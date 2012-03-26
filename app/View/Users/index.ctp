@@ -8,6 +8,8 @@
 ?>
 
 <h1>User Index Page</h1>
+
+<?php // @TODO replace the following with $this ->Html ->tableheaders(); ?>
 <table>
 	<tr>
 		<td>Id</td>
