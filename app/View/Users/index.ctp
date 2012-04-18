@@ -11,7 +11,7 @@
 <h1>User Index Page</h1>
 <table>
 	<?php
-echo $this -> Html -> tableHeaders(array('Id', 'Name', 'Email'));
+echo $this -> Html -> tableHeaders(array('Id', 'Name', 'Email','Alternate Email', 'GT Username', 'Level', 'Phone', 'Action'));
 
 foreach ($users as $user):
 	?>
@@ -24,6 +24,15 @@ foreach ($users as $user):
          ));
 		?></td>
 		<td><?php echo $user['User']['EMAIL'];?></td>
+		<td><?php echo $user['User']['ALT_EMAIL'];?></td>
+		<td><?php echo $user['User']['GT_USER_NAME'];?></td>
+		<td><?php echo $user['User']['LEVEL'];?></td>
+		<td><?php echo $user['User']['PHONE'];?></td>
+		<td><?php echo $this -> Html -> link('Edit', array(
+            'action' => 'edit',
+            $user['User']['ID']
+         ));
+      ?></td>
 	</tr>
 	<?php endforeach;?>
 </table>

@@ -42,7 +42,9 @@ class UsersController extends AppController
    {
       if ($this -> request -> is('post'))
       {
-         if ($this -> User -> save($this -> request -> data))
+         $this -> User -> create();
+         debug($this -> request -> data);
+         if ($this -> User -> saveAssociated($this -> request -> data))
          {
             $this -> Session -> setFlash('The user has been saved.');
             $this -> redirect(array('action' => 'index'));
@@ -51,6 +53,30 @@ class UsersController extends AppController
          {
             $this -> log('Unable to add the user.', 'DEBUG');
             $this -> Session -> setFlash('Unable to add the user.');
+         }
+      }
+   }
+
+   /**
+    * Allows the editing of a specific User.
+    */
+   public function edit($id = null)
+   {
+      $this -> User -> id = $id;
+      if ($this -> request -> is('get'))
+      {
+         $this -> request -> data = $this -> User -> read();
+      }
+      else
+      {
+         if ($this -> User -> save($this -> request -> data))
+         {
+            $this -> Session -> setFlash('The user has been saved.');
+            $this -> redirect(array('action' => 'index'));
+         }
+         else
+         {
+            $this -> Session -> setFlash('Unable to edit the user.');
          }
       }
    }

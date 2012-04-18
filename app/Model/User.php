@@ -46,19 +46,16 @@
  */
 class User extends AppModel
 {
-   var $name = 'User';
-   var $virtualFields = array('NAME' => 'CONCAT(USER.FIRST_NAME, " ", USER.LAST_NAME)');
-   // var $hasOne;
- //public $hasMany = array('Location' => array('className' => 'Location', 'foreignKey' => 'ID'));
-      public $belongsTo = array(
+   public $name = 'User';
+   public $virtualFields = array('NAME' => 'CONCAT(USER.FIRST_NAME, " ", USER.LAST_NAME)');
+   public $belongsTo = array(
       'LOCAL_ADDR' => array(
-      'className' => 'Location',
-      'foreignKey' => 'LOCAL_ADDR'
+         'className' => 'Location',
+         'foreignKey' => 'LOCAL_ADDR'
       ),
       'HOME_ADDR' => array(
-      'className' => 'Location',
-      'foreignKey'
-    => 'HOME_ADDR'
+         'className' => 'Location',
+         'foreignKey' => 'HOME_ADDR'
       )
    );
    public $validate = array(
