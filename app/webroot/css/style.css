@@ -12,16 +12,9 @@ Tags: mantle color, variable width, two columns, widgets
 This is just a basic layout, with only the bare minimum defined.
 Please tweak this and make it your own. :)
 */
-</
+</style>
 
-style>#header {
-	background: transparent url(images/bgBody.jpg) repeat-x center top;
-	top: -2px;
-}
-
-#logoWrapper {
-	background: transparent url(images/bgHeader.jpg) no-repeat scroll center
-		top;
+#header {
 	top: -2px;
 	height: 125px;
 	margin: 0px auto 0;
