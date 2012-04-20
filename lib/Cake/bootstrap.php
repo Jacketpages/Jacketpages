@@ -115,7 +115,7 @@ if (!defined('IMAGES_URL')) {
  * Web path to the CSS files directory.
  */
 if (!defined('CSS_URL')) {
-	define('CSS_URL', 'css/');
+	define('CSS_URL', 'app/webroot/css/');
 }
 
 /**

@@ -16,36 +16,45 @@ Please tweak this and make it your own. :)
 
 #header {
 	top: -2px;
-	height: 125px;
+}
+
+#logoWrapper {
+	background: transparent url(../img/jpHeader.jpg) no-repeat scroll center top;
+	top: -2px;
+	min-height: 125px;
 	margin: 0px auto 0;
 }
 
-#utilityBar {
-	background: #f8da8a url(images/bgUtility.gif) repeat-x center bottom;
+#utilityBarWrapper {
+	background: #f8da8a url(../img/jpUtility.gif) repeat-x center bottom;
 	min-height: 25px;
 	text-align: center;
 }
 
-#utilityBarWrapper {
+#utilityBar {
 	background: transparent center;
 	margin-left: auto;
 	margin-right: auto;
 	width: 960px;
+	min-height:25px;
 }
 
-#breadcrumb {
-	background: transparent url(images/bgBreadcrumb.gif) repeat-x scroll
+#breadCrumbWrapper {
+	background: transparent url(../img/bgBreadcrumb.gif) repeat-x scroll
 		center bottom;
 	border-bottom: 1px solid #E1E1E1;
 	height: 20px;
 	vertical-align: middle;
 }
 
-#breadcrumbWrapper {
+#breadCrumbs {
 	margin-left: auto;
 	margin-right: auto;
 	width: 960px;
 	padding: 3px 0 0;
+	height:20px;
+	border-bottom: 1px solid #E1E1E1;
+	
 }
 
 #breadcrumbWrapper a {
