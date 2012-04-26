@@ -87,6 +87,9 @@ Please tweak this and make it your own. :)
 #content {
 	width: 100%;
 	z-index: 80;
+	width: 960px;
+	margin: 0px auto 0px auto;
+	position: relative;
 }
 
 #sidebars {
@@ -410,25 +413,25 @@ input:active,textarea:active,select:active,input:focus,textarea:focus,select:foc
 	letter-spacing: 1px;
 	line-height: 12px;
 }
-
+/* @TODO This rounded corner section of css seems kind of ridiculous to me. Anyway it can be redone?*/
 .roundedcornr_box {
-	background: url(images/roundedcornr_tl.png) no-repeat top left;
+	background: url(../img/roundedcornr_tl.png) no-repeat top left;
 }
 
 .roundedcornr_top {
-	background: url(images/roundedcornr_tr.png) no-repeat top right;
+	background: url(../img/roundedcornr_tr.png) no-repeat top right;
 }
 
 .roundedcornr_bottom {
-	background: url(images/roundedcornr_bl.png) no-repeat bottom left;
+	background: url(../img/roundedcornr_bl.png) no-repeat bottom left;
 }
 
 .roundedcornr_bottom div {
-	background: url(images/roundedcornr_br.png) no-repeat bottom right;
+	background: url(../img/roundedcornr_br.png) no-repeat bottom right;
 }
 
 .roundedcornr_content {
-	background: url(images/roundedcornr_r.png) top right repeat-y;
+	background: url(../img/roundedcornr_r.png) top right repeat-y;
 }
 
 .roundedcornr_top div,.roundedcornr_top,.roundedcornr_bottom div,.roundedcornr_bottom
@@ -447,7 +450,7 @@ input:active,textarea:active,select:active,input:focus,textarea:focus,select:foc
 }
 
 #information {
-	background: url(images/info.png) no-repeat center left;
+	background: url(../img/info.png) no-repeat center left;
 	padding-left: 5px;
 }
 

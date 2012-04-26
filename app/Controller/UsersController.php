@@ -18,7 +18,7 @@ class UsersController extends AppController
       'Html',
       'Form'
    );
-   public $components = array('Session');
+   public $components = array('Session', 'Acl');
 
    /**
     * A table listing of users.

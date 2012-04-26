@@ -23,7 +23,8 @@
         ?>
     </head>
     <body>
-        <div id="container">
+        <div id="container"> 
+<!--          was container   -->
             <div id="header">
                 <?php
                // Link the Jacketpages logo to the Jacketpages home page
@@ -34,11 +35,14 @@
                echo $this -> Html -> tag('div', $this -> Html -> tag('div', $this->Html->getCrumbs(' > ', 'Home'), array('id' => 'breadCrumbs', 'escape' => false)), array('id' => 'breadCrumbWrapper'));
                //echo $this->Html->getCrumbs(' > ', 'Home');
                 ?>
+                </div>
+<!--                 <div id='allcontent' -->
                 <div id="content">
                     <?php echo $this -> Session -> flash();?>
 
                     <?php echo $this -> fetch('content');?>
                 </div>
+<!--                 </div> -->
                 <div id="footer"></div>
             </div>
             <?php echo $this -> element('sql_dump');?>
