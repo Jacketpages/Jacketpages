@@ -472,7 +472,7 @@ input:active,textarea:active,select:active,input:focus,textarea:focus,select:foc
 	text-transform: lowercase;
 }
 
-#cas #sidebar {
+#sidebar {
 	float: left;
 	font-size: 150%;
 	margin-left: 296px;

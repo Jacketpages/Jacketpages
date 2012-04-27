@@ -8,12 +8,19 @@
  * @since 03/22/2012
  */
 
-// Add the appropriate Breadcrumbs
-$this -> Html -> addCrumb('Users', '/users');
-$this -> Html -> addCrumb($user['User']['NAME'], '/users/view/' . $user['User']['ID']);
+$this -> extend('/Common/view');
 
-// Begin User Information
-echo h($user['User']['NAME']);
-echo h($user['User']['EMAIL']); 
-// End User Information
+$this -> start ('sidebar');
+$this -> end();
+
+$this -> assign('title', 'Users'); 
+ 
+// // Add the appropriate Breadcrumbs
+// $this -> Html -> addCrumb('Users', '/users');
+// $this -> Html -> addCrumb($user['User']['NAME'], '/users/view/' . $user['User']['ID']);
+// 
+// // Begin User Information
+// echo h($user['User']['NAME']);
+// echo h($user['User']['EMAIL']); 
+// // End User Information
 ?>
