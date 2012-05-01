@@ -14,5 +14,5 @@
          </li>
       </ul>
    </li>
-   <li><a href="mailto:gtsgacampus@gmail.com">Contact Us</a></li>
+   <li><a href="mailto:gtsgacampus@gmail.com">Contact Jacketpages</a></li>
 </ul>

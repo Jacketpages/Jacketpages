@@ -108,7 +108,7 @@ if (!defined('VENDORS')) {
  * Web path to the public images directory.
  */
 if (!defined('IMAGES_URL')) {
-	define('IMAGES_URL', 'img/');
+	define('IMAGES_URL', 'app/webroot/img/');
 }
 
 /**
@@ -122,7 +122,7 @@ if (!defined('CSS_URL')) {
  * Web path to the js files directory.
  */
 if (!defined('JS_URL')) {
-	define('JS_URL', 'js/');
+	define('JS_URL', 'app/webroot/js/');
 }
 
 

@@ -1,0 +1,160 @@
+/**
+ * @author Stephen Roca
+ * @author Michael Ellis
+ * @author Michael Mealling
+ * 
+ * Adapted from and adaptation of 
+ * Georgia Tech's general css layout.
+ */
+
+/**
+ * Remove the automatic margin and padding added
+ * to these elements.
+ */
+body, div, ul {
+	margin: 0;
+	padding: 0;
+}
+
+/**
+ * 	Removes the underline and highlighting of links.
+ */
+.links a {
+	text-decoration:none;
+	color:black;
+}
+
+/**
+ * 	Highlights links in gold on hover.
+ */
+.links a:hover, .links a:active {
+	color:#C5A757;
+}
+
+h1 {
+	font-size:16px;
+	font-weight:bold;
+	line-height:24px;
+	margin:12px 0;
+	border-bottom: 1px dotted #666;
+}
+
+/**
+ * Yep, this is currenty useless. Just a container.
+ */
+#header {
+	
+}
+
+/**
+ * Holds and automatically resizes the Jacketpages 
+ * header logo.
+ */
+#logoWrapper {
+	background: transparent url(../img/jpHeader.jpg) no-repeat scroll center top;
+	top: -2px;
+	min-height: 125px;
+	margin: 0px auto 0;
+}
+
+/**
+ * Repeats the picture used for the utility bar across
+ * the screen.
+ */
+#utilityBarWrapper {
+	background: #f8da8a url(../img/jpUtility.gif) repeat-x center bottom;
+	min-height: 25px;
+	text-align: center;
+}
+
+/**
+ * Houses the generated utility bar links.
+ */
+#utilityBar {
+	background: transparent center;
+	margin-left: auto;
+	margin-right: auto;
+	width: 960px;
+	min-height:25px;
+}
+
+/**
+ * Repeats the picture used for the breadcrumbs section
+ * across the screen.
+ */
+#breadCrumbWrapper {
+	background: transparent url(../img/bgBreadcrumb.gif) repeat-x scroll
+		center bottom;
+	border-bottom: 1px solid #E1E1E1;
+	height: 20px;
+	vertical-align: middle;
+}
+
+/**
+ * Houses the generated breadcrumbs.
+ */
+#breadCrumbs {
+	margin-left: auto;
+	margin-right: auto;
+	width: 960px;
+	padding: 3px 0 0 0px;
+	height:20px;
+	font-size: 12px;
+	color:#666;
+}
+
+/**
+ * 	Houses the sidebar and main content
+ */
+#content {
+	width: 100%;
+	z-index: 80;
+	width: 960px;
+	margin: 0px auto 0px auto;
+	position: relative;
+}
+
+/**
+ * Houses the sidebar.
+ */
+#sidebar {
+	margin: 13px 0px 0px 0px;
+	padding: 0 0px;
+	float: left;
+	width: 170px;
+}
+
+/**
+ * Removes the bullet from the top level list
+ * items and edits their font formatting.
+ */
+#sidebar ul li {
+	font-size: 15px;
+	list-style: none;
+	padding-left: 12px;
+	font-weight: bold;
+}
+
+/**
+ * Differentiates the nested list elemenst by
+ * editing their size and weight
+ */
+#sidebar ul li ul li {
+	font-size: 13px;
+	font-weight: normal;
+}
+
+/**
+ * 	Defines the middle of the page where most
+ *  of the content will be generated
+ */
+#middle {
+	float: right;
+	width: 780px; /* could add margin */
+	margin: 0;
+	padding: 6px 0 12px 0;
+	min-height: 400px;
+	position: relative;
+	font-family: "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
+	color: #2b2726;
+}

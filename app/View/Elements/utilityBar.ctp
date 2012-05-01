@@ -1,17 +1,18 @@
-<div id="utilityBarWrapper" class='ddsmoothmenu'>
-   <div id="utilityBar" >
+<div id="utilityBarWrapper">
+   <div id="utilityBar" class="ddsmoothmenu">
                  <ul>
                   <li>
 <!-- Begin populating Profile links -->
-                     <a href="#">My Account</a>
+                     <a href="#">Login</a>
 
                      <ul>
                         <li>
-                           <?php echo $this -> Html -> link(__('Login', true), array(
+                          <?php echo $this -> Html -> link(__('Login', true), array(
                               'controller' => 'users',
                               'action' => 'login'
                            ));
                            ?>
+<!--                            <a href="#">Sub Nav Link</a> -->
                         </li>
                      </ul>
                   </li>
