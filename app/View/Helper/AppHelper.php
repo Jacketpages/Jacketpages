@@ -31,4 +31,13 @@ App::uses('Helper', 'View');
  * @package       app.View.Helper
  */
 class AppHelper extends Helper {
+   public $components = array('Session');
+    public function isLoggedIn()
+   {
+      if ($this -> Session -> read('User.level') != '')
+      {
+         return true;
+      }
+      return false;
+   }
 }

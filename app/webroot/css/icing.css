@@ -31,6 +31,9 @@ body, div, ul {
 	color:#C5A757;
 }
 
+/**
+ * 	Formats the heading of the middle content.
+ */
 h1 {
 	font-size:16px;
 	font-weight:bold;
@@ -150,11 +153,98 @@ h1 {
  */
 #middle {
 	float: right;
-	width: 780px; /* could add margin */
-	margin: 0;
-	padding: 6px 0 12px 0;
+	width: 780px;
 	min-height: 400px;
-	position: relative;
-	font-family: "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
-	color: #2b2726;
 }
+
+/**
+ * 	Start CSS for drop down menu.
+ */
+
+/**
+ * 	Style the main menu. Top level list
+ */
+.utilityMenu ul li {
+	display:inline;
+	list-style:none;
+	position:relative;
+	float:right;
+	font-size: 11px;
+	font-weight:bold;
+	text-transform:uppercase;
+	line-height: 19px;
+	padding-right: 10px;
+	border-right: 1px solid #f9de95;
+}
+
+/**
+ * 	Be sure to include the down arrow to the right
+ *  of the menu link.
+ */
+.utilityMenu ul li a:after {
+	content: url('../img/down.gif');
+	position: absolute;
+	top: 5px;
+	right: 3px;
+}
+
+/**
+ * 	Position the top level list.
+ */
+.utilityMenu ul li a{
+	border-left: 1px solid #f9de95;
+	display:block;
+	padding: 3px 10px;
+	color: #957B33;
+}
+
+/**
+ * 	Highlight the link text in black on hover.
+ */
+.utilityMenu ul li a:hover {
+	color:black;
+}
+
+/**
+ * 	Style the submenu. Make the background color white.
+ */
+.utilityMenu ul li ul {
+	position:absolute;
+	visibility:hidden;
+	background: #ffffff;
+	margin:0;
+	padding:0;
+}
+
+/**
+ * 	Format the font and include box shadow.
+ */
+.utilityMenu ul li ul li {
+	display:inline;
+	width:150px;
+	text-align:left;
+	text-transform:none;
+	font-weight: normal;
+	font-size:15px;
+	border-right-style:none;
+	box-shadow: 5px 5px 5px #888;
+}
+
+/**
+ * 	Remove the border from the submenu links and set a standard width.
+ */
+.utilityMenu ul li ul li a{
+	border-style:none;
+	width:150px;
+	float:left;
+}
+
+/**
+ * 	Remove the image added at the top level list.
+ */
+.utilityMenu ul li ul li a:after{
+	content: none;
+}
+/**
+ * 	End CSS for drop down menu.
+ */

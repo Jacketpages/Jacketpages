@@ -554,7 +554,7 @@ class AuthComponent extends Component {
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/authentication.html#accessing-the-logged-in-user
  */
 	public static function user($key = null) {
-		if (empty(self::$_user) && !CakeSession::check(self::$sessionKey)) {
+		if (empty(self::$_user) && !CakeSession::check(self::$sessionKey)) {  
 			return null;
 		}
 		if (!empty(self::$_user)) {

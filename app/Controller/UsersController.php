@@ -18,7 +18,7 @@ class UsersController extends AppController
       'Html',
       'Form'
    );
-   public $components = array('Session', 'Acl');
+   public $components = array('Acl');
 
    /**
     * A table listing of users.
@@ -89,7 +89,7 @@ class UsersController extends AppController
     * Logs in a User using Georgia Tech's CAS login system.
     * Writes often used User variables to the Session.
     */
-   public function login()
+   /*public function login()
    {
          // Set debug mode
          $this -> phpCAS -> setDebug();
@@ -105,6 +105,32 @@ class UsersController extends AppController
          {
             
          }
-   }
+   }*/
+  
+  public function login() {
+     if ($this -> request -> is('post'))
+     {
+        debug($this -> request ->data);
+        $gtUsername = $this -> request-> data['User']['username'];
+        $user = $this -> User -> find('first', array(
+                  'conditions' => array('User.GT_USER_NAME' => $gtUsername)
+            ));
+            debug($user);
+         $this ->Session -> write('Auth.User', $user['User']['NAME']);
+        debug($this ->Session ->read());
+        if($this -> Auth -> login())
+        {
+           $this -> redirect($this -> Auth -> redirect());
+        }
+        else {
+           $this -> Session -> setFlash('Your username/password was incorrect.');
+        }
+     }
+  }
+  
+  public function logout()
+  {
+     $this -> redirect($this -> Auth -> logout());
+  }
 }
 ?>
