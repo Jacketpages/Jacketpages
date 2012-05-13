@@ -2,8 +2,8 @@
  * @author Stephen Roca
  * @author Michael Ellis
  * @author Michael Mealling
- * 
- * Adapted from and adaptation of 
+ *
+ * Adapted from and adaptation of
  * Georgia Tech's general css layout.
  */
 
@@ -11,152 +11,158 @@
  * Remove the automatic margin and padding added
  * to these elements.
  */
-body, div, ul {
+body, div, ul
+{
 	margin: 0;
 	padding: 0;
 }
-
 /**
  * 	Removes the underline and highlighting of links.
  */
-.links a {
-	text-decoration:none;
-	color:black;
+.links a
+{
+	text-decoration: none;
+	color: black;
 }
-
 /**
  * 	Highlights links in gold on hover.
  */
-.links a:hover, .links a:active {
-	color:#C5A757;
+.links a:hover, .links a:active
+{
+	color: #C5A757;
 }
-
 /**
  * 	Formats the heading of the middle content.
  */
-h1 {
-	font-size:16px;
-	font-weight:bold;
-	line-height:24px;
-	margin:12px 0;
+h1
+{
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 24px;
+	margin: 12px 0;
 	border-bottom: 1px dotted #666;
+	z-index: 0;
 }
-
 /**
  * Yep, this is currenty useless. Just a container.
  */
-#header {
-	
-}
+#header
+{
 
+}
 /**
- * Holds and automatically resizes the Jacketpages 
+ * Holds and automatically resizes the Jacketpages
  * header logo.
  */
-#logoWrapper {
+#logoWrapper
+{
 	background: transparent url(../img/jpHeader.jpg) no-repeat scroll center top;
 	top: -2px;
 	min-height: 125px;
 	margin: 0px auto 0;
 }
-
 /**
  * Repeats the picture used for the utility bar across
  * the screen.
  */
-#utilityBarWrapper {
+#utilityBarWrapper
+{
 	background: #f8da8a url(../img/jpUtility.gif) repeat-x center bottom;
 	min-height: 25px;
 	text-align: center;
 }
-
 /**
  * Houses the generated utility bar links.
  */
-#utilityBar {
+#utilityBar
+{
 	background: transparent center;
 	margin-left: auto;
 	margin-right: auto;
 	width: 960px;
-	min-height:25px;
+	min-height: 25px;
 }
-
 /**
  * Repeats the picture used for the breadcrumbs section
  * across the screen.
  */
-#breadCrumbWrapper {
-	background: transparent url(../img/bgBreadcrumb.gif) repeat-x scroll
-		center bottom;
+#breadCrumbWrapper
+{
+	background: transparent url(../img/bgBreadcrumb.gif) repeat-x scroll center bottom;
 	border-bottom: 1px solid #E1E1E1;
 	height: 20px;
 	vertical-align: middle;
 }
-
 /**
  * Houses the generated breadcrumbs.
  */
-#breadCrumbs {
+#breadCrumbs
+{
 	margin-left: auto;
 	margin-right: auto;
 	width: 960px;
 	padding: 3px 0 0 0px;
-	height:20px;
+	height: 20px;
 	font-size: 12px;
-	color:#666;
+	color: #666;
+}
+
+#breadCrumbs a
+{
+	color: #666;
 }
 
 /**
  * 	Houses the sidebar and main content
  */
-#content {
+#content
+{
 	width: 100%;
 	z-index: 80;
 	width: 960px;
 	margin: 0px auto 0px auto;
 	position: relative;
 }
-
 /**
  * Houses the sidebar.
  */
-#sidebar {
+#sidebar
+{
 	margin: 13px 0px 0px 0px;
 	padding: 0 0px;
 	float: left;
 	width: 170px;
 }
-
 /**
  * Removes the bullet from the top level list
  * items and edits their font formatting.
  */
-#sidebar ul li {
+#sidebar ul li
+{
 	font-size: 15px;
 	list-style: none;
 	padding-left: 12px;
 	font-weight: bold;
 }
-
 /**
  * Differentiates the nested list elemenst by
  * editing their size and weight
  */
-#sidebar ul li ul li {
+#sidebar ul li ul li
+{
 	font-size: 13px;
 	font-weight: normal;
 }
-
 /**
  * 	Defines the middle of the page where most
  *  of the content will be generated
  */
-#middle {
+#middle
+{
 	float: right;
 	width: 780px;
 	min-height: 400px;
 }
-
 /**
  * 	Start CSS for drop down menu.
  */
@@ -164,87 +170,128 @@ h1 {
 /**
  * 	Style the main menu. Top level list
  */
-.utilityMenu ul li {
-	display:inline;
-	list-style:none;
-	position:relative;
-	float:right;
+.utilityMenu ul li
+{
+	display: inline;
+	list-style: none;
+	position: relative;
+	float: right;
 	font-size: 11px;
-	font-weight:bold;
-	text-transform:uppercase;
+	font-weight: bold;
+	text-transform: uppercase;
 	line-height: 19px;
 	padding-right: 10px;
-	border-right: 1px solid #f9de95;
+	/*we will figure this border thing out later*/
+	border-right: 1px solid #DDB856;
+	border-left: 1px solid #DDB856;
 }
-
 /**
  * 	Be sure to include the down arrow to the right
  *  of the menu link.
  */
-.utilityMenu ul li a:after {
+.utilityMenu ul li a:after
+{
 	content: url('../img/down.gif');
 	position: absolute;
 	top: 5px;
 	right: 3px;
 }
-
 /**
  * 	Position the top level list.
  */
-.utilityMenu ul li a{
-	border-left: 1px solid #f9de95;
-	display:block;
+.utilityMenu ul li a
+{
+	/*	border-left: 1px solid #f9de95;*/
+	display: block;
 	padding: 3px 10px;
 	color: #957B33;
 }
-
 /**
  * 	Highlight the link text in black on hover.
  */
-.utilityMenu ul li a:hover {
-	color:black;
+.utilityMenu ul li a:hover
+{
+	color: black;
 }
-
 /**
  * 	Style the submenu. Make the background color white.
  */
-.utilityMenu ul li ul {
-	position:absolute;
-	visibility:hidden;
+.utilityMenu ul li ul
+{
+	position: absolute;
+	visibility: hidden;
 	background: #ffffff;
-	margin:0;
-	padding:0;
+	margin: 0;
+	padding: 0;
+	box-shadow: 5px 5px 5px #888;
+	z-index: 100;
 }
-
 /**
  * 	Format the font and include box shadow.
  */
-.utilityMenu ul li ul li {
-	display:inline;
-	width:150px;
-	text-align:left;
-	text-transform:none;
+.utilityMenu ul li ul li
+{
+	display: inline;
+	/*	min-width:100px;*/
+	text-align: left;
+	text-transform: none;
 	font-weight: normal;
-	font-size:15px;
-	border-right-style:none;
-	box-shadow: 5px 5px 5px #888;
+	font-size: 14px;
+	border-right-style: none;
 }
-
 /**
  * 	Remove the border from the submenu links and set a standard width.
  */
-.utilityMenu ul li ul li a{
-	border-style:none;
-	width:150px;
-	float:left;
+.utilityMenu ul li ul li a
+{
+	border-style: none;
+	width: 150px;
+	float: left;
 }
-
 /**
  * 	Remove the image added at the top level list.
  */
-.utilityMenu ul li ul li a:after{
+.utilityMenu ul li ul li a:after
+{
 	content: none;
 }
 /**
  * 	End CSS for drop down menu.
  */
+
+#middle p {
+	font-size: 14px;
+	line-height: 24px;
+	padding-left: 25px;
+	padding-right: 25px;
+	text-align: justify;
+}
+
+/**
+ * 	Define the image, position, and font formatting of the footer
+ */
+#footer
+{
+	background: url(../img/bgFooter2.png) no-repeat;
+	clear: both;
+	color: #666;
+	height: 57px;
+	font-size: 10px;
+	padding: 12px 0 0 0;
+	text-align: center;
+	margin: 10px auto 10px auto;
+/*	width: 960px;*/
+/*	z-index: 70;*/
+/*	margin: 0;*/
+/*	padding-top: 5px;*/
+/*	letter-spacing: 1px;*/
+/*	line-height: 12px;*/
+}
+#left
+{
+	float: left;
+}
+#right
+{
+	float: right;
+}

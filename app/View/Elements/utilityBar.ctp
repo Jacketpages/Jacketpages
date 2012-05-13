@@ -2,64 +2,210 @@
 /**
  * @author Stephen Roca
  *
- * @TODO finish including all of the standard links
- * @TODO Include html comments to denote when a list starts and ends
  * This file defines the utility bar's menu options/links.
  */
 ?>
 
 <div id="utilityBarWrapper">
    <div class="utilityMenu" id="utilityBar">
-                 <!-- <ul class="utilityMenu">
-                  <li> -->
-<!-- Begin populating Login/Profile links -->
-<?php
-//@TODO make this section use nested lists so it's more php less html
-if (!$this -> Permission -> isLoggedIn()){
-   $list = array(
-   $this -> Html -> link('Login', '#') => array($this -> Html -> link(__('Login', true), array(
-                              'controller' => 'users',
-                              'action' => 'login'
-                           ))
-   ));
-   echo $this -> Html -> nestedList($list);
 
+<!-- Define links as null so they don't appear as undefined when debug is on -->
+<?php
+   $jphome = $profile = $account = $submitBill = $viewMyBills = $viewBills = null;
+   $bills = $viewMyOrgs = $agendaBills = $viewBudgets = $adminSga = $adminUsers = null;
+   $logout = $adminOrgs = $loginOther = $submitBillOther = $postMsg = $admin = null;
+   $login = $loginTopLevel = null;
 ?>
-<!--                      <a href="#">Login</a> -->
-<!-- <ul>
-<li>
-<?php echo $this -> Html -> link(__('Login', true), array(
-'controller' => 'users',
-'action' => 'login'
-));
+
+<!-- Define all top level list items that appear on the utility Bar -->
+<?php
+$orgs = $this -> Html -> link('Organizations', '#');
+$sga = $this -> Html -> link('Student Government', '#');
+if (!$this -> Permission -> isLoggedIn())
+{
+   $loginTopLevel = $this -> Html -> link('Login', '#');
+}
+else
+{
+   $account = $this -> Html -> link('My Account', '#');
+   $bills = $this -> Html -> link('Bills', '#');
+}
+
+if ($this -> Permission -> isAdmin())
+{
+   $admin = $this -> Html -> link('Administration', '#');
+}
 ?>
-</li>
-</ul> -->
-<?php }
-   else
-   {
-   $list = array(
-   $this -> Html -> link('Profile', '#') => array(
-   $this -> Html -> link('Account Profile', array(
-   'owner' => true,
-   'controller' => 'users',
-   'action' => 'view',
-   $this -> Session -> read('User.id')
-   )),
-   $this -> Html -> link('Logout', array(
+<!-- Define the inner level list items for the above list items -->
+<?php
+$viewOrgs = $this -> Html -> link('View All Organizations', array(
    'admin' => false,
-   'controller' => 'users',
-   'action' => 'logout'
-   )),
-   $this -> Html -> link('JacketPages Home', '/')
-   )
-   );
-   echo $this -> Html -> nestedList($list);
+   'controller' => 'organizations',
+   'action' => 'index'
+));
+$viewSga = $this -> Html -> link('View SGA Members', array(
+   'admin' => false,
+   'controller' => 'sga_people',
+   'action' => 'index'
+));
+
+if (!$this -> Permission -> isLoggedIn())
+{
+   $login = $this -> Html -> link(__('Login', true), array(
+      'controller' => 'users',
+      'action' => 'login'
+   ));
+}
+else
+{
+   $profile = $this -> Html -> link('Account Profile', array(
+      'owner' => true,
+      'controller' => 'users',
+      'action' => 'view',
+      $this -> Session -> read('User.id')
+   ));
+   $logout = $this -> Html -> link('Logout', array(
+      'admin' => false,
+      'controller' => 'users',
+      'action' => 'logout'
+   ));
+   $jphome = $this -> Html -> link('JacketPages Home', '/');
+   $submitBill = $this -> Html -> link('Submit Bill', array(
+      'admin' => false,
+      'controller' => 'bills',
+      'action' => 'add'
+   ));
+   $viewMyBills = $this -> Html -> link('View My Bills', array(
+      'owner' => true,
+      'controller' => 'bills',
+      'action' => 'index'
+   ));
+   $viewBills = $this -> Html -> link('View All Bills', array(
+      'controller' => 'bills',
+      'action' => 'index',
+      'All'
+   ));
+
+   $viewMyOrgs = $this -> Html -> link('View My Organizations', array(
+      'owner' => true,
+      'controller' => 'organizations',
+      'action' => 'index'
+   ));
+}
+
+if ($this -> Permission -> isSGA())
+{
+   $viewBudgets = $this -> Html -> link('View Budgets', array(
+      'controller' => 'budgets',
+      'action' => 'index',
+      'admin' => true
+   ));
+
+   $agendaBills = $this -> Html -> link('View Bills on Agenda', array(
+      'controller' => 'bills',
+      'action' => 'index',
+      'Agenda',
+      'admin' => true
+   ));
+}
+
+if ($this -> Permission -> isAdmin())
+{
+   $adminBills = $this -> Html -> link('Administer All Bills', array(
+      'admin' => true,
+      'controller' => 'bills',
+      'action' => 'index'
+   ));
+   $adminSga = $this -> Html -> link('Administer SGA Members', array(
+      'admin' => true,
+      'controller' => 'sga_people',
+      'action' => 'index'
+   ));
+   $adminUsers = $this -> Html -> link('Administer Users', array(
+      'admin' => true,
+      'controller' => 'users',
+      'action' => 'index'
+   ));
+   $adminOrgs = $this -> Html -> link('Administer Organizations', array(
+      'controller' => 'organizations',
+      'action' => 'index',
+      'admin' => true
+   ));
+   $loginOther = $this -> Html -> link('Login as Other User', array(
+      'admin' => true,
+      'controller' => 'users',
+      'action' => 'login'
+   ));
+   $submitBillOther = $this -> Html -> link('Submit Bill as Other User', array(
+      'admin' => true,
+      'controller' => 'bills',
+      'action' => 'add'
+   ));
+   $postMsg = $this -> Html -> link('Post Message', '/pages/message');
+}
 ?>
-<!--       <a href='#'>Profile</a> -->
-<?php }?>
-</li>
-</ul>
-<!-- End populating Login/Profile links -->
+<!-- Define all of the drop down lists -->
+<?php
+// Login
+$loginList = array($loginTopLevel => array(
+      $login,
+      $jphome
+   ));
+
+// My Account
+$accountList = array($account => array(
+      $profile,
+      $logout,
+      $jphome
+   ));
+   
+// Bills
+$billList = array($bills => array(
+      $submitBill,
+      $viewMyBills,
+      $viewBills
+   ));
+   
+// Organizations
+$orgList = array($orgs => array(
+      $viewOrgs,
+      $viewMyOrgs
+   ));
+
+// Student Government
+$sgaList = array($sga => array(
+      $agendaBills,
+      $viewBudgets,
+      $viewSga
+   ));
+
+$adminList = array($admin => array(
+      $adminSga,
+      $adminUsers,
+      $adminOrgs,
+      $loginOther,
+      $submitBillOther,
+      $postMsg
+   ));
+?>
+<!-- Print all of the drop down lists -->
+<?php
+if (!$this -> Permission -> isLoggedIn())
+{
+   echo $this -> Html -> nestedList($loginList);
+}
+else
+{
+   echo $this -> Html -> nestedList($accountList);
+   echo $this -> Html -> nestedList($billList);
+}
+echo $this -> Html -> nestedList($orgList);
+echo $this -> Html -> nestedList($sgaList);
+
+if ($this -> Permission -> isAdmin())
+{
+   echo $this -> Html -> nestedList($adminList);
+}
+?>
 </div>
 </div> 

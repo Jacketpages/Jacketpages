@@ -10,7 +10,7 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller
 {
-   public $helpers = array('Js' => array('Jquery'), 'Session', 'Permission');
+   public $helpers = array('Js', 'Session', 'Permission', 'Html');
    public $components = array(
       'Auth' => array('loginRedirect' => array(
             'controller' => 'users',

@@ -8,7 +8,7 @@ class PermissionHelper extends AppHelper
    // @TODO probably not need. isUser will give the same result
    public function isLoggedIn()
    {
-      if ($this -> Session -> read('User.level') != '')
+      if ($this -> Session -> read('Auth.User') != '')
       {
          return true;
       }
@@ -17,7 +17,7 @@ class PermissionHelper extends AppHelper
    
    public function isUser()
    {
-      return $this -> isLevel('user');
+      return ($this -> isLevel('user') || $this -> isLevel('sga') || $this -> isLevel('admin'));
    }
    
    public function isMember($user_id, $org_id)
@@ -32,7 +32,7 @@ class PermissionHelper extends AppHelper
    
    public function isSGA()
    {
-      return $this -> isLevel('sga');
+      return ($this -> isLevel('sga') || $this -> isLevel('admin'));
    }
    
    public function isAdmin()
@@ -42,7 +42,8 @@ class PermissionHelper extends AppHelper
    
    private function isLevel($level)
    {
-      if ($this -> Session -> read('User.level') == $level)
+      $session_level = $this -> Session -> read('USER.LEVEL');
+      if ($session_level == $level)
       {
          return true;
       }

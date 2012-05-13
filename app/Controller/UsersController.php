@@ -46,7 +46,6 @@ class UsersController extends AppController
       if ($this -> request -> is('post'))
       {
          $this -> User -> create();
-         debug($this -> request -> data);
          if ($this -> User -> saveAssociated($this -> request -> data))
          {
             $this -> Session -> setFlash('The user has been saved.');
@@ -90,47 +89,49 @@ class UsersController extends AppController
     * Writes often used User variables to the Session.
     */
    /*public function login()
+    {
+    // Set debug mode
+    $this -> phpCAS -> setDebug();
+    //Initialize phpCAS
+    $this -> phpCAS -> client(CAS_VERSION_2_0, Configure::read('CAS.hostname'), Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
+    // No SSL validation for the CAS server
+    $this -> phpCAS -> setNoCasServerValidation();
+    // Force CAS authentication if required
+    $this -> phpCAS -> forceAuthentication();
+
+    $GTUsername = $this -> phpCAS -> getUser();
+    if ($GTUsername != '')
+    {
+
+    }
+    }*/
+
+   public function login()
    {
-         // Set debug mode
-         $this -> phpCAS -> setDebug();
-         //Initialize phpCAS
-         $this -> phpCAS -> client(CAS_VERSION_2_0, Configure::read('CAS.hostname'), Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
-         // No SSL validation for the CAS server
-         $this -> phpCAS -> setNoCasServerValidation();
-         // Force CAS authentication if required
-         $this -> phpCAS -> forceAuthentication();
-         
-         $GTUsername = $this -> phpCAS -> getUser();
-         if ($GTUsername != '')
+      if ($this -> request -> is('post'))
+      {
+         $gtUsername = $this -> request -> data['User']['username'];
+         $user = $this -> User -> find('first', array('conditions' => array('User.GT_USER_NAME' => $gtUsername)));
+         $this -> Session -> write('Auth.User', $user['User']['LEVEL']);
+         $this -> Session -> write('USER.NAME', $user['User']['NAME']);
+         $this -> Session -> write('USER.LEVEL', $user['User']['LEVEL']);
+         if ($this -> Auth -> login())
          {
-            
+            $this -> redirect($this -> Auth -> redirect());
          }
-   }*/
-  
-  public function login() {
-     if ($this -> request -> is('post'))
-     {
-        debug($this -> request ->data);
-        $gtUsername = $this -> request-> data['User']['username'];
-        $user = $this -> User -> find('first', array(
-                  'conditions' => array('User.GT_USER_NAME' => $gtUsername)
-            ));
-            debug($user);
-         $this ->Session -> write('Auth.User', $user['User']['NAME']);
-        debug($this ->Session ->read());
-        if($this -> Auth -> login())
-        {
-           $this -> redirect($this -> Auth -> redirect());
-        }
-        else {
-           $this -> Session -> setFlash('Your username/password was incorrect.');
-        }
-     }
-  }
-  
-  public function logout()
-  {
-     $this -> redirect($this -> Auth -> logout());
-  }
+         else
+         {
+            $this -> Session -> setFlash('Your username/password was incorrect.');
+         }
+      }
+   }
+
+   public function logout()
+   {
+
+      $this -> Session -> delete('USER');
+      $this -> redirect($this -> Auth -> logout());
+   }
+
 }
 ?>
