@@ -6,7 +6,18 @@
  * Adapted from and adaptation of
  * Georgia Tech's general css layout.
  */
-
+select{
+	width:100%;
+}
+#category {
+	width: 90%;
+	margin-bottom: 10px;
+}
+label {
+	display: block;
+	font-size: 13px;
+	padding: 0 5px 3px 3px;
+}
 /**
  * Remove the automatic margin and padding added
  * to these elements.
@@ -43,6 +54,23 @@ h1
 	border-bottom: 1px dotted #666;
 	z-index: 0;
 }
+
+h2
+{
+	font-size: 14px;
+	font-weight: bold;
+	margin-left: 25px;
+	/*	margin-right: 20px;*/
+	border-bottom: 1px solid #DDD;
+}
+h3 {
+font-size: 14px;
+font-weight: bold;
+line-height: 24px;
+margin: 12px 0 0 0;
+/*margin-top: 12px;*/
+/*margin-bottom: 0;*/
+}
 /**
  * Yep, this is currenty useless. Just a container.
  */
@@ -50,6 +78,7 @@ h1
 {
 
 }
+
 /**
  * Holds and automatically resizes the Jacketpages
  * header logo.
@@ -106,18 +135,17 @@ h1
 	font-size: 12px;
 	color: #666;
 }
-
 #breadCrumbs a
 {
 	color: #666;
+	text-decoration: none;
 }
-
 /**
  * 	Houses the sidebar and main content
  */
 #content
 {
-	width: 100%;
+/*	width: 100%;*/
 	z-index: 80;
 	width: 960px;
 	margin: 0px auto 0px auto;
@@ -128,7 +156,7 @@ h1
  */
 #sidebar
 {
-	margin: 13px 0px 0px 0px;
+	margin: 18px 0px 0px 0px;
 	padding: 0 0px;
 	float: left;
 	width: 170px;
@@ -141,8 +169,22 @@ h1
 {
 	font-size: 15px;
 	list-style: none;
-	padding-left: 12px;
+/*	padding-left: 12px;*/
+	padding-bottom: 3px;
+	padding-top: 3px;
 	font-weight: bold;
+}
+
+/**
+ * 	Puts a solid bottom border under the last
+ *  list item in nested lists added on top of
+ *  the general sidebar
+ */
+#sidebar #underline:last-child
+{
+/*	margin: 0 0 0 12px;*/
+	padding-left: 0px;
+	border-bottom: 1px solid #DDD;
 }
 /**
  * Differentiates the nested list elemenst by
@@ -162,6 +204,23 @@ h1
 	float: right;
 	width: 780px;
 	min-height: 400px;
+}
+
+/**
+ * 	Defines how paragraphs are displayed in the middle
+ */
+#middle p
+{
+	font-size: 14px;
+	line-height: 24px;
+	padding-left: 0;
+	padding-right: 25px;
+	text-align: justify;
+}
+
+#middle ul
+{
+	padding-left: 40px;
 }
 /**
  * 	Start CSS for drop down menu.
@@ -205,6 +264,7 @@ h1
 	display: block;
 	padding: 3px 10px;
 	color: #957B33;
+	text-decoration: none;
 }
 /**
  * 	Highlight the link text in black on hover.
@@ -259,14 +319,6 @@ h1
  * 	End CSS for drop down menu.
  */
 
-#middle p {
-	font-size: 14px;
-	line-height: 24px;
-	padding-left: 25px;
-	padding-right: 25px;
-	text-align: justify;
-}
-
 /**
  * 	Define the image, position, and font formatting of the footer
  */
@@ -280,13 +332,9 @@ h1
 	padding: 12px 0 0 0;
 	text-align: center;
 	margin: 10px auto 10px auto;
-/*	width: 960px;*/
-/*	z-index: 70;*/
-/*	margin: 0;*/
-/*	padding-top: 5px;*/
-/*	letter-spacing: 1px;*/
-/*	line-height: 12px;*/
 }
+
+/*@TODO Need to go through the following css rules and weed out the unnecessary stuff*/
 #left
 {
 	float: left;
@@ -294,4 +342,197 @@ h1
 #right
 {
 	float: right;
+}
+#alphabet
+{
+	position: relative;
+	height: 30px;
+	width: 100%;
+	margin-bottom: 10px;
+	font-size: 13px;
+}
+#leftHalf
+{
+	position: absolute;
+	left: 0;
+	width: 45%;
+	float: left;
+}
+#rightHalf
+{
+	width: 53%;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	text-align: center;
+}
+#rightHalf ul
+{
+	margin-bottom: 7px;
+	position: absolute;
+	bottom: 0;
+	padding-left:0;
+}
+#rightHalf ul li
+{
+	/*	font-size: 110%;*/
+	/*	font-weight: bold;*/
+	/*	line-height: 17px;*/
+	/*	list-style: none;*/
+	width: auto;
+	display: inline;
+}
+#rightHalf ul li a
+{
+	text-decoration: none;
+	display: block;
+	padding: 3px 0;
+	color: #666;
+	/*	text-decoration: none;*/
+	display: inline;
+}
+
+input, textarea
+{
+	clear: both;
+	border: 1px solid #dadada;
+	color: #000000;
+	padding: 0.3em;
+	width: 100%;	
+}
+
+input#search
+{
+	
+	width: 83%;
+}
+
+search
+{
+	clear: both;
+	border: 1px solid #dadada;
+	color: #000000;
+	padding: 0.3em;
+	width: 80%;	
+}
+
+/**
+ * 	Defines the table attributes when a list is generated
+ * 	such as users or bills
+ */
+.listing
+{
+	border-right: 0;
+	margin-bottom: 10px;
+	width: 100%;
+	border-collapse: collapse;
+	color: #2b2726;
+}
+
+/**
+ * 	Color the table data links dark blue
+ */
+.listing td a
+{
+	color: #001C3A;
+}
+
+/**
+ * 	Style the table headers padding, color, and borders
+ */
+.listing th
+{
+	border: 0;
+	border-bottom: 2px solid #555;
+	text-align: left;
+	font-size: 12px;
+	padding-left: 6px;
+}
+
+/**
+ * 	Alternate the background color of the table rows to
+ *  help visually differentiate data
+ */
+.listing tr:nth-child(2n) td
+{
+	background: #f5f5f5;
+}
+
+/**
+ * 	Define padding, border, and size for the table data
+ */
+.listing tr td
+{
+	border-bottom: 1px solid #DDD;
+	padding: 5px;
+	font-size: 14px;
+}
+
+/**
+ * 	Adds a - character for when the list is
+ *  in ascending sorted order
+ */
+.listing th a.asc:after
+{
+	content: ' -';
+}
+/**
+ * 	Adds a - character for when the list is
+ *  in descending sorted order
+ */
+.listing th a.desc:after
+{
+	content: ' +';
+}
+
+/**
+ * 	Defines the attributes for the pagination numbers
+ * 	and links that appear underneath lists of searchable
+ * 	items
+ */
+.paging
+{
+	text-align: center;
+	background: white;
+	color: #CCC;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	clear: both;
+	padding: 0;
+	font-size: 10px;
+}
+
+/**
+ * 	Removes and colors the links defined for the pagination
+ *  numbers and links
+ */
+.paging a
+{
+	text-decoration: none;
+	color: #001C3A;
+}
+
+/**
+ * 	Halfs the width of a table
+ */
+#halftable
+{
+	width: 50%;
+}
+
+/**
+ * 	Formatting for the submit button
+ */
+input[type=submit]
+{
+	color: #FFF;
+	text-align: center;
+	font-weight: bold;
+	margin-top: 10px;
+	padding: 4px 15px;
+	width: auto;
+	min-height: 1.9em;
+	cursor: pointer;
+	background: url('../img/button.png') repeat-x #ECA701;
+	border: 1px solid #cf7b04;
 }

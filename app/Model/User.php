@@ -62,6 +62,7 @@ class User extends AppModel
       'GT_USER_NAME' => array('rule' => 'notEmpty'),
       'FIRST_NAME' => array('rule' => 'notEmpty'),
       'LAST_NAME' => array('rule' => 'notEmpty'),
+      'EMAIL' => array('rule' => 'email')
    );
    // var $order;
 }

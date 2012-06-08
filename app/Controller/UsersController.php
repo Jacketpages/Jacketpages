@@ -16,16 +16,50 @@ class UsersController extends AppController
     */
    public $helpers = array(
       'Html',
-      'Form'
+      'Form',
+      'Paginator',
+      'Js'
    );
-   public $components = array('Acl');
+   public $components = array(
+      'Acl',
+      'RequestHandler',
+      'Session'
+   );
 
    /**
     * A table listing of users.
     */
-   public function index()
+   public function index($letter = null)
    {
-      $this -> set('users', $this -> User -> find('all', array('limit' => 50)));
+      // Writes the search keyword to the Session if the request is a POST
+      if ($this -> request -> is('post'))
+      {
+         $this -> Session -> write('Search.keyword', $this -> request -> data['User']['keyword']);
+      }
+      // Deletes the search keyword if the letter is null and the request is not ajax
+      else if (!$this -> RequestHandler -> isAjax() && $letter == null)
+      {
+         $this -> Session -> delete('Search.keyword');
+      }
+      // Performs a search on the User table with the following conditions:
+      // WHERE (NAME LIKE '%<SEARCH>%' OR GT_USER_NAME LIKE '%<SEARCH>%') AND NAME LIKE '<LETTER>%'
+      $this -> paginate = array(
+         'conditions' => array('AND' => array(
+               'OR' => array(
+                  array('User.NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+                  array('User.GT_USER_NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+               ),
+               array('User.NAME LIKE' => $letter . '%')
+            )),
+         'limit' => 20
+      );
+      // If the request is ajax then change the layout to return just the updated user list
+      if ($this -> RequestHandler -> isAjax())
+      {
+         $this -> layout = 'list';
+      }
+      // Sets the users variable for the view
+      $this -> set('users', $this -> paginate('User'));
    }
 
    /**
@@ -34,8 +68,26 @@ class UsersController extends AppController
     */
    public function view($id = null)
    {
+      // Set which user to retrieve from the database.
       $this -> User -> id = $id;
       $this -> set('user', $this -> User -> read());
+      // Find all of the past memberships for this user 
+      // along with the organization.
+      $this -> loadModel('Membership');
+      $memberships = $this -> Membership -> find('all', array(
+         'conditions' => array('AND' => array(
+               'Membership.USER_ID' => $id,
+               'Membership.END_DATE =' => '0000-00-00'
+            )),
+         'joins' => array( array(
+               'table' => 'organizations',
+               'alias' => 'Organization',
+               'type' => 'INNER',
+               'conditions' => array('Organization.ID = Membership.ORG_ID', )
+            )),
+          'fields' => array('Organization.NAME', 'Organization.ID', 'Membership.ROLE','Membership.TITLE', 'Membership.START_DATE')
+      ));
+      $this -> set('memberships', $memberships);
    }
 
    /**
@@ -43,6 +95,9 @@ class UsersController extends AppController
     */
    public function add()
    {
+      // If the request is a post attempt to save the user and his
+      // associated location information. If this fails then log
+      // the failure and set a flash message.
       if ($this -> request -> is('post'))
       {
          $this -> User -> create();
@@ -69,6 +124,7 @@ class UsersController extends AppController
       if ($this -> request -> is('get'))
       {
          $this -> request -> data = $this -> User -> read();
+         $this -> set('user', $this -> User -> read());
       }
       else
       {
@@ -106,6 +162,10 @@ class UsersController extends AppController
     }
     }*/
 
+   /**
+    * Logs a User into JacketPages using Cakephp's Auth Component
+    * with no interfacing with CAS
+    */
    public function login()
    {
       if ($this -> request -> is('post'))
@@ -126,9 +186,12 @@ class UsersController extends AppController
       }
    }
 
+   /**
+    * Logs a User out of JacketPages using Cakephp's Auth Component
+    * with no interfacing with CAS
+    */
    public function logout()
    {
-
       $this -> Session -> delete('USER');
       $this -> redirect($this -> Auth -> logout());
    }
