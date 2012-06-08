@@ -57,7 +57,7 @@
 
         </script>
     </head>
-    <body class='links'>
+    <body>
         <!--         <div id="container">  -->
         <div id="header">
             <?php
@@ -82,7 +82,7 @@
             }
             else
             {
-               $message = $this -> Html -> tag('div', "Welcome, guest.", array('id' => 'right'));
+               $message = $this -> Html -> tag('div', "Welcome, Guest.", array('id' => 'right'));
             }
             
             // Output the Breadcrumbs bar
@@ -101,6 +101,6 @@
                 ?>
             </div>
         </div>
-        <!--         <?php echo $this -> element('sql_dump');?> -->
+        <?php echo $this -> element('sql_dump');?>
     </body>
 </html>

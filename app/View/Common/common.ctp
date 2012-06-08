@@ -1,4 +1,4 @@
-<div class="actions" id="sidebar">
+<div class="links" id="sidebar">
         <?php
       echo $this -> fetch('sidebar');
       echo $this -> element('sidebar');

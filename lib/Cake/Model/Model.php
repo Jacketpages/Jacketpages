@@ -2649,10 +2649,10 @@ class Model extends Object implements CakeEventListener {
 		if (is_null($query)) {
 			return null;
 		}
-
+      
 		$results = $this->getDataSource()->read($this, $query);
 		$this->resetAssociations();
-
+      
 		if ($query['callbacks'] === true || $query['callbacks'] === 'after') {
 			$results = $this->_filterResults($results);
 		}
