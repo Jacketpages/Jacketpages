@@ -15,8 +15,10 @@
       // echo $this -> Html -> meta('icon');
       echo $this -> Html -> css('icing');
       echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
+      echo $this -> Html -> css('ui-lightness');
       // Include Jquery
       echo $this -> Html -> script('jquery-1.7.2.js');
+      echo $this -> Html -> script('jquery-ui-1.8.21.min.js');
 
       // Fetch any other meta, css, or script libraries included in views
       echo $this -> fetch('meta');
@@ -56,6 +58,7 @@
 			});
 
         </script>
+
     </head>
     <body>
         <!--         <div id="container">  -->

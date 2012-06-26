@@ -23,7 +23,15 @@ $this -> start('middle');
    echo $this -> Form -> input('LAST_NAME', array('label' => 'Last Name'));
    echo $this -> Form -> input('PHONE', array('label' => 'Phone Number'));
    echo $this -> Form -> input('EMAIL', array('label' => 'Email'));
+   echo $this -> Form -> input('Date', array('type' => 'text', 'id' => 'datepicker'));
    echo $this -> Form -> end('Submit');
    // End User Edit Form
+   ?>
+<script>
+   $(function() {
+      $( "#datepicker" ).datepicker();
+   });
+</script>
+<?php
 $this -> end();
 ?>

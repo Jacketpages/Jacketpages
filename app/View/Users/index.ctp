@@ -8,7 +8,6 @@
  */
 ?>
 <?php
-// @TODO Massage this paginator declaration to have this page use ajax.
 $this -> Paginator -> options(array(
       'update' => '#forupdate',
       'indicator' => '#indicator',
@@ -27,48 +26,11 @@ echo $this -> Html -> nestedList(array(
 ), array(), array('id' => 'underline'));
 $this -> end();
 $this -> start('search');
+
+echo $this -> element('search');
 ?>
 
-<div id="alphabet">
-    <div id="leftHalf">
-        <?php
-      echo $this -> Form -> create();
-      echo $this -> Form -> input('keyword', array(
-         'label' => array('text' => 'Search', 'style' => 'display:inline'),
-         'id' => 'search',
-         'default' => $this -> Session -> read('Search.keyword'),
-         'width' => '80%'
-      ));
-      echo $this -> Form -> end();
-        ?>
-    </div>
-    <div id="rightHalf">
-        <ul>
-            <?php
-            // TODO Clean up this whole alphabet thing. Is there an easier way?
-            // set up alphabet
-            $alpha = range('A', 'Z');
-            for ($i = 0; $i < count($alpha); $i++)
-            {
-               echo "<li>\n";
-               echo $this -> Html -> link($alpha[$i], array(
-                  'controller' => strtolower($this -> params['controller']),
-                  'action' => 'index',
-                  strtolower($alpha[$i])
-               ));
-               echo "&nbsp";
-               echo "</li>\n";
-            }
-            echo "<li>\n";
-            echo $this -> Html -> link('ALL', array(
-               'controller' => strtolower($this -> params['controller']),
-               'action' => 'index'
-            ));
-            ?>
-            </li>
-        </ul>
-    </div>
-</div>
+
 <?php $this -> end();
    $this -> start('listing');?>
 <div id='forupdate'>
@@ -111,21 +73,7 @@ $this -> start('search');
 </table>
 <!-- End users table -->
 
-<div class="paging">
-    <?php echo $this -> Paginator -> prev('<< ' . __('previous', true), array(), null, array('class' => 'disabled'));?>
-    |
-    <?php echo $this -> Paginator -> numbers();?>
-    |
-    <?php echo $this -> Paginator -> next(__('next', true) . ' >>', array(), null, array('class' => 'disabled'));?>
-    <br>
-    <br>
-    <?php
-   echo $this -> Paginator -> counter(array('format' => __('Page {:page} of {:pages}, showing {:current} records out of
-{:count} total, starting on record {:start}, ending on {:end}', true)));
-// Implement Ajax for this page.
-echo $this -> Js -> writeBuffer();
-    ?>
-</div>
+<?php echo $this -> element('paging');?>
 </div>
 <?php
  $this -> end();?>

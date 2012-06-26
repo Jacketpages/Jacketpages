@@ -28,6 +28,7 @@ class UsersController extends AppController
 
    /**
     * A table listing of users.
+    * @param letter - the first letter of a User's name for searching
     */
    public function index($letter = null)
    {

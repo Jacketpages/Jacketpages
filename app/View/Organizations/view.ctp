@@ -1,6 +1,14 @@
-<?php echo $this -> Html -> addCrumb('All Organizations', '/organizations');?>
-<?php echo $this -> Html -> addCrumb($organization['Organization']['NAME'], '/organizations/view/' . $organization['Organization']['ID']);?>
 <?php
+/**
+ * @author Stephen Roca
+ * @since 06/08/2012
+ */
+ 
+ // TODO sort out the officers issues
+ // TODO fill in budgets, bills, etc.
+ // TODO rethink the sidebar links
+echo $this -> Html -> addCrumb('All Organizations', '/organizations');
+echo $this -> Html -> addCrumb($organization['Organization']['NAME'], '/organizations/view/' . $organization['Organization']['ID']);
 $this -> extend('/Common/common');
 $this -> start('sidebar');
 echo $this -> Html -> nestedList(array(
@@ -76,7 +84,6 @@ echo $this -> Html -> tag('h3', 'Officers:');
 <?php
 echo $this -> Html -> tag('h1', 'Description');
 echo $this -> Html -> para('leftalign', $organization['Organization']['DESCRIPTION']);
-//debug($organization);
 echo $this -> Html -> nestedList(array(
    'Status: ' . $organization['Organization']['STATUS'],
    'Organization Contact: ' . $organization['User']['NAME'],
