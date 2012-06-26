@@ -1,5 +1,5 @@
 <?php 
-$this -> extend('/Common/view');
+$this -> extend('/Common/common');
 $this -> assign('title', 'Login');
 
 $this -> start('middle');

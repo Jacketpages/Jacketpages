@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Stephen Roca
- *
+ * @since 03/22/2012
  * This file defines the utility bar's menu options/links.
  */
 ?>
@@ -141,7 +141,7 @@ if ($this -> Permission -> isAdmin())
       'controller' => 'bills',
       'action' => 'add'
    ));
-   $postMsg = $this -> Html -> link('Post Message', '/pages/message');
+   $postMsg = $this -> Html -> link('Post Message', '/Messages/message');
 }
 ?>
 <!-- Define all of the drop down lists -->

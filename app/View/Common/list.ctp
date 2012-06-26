@@ -1,4 +1,10 @@
-<div class="links" id="sidebar">
+<?php
+/**
+ * @author Stephen Roca
+ * @since 03/22/2012
+ */
+ ?>
+ <div class="links" id="sidebar">
         <?php
       echo $this -> fetch('sidebar');
       echo $this -> element('sidebar');

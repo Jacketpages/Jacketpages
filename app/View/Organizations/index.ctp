@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Stephen Roca
+ * @since 06/08/2012
+ */
 $this -> Paginator -> options(array(
       'update' => '#forupdate',
       'indicator' => '#indicator',
@@ -24,9 +28,9 @@ echo $this -> Html -> nestedList(array(
    echo $this -> Form -> create();
    echo $this -> Form -> input('category', array(
       'label' => false,
-      //'default' => $cat,
+      'default' => $this -> Session -> read('Search.category'),
       'options' => array(
-         'all' => 'All',
+         '' => 'All',
          'CPC Sorority' => 'CPC Sorority',
          'Cultural/Diversity' => 'Cultural/Diversity',
          'Departmental Sponsored' => 'Departmental Sponsored',
@@ -49,7 +53,6 @@ echo $this -> Html -> nestedList(array(
          'Other' => 'Other'
       )
    ));
-   echo $this -> Form -> end(__('Search', true));
     ?>
 </div>
 <!--    TODO edit this to where this is not done with a random div -->
@@ -75,6 +78,7 @@ $this -> start('search');
       ));
       echo $this -> Form -> end();
         ?>
+        <div id="div_choices" class="autocomplete"></div> 
     </div>
     <div id="rightHalf">
         <ul>
@@ -171,6 +175,14 @@ echo $this -> Js -> writeBuffer();
     ?>
 </div>
 </div>
+<script type="text/javascript">
+   $(function() {
+      var avaliableTags = <?php echo json_encode($names_to_autocomplete)?>;
+      $("#search").autocomplete({
+         source : avaliableTags
+      });
+   });
+</script>
 <?php
 $this -> end();
-?>)
+?>

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Stephen Roca
+ * @since 06/08/2012
+ */
 class OrganizationsController extends AppController
 {
    /**
@@ -16,9 +20,55 @@ class OrganizationsController extends AppController
       'Session'
    );
 
-   public function index()
+   //TODO this method needs some cleanup still
+   public function index($letter = null, $category = null)
    {
+      debug($this -> request -> data);
+      // Writes the search keyword to the Session if the request is a POST
+      if ($this -> request -> is('post'))
+      {
+         $this -> Session -> write('Search.keyword', $this -> request -> data['Organization']['keyword']);
+         $this -> Session -> write('Search.category', $this -> request -> data['Organization']['category']);
+      }
+      // Deletes the search keyword if the letter is null and the request is not ajax
+      else if (!$this -> RequestHandler -> isAjax() && $letter == null)
+      {
+         
+         $this -> Session -> delete('Search');
+      }
+      debug($this -> Session -> read());
+      // Performs a search on the Organization table with the following conditions:
+      // WHERE 
+      $this -> paginate = array(
+         'conditions' => array('AND' => array(
+               'OR' => array(
+                  array('Organization.NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+                  array('Organization.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+                  array('Organization.SHORT_NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+               ),
+               array('Organization.NAME LIKE' => $letter . '%'),
+               array('Organization.STATUS' => 'Active'),
+               array('Category.NAME LIKE' => $this -> Session -> read('Search.category') . '%')
+            )),
+         'limit' => 20
+      );
+      // If the request is ajax then change the layout to return just the updated user list
+      if ($this -> RequestHandler -> isAjax())
+      {
+         $this -> layout = 'list';
+      }
+      // Sets the users variable for the view
+      //$this -> set('organizations', $this -> paginate('Organization'));
+      debug($this -> request -> data);
       $this -> set('organizations', $this -> paginate('Organization'));
+      $orgNames = $this -> Organization -> find('all', array('fields' => 'NAME'));
+      $just_names = array();
+      foreach($orgNames as $orgName)
+      {
+         $just_names[] = $orgName['Organization']['NAME'];
+      }
+      //debug($just_names);
+      $this -> set('names_to_autocomplete', $just_names);
       if ($this -> RequestHandler -> isAjax())
       {
          $this -> layout = 'list';
@@ -98,9 +148,26 @@ class OrganizationsController extends AppController
       //TODO Implement
    }
 
-   public function edit()
+   public function edit($id = null)
    {
-      //TODO Implement
+      $this -> Organization -> id = $id;
+      if ($this -> request -> is('get'))
+      {
+         $this -> request -> data = $this -> Organization -> read();
+         $this -> set('organization', $this -> Organization -> read());
+      }
+      else
+      {
+         if ($this -> Organization -> save($this -> request -> data))
+         {
+            $this -> Session -> setFlash('The user has been saved.');
+            $this -> redirect(array('action' => 'index'));
+         }
+         else
+         {
+            $this -> Session -> setFlash('Unable to edit the user.');
+         }
+      }
    }
 
 }
