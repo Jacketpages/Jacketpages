@@ -5,9 +5,17 @@
  */
 class BillsController extends AppController
 {
-  public function index()
-  {
-     
-  } 
+	public $helpers = array('Form', 'Html', 'Session');
+	  public function index()
+	  {
+	     $this -> set('bills', $this -> paginate('Bill'));
+	  }
+	  
+	  public function view($id = null)
+	  {
+	  	// Set which organization to retrieve from the database.
+      $this -> Bill -> id = $id;
+      $this -> set('bill', $this -> Bill -> read());
+	  }
 }
 ?>

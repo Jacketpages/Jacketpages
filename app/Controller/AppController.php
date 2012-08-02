@@ -12,12 +12,13 @@ class AppController extends Controller
 {
    public $helpers = array('Js', 'Session', 'Permission', 'Html');
    public $components = array(
+   	  'Acl',
       'Auth' => array('loginRedirect' => array(
             'controller' => 'users',
             'action' => 'index'
          ), 'logoutRedirect'=>array('controller'=>'users', 'action'=> 'index'),
          'authError'=> "You cannot access that page",
-         'authorize'=>array('Controller')),
+         'authorize'=>array('Controller', 'Actions' => array('actionPath' => 'controllers'))),
       'Session'
    );
    
@@ -25,7 +26,7 @@ class AppController extends Controller
     * Users that aren't logged in have access to the following actions.
     */
    public function beforeFilter(){
-      $this -> Auth -> allow('index', 'view');
+      $this -> Auth -> allow('index');
    }
    
    public function isAuthorized($user){

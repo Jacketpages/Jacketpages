@@ -23,7 +23,6 @@ class OrganizationsController extends AppController
    //TODO this method needs some cleanup still
    public function index($letter = null, $category = null)
    {
-      debug($this -> request -> data);
       // Writes the search keyword to the Session if the request is a POST
       if ($this -> request -> is('post'))
       {
@@ -36,7 +35,6 @@ class OrganizationsController extends AppController
          
          $this -> Session -> delete('Search');
       }
-      debug($this -> Session -> read());
       // Performs a search on the Organization table with the following conditions:
       // WHERE 
       $this -> paginate = array(
@@ -58,16 +56,14 @@ class OrganizationsController extends AppController
          $this -> layout = 'list';
       }
       // Sets the users variable for the view
-      //$this -> set('organizations', $this -> paginate('Organization'));
-      debug($this -> request -> data);
       $this -> set('organizations', $this -> paginate('Organization'));
       $orgNames = $this -> Organization -> find('all', array('fields' => 'NAME'));
+	  // Create the array for the javascript autocomplete
       $just_names = array();
       foreach($orgNames as $orgName)
       {
          $just_names[] = $orgName['Organization']['NAME'];
       }
-      //debug($just_names);
       $this -> set('names_to_autocomplete', $just_names);
       if ($this -> RequestHandler -> isAjax())
       {

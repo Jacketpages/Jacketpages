@@ -104,8 +104,8 @@
  * to the roles you defined in the roles configuration. 
  */
 $config['map'] = array(
-	'User' => 'User/username',
-	'Role' => 'User/group_id',
+	'User' => 'User/GT_USER_NAME',
+	'Role' => 'User/GROUP_ID',
 );
 
 /**
@@ -113,7 +113,9 @@ $config['map'] = array(
  * the roles defined in your role configuration.
  */
 $config['alias'] = array(
-	'Role/4' => 'Role/editor',
+	'Role/1' => 'Role/admin',
+	'Role/2' => 'Role/power',
+	'Role/3' => 'Role/user',
 );
 
 /**
@@ -128,7 +130,9 @@ $config['roles'] = array(
  */
 $config['rules'] = array(
 	'allow' => array(
-		'*' => 'Role/admin',
+		'controllers/users/index' => 'Role/admin',
+		'controllers/users/*' => 'Role/power',
 	),
-	'deny' => array(),
+	'deny' => array(
+	),
 );

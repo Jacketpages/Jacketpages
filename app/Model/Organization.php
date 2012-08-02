@@ -8,7 +8,7 @@ class Organization extends AppModel
    public $belongsTo = array(
       'User' => array(
          'className' => 'User',
-         'foreignKey' => 'CNTCT_ID'
+         'foreignKey' => 'CONTACT_ID'
       ),
       'Category' => array(
          'className' => 'Category',
