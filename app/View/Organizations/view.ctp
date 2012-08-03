@@ -87,8 +87,8 @@ echo $this -> Html -> para('leftalign', $organization['Organization']['DESCRIPTI
 echo $this -> Html -> nestedList(array(
    'Status: ' . $organization['Organization']['STATUS'],
    'Organization Contact: ' . $organization['User']['NAME'],
-   'Website: ' . $this -> Html -> link($organization['Organization']['WEBSITE']),
-   'Meetings: ' .  $organization['Organization']['METNG_INFO']
+   'External Website: ' . $this -> Html -> link($organization['Organization']['WEBSITE']),
+   'Meetings: ' .  $organization['Organization']['MEETING_INFO']
 ));
 echo $this -> Html -> tag('h1', 'Budgets');
 echo $this -> Html -> tag('h1', 'Bills');

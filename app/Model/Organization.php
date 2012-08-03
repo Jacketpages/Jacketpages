@@ -5,6 +5,7 @@
  */
 class Organization extends AppModel
 {
+	public $order = 'Organization.NAME';
    public $belongsTo = array(
       'User' => array(
          'className' => 'User',

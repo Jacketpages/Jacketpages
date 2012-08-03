@@ -44,7 +44,7 @@ class UsersController extends AppController
 			$this -> Session -> delete('Search.keyword');
 		}
 		// Performs a search on the User table with the following conditions:
-		// WHERE (NAME LIKE '%<SEARCH>%' OR GT_USER_NAME LIKE '%<SEARCH>%') AND NAME LIKE
+		// WHERE (NAME LIKE '%<KEYWORD>%' OR GT_USER_NAME LIKE '%<KEYWORD>%') AND NAME LIKE
 		// '<LETTER>%'
 		$this -> paginate = array(
 			'conditions' => array('AND' => array(
@@ -186,6 +186,7 @@ class UsersController extends AppController
 			$this -> Session -> write('Auth.User', $user['User']['LEVEL']);
 			$this -> Session -> write('USER.NAME', $user['User']['NAME']);
 			$this -> Session -> write('USER.LEVEL', $user['User']['LEVEL']);
+			$this -> Session -> write('USER.ID', $user['User']['ID']);
 			if ($this -> Auth -> login())
 			{
 				$this -> redirect($this -> Auth -> redirect());

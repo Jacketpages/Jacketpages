@@ -62,7 +62,7 @@ else
       'owner' => true,
       'controller' => 'users',
       'action' => 'view',
-      $this -> Session -> read('User.id')
+      $this -> Session -> read('USER.ID')
    ));
    $logout = $this -> Html -> link('Logout', array(
       'admin' => false,

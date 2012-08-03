@@ -130,7 +130,7 @@ $config['roles'] = array(
  */
 $config['rules'] = array(
 	'allow' => array(
-		'controllers/users/index' => 'Role/admin',
+		'*' => 'Role/admin',
 		'controllers/users/*' => 'Role/power',
 	),
 	'deny' => array(

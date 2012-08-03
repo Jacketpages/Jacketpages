@@ -397,7 +397,7 @@ input, textarea
 	clear: both;
 	border: 1px solid #dadada;
 	color: #000000;
-	padding: 0.3em;
+	/*padding: 0.3em;*/
 	width: 100%;	
 }
 
