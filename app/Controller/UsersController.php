@@ -38,13 +38,13 @@ class UsersController extends AppController
 			$this -> Session -> write('Search.keyword', $this -> request -> data['User']['keyword']);
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
-		else
-		if (!$this -> RequestHandler -> isAjax() && $letter == null)
+		else if (!$this -> RequestHandler -> isAjax() && $letter == null)
 		{
 			$this -> Session -> delete('Search.keyword');
 		}
-		// Performs a search on the User table with the following conditions:
-		// WHERE (NAME LIKE '%<KEYWORD>%' OR GT_USER_NAME LIKE '%<KEYWORD>%') AND NAME LIKE
+		// Performs a SELECT on the User table with the following conditions:
+		// WHERE (NAME LIKE '%<KEYWORD>%' OR GT_USER_NAME LIKE '%<KEYWORD>%') AND NAME
+		// LIKE
 		// '<LETTER>%'
 		$this -> paginate = array(
 			'conditions' => array('AND' => array(
@@ -210,42 +210,42 @@ class UsersController extends AppController
 
 	// public function create()
 	// {
-		// // $this -> Acl -> Aco -> create(array(
-		// // 'parent_id' => null,
-		// // 'alias' => 'controllers'
-		// // ));
-		// // $this -> Acl -> Aco -> save();
-		// // $this->Acl->Aco->create(array('parent_id' => 1, 'alias' => 'User'));
-		// // $this->Acl->Aco->save();
-		// $this -> Acl -> Aco -> create(array(
-			// 'parent_id' => 4,
-			// 'alias' => 'view'
-		// ));
-		// $this -> Acl -> Aco -> save();
+	// // $this -> Acl -> Aco -> create(array(
+	// // 'parent_id' => null,
+	// // 'alias' => 'controllers'
+	// // ));
+	// // $this -> Acl -> Aco -> save();
+	// // $this->Acl->Aco->create(array('parent_id' => 1, 'alias' => 'User'));
+	// // $this->Acl->Aco->save();
+	// $this -> Acl -> Aco -> create(array(
+	// 'parent_id' => 4,
+	// 'alias' => 'view'
+	// ));
+	// $this -> Acl -> Aco -> save();
 	// }
-// 
+	//
 	// public function initDB()
 	// {
-		// $this -> loadModel('Group');
-		// $group = $this -> Group;
-		// debug($this -> User);
-		// //Allow admins to everything
-		// $group -> id = 1;
-		// $this -> Acl -> deny($group, 'controllers');
-		// $this -> Acl -> allow($group, 'controllers/Users');
-// 
-		// //allow managers to posts and widgets
-		// $group -> id = 2;
-		// $this -> Acl -> deny($group, 'controllers');
-		// $this -> Acl -> allow($group, 'controllers/Users');
-		// //allow users to only add and edit on posts and widgets
-		// $group -> id = 3;
-		// $this -> Acl -> deny($group, 'controllers');
-		// $this -> Acl -> allow($group, 'controllers/Users/add');
-		// $this -> Acl -> allow($group, 'controllers/Users/edit');
-		// //we add an exit to avoid an ugly "missing views" error message
-		// echo "all done";
-		// exit ;
+	// $this -> loadModel('Group');
+	// $group = $this -> Group;
+	// debug($this -> User);
+	// //Allow admins to everything
+	// $group -> id = 1;
+	// $this -> Acl -> deny($group, 'controllers');
+	// $this -> Acl -> allow($group, 'controllers/Users');
+	//
+	// //allow managers to posts and widgets
+	// $group -> id = 2;
+	// $this -> Acl -> deny($group, 'controllers');
+	// $this -> Acl -> allow($group, 'controllers/Users');
+	// //allow users to only add and edit on posts and widgets
+	// $group -> id = 3;
+	// $this -> Acl -> deny($group, 'controllers');
+	// $this -> Acl -> allow($group, 'controllers/Users/add');
+	// $this -> Acl -> allow($group, 'controllers/Users/edit');
+	// //we add an exit to avoid an ugly "missing views" error message
+	// echo "all done";
+	// exit ;
 	// }
 
 }

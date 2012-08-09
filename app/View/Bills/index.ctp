@@ -20,7 +20,7 @@ $this -> end();
 $this -> start('listing');
 ?>
 <div id="accordion">
-	<h3><a href="#">Section 1</a></h3>
+	<h3><a href="#">Filters</a></h3>
 	<div>
 		<p>
 			Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.

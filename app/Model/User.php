@@ -6,7 +6,7 @@
 class User extends AppModel
 {
 	public $name = 'User';
-	public $virtualFields = array('NAME' => 'CONCAT(USER.FIRST_NAME, " ", USER.LAST_NAME)');
+	public $virtualFields = array('NAME' => 'CONCAT(FIRST_NAME, " ", LAST_NAME)');
 	public $actsAs = array('Acl' => array('requester'));
 
 	public function parentNode()

@@ -20,11 +20,10 @@ class OrganizationsController extends AppController
 		'Session'
 	);
 
-	//TODO this method needs some cleanup still
 	/**
 	 * A table listing of organizations.
 	 * @param letter - the first letter of an organization's name for searching.
-	 * @param category - a category name to be used as a filter.
+	 * @param category - an organization category name to be used as a filter.
 	 */
 	public function index($letter = null, $category = null)
 	{
@@ -37,10 +36,9 @@ class OrganizationsController extends AppController
 		// Deletes the search keyword if the letter is null and the request is not ajax
 		else if (!$this -> RequestHandler -> isAjax() && $letter == null)
 		{
-
 			$this -> Session -> delete('Search');
 		}
-		// Performs a search on the Organization table with the following conditions:
+		// Performs a SELECT on the Organization table with the following conditions:
 		// WHERE (NAME LIKE '%<KEYWORD>%' OR DESCRIPTION LIKE '%<KEYWORD>%' OR SHORT_NAME
 		// LIKE '%<KEYWORD>%')
 		// AND NAME LIKE '<LETTER>%' AND STATUS != 'Inactive' AND CATEGORY.NAME LIKE
@@ -58,8 +56,7 @@ class OrganizationsController extends AppController
 				)),
 			'limit' => 20
 		);
-		// If the request is ajax then change the layout to return just the updated user
-		// list
+		// If the request is ajax then change the layout to return just the updated user list
 		if ($this -> RequestHandler -> isAjax())
 		{
 			$this -> layout = 'list';
@@ -74,10 +71,6 @@ class OrganizationsController extends AppController
 			$just_names[] = $orgName['Organization']['NAME'];
 		}
 		$this -> set('names_to_autocomplete', $just_names);
-		if ($this -> RequestHandler -> isAjax())
-		{
-			$this -> layout = 'list';
-		}
 	}
 
 	/**
@@ -96,15 +89,9 @@ class OrganizationsController extends AppController
 					'Membership.ROLE' => 'President',
 					'Membership.START_DATE LIKE' => '2011%'
 				)),
-			'joins' => array( array(
-					'table' => 'users',
-					'alias' => 'User',
-					'type' => 'INNER',
-					'conditions' => array('User.ID = Membership.USER_ID', )
-				)),
 			'fields' => array(
 				'Membership.ROLE',
-				'CONCAT(User.FIRST_NAME," ", User.LAST_NAME) as NAME',
+				'Membership.NAME',
 				'Membership.STATUS',
 				'Membership.TITLE'
 			)
@@ -116,15 +103,9 @@ class OrganizationsController extends AppController
 					'Membership.ROLE' => 'Treasurer',
 					'Membership.START_DATE LIKE' => '2011%'
 				)),
-			'joins' => array( array(
-					'table' => 'users',
-					'alias' => 'User',
-					'type' => 'INNER',
-					'conditions' => array('User.ID = Membership.USER_ID', )
-				)),
 			'fields' => array(
 				'Membership.ROLE',
-				'CONCAT(User.FIRST_NAME," ", User.LAST_NAME) as NAME',
+				'Membership.NAME',
 				'Membership.STATUS',
 				'Membership.TITLE'
 			)
@@ -136,15 +117,9 @@ class OrganizationsController extends AppController
 					'Membership.ROLE' => 'Advisor',
 					'Membership.START_DATE LIKE' => '2011%'
 				)),
-			'joins' => array( array(
-					'table' => 'users',
-					'alias' => 'User',
-					'type' => 'INNER',
-					'conditions' => array('User.ID = Membership.USER_ID', )
-				)),
 			'fields' => array(
 				'Membership.ROLE',
-				'CONCAT(User.FIRST_NAME," ", User.LAST_NAME) as NAME',
+				'Membership.NAME',
 				'Membership.STATUS',
 				'Membership.TITLE'
 			)
@@ -156,27 +131,35 @@ class OrganizationsController extends AppController
 					'Membership.ROLE' => 'Officer',
 					'Membership.START_DATE LIKE' => '2011%'
 				)),
-			'joins' => array( array(
-					'table' => 'users',
-					'alias' => 'User',
-					'type' => 'INNER',
-					'conditions' => array('User.ID = Membership.USER_ID', )
-				)),
 			'fields' => array(
 				'Membership.ROLE',
-				'CONCAT(User.FIRST_NAME," ",User.LAST_NAME) as NAME',
+				'Membership.NAME',
 				'Membership.STATUS',
 				'Membership.TITLE'
 			)
 		));
-		$this -> set('officers', $officers);
+				$this -> set('officers', $officers);
+		$members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
+					'Membership.ROLE' => 'Member',
+					'Membership.ORG_ID' => $id
+				))));
+		$this -> set('members', $members);
+		$pending_members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
+					'Membership.ROLE' => 'Pending',
+					'Membership.ORG_ID' => $id
+				))));
+		$this -> set('pending_members', $pending_members);
 	}
 
 	public function add()
 	{
 		//TODO Implement
 	}
-
+	
+	/**
+	 * Edits an individual organization's information.
+	 * @param id - the id of the Organization to edit.
+	 */
 	public function edit($id = null)
 	{
 		$this -> Organization -> id = $id;
