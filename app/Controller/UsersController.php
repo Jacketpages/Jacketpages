@@ -83,12 +83,6 @@ class UsersController extends AppController
 					'Membership.USER_ID' => $id,
 					'Membership.END_DATE =' => '0000-00-00'
 				)),
-			'joins' => array( array(
-					'table' => 'organizations',
-					'alias' => 'Organization',
-					'type' => 'INNER',
-					'conditions' => array('Organization.ID = Membership.ORG_ID', )
-				)),
 			'fields' => array(
 				'Organization.NAME',
 				'Organization.ID',

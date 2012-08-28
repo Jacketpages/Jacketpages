@@ -126,7 +126,8 @@ if ($members)
 		echo $this -> Html -> tableCells(array(
 			$this -> Html -> link($member['Membership']['NAME'], array(
 				'controller' => 'memberships',
-				'action' => 'edit'
+				'action' => 'edit',
+				$member['Membership']['ID']
 			)),
 			$member['User']['EMAIL'],
 			$member['User']['PHONE']

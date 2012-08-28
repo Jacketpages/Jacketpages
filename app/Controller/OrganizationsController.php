@@ -73,6 +73,11 @@ class OrganizationsController extends AppController
 		$this -> set('names_to_autocomplete', $just_names);
 	}
 
+	public function my_orgs()
+	{
+		
+	}
+
 	/**
 	 * Views an individual organization's information.
 	 * @param id - the id of the Organization to view.

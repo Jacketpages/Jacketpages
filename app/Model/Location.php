@@ -1,7 +1,11 @@
 <?php
+/**
+ * @author Stephen Roca
+ * @since 03/27/2012
+ */
 class Location extends AppModel
 {
-   var $name = 'Location';
+   public $name = 'Location';
 }
 
 ?>

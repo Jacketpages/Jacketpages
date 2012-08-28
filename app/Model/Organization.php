@@ -6,15 +6,15 @@
 class Organization extends AppModel
 {
 	public $order = 'Organization.NAME';
-   public $belongsTo = array(
-      'User' => array(
-         'className' => 'User',
-         'foreignKey' => 'CONTACT_ID'
-      ),
-      'Category' => array(
-         'className' => 'Category',
-         'foreignKey' => 'CATEGORY'
-      )
-   );
+	public $belongsTo = array(
+		'User' => array(
+			'className' => 'User',
+			'foreignKey' => 'CONTACT_ID'
+		),
+		'Category' => array(
+			'className' => 'Category',
+			'foreignKey' => 'CATEGORY'
+		)
+	);
 }
 ?>

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @author Stephen Roca
+ * @since 06/08/2012
+ */
 class Membership extends AppModel
 {
    public $name = 'Membership';

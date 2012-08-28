@@ -87,9 +87,8 @@ else
    ));
 
    $viewMyOrgs = $this -> Html -> link('View My Organizations', array(
-      'owner' => true,
       'controller' => 'organizations',
-      'action' => 'index'
+      'action' => 'my_orgs'
    ));
 }
 

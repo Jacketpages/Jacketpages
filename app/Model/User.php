@@ -54,6 +54,5 @@ class User extends AppModel
 		'LAST_NAME' => array('rule' => 'notEmpty'),
 		'EMAIL' => array('rule' => 'email')
 	);
-	// var $order;
 }
 ?>

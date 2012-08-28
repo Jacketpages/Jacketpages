@@ -17,14 +17,58 @@ class BillsController extends AppController
 
 	public function view($id = null)
 	{
-		// Set which organization to retrieve from the database.
+		// Set which bill to retrieve from the database.
 		$this -> Bill -> id = $id;
 		$this -> set('bill', $this -> Bill -> read());
+		// Set the lineitem arrays for the different states to
+		// pass to the view.
+		$this -> loadModel('Line_Item');
+		$this -> set('submitted', $this -> Line_Item -> find('all', array('conditions' => array(
+				'BILL_ID' => $id,
+				'STATE' => 'Submitted'
+			))));
+		$this -> set('jfc', $this -> Line_Item -> find('all', array('conditions' => array(
+				'BILL_ID' => $id,
+				'STATE' => 'JFC'
+			))));
+		$this -> set('graduate', $this -> Line_Item -> find('all', array('conditions' => array(
+				'BILL_ID' => $id,
+				'STATE' => 'Graduate'
+			))));
+		$this -> set('undergraduate', $this -> Line_Item -> find('all', array('conditions' => array(
+				'BILL_ID' => $id,
+				'STATE' => 'Undergraduate'
+			))));
+		$this -> set('conference', $this -> Line_Item -> find('all', array('conditions' => array(
+				'BILL_ID' => $id,
+				'STATE' => 'Conference'
+			))));
+		$this -> set('all', $this -> Line_Item -> find('all', array(
+			'conditions' => array('BILL_ID' => $id),
+			'order' => array("FIELD(STATE, 'Submitted','JFC', 'Graduate', 'Undergraduate', 'Conference', 'Final')")
+		)));
+		$this -> set('final', $this -> Line_Item -> find('all', array('conditions' => array(
+				'BILL_ID' => $id,
+				'STATE' => 'Final'
+			))));
+		// Set the amounts for prior year and capital outlay lineitems
+		// TODO Finish populating this array with totals
+		$this -> set('priorYear', $this -> Line_Item -> find('all', array(
+			'fields' => array("SUM(IF(ACCOUNT = 'PY' AND STATE = 'SUBMITTED',TOTAL_COST, 0)) AS PY_SUBMITTED",
+			"SUM(IF(ACCOUNT = 'CO' AND STATE = 'SUBMITTED',TOTAL_COST, 0)) AS CO_SUBMITTED",
+			"SUM(IF(STATE = 'SUBMITTED',TOTAL_COST, 0)) AS TOTAL_SUBMITTED"),
+			'conditions' => array(
+				'BILL_ID' => $id
+			)
+		)));
+		//$this -> set('capitalOutlay', $this -> Line_Item->find('all', array('fields' =>
+		// array('SUM(TOTAL_COST)'),'conditions' => array('BILL_ID' => $id, 'ACCOUNT' =>
+		// 'PY'))));
 	}
 
 	public function add()
 	{
-		if($this -> request -> is('post'))
+		if ($this -> request -> is('post'))
 		{
 			$this -> Bill -> create();
 			if ($this -> Bill -> saveAssociated($this -> request -> data))

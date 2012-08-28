@@ -1221,7 +1221,7 @@ class HtmlHelper extends AppHelper {
 		return $configs;
 	}
 	
-	public function tableBegin($options)
+	public function tableBegin($options = null)
 	{
 		return sprintf($this->_tags['tableBegin'], $this->_parseAttributes($options, null, ' ', ''));
 	}
