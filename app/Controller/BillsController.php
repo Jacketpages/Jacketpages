@@ -12,6 +12,9 @@ class BillsController extends AppController
 	);
 	public function index()
 	{
+		// Set page view permissions
+		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'billExportPerm'));
+		
 		$this -> set('bills', $this -> paginate('Bill'));
 	}
 

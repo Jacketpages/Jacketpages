@@ -6,78 +6,78 @@
 
 $this -> extend("/Common/common");
 $this -> start('sidebar');
-echo $this -> Html -> nestedList(array(
-	$this -> Html -> link(__('Update Bill', true), array(
+echo $this -> Html -> nestedList(array($this -> Html -> link('Add Line Item', array(
+		'controller' => 'line_items',
+		'action' => 'add',
+		$bill['Bill']['ID']
+	)) , $this -> Html -> link(__('Update Bill', true), array(
 		'action' => 'edit',
 		$bill['Bill']['ID']
-	)),
-	$this -> Html -> link(__('Delete Bill', true), array(
-		'action' => 'delete',
-		$bill['Bill']['ID']
-	), null, sprintf(__('Are you sure you want to delete %s?', true), $bill['Bill']['TITLE']))
-), array(), array('id' => 'underline'));
+	))), array(), array('id' => 'underline'));
 $this -> end();
 $this -> assign("title", "Bill");
 $this -> start('middle');
-?>
-<table class='list'>
-	<?php
-	echo $this -> Html -> tableCells(array(
-		'Title',
-		$bill['Bill']['TITLE']
-	));
-	echo $this -> Html -> tableCells(array(
-		'Description',
-		$bill['Bill']['DESCRIPTION']
-	));
-	echo $this -> Html -> tableCells(array(
-		'Number',
-		$bill['Bill']['NUMBER']
-	));
-	echo $this -> Html -> tableCells(array(
-		'Submit Date',
-		$bill['Bill']['SUBMIT_DATE']
-	));
-	?>
-</table>
-<?php
+// General bill information table
+echo $this -> Html -> tableBegin(array('class' => 'list'));
+echo $this -> Html -> tableCells(array(
+	'Title',
+	$bill['Bill']['TITLE']
+));
+echo $this -> Html -> tableCells(array(
+	'Description',
+	$bill['Bill']['DESCRIPTION']
+));
+echo $this -> Html -> tableCells(array(
+	'Number',
+	$bill['Bill']['NUMBER']
+));
+echo $this -> Html -> tableCells(array(
+	'Submit Date',
+	$bill['Bill']['SUBMIT_DATE']
+));
+echo $this -> Html -> tableEnd();
+// Bill status table
 echo $this -> Html -> tag('h1', 'Status');
-?>
-<table class='list'>
-	<?php
-	echo $this -> Html -> tableCells(array(
-		'Type',
-		$bill['Bill']['TYPE']
-	));
-	echo $this -> Html -> tableCells(array(
-		'Category',
-		$bill['Bill']['CATEGORY']
-	));
-	echo $this -> Html -> tableCells(array(
-		'Status',
-		$bill['Status']['NAME']
-	));
-	?>
-</table>
-<?php
+echo $this -> Html -> tableBegin(array('class' => 'list'));
+echo $this -> Html -> tableCells(array(
+	'Type',
+	$bill['Bill']['TYPE']
+));
+echo $this -> Html -> tableCells(array(
+	'Category',
+	$bill['Bill']['CATEGORY']
+));
+echo $this -> Html -> tableCells(array(
+	'Status',
+	$bill['Status']['NAME']
+));
+echo $this -> Html -> tableEnd();
+//Bill author table
 echo $this -> Html -> tag('h1', 'Authors');
+echo $this -> Html -> tableBegin(array('class' => 'list'));
+echo $this -> Html -> tableCells(array(
+	'Graduate Author',
+	'Need to transfer Bill authors still'
+));
+echo $this -> Html -> tableCells(array(
+	'Submitter',
+	$bill['Submitter']['NAME']
+));
+echo $this -> Html -> tableCells(array(
+	'Organization',
+	$bill['Status']['NAME']
+));
+echo $this -> Html -> tableEnd();
+
+echo $this -> Html -> tableBegin(array('class' => 'list', 'width' => '50%'));
+echo $this -> Html -> tableHeaders(array('GSS Outcome:'));
+echo $this -> Html -> tableCells(array('d', 'd'));
+echo $this -> Html -> tableEnd();
+if($submitted == null)
+{
+	$this -> end();
+}
 ?>
-<table class='list'>
-	<?php
-	echo $this -> Html -> tableCells(array(
-		'Graduate Author',
-		'Need to transfer Bill authors still'
-	));
-	echo $this -> Html -> tableCells(array(
-		'Submitter',
-		$bill['Submitter']['NAME']
-	));
-	echo $this -> Html -> tableCells(array(
-		'Organization',
-		$bill['Status']['NAME']
-	));
-	?>
-</table>
 <script>
 	$(function() {
 		$("#tabs").tabs();
@@ -116,7 +116,7 @@ echo $this -> Html -> tag('h1', 'Authors');
 	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $all)), array('id' => 'tabs-6'));
 	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $final)), array('id' => 'tabs-7'));
 	debug($priorYear);
-?>
+	?>
 </div>
 <?php
 

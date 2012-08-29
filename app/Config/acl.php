@@ -123,6 +123,10 @@ $config['alias'] = array(
  */
 $config['roles'] = array(
 	'Role/admin' => null,
+	'Role/power' => null,
+	'Role/site_admin' => 'Role/org_admin',
+	'Role/org_admin' => 'Role/general',
+	'Role/general' => null,
 );
 
 /**
@@ -131,7 +135,8 @@ $config['roles'] = array(
 $config['rules'] = array(
 	'allow' => array(
 		'*' => 'Role/admin',
-		'controllers/users/*' => 'Role/power',
+		'Users/*' => 'Role/power',
+		'orgCreatePerm' => 'Role/power',
 	),
 	'deny' => array(
 	),

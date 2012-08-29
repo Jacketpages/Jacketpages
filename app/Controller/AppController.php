@@ -44,10 +44,14 @@ class AppController extends Controller
 		// Display is the home/base page
 		$this -> Auth -> allow('display', 'index', 'view');
 	}
+	
+	public function beforeRender()
+	{
+		$this -> set('permitted', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'controllers/' . $this -> viewPath . "/" . $this -> view));
+	}
 
 	public function isAuthorized($user)
 	{
 		return true;
 	}
-
 }

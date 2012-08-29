@@ -12,7 +12,8 @@ class OrganizationsController extends AppController
 		'Html',
 		'Form',
 		'Paginator',
-		'Js'
+		'Js',
+		'Permission'
 	);
 	public $components = array(
 		'Acl',
@@ -27,6 +28,10 @@ class OrganizationsController extends AppController
 	 */
 	public function index($letter = null, $category = null)
 	{
+		// Set page view permissions
+		$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'orgCreatePerm'));
+		$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'orgExportPerm'));
+		
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))
 		{
