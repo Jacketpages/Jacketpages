@@ -8,14 +8,21 @@ class BillsController extends AppController
 	public $helpers = array(
 		'Form',
 		'Html',
-		'Session'
+		'Session',
+		'Number'
 	);
-	public function index()
+	public function index($id = null)
 	{
 		// Set page view permissions
 		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'billExportPerm'));
-		
-		$this -> set('bills', $this -> paginate('Bill'));
+
+		if($id != null)
+		{
+		$this -> set('bills', $this -> paginate('Bill', array('SUBMITTER' => $id)));
+		}
+		else {
+			$this -> set('bills', $this -> paginate('Bill'));
+		}	
 	}
 
 	public function view($id = null)
@@ -54,19 +61,29 @@ class BillsController extends AppController
 				'BILL_ID' => $id,
 				'STATE' => 'Final'
 			))));
-		// Set the amounts for prior year and capital outlay lineitems
-		// TODO Finish populating this array with totals
-		$this -> set('priorYear', $this -> Line_Item -> find('all', array(
-			'fields' => array("SUM(IF(ACCOUNT = 'PY' AND STATE = 'SUBMITTED',TOTAL_COST, 0)) AS PY_SUBMITTED",
-			"SUM(IF(ACCOUNT = 'CO' AND STATE = 'SUBMITTED',TOTAL_COST, 0)) AS CO_SUBMITTED",
-			"SUM(IF(STATE = 'SUBMITTED',TOTAL_COST, 0)) AS TOTAL_SUBMITTED"),
-			'conditions' => array(
-				'BILL_ID' => $id
-			)
-		)));
-		//$this -> set('capitalOutlay', $this -> Line_Item->find('all', array('fields' =>
-		// array('SUM(TOTAL_COST)'),'conditions' => array('BILL_ID' => $id, 'ACCOUNT' =>
-		// 'PY'))));
+		// Set the amounts for prior year, capital outlay, and total
+		$totals = $this -> Line_Item -> find('all', array(
+			'fields' => array(
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Submitted',TOTAL_COST, 0)) AS PY_SUBMITTED",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Submitted',TOTAL_COST, 0)) AS CO_SUBMITTED",
+				"SUM(IF(STATE = 'Submitted',TOTAL_COST, 0)) AS TOTAL_SUBMITTED",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'JFC',TOTAL_COST, 0)) AS PY_JFC",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'JFC',TOTAL_COST, 0)) AS CO_JFC",
+				"SUM(IF(STATE = 'JFC',TOTAL_COST, 0)) AS TOTAL_JFC",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Graduate',TOTAL_COST, 0)) AS PY_GRADUATE",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Graduate',TOTAL_COST, 0)) AS CO_GRADUATE",
+				"SUM(IF(STATE = 'Graduate',TOTAL_COST, 0)) AS TOTAL_GRADUATE",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Undergraduate',TOTAL_COST, 0)) AS PY_UNDERGRADUATE",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Undergraduate',TOTAL_COST, 0)) AS CO_UNDERGRADUATE",
+				"SUM(IF(STATE = 'Undergraduate',TOTAL_COST, 0)) AS TOTAL_UNDERGRADUATE",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Conference',TOTAL_COST, 0)) AS PY_CONFERENCE",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Conference',TOTAL_COST, 0)) AS CO_CONFERENCE",
+				"SUM(IF(STATE = 'Conference',TOTAL_COST, 0)) AS TOTAL_CONFERENCE"
+			),
+			'conditions' => array('BILL_ID' => $id)
+		));
+		$this -> set('totals', $totals[0][0]);
+		$this -> set('states', $this -> Line_Item -> query("SELECT DISTINCT STATE FROM LINE_ITEMS AS LineItem where STATE != 'Final'"));
 	}
 
 	public function add()
@@ -139,5 +156,9 @@ class BillsController extends AppController
 
 	}
 
+	public function my_bills($id = null)
+	{
+		$this -> index($id);
+	}
 }
 ?>

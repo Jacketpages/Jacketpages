@@ -6,14 +6,17 @@
 
 $this -> extend("/Common/common");
 $this -> start('sidebar');
-echo $this -> Html -> nestedList(array($this -> Html -> link('Add Line Item', array(
+echo $this -> Html -> nestedList(array(
+	$this -> Html -> link('Add Line Item', array(
 		'controller' => 'line_items',
 		'action' => 'add',
 		$bill['Bill']['ID']
-	)) , $this -> Html -> link(__('Update Bill', true), array(
+	)),
+	$this -> Html -> link(__('Update Bill', true), array(
 		'action' => 'edit',
 		$bill['Bill']['ID']
-	))), array(), array('id' => 'underline'));
+	))
+), array(), array('id' => 'underline'));
 $this -> end();
 $this -> assign("title", "Bill");
 $this -> start('middle');
@@ -69,11 +72,17 @@ echo $this -> Html -> tableCells(array(
 ));
 echo $this -> Html -> tableEnd();
 
-echo $this -> Html -> tableBegin(array('class' => 'list', 'width' => '50%'));
+echo $this -> Html -> tableBegin(array(
+	'class' => 'list',
+	'width' => '50%'
+));
 echo $this -> Html -> tableHeaders(array('GSS Outcome:'));
-echo $this -> Html -> tableCells(array('d', 'd'));
+echo $this -> Html -> tableCells(array(
+	'd',
+	'd'
+));
 echo $this -> Html -> tableEnd();
-if($submitted == null)
+if ($submitted == null)
 {
 	$this -> end();
 }
@@ -108,17 +117,36 @@ if($submitted == null)
 		</li>
 	</ul>
 	<?php
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $submitted)), array('id' => 'tabs-1'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $jfc)), array('id' => 'tabs-2'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $graduate)), array('id' => 'tabs-3'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $undergraduate)), array('id' => 'tabs-4'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $conference)), array('id' => 'tabs-5'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $all)), array('id' => 'tabs-6'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array('lineitems' => $final)), array('id' => 'tabs-7'));
-	debug($priorYear);
+	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+		'lineitems' => $submitted,
+		'showAll' => 0
+	)), array('id' => 'tabs-1'));
+	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+		'lineitems' => $jfc,
+		'showAll' => 0
+	)), array('id' => 'tabs-2'));
+	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+		'lineitems' => $graduate,
+		'showAll' => 0
+	)), array('id' => 'tabs-3'));
+	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+		'lineitems' => $undergraduate,
+		'showAll' => 0
+	)), array('id' => 'tabs-4'));
+	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+		'lineitems' => $conference,
+		'showAll' => 0
+	)), array('id' => 'tabs-5'));
+	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+		'lineitems' => $all,
+		'showAll' => 1
+	)), array('id' => 'tabs-6'));
+	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+		'lineitems' => $final,
+		'showAll' => 0
+	)), array('id' => 'tabs-7'));
 	?>
 </div>
 <?php
-
 $this -> end();
 ?>

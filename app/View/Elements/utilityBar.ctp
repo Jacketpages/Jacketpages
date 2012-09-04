@@ -39,12 +39,10 @@ if ($this -> Permission -> isAdmin())
 <!-- Define the inner level list items for the above list items -->
 <?php
 $viewOrgs = $this -> Html -> link('View All Organizations', array(
-   'admin' => false,
    'controller' => 'organizations',
    'action' => 'index'
 ));
 $viewSga = $this -> Html -> link('View SGA Members', array(
-   'admin' => false,
    'controller' => 'sga_people',
    'action' => 'index'
 ));
@@ -59,31 +57,27 @@ if (!$this -> Permission -> isLoggedIn())
 else
 {
    $profile = $this -> Html -> link('Account Profile', array(
-      'owner' => true,
       'controller' => 'users',
       'action' => 'view',
       $this -> Session -> read('USER.ID')
    ));
    $logout = $this -> Html -> link('Logout', array(
-      'admin' => false,
       'controller' => 'users',
       'action' => 'logout'
    ));
    $jphome = $this -> Html -> link('JacketPages Home', '/');
    $submitBill = $this -> Html -> link('Submit Bill', array(
-      'admin' => false,
       'controller' => 'bills',
       'action' => 'add'
    ));
    $viewMyBills = $this -> Html -> link('View My Bills', array(
-      'owner' => true,
       'controller' => 'bills',
-      'action' => 'index'
+      'action' => 'my_bills',
+      $this -> Session -> read('USER.ID')
    ));
    $viewBills = $this -> Html -> link('View All Bills', array(
       'controller' => 'bills',
-      'action' => 'index',
-      'All'
+      'action' => 'index'
    ));
 
    $viewMyOrgs = $this -> Html -> link('View My Organizations', array(
@@ -97,46 +91,38 @@ if ($this -> Permission -> isSGA())
    $viewBudgets = $this -> Html -> link('View Budgets', array(
       'controller' => 'budgets',
       'action' => 'index',
-      'admin' => true
    ));
 
    $agendaBills = $this -> Html -> link('View Bills on Agenda', array(
       'controller' => 'bills',
       'action' => 'index',
       'Agenda',
-      'admin' => true
    ));
 }
 
 if ($this -> Permission -> isAdmin())
 {
    $adminBills = $this -> Html -> link('Administer All Bills', array(
-      'admin' => true,
       'controller' => 'bills',
       'action' => 'index'
    ));
    $adminSga = $this -> Html -> link('Administer SGA Members', array(
-      'admin' => true,
       'controller' => 'sga_people',
       'action' => 'index'
    ));
    $adminUsers = $this -> Html -> link('Administer Users', array(
-      'admin' => true,
       'controller' => 'users',
       'action' => 'index'
    ));
    $adminOrgs = $this -> Html -> link('Administer Organizations', array(
       'controller' => 'organizations',
       'action' => 'index',
-      'admin' => true
    ));
    $loginOther = $this -> Html -> link('Login as Other User', array(
-      'admin' => true,
       'controller' => 'users',
       'action' => 'login'
    ));
    $submitBillOther = $this -> Html -> link('Submit Bill as Other User', array(
-      'admin' => true,
       'controller' => 'bills',
       'action' => 'add'
    ));
