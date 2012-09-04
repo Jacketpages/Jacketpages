@@ -1,10 +1,10 @@
 <?php
-//App::uses('AppHelper', 'View/Helper');
 
 //@TODO include comments
 class PermissionHelper extends AppHelper 
 {
    public $helpers = array('Session');
+   public $components = array('Acl', 'Session');
    // @TODO probably not need. isUser will give the same result
    public function isLoggedIn()
    {
@@ -48,5 +48,10 @@ class PermissionHelper extends AppHelper
          return true;
       }
       return false;
+   }
+   
+   public function check($viewPath, $view)
+   {
+   	return $this -> Acl -> check($viewPath . "/" . $view, 'Role/' . $this -> Session -> read('USER.LEVEL'));
    }
 }

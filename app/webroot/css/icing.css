@@ -220,7 +220,7 @@ margin: 12px 0 0 0;
 
 #middle ul
 {
-	padding-left: 40px;
+	/*padding-left: 40px;*/
 }
 /**
  * 	Start CSS for drop down menu.
@@ -397,7 +397,7 @@ input, textarea
 	clear: both;
 	border: 1px solid #dadada;
 	color: #000000;
-	padding: 0.3em;
+	/*padding: 0.3em;*/
 	width: 100%;	
 }
 
@@ -535,4 +535,38 @@ input[type=submit]
 	cursor: pointer;
 	background: url('../img/button.png') repeat-x #ECA701;
 	border: 1px solid #cf7b04;
+}
+
+.list {
+	background: #fff;
+	border-right: 0;
+	clear: both;
+	color: #333;
+	margin-bottom: 10px;
+	width: 100%;
+	font-size: 14px;
+}
+
+table.list tr {
+	padding: 6px;
+}
+
+table.list tr td {
+	border-bottom: 1px solid #ddd;
+	background: none;
+}
+
+table.list tr:last-child td {
+	border: none;
+}
+
+table.list tr td:first-child {
+	width: 20%;
+	vertical-align: top;
+	font-weight: bold;
+	text-align: left;
+}
+
+table.list tr:nth-child(2n) td {
+	background: none;
 }

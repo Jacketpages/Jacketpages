@@ -71,6 +71,8 @@ class HtmlHelper extends AppHelper {
 		'submitimage' => '<input type="image" src="%s" %s/>',
 		'button' => '<button%s>%s</button>',
 		'image' => '<img src="%s" %s/>',
+		'tableBegin' => '<table%s>',
+		'tableEnd' => '</table>',
 		'tableheader' => '<th%s>%s</th>',
 		'tableheaderrow' => '<tr%s>%s</tr>',
 		'tablecell' => '<td%s>%s</td>',
@@ -1218,5 +1220,14 @@ class HtmlHelper extends AppHelper {
 		}
 		return $configs;
 	}
+	
+	public function tableBegin($options = null)
+	{
+		return sprintf($this->_tags['tableBegin'], $this->_parseAttributes($options, null, ' ', ''));
+	}
 
+	public function tableEnd()
+	{
+		return $this->_tags['tableEnd'];
+	}
 }
