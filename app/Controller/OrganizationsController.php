@@ -26,12 +26,12 @@ class OrganizationsController extends AppController
 	 * @param letter - the first letter of an organization's name for searching.
 	 * @param category - an organization category name to be used as a filter.
 	 */
-	public function index($letter = null, $category = null)
+	public function index($letter = null, $category = null, $inactive_page = null)
 	{
 		// Set page view permissions
 		$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'orgCreatePerm'));
 		$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'orgExportPerm'));
-		
+
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))
 		{
@@ -43,6 +43,16 @@ class OrganizationsController extends AppController
 		{
 			$this -> Session -> delete('Search');
 		}
+		$org_status = 'Organization.STATUS';
+		if ($inactive_page)
+		{
+			$org_status = $org_status . " =";
+		}
+		else
+		{
+			$org_status = $org_status . " !=";
+		}
+
 		// Performs a SELECT on the Organization table with the following conditions:
 		// WHERE (NAME LIKE '%<KEYWORD>%' OR DESCRIPTION LIKE '%<KEYWORD>%' OR SHORT_NAME
 		// LIKE '%<KEYWORD>%')
@@ -56,12 +66,13 @@ class OrganizationsController extends AppController
 						array('Organization.SHORT_NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
 					),
 					array('Organization.NAME LIKE' => $letter . '%'),
-					array('Organization.STATUS !=' => 'Inactive'),
+					array($org_status => 'Inactive'),
 					array('Category.NAME LIKE' => $this -> Session -> read('Search.category') . '%')
 				)),
 			'limit' => 20
 		);
-		// If the request is ajax then change the layout to return just the updated user list
+		// If the request is ajax then change the layout to return just the updated user
+		// list
 		if ($this -> RequestHandler -> isAjax())
 		{
 			$this -> layout = 'list';
@@ -78,9 +89,26 @@ class OrganizationsController extends AppController
 		$this -> set('names_to_autocomplete', $just_names);
 	}
 
-	public function my_orgs()
+	public function inactive_orgs($letter = null, $category = null)
 	{
-		
+		$this -> index($letter, $category, true);
+	}
+
+	public function my_orgs($id = null)
+	{
+		$this -> loadModel('Membership');
+		$org_ids = $this -> Membership -> find('list', array(
+			'conditions' => array('USER_ID' => $id),
+			'fields' => array(
+				'ID',
+				'ORG_ID'
+			)
+		));
+		debug($org_ids);
+		if ($org_ids != null)
+		{
+			$this -> set('organizations', $this -> Organization -> find('all', array('conditions' => array('IN' => array('ID' => $org_ids)))));
+		}
 	}
 
 	/**
@@ -148,7 +176,7 @@ class OrganizationsController extends AppController
 				'Membership.TITLE'
 			)
 		));
-				$this -> set('officers', $officers);
+		$this -> set('officers', $officers);
 		$members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
 					'Membership.ROLE' => 'Member',
 					'Membership.ORG_ID' => $id
@@ -165,7 +193,7 @@ class OrganizationsController extends AppController
 	{
 		//TODO Implement
 	}
-	
+
 	/**
 	 * Edits an individual organization's information.
 	 * @param id - the id of the Organization to edit.
@@ -182,14 +210,38 @@ class OrganizationsController extends AppController
 		{
 			if ($this -> Organization -> save($this -> request -> data))
 			{
-				$this -> Session -> setFlash('The user has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				CakeLog::write('info', 'User[' . $this -> Session -> read('USER.NAME') . '] has edited Organization[' . $this -> request -> data['Organization']['NAME'] . ']');
+				$this -> Session -> setFlash('The organization has been saved.');
+				$this -> redirect(array(
+					'action' => 'view',
+					$this -> request -> data['Organization']['ID']
+				));
 			}
 			else
 			{
-				$this -> Session -> setFlash('Unable to edit the user.');
+				CakeLog::write('error', 'User[' . $this -> Session -> read('USER.NAME') . '] was unable to edit Organization[' . $this -> request -> data['Organization']['NAME'] . ']');
+				$this -> Session -> setFlash('Unable to edit the organization.');
 			}
 		}
+	}
+
+	public function export()
+	{
+		// header("Content-type:application/vnd.ms-excel");
+		// header("Content-disposition:attachment;filename=Organizations.csv");
+		 $organizations = $this -> Organization -> find('all', array('fields' =>
+		 array('Organization.NAME', 'Organization.STATUS'
+		 )));
+		$this -> loadModel('Membership');
+		$memberships = $this -> Membership -> find('first', array('conditions' => array('Membership.ROLE' => 'President')));
+		debug($memberships);
+		
+		 
+
+		//$this -> set('organizations',$this -> Organization -> find('all'));
+		//debug($this -> Membership -> find('list', array('fields' => array('ORG_ID',
+		// 'ROLE', 'STATUS'))));
+		//$this -> set('memberships', $this -> Membership -> find('all'));
 	}
 
 }

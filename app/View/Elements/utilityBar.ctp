@@ -14,7 +14,7 @@
    $jphome = $profile = $account = $submitBill = $viewMyBills = $viewBills = null;
    $bills = $viewMyOrgs = $agendaBills = $viewBudgets = $adminSga = $adminUsers = null;
    $logout = $adminOrgs = $loginOther = $submitBillOther = $postMsg = $admin = null;
-   $login = $loginTopLevel = null;
+   $login = $loginTopLevel = $inactiveOrgs = null;
 ?>
 
 <!-- Define all top level list items that appear on the utility Bar -->
@@ -82,7 +82,13 @@ else
 
    $viewMyOrgs = $this -> Html -> link('View My Organizations', array(
       'controller' => 'organizations',
-      'action' => 'my_orgs'
+      'action' => 'my_orgs',
+      $this -> Session -> read('USER.ID')
+   ));
+   
+   $inactiveOrgs = $this -> Html -> link('View Inactive Organizations', array(
+      'controller' => 'organizations',
+      'action' => 'inactive_orgs'
    ));
 }
 
@@ -154,7 +160,8 @@ $billList = array($bills => array(
 // Organizations
 $orgList = array($orgs => array(
       $viewOrgs,
-      $viewMyOrgs
+      $viewMyOrgs,
+      $inactiveOrgs
    ));
 
 // Student Government

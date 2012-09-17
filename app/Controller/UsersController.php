@@ -112,7 +112,6 @@ class UsersController extends AppController
 			}
 			else
 			{
-				$this -> log('Unable to add the user.', 'DEBUG');
 				$this -> Session -> setFlash('Unable to add the user.');
 			}
 		}

@@ -16,13 +16,14 @@ class BillsController extends AppController
 		// Set page view permissions
 		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'billExportPerm'));
 
-		if($id != null)
+		if ($id != null)
 		{
-		$this -> set('bills', $this -> paginate('Bill', array('SUBMITTER' => $id)));
+			$this -> set('bills', $this -> paginate('Bill', array('SUBMITTER' => $id)));
 		}
-		else {
+		else
+		{
 			$this -> set('bills', $this -> paginate('Bill'));
-		}	
+		}
 	}
 
 	public function view($id = null)
@@ -98,7 +99,6 @@ class BillsController extends AppController
 			}
 			else
 			{
-				$this -> log('Unable to add the user.', 'DEBUG');
 				$this -> Session -> setFlash('Unable to add bill.');
 			}
 		}
@@ -160,5 +160,6 @@ class BillsController extends AppController
 	{
 		$this -> index($id);
 	}
+
 }
 ?>
