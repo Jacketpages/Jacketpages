@@ -6,6 +6,11 @@
  * Adapted from and adaptation of
  * Georgia Tech's general css layout.
  */
+
+*{
+	font-family: "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
+}
+
 select{
 	width:100%;
 }
@@ -167,7 +172,7 @@ margin: 12px 0 0 0;
  */
 #sidebar ul li
 {
-	font-size: 15px;
+	font-size: 13px;
 	list-style: none;
 /*	padding-left: 12px;*/
 	padding-bottom: 3px;
@@ -296,7 +301,7 @@ margin: 12px 0 0 0;
 	text-align: left;
 	text-transform: none;
 	font-weight: normal;
-	font-size: 14px;
+	font-size: 12px;
 	border-right-style: none;
 }
 /**
@@ -569,4 +574,17 @@ table.list tr td:first-child {
 
 table.list tr:nth-child(2n) td {
 	background: none;
+}
+
+#checkboxlist {
+display: inline;
+width: 10px;
+font-size: 13px;
+color: #666;
+font-weight: normal;
+}
+
+#filter{
+	padding-left: 10px;
+list-style: none;
 }

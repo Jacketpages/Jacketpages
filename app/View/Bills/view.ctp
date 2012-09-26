@@ -20,6 +20,7 @@ echo $this -> Html -> nestedList(array(
 $this -> end();
 $this -> assign("title", "Bill");
 $this -> start('middle');
+debug($bill);
 // General bill information table
 echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Html -> tableCells(array(
@@ -76,11 +77,66 @@ echo $this -> Html -> tableBegin(array(
 	'class' => 'list',
 	'width' => '50%'
 ));
-echo $this -> Html -> tableHeaders(array('GSS Outcome:'));
-echo $this -> Html -> tableCells(array(
-	'd',
-	'd'
-));
+
+if ($bill['Bill']['TYPE'] == 'Finance Request')
+{
+	if ($bill['Bill']['CATEGORY'] == 'Graduate' || $bill['Bill']['CATEGORY'] == 'Joint')
+	{
+		$titles[] = 'GSS Outcome:';
+		$titles[] = '';
+		$dates[] = 'Date';
+		$dates[] = $bill['GSS']['DATE'];
+		$yeas[] = 'Yeas';
+		$yeas[] = $bill['GSS']['YEAS'];
+		$nays[] = 'Nays';
+		$nays[] = $bill['GSS']['NAYS'];
+		$abstains[] = 'Abstains';
+		$abstains[] = $bill['GSS']['ABSTAINS'];
+	}
+
+	if ($bill['Bill']['CATEGORY'] == 'Undergraduate' || $bill['Bill']['CATEGORY'] == 'Joint')
+	{
+		$titles[] = 'UHR Outcome:';
+		$titles[] = '';
+		$dates[] = 'Date';
+		$dates[] = $bill['UHR']['DATE'];
+		$yeas[] = 'Yeas';
+		$yeas[] = $bill['UHR']['YEAS'];
+		$nays[] = 'Nays';
+		$nays[] = $bill['UHR']['NAYS'];
+		$abstains[] = 'Abstains';
+		$abstains[] = $bill['UHR']['ABSTAINS'];
+	}
+
+	if ($bill['Bill']['CATEGORY'] == 'Conference')
+	{
+		$ctitles[] = 'GSS Conference Outcome:';
+		$ctitles[] = '';
+		$ctitles[] = 'UHR Conference Outcome:';
+		$ctitles[] = '';
+		$cdates[] = 'Date';
+		$cdates[] = $bill['GCC']['DATE'];
+		$cdates[] = 'Date';
+		$cdates[] = $bill['UCC']['DATE'];
+		$cyeas[] = 'Yeas';
+		$cyeas[] = $bill['GCC']['YEAS'];
+		$cyeas[] = 'Yeas';
+		$cyeas[] = $bill['UCC']['YEAS'];
+		$cnays[] = 'Nays';
+		$cnays[] = $bill['GCC']['NAYS'];
+		$cnays[] = 'Nays';
+		$cnays[] = $bill['UCC']['NAYS'];
+		$cabstains[] = 'Abstains';
+		$cabstains[] = $bill['GCC']['ABSTAINS'];
+		$cabstains[] = 'Abstains';
+		$cabstains[] = $bill['UCC']['ABSTAINS'];
+	}
+}
+echo $this -> Html -> tableHeaders($titles);
+echo $this -> Html -> tableCells($dates);
+echo $this -> Html -> tableCells($yeas);
+echo $this -> Html -> tableCells($nays);
+echo $this -> Html -> tableCells($abstains);
 echo $this -> Html -> tableEnd();
 if ($submitted == null)
 {

@@ -11,17 +11,163 @@ class BillsController extends AppController
 		'Session',
 		'Number'
 	);
+
+	public $components = array(
+		'RequestHandler',
+		'Session'
+	);
 	public function index($id = null)
 	{
 		// Set page view permissions
 		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'billExportPerm'));
 
+		// Writes the search keyword to the Session if the request is a POST
+		if ($this -> request -> is('post'))
+		{
+			$this -> Session -> write('Search.keyword', $this -> request -> data['Bill']['keyword']);
+		}
+		// Deletes the search keyword if the letter is null and the request is not ajax
+		else if (!$this -> RequestHandler -> isAjax())
+		{
+			$this -> Session -> delete('Search');
+		}
+
+		// Check to see if the status Session variables are null
+		// If they are null set them to 1.
+		if ($this -> Session -> read($this -> name . '.On Agenda') == null)
+		{
+			$this -> Session -> write($this -> name . '.On Agenda', 1);
+		}
+		else if ($this -> data['Bill']['On Agenda'] != null)
+		{
+			$this -> Session -> write($this -> name . '.On Agenda', $this -> data['Bill']['On Agenda']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Awaiting Author') == null)
+			$this -> Session -> write($this -> name . '.Awaiting Author', 1);
+		else if ($this -> data['Bill']['Awaiting Author'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Awaiting Author', $this -> data['Bill']['Awaiting Author']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Authored') == null)
+			$this -> Session -> write($this -> name . '.Authored', 1);
+		else if ($this -> data['Bill']['Authored'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Authored', $this -> data['Bill']['Authored']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Passed') == null)
+			$this -> Session -> write($this -> name . '.Passed', 1);
+		else if ($this -> data['Bill']['Passed'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Passed', $this -> data['Bill']['Passed']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Failed') == null)
+			$this -> Session -> write($this -> name . '.Failed', 1);
+		else if ($this -> data['Bill']['Authored'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Failed', $this -> data['Bill']['Failed']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Archived') == null)
+			$this -> Session -> write($this -> name . '.Archived', 1);
+		else if ($this -> data['Bill']['Failed'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Archived', $this -> data['Bill']['Archived']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Joint') == null)
+			$this -> Session -> write($this -> name . '.Joint', 1);
+		else if ($this -> data['Bill']['Joint'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Joint', $this -> data['Bill']['Joint']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Conference') == null)
+			$this -> Session -> write($this -> name . '.Conference', 1);
+		else if ($this -> data['Bill']['Conference'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Conference', $this -> data['Bill']['Conference']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Undergraduate') == null)
+			$this -> Session -> write($this -> name . '.Undergraduate', 1);
+		else if ($this -> data['Bill']['Undergraduate'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Undergraduate', $this -> data['Bill']['Undergraduate']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.Graduate') == null)
+			$this -> Session -> write($this -> name . '.Graduate', 1);
+		else if ($this -> data['Bill']['Graduate'] != null)
+		{
+			$this -> Session -> write($this -> name . '.Graduate', $this -> data['Bill']['Graduate']);
+
+		}
+
+		if ($this -> Session -> read($this -> name . '.On Agenda'))
+			$statuses[] = 3;
+		if ($this -> Session -> read($this -> name . '.Awaiting Author'))
+			$statuses[] = 1;
+		if ($this -> Session -> read($this -> name . '.Authored'))
+			$statuses[] = 2;
+		if ($this -> Session -> read($this -> name . '.Passed'))
+			$statuses[] = 4;
+		if ($this -> Session -> read($this -> name . '.Failed'))
+			$statuses[] = 5;
+		if ($this -> Session -> read($this -> name . '.Archived'))
+			$statuses[] = 6;
+
+		if ($this -> Session -> read($this -> name . '.Joint'))
+			$categories[] = 'Joint';
+		if ($this -> Session -> read($this -> name . '.Conference'))
+			$categories[] = 'Conference';
+		if ($this -> Session -> read($this -> name . '.Undergraduate'))
+			$categories[] = 'Undergraduate';
+		if ($this -> Session -> read($this -> name . '.Graduate'))
+			$categories[] = 'Graduate';
+
 		if ($id != null)
 		{
+			$this -> paginate = array(
+				'conditions' => array(
+					'Bill.STATUS' => $statuses,
+					'Bill.CATEGORY' => $categories,
+					'OR' => array(
+						array('Bill.TITLE LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+						array('Bill.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+						array('Bill.NUMBER LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+					)
+				),
+				'limit' => 20
+			);
 			$this -> set('bills', $this -> paginate('Bill', array('SUBMITTER' => $id)));
 		}
 		else
 		{
+			$this -> paginate = array(
+				'conditions' => array(
+					'Bill.STATUS' => $statuses,
+					'Bill.CATEGORY' => $categories,
+					'OR' => array(
+						array('Bill.TITLE LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+						array('Bill.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+						array('Bill.NUMBER LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+					)
+				),
+				'limit' => 20
+			);
 			$this -> set('bills', $this -> paginate('Bill'));
 		}
 	}
