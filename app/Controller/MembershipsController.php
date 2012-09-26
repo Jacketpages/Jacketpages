@@ -1,11 +1,21 @@
 <?php
+/**
+ * Memberships Controller
+ *
+ * @author Stephen Roca
+ * @since 06/08/2012
+ */
 class MembershipsController extends AppController
 {
 	public $helpers = array(
 		'Form',
 		'Html'
 	);
-
+	
+	/**
+	 * Edits an individual Membership
+	 * @param id - a membership's id
+	 */
 	public function edit($id = null)
 	{
 		$this -> Membership -> id = $id;

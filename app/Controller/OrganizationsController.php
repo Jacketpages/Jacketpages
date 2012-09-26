@@ -25,6 +25,8 @@ class OrganizationsController extends AppController
 	 * A table listing of organizations.
 	 * @param letter - the first letter of an organization's name for searching.
 	 * @param category - an organization category name to be used as a filter.
+	 * @param inactive_page - a flag that tells whether or not to display only
+	 * inactive organizations or all organizations
 	 */
 	public function index($letter = null, $category = null, $inactive_page = null)
 	{
@@ -89,11 +91,20 @@ class OrganizationsController extends AppController
 		$this -> set('names_to_autocomplete', $just_names);
 	}
 
+	/**
+	 * Displays a list of inactive organizations
+	 * @param letter - the first letter of an organization's name for searching.
+	 * @param category - an organization category name to be used as a filter.
+	 */
 	public function inactive_orgs($letter = null, $category = null)
 	{
 		$this -> index($letter, $category, true);
 	}
 
+	/**
+	 * Displays a user's organizations past and current.
+	 * @param id - a user's id
+	 */
 	public function my_orgs($id = null)
 	{
 		$this -> loadModel('Membership');
@@ -225,18 +236,21 @@ class OrganizationsController extends AppController
 		}
 	}
 
+	/**
+	 * Exports the following information for all organizations: name, status,
+	 * president, treasurer, advisor, and contact information for each to a csv file.
+	 */
 	public function export()
 	{
 		// header("Content-type:application/vnd.ms-excel");
 		// header("Content-disposition:attachment;filename=Organizations.csv");
-		 $organizations = $this -> Organization -> find('all', array('fields' =>
-		 array('Organization.NAME', 'Organization.STATUS'
-		 )));
+		$organizations = $this -> Organization -> find('all', array('fields' => array(
+				'Organization.NAME',
+				'Organization.STATUS'
+			)));
 		$this -> loadModel('Membership');
 		$memberships = $this -> Membership -> find('first', array('conditions' => array('Membership.ROLE' => 'President')));
 		debug($memberships);
-		
-		 
 
 		//$this -> set('organizations',$this -> Organization -> find('all'));
 		//debug($this -> Membership -> find('list', array('fields' => array('ORG_ID',

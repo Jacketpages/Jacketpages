@@ -8,7 +8,10 @@
  {
     public $helpers = array('Form', 'Paginator', 'Html');
     public $components = array('RequestHandler');
-    // View a list of SgaPeople
+    /**
+	 * View a list of SgaPeople
+	 * @param letter - used to filter SgaPeople's names on thier first letter.
+	 */
     // TODO clean up the comments for this function. They still correspond to User
     public function index($letter=null)
     {
@@ -44,19 +47,25 @@
       $this -> set('sgapeople', $this -> paginate('SgaPerson'));
     }
     
-    // View an individual SgaPerson
+    /**
+	 * View an individual SgaPerson
+	 */ 
     public function view()
     {
        // TODO Implement
     }
     
-    // Add an individual SgaPerson
+    /**
+	 * Add an individual SgaPerson
+	 */
     public function add()
     {
        // TODO Implement
     }
     
-    // Edit an individual SgaPerson
+    /**
+	 * Edit an individual SgaPerson
+	 */
     public function edit()
     {
        // TODO Implement

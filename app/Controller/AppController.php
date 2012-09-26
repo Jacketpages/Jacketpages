@@ -41,7 +41,7 @@ class AppController extends Controller
 	 */
 	public function beforeFilter()
 	{
-		// Display is the home/base page
+		// display is the home/base page
 		$this -> Auth -> allow('display', 'index', 'view');
 	}
 	

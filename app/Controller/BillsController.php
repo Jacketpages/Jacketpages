@@ -16,6 +16,12 @@ class BillsController extends AppController
 		'RequestHandler',
 		'Session'
 	);
+
+	/**
+	 * A table listing of bills. If given a user's id then displays all the bills for
+	 * that user
+	 * @param $id - a user's id
+	 */
 	public function index($id = null)
 	{
 		// Set page view permissions
@@ -32,6 +38,7 @@ class BillsController extends AppController
 			$this -> Session -> delete('Search');
 		}
 
+		/* START CHECKBOX FILTER LOGIC*/
 		// Check to see if the status Session variables are null
 		// If they are null set them to 1.
 		if ($this -> Session -> read($this -> name . '.On Agenda') == null)
@@ -138,6 +145,8 @@ class BillsController extends AppController
 		if ($this -> Session -> read($this -> name . '.Graduate'))
 			$categories[] = 'Graduate';
 
+		/* END CHECKBOX FILTER LOGIC*/
+
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.STATUS' => $statuses,
@@ -150,6 +159,8 @@ class BillsController extends AppController
 			),
 			'limit' => 20
 		);
+		
+		// If given a user's id then filter to show only that user's bills
 		if ($id != null)
 		{
 			$this -> set('bills', $this -> paginate('Bill', array('SUBMITTER' => $id)));
@@ -160,6 +171,10 @@ class BillsController extends AppController
 		}
 	}
 
+	/**
+	 * View an individual bill's information
+	 * @param id - the bill's id
+	 */
 	public function view($id = null)
 	{
 		// Set which bill to retrieve from the database.
@@ -218,9 +233,15 @@ class BillsController extends AppController
 			'conditions' => array('BILL_ID' => $id)
 		));
 		$this -> set('totals', $totals[0][0]);
+		/* Create an array of states to easily loop through and display the
+		 * totals for the individual accounts
+		 */ 
 		$this -> set('states', $this -> Line_Item -> query("SELECT DISTINCT STATE FROM LINE_ITEMS AS LineItem where STATE != 'Final'"));
 	}
 
+	/**
+	 * Add a new bill
+	 */
 	public function add()
 	{
 		if ($this -> request -> is('post'))
@@ -285,11 +306,19 @@ class BillsController extends AppController
 		$this -> set('underAuthors', $underAuthors);
 	}
 
-	public function edit()
+	/**
+	 * Edit an existing bill
+	 * @param id - the id of the bill to edit
+	 */
+	public function edit($id = null)
 	{
-
+		//TODO Implement
 	}
 
+	/**
+	 * A table listing of bills for a specific user
+	 * @param id - a user's id
+	 */
 	public function my_bills($id = null)
 	{
 		$this -> index($id);
