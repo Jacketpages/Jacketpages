@@ -138,36 +138,24 @@ class BillsController extends AppController
 		if ($this -> Session -> read($this -> name . '.Graduate'))
 			$categories[] = 'Graduate';
 
+		$this -> paginate = array(
+			'conditions' => array(
+				'Bill.STATUS' => $statuses,
+				'Bill.CATEGORY' => $categories,
+				'OR' => array(
+					array('Bill.TITLE LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+					array('Bill.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+					array('Bill.NUMBER LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+				)
+			),
+			'limit' => 20
+		);
 		if ($id != null)
 		{
-			$this -> paginate = array(
-				'conditions' => array(
-					'Bill.STATUS' => $statuses,
-					'Bill.CATEGORY' => $categories,
-					'OR' => array(
-						array('Bill.TITLE LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-						array('Bill.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-						array('Bill.NUMBER LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
-					)
-				),
-				'limit' => 20
-			);
 			$this -> set('bills', $this -> paginate('Bill', array('SUBMITTER' => $id)));
 		}
 		else
 		{
-			$this -> paginate = array(
-				'conditions' => array(
-					'Bill.STATUS' => $statuses,
-					'Bill.CATEGORY' => $categories,
-					'OR' => array(
-						array('Bill.TITLE LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-						array('Bill.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-						array('Bill.NUMBER LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
-					)
-				),
-				'limit' => 20
-			);
 			$this -> set('bills', $this -> paginate('Bill'));
 		}
 	}
