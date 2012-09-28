@@ -244,13 +244,32 @@ class OrganizationsController extends AppController
 	{
 		// header("Content-type:application/vnd.ms-excel");
 		// header("Content-disposition:attachment;filename=Organizations.csv");
+		$build_export = array();
 		$organizations = $this -> Organization -> find('all', array('fields' => array(
+				'Organization.ID',
 				'Organization.NAME',
 				'Organization.STATUS'
 			)));
 		$this -> loadModel('Membership');
+		foreach ($organizations as $organization)
+		{
+			$build_export[] = $organization['Organization']['NAME'];
+			$build_export[] = $organization['Organization']['STATUS'];
+			$president = $this -> Membership -> find('first', array(
+				'conditions' => array(
+					'Membership.ROLE' => 'President',
+					'Membership.ORG_ID' => $organization['Organization']['ID']
+				),
+				'fields' => array(
+					'NAME',
+					'User.EMAIL'
+				)
+			));
+			$build_export[] = $president['Membership']['NAME'];
+
+		}
 		$memberships = $this -> Membership -> find('first', array('conditions' => array('Membership.ROLE' => 'President')));
-		debug($memberships);
+		debug($build_export);
 
 		//$this -> set('organizations',$this -> Organization -> find('all'));
 		//debug($this -> Membership -> find('list', array('fields' => array('ORG_ID',
