@@ -6,6 +6,7 @@
 class Organization extends AppModel
 {
 	public $order = 'Organization.NAME';
+	public $virtualFields = array('CONTACT_NAME' => 'CONCAT(User.FIRST_NAME, " ", User.LAST_NAME)');
 	public $belongsTo = array(
 		'User' => array(
 			'className' => 'User',

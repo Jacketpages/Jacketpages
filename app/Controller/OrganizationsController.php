@@ -13,12 +13,14 @@ class OrganizationsController extends AppController
 		'Form',
 		'Paginator',
 		'Js',
-		'Permission'
+		'Permission',
+		'Csv'
 	);
 	public $components = array(
 		'Acl',
 		'RequestHandler',
-		'Session'
+		'Session',
+		'Csv'
 	);
 
 	/**
@@ -242,39 +244,61 @@ class OrganizationsController extends AppController
 	 */
 	public function export()
 	{
-		// header("Content-type:application/vnd.ms-excel");
-		// header("Content-disposition:attachment;filename=Organizations.csv");
-		$build_export = array();
 		$organizations = $this -> Organization -> find('all', array('fields' => array(
 				'Organization.ID',
 				'Organization.NAME',
-				'Organization.STATUS'
+				'Organization.STATUS',
+				'Organization.CONTACT_NAME',
+				'User.EMAIL'
 			)));
 		$this -> loadModel('Membership');
+		$build_export[] = array(
+				"Organization",
+				"Status",
+				"Organization Contact",
+				"Organization Contact's Email",
+				"President",
+				"President's Email",
+				"Treasurer",
+				"Treasurer's Email",
+				"Advisor",
+				"Advisor's Email",
+			);
 		foreach ($organizations as $organization)
 		{
-			$build_export[] = $organization['Organization']['NAME'];
-			$build_export[] = $organization['Organization']['STATUS'];
-			$president = $this -> Membership -> find('first', array(
-				'conditions' => array(
-					'Membership.ROLE' => 'President',
-					'Membership.ORG_ID' => $organization['Organization']['ID']
-				),
-				'fields' => array(
-					'NAME',
-					'User.EMAIL'
-				)
+			$roles = array(
+				'President',
+				'Treasurer',
+				'Advisor'
+			);
+			$president = $this -> Membership -> findByRoleAndOrgId('President', $organization['Organization']['ID'], array(
+				'NAME',
+				'User.EMAIL'
 			));
-			$build_export[] = $president['Membership']['NAME'];
-
+			$treasurer = $this -> Membership -> findByRoleAndOrgId('Treasurer', $organization['Organization']['ID'], array(
+				'NAME',
+				'User.EMAIL'
+			));
+			$advisor = $this -> Membership -> findByRoleAndOrgId('Advisor', $organization['Organization']['ID'], array(
+				'NAME',
+				'User.EMAIL'
+			));
+			
+			$build_export[] = array(
+				$organization['Organization']['NAME'],
+				$organization['Organization']['STATUS'],
+				$organization['Organization']['CONTACT_NAME'],
+				$organization['User']['EMAIL'],
+				$president['Membership']['NAME'],
+				$president['User']['EMAIL'],
+				$treasurer['Membership']['NAME'],
+				$treasurer['User']['EMAIL'],
+				$advisor['Membership']['NAME'],
+				$advisor['User']['EMAIL'],
+			);
 		}
-		$memberships = $this -> Membership -> find('first', array('conditions' => array('Membership.ROLE' => 'President')));
-		debug($build_export);
-
-		//$this -> set('organizations',$this -> Organization -> find('all'));
-		//debug($this -> Membership -> find('list', array('fields' => array('ORG_ID',
-		// 'ROLE', 'STATUS'))));
-		//$this -> set('memberships', $this -> Membership -> find('all'));
+		$this -> layout = 'csv';
+		$this -> set('export', $build_export);
 	}
 
 }

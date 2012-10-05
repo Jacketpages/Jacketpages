@@ -239,11 +239,39 @@ class BillsController extends AppController
 		$this -> set('states', $this -> Line_Item -> query("SELECT DISTINCT STATE FROM LINE_ITEMS AS LineItem where STATE != 'Final'"));
 	}
 
+	function getValidNumber($category)
+		{
+			$this -> loadModel('Bill');
+			$number = $this -> getFiscalYear() + 1;
+			if ($category == 'Undergraduate')
+				$number .= 'U';
+			if ($category == 'Graduate')
+				$number .= 'G';
+			if ($category == 'Joint')
+				$number .= 'J';
+			if ($category == 'Budget')
+				$number .= 'B';
+			$sql = "SELECT substr(number,4) as num FROM bills WHERE substr(number,1,3) = '$number' ORDER BY num DESC LIMIT 1";
+			$num = $this -> Bill -> query($sql);
+			if (empty($num))
+			{
+				$num = 1;
+			}
+			else
+			{
+				$num = $num[0][0]['num'] + 1;
+			}
+			$num = str_pad($num, 3, '0', STR_PAD_LEFT);
+			$number .= $num;
+			return $number;
+		}
+	
 	/**
 	 * Add a new bill
 	 */
 	public function add()
 	{
+		debug($this -> request -> data);
 		if ($this -> request -> is('post'))
 		{
 			$this -> Bill -> create();
