@@ -18,7 +18,7 @@ if ($lineitems != null)
 	{
 		echo $this -> Html -> tableCells(array(
 			$lineitem['LineItem']['LINE_NUMBER'],
-			$lineitem['LineItem']['NAME'],
+			$this -> Html -> link($lineitem['LineItem']['NAME'], array('controller' => 'LineItems', 'action' => 'view', $lineitem['LineItem']['ID'])),
 			$lineitem['LineItem']['COST_PER_UNIT'],
 			$lineitem['LineItem']['QUANTITY'],
 			$lineitem['LineItem']['TOTAL_COST'],

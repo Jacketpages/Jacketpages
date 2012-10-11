@@ -15,17 +15,21 @@ $this -> Html -> addCrumb('Users', '/users');
 $this -> Html -> addCrumb($user['User']['NAME'], '/users/view/' . $user['User']['ID']);
 $this -> extend('/Common/common');
 
-$this -> start('sidebar');
-echo $this -> Html -> nestedList(array(
-   $this -> Html -> link(__('Edit User', true), array(
+$links[] = $this -> Html -> link(__('Edit User', true), array(
       'action' => 'edit',
       $user['User']['ID']
-   )),
-   $this -> Html -> link(__('Delete User', true), array(
+   )); 
+if($userDeletePerm)
+{
+	$links[] = $this -> Html -> link(__('Delete User', true), array(
       'action' => 'delete',
       $user['User']['ID']
-   ), null, sprintf(__('Are you sure you want to delete %s?', true), $user['User']['NAME']))
-), array(), array('id' => 'underline'));
+   ), null, sprintf(__('Are you sure you want to delete %s?', true), $user['User']['NAME']));
+}
+
+$this -> start('sidebar');
+echo $this -> Html -> nestedList($links
+, array(), array('id' => 'underline'));
 $this -> end();
 
 $this -> assign('title', $user['User']['NAME']);
@@ -43,9 +47,14 @@ echo $this -> Html -> tableCells(array(
    $user['User']['EMAIL']
 ));
 echo $this -> Html -> tableCells(array(
+   'Alternate Email',
+   $user['User']['ALT_EMAIL']
+));
+echo $this -> Html -> tableCells(array(
    'Phone',
    $user['User']['PHONE']
 ));
+
  ?>
 </table>
 <?php

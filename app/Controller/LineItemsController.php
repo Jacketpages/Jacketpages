@@ -9,6 +9,11 @@ class LineItemsController extends AppController
 {
 	public $helpers = array('Form');
 
+	public function view($id = null)
+	{
+		$this -> set('lineitem', $this -> LineItem -> findById($id));
+	}
+
 	/**
 	 * Adds a new line item
 	 * @param id - the id of the bill that the line item is added to
@@ -20,24 +25,30 @@ class LineItemsController extends AppController
 			'conditions' => array('Bill.ID' => $id),
 			'fields' => array(
 				'TITLE',
-				'TYPE'
+				'TYPE',
+				'ID'
 			)
 		)));
 		// If the request is a post attempt to save the line item.
 		// If this fails then log the failure and set a flash message.
 		if ($this -> request -> is('post'))
 		{
-			$this -> Line_Item -> create();
-			if ($this -> Line_Item -> saveAssociated($this -> request -> data))
+			$this -> LineItem -> create();
+			if ($this -> LineItem -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The user has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				$this -> redirect(array('controller' => 'bills', 'action' => 'index'));
 			}
 			else
 			{
 				$this -> Session -> setFlash('Unable to add the user.');
 			}
 		}
+	}
+
+	public function delete($id = null)
+	{
+		
 	}
 
 	/**

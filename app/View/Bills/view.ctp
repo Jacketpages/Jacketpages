@@ -20,7 +20,6 @@ echo $this -> Html -> nestedList(array(
 $this -> end();
 $this -> assign("title", "Bill");
 $this -> start('middle');
-debug($bill);
 // General bill information table
 echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Html -> tableCells(array(
@@ -61,7 +60,12 @@ echo $this -> Html -> tag('h1', 'Authors');
 echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Html -> tableCells(array(
 	'Graduate Author',
-	'Need to transfer Bill authors still'
+	$GradAuthor[0]['NAME']
+));
+debug($this -> Session -> read());
+echo $this -> Html -> tableCells(array(
+	'Undergraduate Author',
+	$UnderAuthor[0]['NAME']
 ));
 echo $this -> Html -> tableCells(array(
 	'Submitter',
@@ -73,13 +77,14 @@ echo $this -> Html -> tableCells(array(
 ));
 echo $this -> Html -> tableEnd();
 
+
+if ($bill['Bill']['TYPE'] == 'Finance Request' && $bill['Bill']['STATUS'] > 3)
+{
 echo $this -> Html -> tableBegin(array(
 	'class' => 'list',
 	'width' => '50%'
 ));
-
-if ($bill['Bill']['TYPE'] == 'Finance Request')
-{
+	echo $this -> Html -> tag('h1', 'Outcomes:');
 	if ($bill['Bill']['CATEGORY'] == 'Graduate' || $bill['Bill']['CATEGORY'] == 'Joint')
 	{
 		$titles[] = 'GSS Outcome:';
@@ -131,13 +136,13 @@ if ($bill['Bill']['TYPE'] == 'Finance Request')
 		$cabstains[] = 'Abstains';
 		$cabstains[] = $bill['UCC']['ABSTAINS'];
 	}
-}
 echo $this -> Html -> tableHeaders($titles);
 echo $this -> Html -> tableCells($dates);
 echo $this -> Html -> tableCells($yeas);
 echo $this -> Html -> tableCells($nays);
 echo $this -> Html -> tableCells($abstains);
 echo $this -> Html -> tableEnd();
+}
 if ($submitted == null)
 {
 	$this -> end();

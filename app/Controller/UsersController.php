@@ -72,6 +72,7 @@ class UsersController extends AppController
 	 */
 	public function view($id = null)
 	{
+		$this -> set('userDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'userDelete'));
 		// Set which user to retrieve from the database.
 		$this -> User -> id = $id;
 		$this -> set('user', $this -> User -> read());

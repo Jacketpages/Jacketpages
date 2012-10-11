@@ -3,9 +3,14 @@
  * @author Stephen Roca
  * @since 08/24/2012
  */
-class Line_item extends AppModel
+class LineItem extends AppModel
 {
-	public $alias = 'LineItem';
+	public $belongsTo = array(
+		'Bill' => array(
+			'className' => 'Bill',
+			'foreignKey' => 'BILL_ID'
+		)
+	);
 }
 
 ?>

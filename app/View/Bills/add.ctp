@@ -32,12 +32,12 @@ echo $this -> Form -> input('CATEGORY', array(
 echo $this -> Form -> input('STATUS', array(
 	'label' => 'Status',
 	'options' => array(
-		'Awaiting Author' => 'Awaiting Author',
-		'Authored' => 'Authored',
-		'Agenda' => 'Agenda',
-		'Passed' => 'Passed',
-		'Failed' => 'Failed',
-		'Archived' => 'Archived'
+		1 => 'Awaiting Author',
+		2 => 'Authored',
+		3 => 'Agenda',
+		4 => 'Passed',
+		5 => 'Failed',
+		6 => 'Tabled'
 	)
 ));
 echo $this -> Form -> input('ORG_ID', array(
@@ -45,12 +45,12 @@ echo $this -> Form -> input('ORG_ID', array(
 	'options' => $organizations,
 	'default' => 'Select Organization'
 ));
-echo $this -> Form -> input('underAuthor_id', array(
+echo $this -> Form -> input('Authors.UNDR_AUTH_ID', array(
 	'div' => 'underAuthor_id',
 	'label' => 'Undergraduate Author',
 	'options' => $underAuthors
 ));
-echo $this -> Form -> input('gradAuthor_id', array(
+echo $this -> Form -> input('Authors.GRAD_AUTH_ID', array(
 	'div' => 'gradAuthor_id',
 	'label' => 'Graduate Author',
 	'options' => $gradAuthors

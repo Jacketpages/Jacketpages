@@ -9,7 +9,8 @@ class BillsController extends AppController
 		'Form',
 		'Html',
 		'Session',
-		'Number'
+		'Number',
+		'Time'
 	);
 
 	public $components = array(
@@ -22,7 +23,7 @@ class BillsController extends AppController
 	 * that user
 	 * @param $id - a user's id
 	 */
-	public function index($id = null)
+	public function index($letter = null, $id = null)
 	{
 		// Set page view permissions
 		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'billExportPerm'));
@@ -155,11 +156,12 @@ class BillsController extends AppController
 					array('Bill.TITLE LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
 					array('Bill.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
 					array('Bill.NUMBER LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
-				)
+				),
+				array('Bill.TITLE LIKE' => $letter . '%')
 			),
 			'limit' => 20
 		);
-		
+
 		// If given a user's id then filter to show only that user's bills
 		if ($id != null)
 		{
@@ -177,42 +179,78 @@ class BillsController extends AppController
 	 */
 	public function view($id = null)
 	{
+		$this -> loadModel('BillAuthor');
+		$this -> set('GradAuthor', $this -> BillAuthor -> find('first', array(
+			'fields' => array('CONCAT(Users.FIRST_NAME," ", Users.LAST_NAME) as NAME'),
+			'joins' => array(
+				array(
+					'table' => 'SGA_PEOPLE',
+					'type' => 'inner',
+					'foreignKey' => 'GRAD_AUTH_ID',
+					'conditions' => array('BillAuthor.GRAD_AUTH_ID = SGA_PEOPLE.ID')
+				),
+				array(
+					'table' => 'Users',
+					'type' => 'left',
+					'foreignKey' => false,
+					'conditions' => array('SGA_PEOPLE.USER_ID = USERS.ID')
+				)
+			)
+		)));
+		$this -> set('UnderAuthor', $this -> BillAuthor -> find('first', array(
+			'fields' => array('CONCAT(Users.FIRST_NAME," ", Users.LAST_NAME) as NAME'),
+			'joins' => array(
+				array(
+					'table' => 'SGA_PEOPLE',
+					'type' => 'inner',
+					'foreignKey' => 'UNDR_AUTH_ID',
+					'conditions' => array('BillAuthor.UNDR_AUTH_ID = SGA_PEOPLE.ID')
+				),
+				array(
+					'table' => 'Users',
+					'type' => 'left',
+					'foreignKey' => false,
+					'conditions' => array('SGA_PEOPLE.USER_ID = USERS.ID')
+				)
+			)
+		)));
+
 		// Set which bill to retrieve from the database.
 		$this -> Bill -> id = $id;
 		$this -> set('bill', $this -> Bill -> read());
 		// Set the lineitem arrays for the different states to
 		// pass to the view.
-		$this -> loadModel('Line_Item');
-		$this -> set('submitted', $this -> Line_Item -> find('all', array('conditions' => array(
+		$this -> loadModel('LineItem');
+		$this -> set('submitted', $this -> LineItem -> find('all', array('conditions' => array(
 				'BILL_ID' => $id,
 				'STATE' => 'Submitted'
 			))));
-		$this -> set('jfc', $this -> Line_Item -> find('all', array('conditions' => array(
+		$this -> set('jfc', $this -> LineItem -> find('all', array('conditions' => array(
 				'BILL_ID' => $id,
 				'STATE' => 'JFC'
 			))));
-		$this -> set('graduate', $this -> Line_Item -> find('all', array('conditions' => array(
+		$this -> set('graduate', $this -> LineItem -> find('all', array('conditions' => array(
 				'BILL_ID' => $id,
 				'STATE' => 'Graduate'
 			))));
-		$this -> set('undergraduate', $this -> Line_Item -> find('all', array('conditions' => array(
+		$this -> set('undergraduate', $this -> LineItem -> find('all', array('conditions' => array(
 				'BILL_ID' => $id,
 				'STATE' => 'Undergraduate'
 			))));
-		$this -> set('conference', $this -> Line_Item -> find('all', array('conditions' => array(
+		$this -> set('conference', $this -> LineItem -> find('all', array('conditions' => array(
 				'BILL_ID' => $id,
 				'STATE' => 'Conference'
 			))));
-		$this -> set('all', $this -> Line_Item -> find('all', array(
+		$this -> set('all', $this -> LineItem -> find('all', array(
 			'conditions' => array('BILL_ID' => $id),
 			'order' => array("FIELD(STATE, 'Submitted','JFC', 'Graduate', 'Undergraduate', 'Conference', 'Final')")
 		)));
-		$this -> set('final', $this -> Line_Item -> find('all', array('conditions' => array(
+		$this -> set('final', $this -> LineItem -> find('all', array('conditions' => array(
 				'BILL_ID' => $id,
 				'STATE' => 'Final'
 			))));
 		// Set the amounts for prior year, capital outlay, and total
-		$totals = $this -> Line_Item -> find('all', array(
+		$totals = $this -> LineItem -> find('all', array(
 			'fields' => array(
 				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Submitted',TOTAL_COST, 0)) AS PY_SUBMITTED",
 				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Submitted',TOTAL_COST, 0)) AS CO_SUBMITTED",
@@ -235,50 +273,51 @@ class BillsController extends AppController
 		$this -> set('totals', $totals[0][0]);
 		/* Create an array of states to easily loop through and display the
 		 * totals for the individual accounts
-		 */ 
-		$this -> set('states', $this -> Line_Item -> query("SELECT DISTINCT STATE FROM LINE_ITEMS AS LineItem where STATE != 'Final'"));
+		 */
+		$this -> set('states', $this -> LineItem -> query("SELECT DISTINCT STATE FROM LINE_ITEMS AS LineItem where STATE != 'Final'"));
 	}
 
 	function getValidNumber($category)
+	{
+		$number = $this -> getFiscalYear() + 1;
+		if ($category == 'Undergraduate')
+			$number .= 'U';
+		if ($category == 'Graduate')
+			$number .= 'G';
+		if ($category == 'Joint')
+			$number .= 'J';
+		if ($category == 'Budget')
+			$number .= 'B';
+		$sql = "SELECT substr(number,4) as num FROM bills WHERE substr(number,1,3) = '$number' ORDER BY num DESC LIMIT 1";
+		$num = $this -> Bill -> query($sql);
+		if (empty($num))
 		{
-			$this -> loadModel('Bill');
-			$number = $this -> getFiscalYear() + 1;
-			if ($category == 'Undergraduate')
-				$number .= 'U';
-			if ($category == 'Graduate')
-				$number .= 'G';
-			if ($category == 'Joint')
-				$number .= 'J';
-			if ($category == 'Budget')
-				$number .= 'B';
-			$sql = "SELECT substr(number,4) as num FROM bills WHERE substr(number,1,3) = '$number' ORDER BY num DESC LIMIT 1";
-			$num = $this -> Bill -> query($sql);
-			if (empty($num))
-			{
-				$num = 1;
-			}
-			else
-			{
-				$num = $num[0][0]['num'] + 1;
-			}
-			$num = str_pad($num, 3, '0', STR_PAD_LEFT);
-			$number .= $num;
-			return $number;
+			$num = 1;
 		}
-	
+		else
+		{
+			$num = $num[0][0]['num'] + 1;
+		}
+		$num = str_pad($num, 3, '0', STR_PAD_LEFT);
+		$number .= $num;
+		return $number;
+	}
+
 	/**
 	 * Add a new bill
 	 */
 	public function add()
 	{
-		debug($this -> request -> data);
 		if ($this -> request -> is('post'))
 		{
 			$this -> Bill -> create();
+			$this -> request -> data['Bill']['NUMBER'] = $this -> getValidNumber($this -> request -> data['Bill']['CATEGORY']);
+			$this -> request -> data['Bill']['SUBMITTER'] = $this -> Session -> read('USER.ID');
+			$this->Bill->set('LAST_MOD_DATE',date ('Y-m-d'));
 			if ($this -> Bill -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The bill has been saved.');
-				//$this -> redirect(array('action' => 'index'));
+				$this -> redirect(array('action' => 'index'));
 			}
 			else
 			{
@@ -341,15 +380,34 @@ class BillsController extends AppController
 	public function edit($id = null)
 	{
 		//TODO Implement
+		$this->Bill->set('LAST_MOD_DATE',date ('Y-m-d'));
+		$this -> Bill -> id = $id;
+		if ($this -> request -> is('get'))
+		{
+			$this -> request -> data = $this -> Bill -> read();
+			$this -> set('user', $this -> Bill -> read());
+		}
+		else
+		{
+			if ($this -> Bill -> save($this -> request -> data))
+			{
+				$this -> Session -> setFlash('The Bill has been saved.');
+				$this -> redirect(array('action' => 'index'));
+			}
+			else
+			{
+				$this -> Session -> setFlash('Unable to edit the Bill.');
+			}
+		}
 	}
 
 	/**
 	 * A table listing of bills for a specific user
 	 * @param id - a user's id
 	 */
-	public function my_bills($id = null)
+	public function my_bills($letter = null, $id = null)
 	{
-		$this -> index($id);
+		$this -> index($letter, $id);
 	}
 
 }
