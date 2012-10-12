@@ -301,5 +301,10 @@ class OrganizationsController extends AppController
 		$this -> set('export', $build_export);
 	}
 
+	public function roster()
+	{
+		
+	}
+
 }
 ?>
