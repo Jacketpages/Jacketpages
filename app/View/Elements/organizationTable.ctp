@@ -12,26 +12,26 @@ if ($admin)
 	), array('class' => 'links'));
 	foreach ($organizations as $organization)
 	{
-		$summary = $organization['Organization']['DESCRIPTION'];
+		$summary = $organization['Organization']['description'];
 		//$summary = Sanitize::html($summary, array('remove' => TRUE));
 		if (strlen($summary) > 200)
 		{
 			$summary = substr($summary, 0, strrpos(substr($summary, 0, 200), ' ')) . '...';
 		}
 		echo $this -> Html -> tableCells(array(
-			$this -> Html -> link($organization['Organization']['NAME'], array(
+			$this -> Html -> link($organization['Organization']['name'], array(
 				'action' => 'view',
-				$organization['Organization']['ID']
+				$organization['Organization']['id']
 			)),
 			$summary,
-			$organization['Organization']['STATUS'],
+			$organization['Organization']['status'],
 			'',
 			$this -> Html -> link(__('Edit', true), array(
 				'action' => 'edit',
-				$organization['Organization']['ID']
+				$organization['Organization']['id']
 			)), $this -> Html -> link(__('Delete', true), array(
 				'action' => 'delete',
-				$organization['Organization']['ID']
+				$organization['Organization']['id']
 			), null, sprintf(__('Are you sure you want to delete this organization?', true)))
 		));
 	}
@@ -50,19 +50,17 @@ else
 	), array('class' => 'links'));
 	foreach ($organizations as $organization)
 	{
-		if (strlen($organization['Organization']['LOGO_NAME']) < 1)
+		if (strlen($organization['Organization']['logo_name']) < 1)
 		{
 			$logo = $this -> Html -> image('/img/default_logo.gif', array('width' => '60'));
 		}
 		else
 		{
-			$logo = $this -> Html -> image(array(
-				'controller' => 'organizations',
-				'action' => 'getLogo',
-				$organization['Organization']['ID']
-			), array('width' => '60'));
+			$logo = $this -> Html -> image('/organizations/getLogo/' . 
+				$organization['Organization']['id']
+			, array('width' => '60'));
 		}
-		$summary = $organization['Organization']['DESCRIPTION'];
+		$summary = $organization['Organization']['description'];
 		//$summary = Sanitize::html($summary, array('remove' => TRUE));
 		if (strlen($summary) > 200)
 		{
@@ -70,18 +68,18 @@ else
 		}
 		echo $this -> Html -> tableCells(array(
 			$logo,
-			$this -> Html -> link($organization['Organization']['NAME'], array(
+			$this -> Html -> link($organization['Organization']['name'], array(
 				'action' => 'view',
-				$organization['Organization']['ID']
+				$organization['Organization']['id']
 			)),
 			$summary,
 			$this -> Html -> link(__('Edit', true), array(
 				'action' => 'edit',
-				$organization['Organization']['ID']
+				$organization['Organization']['id']
 			)),
 			$this -> Html -> link(__('Delete', true), array(
 				'action' => 'delete',
-				$organization['Organization']['ID']
+				$organization['Organization']['id']
 			), null, sprintf(__('Are you sure you want to delete this organization?', true)))
 		));
 	}

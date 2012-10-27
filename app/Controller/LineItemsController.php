@@ -22,11 +22,11 @@ class LineItemsController extends AppController
 	{
 		$this -> loadModel('Bill');
 		$this -> set('bill', $this -> Bill -> find('first', array(
-			'conditions' => array('Bill.ID' => $id),
+			'conditions' => array('Bill.id' => $id),
 			'fields' => array(
-				'TITLE',
-				'TYPE',
-				'ID'
+				'title',
+				'type',
+				'id'
 			)
 		)));
 		// If the request is a post attempt to save the line item.
@@ -37,7 +37,7 @@ class LineItemsController extends AppController
 			if ($this -> LineItem -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The user has been saved.');
-				$this -> redirect(array('controller' => 'bills', 'action' => 'index'));
+				$this -> redirect(array('controller' => 'bills', 'action' => 'view', $id));
 			}
 			else
 			{

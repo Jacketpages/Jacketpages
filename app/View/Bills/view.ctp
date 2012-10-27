@@ -10,11 +10,11 @@ echo $this -> Html -> nestedList(array(
 	$this -> Html -> link('Add Line Item', array(
 		'controller' => 'line_items',
 		'action' => 'add',
-		$bill['Bill']['ID']
+		$bill['Bill']['id']
 	)),
 	$this -> Html -> link(__('Update Bill', true), array(
 		'action' => 'edit',
-		$bill['Bill']['ID']
+		$bill['Bill']['id']
 	))
 ), array(), array('id' => 'underline'));
 $this -> end();
@@ -24,19 +24,19 @@ $this -> start('middle');
 echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Html -> tableCells(array(
 	'Title',
-	$bill['Bill']['TITLE']
+	$bill['Bill']['title']
 ));
 echo $this -> Html -> tableCells(array(
 	'Description',
-	$bill['Bill']['DESCRIPTION']
+	$bill['Bill']['description']
 ));
 echo $this -> Html -> tableCells(array(
 	'Number',
-	$bill['Bill']['NUMBER']
+	$bill['Bill']['number']
 ));
 echo $this -> Html -> tableCells(array(
 	'Submit Date',
-	$bill['Bill']['SUBMIT_DATE']
+	$bill['Bill']['submit_date']
 ));
 echo $this -> Html -> tableEnd();
 // Bill status table
@@ -44,15 +44,15 @@ echo $this -> Html -> tag('h1', 'Status');
 echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Html -> tableCells(array(
 	'Type',
-	$bill['Bill']['TYPE']
+	$bill['Bill']['type']
 ));
 echo $this -> Html -> tableCells(array(
 	'Category',
-	$bill['Bill']['CATEGORY']
+	$bill['Bill']['category']
 ));
 echo $this -> Html -> tableCells(array(
 	'Status',
-	$bill['Status']['NAME']
+	$bill['Status']['name']
 ));
 echo $this -> Html -> tableEnd();
 //Bill author table
@@ -60,81 +60,80 @@ echo $this -> Html -> tag('h1', 'Authors');
 echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Html -> tableCells(array(
 	'Graduate Author',
-	$GradAuthor[0]['NAME']
+	$GradAuthor['User']['name']
 ));
-debug($this -> Session -> read());
 echo $this -> Html -> tableCells(array(
 	'Undergraduate Author',
-	$UnderAuthor[0]['NAME']
+	$UnderAuthor['User']['name']
 ));
 echo $this -> Html -> tableCells(array(
 	'Submitter',
-	$bill['Submitter']['NAME']
+	$bill['Submitter']['name']
 ));
 echo $this -> Html -> tableCells(array(
 	'Organization',
-	$bill['Status']['NAME']
+	$bill['Organization']['name']
 ));
 echo $this -> Html -> tableEnd();
 
 
-if ($bill['Bill']['TYPE'] == 'Finance Request' && $bill['Bill']['STATUS'] > 3)
+if ($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 3)
 {
 echo $this -> Html -> tableBegin(array(
 	'class' => 'list',
 	'width' => '50%'
 ));
 	echo $this -> Html -> tag('h1', 'Outcomes:');
-	if ($bill['Bill']['CATEGORY'] == 'Graduate' || $bill['Bill']['CATEGORY'] == 'Joint')
+	if ($bill['Bill']['category'] == 'Graduate' || $bill['Bill']['category'] == 'Joint')
 	{
 		$titles[] = 'GSS Outcome:';
 		$titles[] = '';
 		$dates[] = 'Date';
-		$dates[] = $bill['GSS']['DATE'];
+		$dates[] = $bill['GSS']['date'];
 		$yeas[] = 'Yeas';
-		$yeas[] = $bill['GSS']['YEAS'];
+		$yeas[] = $bill['GSS']['yeas'];
 		$nays[] = 'Nays';
-		$nays[] = $bill['GSS']['NAYS'];
+		$nays[] = $bill['GSS']['nays'];
 		$abstains[] = 'Abstains';
-		$abstains[] = $bill['GSS']['ABSTAINS'];
+		$abstains[] = $bill['GSS']['abstains'];
 	}
 
-	if ($bill['Bill']['CATEGORY'] == 'Undergraduate' || $bill['Bill']['CATEGORY'] == 'Joint')
+	if ($bill['Bill']['category'] == 'Undergraduate' || $bill['Bill']['category'] == 'Joint')
 	{
 		$titles[] = 'UHR Outcome:';
 		$titles[] = '';
 		$dates[] = 'Date';
-		$dates[] = $bill['UHR']['DATE'];
+		$dates[] = $bill['UHR']['date'];
 		$yeas[] = 'Yeas';
-		$yeas[] = $bill['UHR']['YEAS'];
+		$yeas[] = $bill['UHR']['yeas'];
 		$nays[] = 'Nays';
-		$nays[] = $bill['UHR']['NAYS'];
+		$nays[] = $bill['UHR']['nays'];
 		$abstains[] = 'Abstains';
-		$abstains[] = $bill['UHR']['ABSTAINS'];
+		$abstains[] = $bill['UHR']['abstains'];
 	}
 
-	if ($bill['Bill']['CATEGORY'] == 'Conference')
+	if ($bill['Bill']['category'] == 'Conference')
 	{
 		$ctitles[] = 'GSS Conference Outcome:';
 		$ctitles[] = '';
 		$ctitles[] = 'UHR Conference Outcome:';
 		$ctitles[] = '';
 		$cdates[] = 'Date';
-		$cdates[] = $bill['GCC']['DATE'];
+		$cdates[] = $bill['GCC']['date'];
 		$cdates[] = 'Date';
-		$cdates[] = $bill['UCC']['DATE'];
+		$cdates[] = $bill['UCC']['date'];
 		$cyeas[] = 'Yeas';
-		$cyeas[] = $bill['GCC']['YEAS'];
+		$cyeas[] = $bill['GCC']['yeas'];
 		$cyeas[] = 'Yeas';
-		$cyeas[] = $bill['UCC']['YEAS'];
+		$cyeas[] = $bill['UCC']['yeas'];
 		$cnays[] = 'Nays';
-		$cnays[] = $bill['GCC']['NAYS'];
+		$cnays[] = $bill['GCC']['nays'];
 		$cnays[] = 'Nays';
-		$cnays[] = $bill['UCC']['NAYS'];
+		$cnays[] = $bill['UCC']['nays'];
 		$cabstains[] = 'Abstains';
-		$cabstains[] = $bill['GCC']['ABSTAINS'];
+		$cabstains[] = $bill['GCC']['abstains'];
 		$cabstains[] = 'Abstains';
-		$cabstains[] = $bill['UCC']['ABSTAINS'];
+		$cabstains[] = $bill['UCC']['abstains'];
 	}
 echo $this -> Html -> tableHeaders($titles);
 echo $this -> Html -> tableCells($dates);

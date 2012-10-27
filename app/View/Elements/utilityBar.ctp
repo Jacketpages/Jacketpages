@@ -72,8 +72,7 @@ else
    ));
    $viewMyBills = $this -> Html -> link('View My Bills', array(
       'controller' => 'bills',
-      'action' => 'my_bills',
-      $this -> Session -> read('USER.ID')
+      'action' => 'my_bills'
    ));
    $viewBills = $this -> Html -> link('View All Bills', array(
       'controller' => 'bills',

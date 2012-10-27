@@ -31,10 +31,10 @@
       $this -> paginate = array(
          'conditions' => array('AND' => array(
                'OR' => array(
-                  array($this->User->getVirtualField('NAME') . ' LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+                  array($this->User->getVirtualField('name') . ' LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
                   //array('User.GT_USER_NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
                ),
-               array($this->User->getVirtualField('NAME') . ' LIKE'=> $letter . '%')
+               array($this->User->getVirtualField('name') . ' LIKE'=> $letter . '%')
             )),
          'limit' => 20
       );

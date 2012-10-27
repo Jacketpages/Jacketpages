@@ -38,90 +38,34 @@ class BillsController extends AppController
 		{
 			$this -> Session -> delete('Search');
 		}
-
 		/* START CHECKBOX FILTER LOGIC*/
 		// Check to see if the status Session variables are null
 		// If they are null set them to 1.
-		if ($this -> Session -> read($this -> name . '.On Agenda') == null)
+		if ($this -> Session -> read($this -> name) == null || $this -> Session -> read($this -> name . '.On Agenda') == null || $this -> data == null)
 		{
 			$this -> Session -> write($this -> name . '.On Agenda', 1);
+			$this -> Session -> write($this -> name . '.Awaiting Author', 1);
+			$this -> Session -> write($this -> name . '.Authored', 1);
+			$this -> Session -> write($this -> name . '.Passed', 1);
+			$this -> Session -> write($this -> name . '.Failed', 1);
+			$this -> Session -> write($this -> name . '.Archived', 1);
+			$this -> Session -> write($this -> name . '.Joint', 1);
+			$this -> Session -> write($this -> name . '.Conference', 1);
+			$this -> Session -> write($this -> name . '.Undergraduate', 1);
+			$this -> Session -> write($this -> name . '.Graduate', 1);
 		}
-		else if ($this -> data['Bill']['On Agenda'] != null)
+		else 
 		{
 			$this -> Session -> write($this -> name . '.On Agenda', $this -> data['Bill']['On Agenda']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Awaiting Author') == null)
-			$this -> Session -> write($this -> name . '.Awaiting Author', 1);
-		else if ($this -> data['Bill']['Awaiting Author'] != null)
-		{
+			$this -> Session -> write($this -> name . '.Authored', $this -> data['Bill']['Authored']);			
 			$this -> Session -> write($this -> name . '.Awaiting Author', $this -> data['Bill']['Awaiting Author']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Authored') == null)
-			$this -> Session -> write($this -> name . '.Authored', 1);
-		else if ($this -> data['Bill']['Authored'] != null)
-		{
-			$this -> Session -> write($this -> name . '.Authored', $this -> data['Bill']['Authored']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Passed') == null)
-			$this -> Session -> write($this -> name . '.Passed', 1);
-		else if ($this -> data['Bill']['Passed'] != null)
-		{
 			$this -> Session -> write($this -> name . '.Passed', $this -> data['Bill']['Passed']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Failed') == null)
-			$this -> Session -> write($this -> name . '.Failed', 1);
-		else if ($this -> data['Bill']['Authored'] != null)
-		{
 			$this -> Session -> write($this -> name . '.Failed', $this -> data['Bill']['Failed']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Archived') == null)
-			$this -> Session -> write($this -> name . '.Archived', 1);
-		else if ($this -> data['Bill']['Failed'] != null)
-		{
 			$this -> Session -> write($this -> name . '.Archived', $this -> data['Bill']['Archived']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Joint') == null)
-			$this -> Session -> write($this -> name . '.Joint', 1);
-		else if ($this -> data['Bill']['Joint'] != null)
-		{
 			$this -> Session -> write($this -> name . '.Joint', $this -> data['Bill']['Joint']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Conference') == null)
-			$this -> Session -> write($this -> name . '.Conference', 1);
-		else if ($this -> data['Bill']['Conference'] != null)
-		{
 			$this -> Session -> write($this -> name . '.Conference', $this -> data['Bill']['Conference']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Undergraduate') == null)
-			$this -> Session -> write($this -> name . '.Undergraduate', 1);
-		else if ($this -> data['Bill']['Undergraduate'] != null)
-		{
 			$this -> Session -> write($this -> name . '.Undergraduate', $this -> data['Bill']['Undergraduate']);
-
-		}
-
-		if ($this -> Session -> read($this -> name . '.Graduate') == null)
-			$this -> Session -> write($this -> name . '.Graduate', 1);
-		else if ($this -> data['Bill']['Graduate'] != null)
-		{
 			$this -> Session -> write($this -> name . '.Graduate', $this -> data['Bill']['Graduate']);
-
 		}
 
 		if ($this -> Session -> read($this -> name . '.On Agenda'))
@@ -179,45 +123,12 @@ class BillsController extends AppController
 	 */
 	public function view($id = null)
 	{
-		$this -> loadModel('BillAuthor');
-		$this -> set('GradAuthor', $this -> BillAuthor -> find('first', array(
-			'fields' => array('CONCAT(Users.FIRST_NAME," ", Users.LAST_NAME) as NAME'),
-			'joins' => array(
-				array(
-					'table' => 'SGA_PEOPLE',
-					'type' => 'inner',
-					'foreignKey' => 'GRAD_AUTH_ID',
-					'conditions' => array('BillAuthor.GRAD_AUTH_ID = SGA_PEOPLE.ID')
-				),
-				array(
-					'table' => 'Users',
-					'type' => 'left',
-					'foreignKey' => false,
-					'conditions' => array('SGA_PEOPLE.USER_ID = USERS.ID')
-				)
-			)
-		)));
-		$this -> set('UnderAuthor', $this -> BillAuthor -> find('first', array(
-			'fields' => array('CONCAT(Users.FIRST_NAME," ", Users.LAST_NAME) as NAME'),
-			'joins' => array(
-				array(
-					'table' => 'SGA_PEOPLE',
-					'type' => 'inner',
-					'foreignKey' => 'UNDR_AUTH_ID',
-					'conditions' => array('BillAuthor.UNDR_AUTH_ID = SGA_PEOPLE.ID')
-				),
-				array(
-					'table' => 'Users',
-					'type' => 'left',
-					'foreignKey' => false,
-					'conditions' => array('SGA_PEOPLE.USER_ID = USERS.ID')
-				)
-			)
-		)));
-
+		
 		// Set which bill to retrieve from the database.
 		$this -> Bill -> id = $id;
-		$this -> set('bill', $this -> Bill -> read());
+		$bill = $this -> Bill -> read();
+		$this -> setAuthorNames($bill['Authors']['grad_auth_id'], $bill['Authors']['undr_auth_id']);
+		$this -> set('bill', $bill);
 		// Set the lineitem arrays for the different states to
 		// pass to the view.
 		$this -> loadModel('LineItem');
@@ -311,9 +222,23 @@ class BillsController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			$this -> Bill -> create();
-			$this -> request -> data['Bill']['NUMBER'] = $this -> getValidNumber($this -> request -> data['Bill']['CATEGORY']);
-			$this -> request -> data['Bill']['SUBMITTER'] = $this -> Session -> read('USER.ID');
-			$this->Bill->set('LAST_MOD_DATE',date ('Y-m-d'));
+			$this -> request -> data['Bill']['number'] = $this -> getValidNumber($this -> request -> data['Bill']['category']);
+			$this -> request -> data['Bill']['submitter'] = $this -> Session -> read('User.id');
+			$this -> request -> data['Bill']['last_mod_by'] = $this -> Session -> read('User.id');
+			$this -> request -> data['Bill']['status'] = 1;
+			$this -> request -> data['Bill']['submit_date'] = date('Y-m-d');
+			$this -> request -> data['Bill']['last_mod_date'] = date('Y-m-d h:i:s');
+			// If Graduate author or Undergraduate author are set as Unknown
+			// then set them to a place holder author.
+			if ($this -> request -> data['Authors']['grad_auth_id'] == null)
+			{
+				$this -> request -> data['Authors']['grad_auth_id'] = 1;
+			}
+			if ($this -> request -> data['Authors']['undr_auth_id'] == null)
+			{
+				$this -> request -> data['Authors']['undr_auth_id'] = 1;
+			}
+			
 			if ($this -> Bill -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The bill has been saved.');
@@ -324,33 +249,14 @@ class BillsController extends AppController
 				$this -> Session -> setFlash('Unable to add bill.');
 			}
 		}
-		// Set the organization drop down list for
-		// creating a new bill
-		$id = $this -> Session -> read('USER.ID');
-		$this -> loadModel('Membership');
-		$orgs[''] = 'Select Organization';
-		$ids = $this -> Membership -> find('all', array(
-			'fields' => array('Membership.ORG_ID'),
-			'conditions' => array('Membership.USER_ID' => $id)
-		));
-		$this -> loadModel('Organization');
-		$orgs['My Organizations'] = $this -> Organization -> find('list', array(
-			'fields' => array('NAME'),
-			'conditions' => array('Organization.ID' => Set::extract('/Membership/ORG_ID', $ids))
-		));
-		$na_id = key($this -> Organization -> find('list', array(
-			'fields' => array('NAME'),
-			'conditions' => array('NAME' => 'N/A')
-		)));
-		$orgs['My Organizations'][$na_id] = 'N/A';
-		$orgs['All'] = $this -> Organization -> find('list', array('fields' => array('NAME')));
-		$this -> set('organizations', $orgs);
 
+
+		$this -> setOrganizationNames();
 		// Set the graduate authors drop down list
 		// for creating a new bill
 		$this -> loadModel('SgaPerson');
 		$sga_graduate = $this -> SgaPerson -> find('list', array(
-			'fields' => array('NAME_DEPARTMENT'),
+			'fields' => array('name_department'),
 			'conditions' => array(
 				'STATUS' => 'Active',
 				'HOUSE' => 'Graduate'
@@ -361,7 +267,7 @@ class BillsController extends AppController
 		$gradAuthors['SGA'] = $sga_graduate;
 		$this -> set('gradAuthors', $gradAuthors);
 		$sga_undergraduate = $this -> SgaPerson -> find('list', array(
-			'fields' => array('NAME_DEPARTMENT'),
+			'fields' => array('name_department'),
 			'conditions' => array(
 				'STATUS' => 'Active',
 				'HOUSE' => 'Undergraduate'
@@ -380,19 +286,37 @@ class BillsController extends AppController
 	public function edit($id = null)
 	{
 		//TODO Implement
-		$this->Bill->set('LAST_MOD_DATE',date ('Y-m-d'));
-		$this -> Bill -> id = $id;
+		
+		//TODO move the below statement because they won't both
+		// be in the post data at the same time
+		if ($this -> request -> data['Authors']['grad_auth_appr'] 
+			&& $this -> request -> data['Authors']['undr_auth_appr'] 
+			&& $this -> request -> data['Bill']['status'] == 1)
+		{
+			$this -> request -> data['Bill']['status'] = 2;
+		}
+		$this -> Bill -> id = $id;		$this -> Bill -> set('last_mod_date', date('Y-m-d h:i:s'));
+		$this -> Bill -> set('last_mod_by', $this -> Session -> read('User.id'));
+			$this -> setOrganizationNames();
+			debug($this -> request -> data);
 		if ($this -> request -> is('get'))
 		{
+			$this -> Bill -> id = $id;
 			$this -> request -> data = $this -> Bill -> read();
-			$this -> set('user', $this -> Bill -> read());
+			$bill = $this -> Bill -> read();
+			$this -> setAuthorNames($bill['Authors']['grad_auth_id'], $bill['Authors']['undr_auth_id']);
+			$this -> set('bill', $this -> Bill -> read());
 		}
 		else
 		{
-			if ($this -> Bill -> save($this -> request -> data))
+			$this -> loadModel('BillAuthor');
+			$this -> request -> data['Authors']['id']= $this -> request -> data['Bill']['auth_id'];
+			if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 			{
+				$this -> Bill -> id = $id;
+				
 				$this -> Session -> setFlash('The Bill has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				// $this -> redirect(array('action' => 'index'));
 			}
 			else
 			{
@@ -405,9 +329,54 @@ class BillsController extends AppController
 	 * A table listing of bills for a specific user
 	 * @param id - a user's id
 	 */
-	public function my_bills($letter = null, $id = null)
+	public function my_bills($letter = null)
 	{
-		$this -> index($letter, $id);
+		$this -> index($letter, $this -> Session -> read('User.id'));
+	}
+
+	private function setOrganizationNames()
+	{
+		// Set the organization drop down list for
+		// creating a new bill
+		$id = $this -> Session -> read('User.id');
+		$this -> loadModel('Membership');
+		$orgs[''] = 'Select Organization';
+		$ids = $this -> Membership -> find('all', array(
+			'fields' => array('Membership.org_id'),
+			'conditions' => array('Membership.user_id' => $id)
+		));
+		$this -> loadModel('Organization');
+		$orgs['My Organizations'] = $this -> Organization -> find('list', array(
+			'fields' => array('name'),
+			'conditions' => array('Organization.id' => Set::extract('/Membership/org_id', $ids))
+		));
+		$na_id = key($this -> Organization -> find('list', array(
+			'fields' => array('name'),
+			'conditions' => array('name' => 'N/A')
+		)));
+		$orgs['My Organizations'][$na_id] = 'N/A';
+		$orgs['All'] = $this -> Organization -> find('list', array('fields' => array('name')));
+		$this -> set('organizations', $orgs);
+	}
+
+	private function setAuthorNames($grad_id, $undr_id)
+	{
+		$this -> loadModel('BillAuthor');
+		$this -> loadModel('User');
+		$this -> set('GradAuthor', $this -> User -> find('first', array(
+			'fields' => array('name'),
+			'conditions' => array('User.sga_id' => $grad_id
+		
+			)
+		)));
+		
+		$this -> set('UnderAuthor', $this -> User -> find('first', array(
+			'fields' => array('name'),
+			'conditions' => array('User.sga_id' => $undr_id
+		
+			)
+		)));
+
 	}
 
 }

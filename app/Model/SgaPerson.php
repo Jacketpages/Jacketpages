@@ -6,11 +6,11 @@
 
 class SgaPerson extends AppModel
 {
-	public $virtualFields = array('NAME_DEPARTMENT' => 'CONCAT(CONCAT(FIRST_NAME, " ", LAST_NAME), " -- ", DEPARTMENT)');
-	public $order = 'User.FIRST_NAME';
+	public $virtualFields = array('name_department' => 'CONCAT(CONCAT(first_name, " ", last_name), " -- ", department)');
+	public $order = 'User.first_name';
 	public $belongsTo = array('User' => array(
 			'className' => 'User',
-			'foreignKey' => 'USER_ID'
+			'foreignKey' => 'user_id'
 		));
 }
 ?>

@@ -8,7 +8,7 @@ class LineItem extends AppModel
 	public $belongsTo = array(
 		'Bill' => array(
 			'className' => 'Bill',
-			'foreignKey' => 'BILL_ID'
+			'foreignKey' => 'bill_id'
 		)
 	);
 }

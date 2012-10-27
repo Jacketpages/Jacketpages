@@ -7,19 +7,31 @@ array($this -> Html -> link('View All Bills', array('action' => 'index'))), arra
 );
 $this -> end();
 $this -> start('middle');
+debug($this -> Session -> read());
 echo $this -> Form -> create();
-echo $this -> Form -> input('TITLE', array('label' => 'Title'));
-echo $this -> Form -> input('DESCRIPTION', array('label' => 'Description'));
-echo $this -> Form -> input('NUMBER', array('label' => 'Number'));
-echo $this -> Form -> input('FUNDRAISING', array('label' => 'Fundraising Efforts'));
-echo $this -> Form -> input('TYPE', array('label' => 'Type'));
-echo $this -> Form -> input('CATEGORY', array('label' => 'Category'));
-echo $this -> Form -> input('STATUS', array('label' => 'Status'));
-echo $this -> Form -> input('ORGANIZATION', array('label' => 'Organization'));
-echo $this -> Form -> input('Authors.UNDR_AUTH_ID', array('label' => 'Undergraduate Author'));
-echo $this -> Form -> input('Authors.UNDR_AUTH_APPR', array('label' => 'Undergraduate Approval'));
-echo $this -> Form -> input('Authors.GRAD_AUTH_ID', array('label' => 'Graduate Author'));
-echo $this -> Form -> input('Authors.GRAD_AUTH_APPR', array('label' => 'Graduate Approval'));
+echo $this -> Form -> input('id', array('type' => 'hidden'));
+echo $this -> Form -> input('title', array('label' => 'Title'));
+echo $this -> Form -> input('description', array('label' => 'Description'));
+echo $this -> Form -> input('number', array('label' => 'Number'));
+echo $this -> Form -> input('fundraising', array('label' => 'Fundraising Efforts'));
+echo $this -> Form -> input('type', array('label' => 'Type'));
+echo $this -> Form -> input('category', array('label' => 'Category'));
+echo $this -> Form -> input('org_id', array(
+	'label' => 'Organization',
+	'options' => $organizations,
+	'default' => 'Select Organization'
+));
+// debug($bill);echo $this -> Form -> input('Bill.auth_id', array('type' => 'hidden'));
+echo $this -> Form -> input('Authors.ID', array('type' => 'hidden'));
+if ($bill['Authors']['undr_auth_id'] == $this -> Session -> read('Sga.id'))
+{
+	echo $this -> Form -> input('Authors.undr_auth_appr', array('options' => array(0 => 'Not Approved', 1 => 'Approved'), 'label' => 'Undergraduate Approval - '. $UnderAuthor['User']['name']));
+}
+
+if ($bill['Authors']['grad_auth_id'] == $this -> Session -> read('Sga.id'))
+{
+	echo $this -> Form -> input('Authors.grad_auth_appr', array('options' => array(0 => 'Not Approved', 1 => 'Approved'),'label' => 'Graduate Approval - ' . $GradAuthor['User']['name']));
+}
 echo $this -> Form -> end('Submit');
 $this -> end();
 ?>

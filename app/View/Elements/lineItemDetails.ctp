@@ -17,14 +17,14 @@ if ($lineitems != null)
 	foreach ($lineitems as $lineitem)
 	{
 		echo $this -> Html -> tableCells(array(
-			$lineitem['LineItem']['LINE_NUMBER'],
-			$this -> Html -> link($lineitem['LineItem']['NAME'], array('controller' => 'LineItems', 'action' => 'view', $lineitem['LineItem']['ID'])),
-			$lineitem['LineItem']['COST_PER_UNIT'],
-			$lineitem['LineItem']['QUANTITY'],
-			$lineitem['LineItem']['TOTAL_COST'],
-			$lineitem['LineItem']['LINE_NUMBER'],
-			$lineitem['LineItem']['ACCOUNT'],
-			$lineitem['LineItem']['STATE']
+			$lineitem['LineItem']['line_number'],
+			$this -> Html -> link($lineitem['LineItem']['name'], array('controller' => 'LineItems', 'action' => 'view', $lineitem['LineItem']['id'])),
+			$lineitem['LineItem']['cost_per_unit'],
+			$lineitem['LineItem']['quantity'],
+			$lineitem['LineItem']['total_cost'],
+			$lineitem['LineItem']['line_number'],
+			$lineitem['LineItem']['account'],
+			$lineitem['LineItem']['state']
 		));
 	}
 	echo $this -> Html -> tableEnd();
@@ -36,13 +36,13 @@ if ($lineitems != null)
 	{
 		foreach ($states as $state)
 		{
-			echo $this -> Html -> tableCells(array($state['LineItem']['STATE'] . ':',
+			echo $this -> Html -> tableCells(array($state['LineItem']['state'] . ':',
 				'Prior Year',
-				$this -> Number -> currency($totals['PY_' . strtoupper($state['LineItem']['STATE'])]),
+				$this -> Number -> currency($totals['PY_' . strtoupper($state['LineItem']['state'])]),
 				'Capital Outlay',
-				$this -> Number -> currency($totals['CO_' . strtoupper($state['LineItem']['STATE'])]),
+				$this -> Number -> currency($totals['CO_' . strtoupper($state['LineItem']['state'])]),
 				'Total',
-				$this -> Number -> currency($totals['TOTAL_' . strtoupper($state['LineItem']['STATE'])])
+				$this -> Number -> currency($totals['TOTAL_' . strtoupper($state['LineItem']['state'])])
 			));
 		}
 	}
@@ -51,11 +51,11 @@ if ($lineitems != null)
 
 		echo $this -> Html -> tableCells(array(
 			'Prior Year',
-			$this -> Number -> currency($totals['PY_' . strtoupper($lineitems[0]['LineItem']['STATE'])]),
+			$this -> Number -> currency($totals['PY_' . strtoupper($lineitems[0]['LineItem']['state'])]),
 			'Capital Outlay',
-			$this -> Number -> currency($totals['CO_' . strtoupper($lineitems[0]['LineItem']['STATE'])]),
+			$this -> Number -> currency($totals['CO_' . strtoupper($lineitems[0]['LineItem']['state'])]),
 			'Total',
-			$this -> Number -> currency($totals['TOTAL_' . strtoupper($lineitems[0]['LineItem']['STATE'])])
+			$this -> Number -> currency($totals['TOTAL_' . strtoupper($lineitems[0]['LineItem']['state'])])
 		));
 	}
 	echo $this -> Html -> tableEnd();

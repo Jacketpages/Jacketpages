@@ -8,46 +8,47 @@ class Bill extends AppModel
 	public $belongsTo = array(
 		'Status' => array(
 			'className' => 'BillStatus',
-			'foreignKey' => 'STATUS'
+			'foreignKey' => 'status'
 		),
 		'Submitter' => array(
 			'className' => 'User',
-			'foreignKey' => 'SUBMITTER'
+			'foreignKey' => 'submitter'
 		),
-		'GSS' => array('className' => 'BillVote', 'foreignKey' => 'GSS_ID'),
-		'UHR' => array('className' => 'BillVote', 'foreignKey' => 'UHR_ID'),
-		'GCC' => array('className' => 'BillVote', 'foreignKey' => 'GCC_ID'),
-		'UCC' => array('className' => 'BillVote', 'foreignKey' => 'UCC_ID'),
-		'Authors' => array('className' => 'BillAuthor', 'foreignKey' => 'AUTH_ID')
+		'GSS' => array('className' => 'BillVote', 'foreignKey' => 'gss_id'),
+		'UHR' => array('className' => 'BillVote', 'foreignKey' => 'uhr_id'),
+		'GCC' => array('className' => 'BillVote', 'foreignKey' => 'gcc_id'),
+		'UCC' => array('className' => 'BillVote', 'foreignKey' => 'ucc_id'),
+		'Authors' => array('className' => 'BillAuthor', 'foreignKey' => 'auth_id'),
+		'Organization' => array('className' => 'Organization', 'foreignKey' => 'org_id', 'fields' => 'name')
 	);
 	
 	public $validate = array(
-		'TITLE' => array(
+		'title' => array(
 			'declared' => array(
 				'rule' => 'notEmpty',
 				'required' => true,
 				'message' => 'Must be numbers and letters and cannot be blank.',
 	),
 	),
-		'DESCRIPTION' => array(
+		'description' => array(
 			'declared' => array(
 				'rule' => 'notEmpty',
 				'required' => true,
 				'message' => 'Must be numbers and letters and cannot be blank.',
 	),
 	),
-		'ORG_ID' => array(
+		'org_id' => array(
 			'declared' => array(
 				'rule' => 'notEmpty',
 				'required' => true,
 				'message' => 'You must enter an organization.',
 	),
 	),
-		'TYPE' => array(
+		'type' => array(
 			'rule' => array('inList', array('Resolution','Finance Request', 'Budget')),
 			'message' => 'Invalid type',
 	),
-		'CATEGORY' => array(
+		'category' => array(
 			'rule' => array('inList', array('Joint', 'Undergraduate', 'Graduate', 'Conference')),
 	)
 	);

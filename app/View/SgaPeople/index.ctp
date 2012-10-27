@@ -67,31 +67,31 @@ $this -> start('listing');
     <?php
       // Print out all of the table headers
    echo $this -> Html -> tableHeaders(array(
-      $this -> Paginator -> sort('NAME', 'Name'),
-      $this -> Paginator -> sort('HOUSE', 'House'),
-      $this -> Paginator -> sort('DEPARTMENT', 'Department'),
-      $this -> Paginator -> sort('STATUS', 'Status'), "",""
+      $this -> Paginator -> sort('name', 'Name'),
+      $this -> Paginator -> sort('house', 'House'),
+      $this -> Paginator -> sort('department', 'Department'),
+      $this -> Paginator -> sort('status', 'Status'), "",""
    ), array('class' => 'links'));
    foreach ($sgapeople as $sgaperson)
    {
       echo $this -> Html -> tableCells(array(
-         $this -> Html -> link($sgaperson['User']['NAME'], array(
+         $this -> Html -> link($sgaperson['User']['name'], array(
             'controller' => 'users',
             'action' => 'view',
-            $sgaperson['SgaPerson']['USER_ID']
+            $sgaperson['SgaPerson']['user_id']
          )),
-         $sgaperson['SgaPerson']['HOUSE'],
-         $sgaperson['SgaPerson']['DEPARTMENT'],
-         $sgaperson['SgaPerson']['STATUS'],
+         $sgaperson['SgaPerson']['house'],
+         $sgaperson['SgaPerson']['department'],
+         $sgaperson['SgaPerson']['status'],
          $this -> Html -> link('Edit', array(
             'action' => 'edit',
-            $sgaperson['SgaPerson']['ID']
+            $sgaperson['SgaPerson']['id']
          )),
          // @TODO Figure out what the sprintf thing is for. Display error message. Is it the cakephp standard?
          $this -> Html -> link(__('Delete', true), array(
             'action' => 'delete',
-            $sgaperson['SgaPerson']['ID']
-         ), null, sprintf(__('Are you sure you want to delete %s?', true), $sgaperson['User']['NAME']))
+            $sgaperson['SgaPerson']['id']
+         ), null, sprintf(__('Are you sure you want to delete %s?', true), $sgaperson['User']['name']))
       ));
    }
     ?>

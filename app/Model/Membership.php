@@ -6,15 +6,15 @@
 class Membership extends AppModel
 {
 	public $name = 'Membership';
-	public $virtualFields = array('NAME' => 'CONCAT(User.FIRST_NAME, " ", User.LAST_NAME)');
+	public $virtualFields = array('name' => 'CONCAT(User.first_name, " ", User.last_name)');
 	public $belongsTo = array(
 		'Organization' => array(
 			'className' => 'Organization',
-			'foreignKey' => 'ORG_ID'
+			'foreignKey' => 'org_id'
 		),
 		'User' => array(
 			'className' => 'User',
-			'foreignKey' => 'USER_ID'
+			'foreignKey' => 'user_id'
 		)
 	);
 }

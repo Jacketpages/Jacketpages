@@ -65,13 +65,13 @@ class OrganizationsController extends AppController
 		$this -> paginate = array(
 			'conditions' => array('AND' => array(
 					'OR' => array(
-						array('Organization.NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-						array('Organization.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-						array('Organization.SHORT_NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+						array('Organization.name LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+						array('Organization.description LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+						array('Organization.short_name LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
 					),
-					array('Organization.NAME LIKE' => $letter . '%'),
+					array('Organization.name LIKE' => $letter . '%'),
 					array($org_status => 'Inactive'),
-					array('Category.NAME LIKE' => $this -> Session -> read('Search.category') . '%')
+					array('Category.name LIKE' => $this -> Session -> read('Search.category') . '%')
 				)),
 			'limit' => 20
 		);
@@ -83,12 +83,12 @@ class OrganizationsController extends AppController
 		}
 		// Sets the users variable for the view
 		$this -> set('organizations', $this -> paginate('Organization'));
-		$orgNames = $this -> Organization -> find('all', array('fields' => 'NAME'));
+		$orgNames = $this -> Organization -> find('all', array('fields' => 'name'));
 		// Create the array for the javascript autocomplete
 		$just_names = array();
 		foreach ($orgNames as $orgName)
 		{
-			$just_names[] = $orgName['Organization']['NAME'];
+			$just_names[] = $orgName['Organization']['name'];
 		}
 		$this -> set('names_to_autocomplete', $just_names);
 	}
@@ -111,16 +111,16 @@ class OrganizationsController extends AppController
 	{
 		$this -> loadModel('Membership');
 		$org_ids = $this -> Membership -> find('list', array(
-			'conditions' => array('USER_ID' => $id),
+			'conditions' => array('user_id' => $id),
 			'fields' => array(
-				'ID',
-				'ORG_ID'
+				'id',
+				'org_id'
 			)
 		));
 		debug($org_ids);
 		if ($org_ids != null)
 		{
-			$this -> set('organizations', $this -> Organization -> find('all', array('conditions' => array('IN' => array('ID' => $org_ids)))));
+			$this -> set('organizations', $this -> Organization -> find('all', array('conditions' => array('IN' => array('id' => $org_ids)))));
 		}
 	}
 
@@ -136,15 +136,15 @@ class OrganizationsController extends AppController
 		$this -> loadModel('Membership');
 		$president = $this -> Membership -> find('first', array(
 			'conditions' => array('AND' => array(
-					'Membership.ORG_ID' => $id,
-					'Membership.ROLE' => 'President',
-					'Membership.START_DATE LIKE' => '2011%'
+					'Membership.org_id' => $id,
+					'Membership.role' => 'President',
+					'Membership.start_date LIKE' => '2011%'
 				)),
 			'fields' => array(
-				'Membership.ROLE',
-				'Membership.NAME',
-				'Membership.STATUS',
-				'Membership.TITLE'
+				'Membership.role',
+				'Membership.name',
+				'Membership.status',
+				'Membership.title'
 			)
 		));
 		$this -> set('president', $president);
@@ -155,49 +155,49 @@ class OrganizationsController extends AppController
 					'Membership.START_DATE LIKE' => '2011%'
 				)),
 			'fields' => array(
-				'Membership.ROLE',
-				'Membership.NAME',
-				'Membership.STATUS',
-				'Membership.TITLE'
+				'Membership.role',
+				'Membership.name',
+				'Membership.status',
+				'Membership.title'
 			)
 		));
 		$this -> set('treasurer', $treasurer);
 		$advisor = $this -> Membership -> find('first', array(
 			'conditions' => array('AND' => array(
-					'Membership.ORG_ID' => $id,
-					'Membership.ROLE' => 'Advisor',
-					'Membership.START_DATE LIKE' => '2011%'
+					'Membership.org_id' => $id,
+					'Membership.role' => 'Advisor',
+					'Membership.start_date LIKE' => '2011%'
 				)),
 			'fields' => array(
-				'Membership.ROLE',
-				'Membership.NAME',
-				'Membership.STATUS',
-				'Membership.TITLE'
+				'Membership.role',
+				'Membership.name',
+				'Membership.status',
+				'Membership.title'
 			)
 		));
 		$this -> set('advisor', $advisor);
 		$officers = $this -> Membership -> find('all', array(
 			'conditions' => array('AND' => array(
-					'Membership.ORG_ID' => $id,
-					'Membership.ROLE' => 'Officer',
-					'Membership.START_DATE LIKE' => '2011%'
+					'Membership.org_id' => $id,
+					'Membership.role' => 'Officer',
+					'Membership.start_date LIKE' => '2011%'
 				)),
 			'fields' => array(
-				'Membership.ROLE',
-				'Membership.NAME',
-				'Membership.STATUS',
-				'Membership.TITLE'
+				'Membership.role',
+				'Membership.name',
+				'Membership.status',
+				'Membership.title'
 			)
 		));
 		$this -> set('officers', $officers);
 		$members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
-					'Membership.ROLE' => 'Member',
-					'Membership.ORG_ID' => $id
+					'Membership.role' => 'Member',
+					'Membership.org_id' => $id
 				))));
 		$this -> set('members', $members);
 		$pending_members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
-					'Membership.ROLE' => 'Pending',
-					'Membership.ORG_ID' => $id
+					'Membership.role' => 'Pending',
+					'Membership.org_id' => $id
 				))));
 		$this -> set('pending_members', $pending_members);
 	}
@@ -227,7 +227,7 @@ class OrganizationsController extends AppController
 				$this -> Session -> setFlash('The organization has been saved.');
 				$this -> redirect(array(
 					'action' => 'view',
-					$this -> request -> data['Organization']['ID']
+					$this -> request -> data['Organization']['id']
 				));
 			}
 			else
@@ -301,10 +301,150 @@ class OrganizationsController extends AppController
 		$this -> set('export', $build_export);
 	}
 
-	public function roster()
+	public function roster($id = null)
 	{
+		$this -> loadModel('Membership');
+		$officers = $this -> Membership -> find('all', array(
+			'conditions' => array('AND' => array(
+					'Membership.org_id' => $id,
+					'Membership.role <>' => 'Member',
+					'Membership.start_date LIKE' => '2011%'
+				)),
+			'fields' => array(
+				'Membership.role',
+				'Membership.name',
+				'Membership.status',
+				'Membership.title'
+			)
+		));
 		
+		$members = $this -> Membership -> find('all', array(
+			'conditions' => array('AND' => array(
+					'Membership.org_id' => $id,
+					'Membership.role' => 'Member'
+				)),
+			'fields' => array(
+				'Membership.role',
+				'Membership.name',
+				'Membership.status',
+				'Membership.title'
+			)
+		));
+		$pending_members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
+					'Membership.role' => 'Pending',
+					'Membership.org_id' => $id
+				))));
+		$this -> set('officers', $officers);
+		$this -> set('members', $members);
+		$this -> set('pending_members', $pending_members);
 	}
+
+	public function addlogo($id = null)
+	{
+			$org = $this -> Organization -> read(null, $id);
+			/*if ($org['Organization']['status'] != 'Active' && !$this -> isLevel('admin'))
+			{
+				$this -> Session -> setFlash(__('Invalid organization', true));
+				$this -> redirect(array('action' => 'index'));
+			}
+			if (!$id)
+			{
+				$this -> Session -> setFlash(__('Invalid organization.', true));
+				$this -> redirect(array('action' => 'index'));
+			}
+			if (!$this -> isLevel('admin') && !$this -> _isOfficer($id))
+			{
+				$this -> Session -> setFlash(__('You are not an officer of this organization.', true));
+				$this -> redirect(array(
+						'action' => 'view',
+						$id
+				));
+			}*/
+			if (!empty($this -> data) && is_uploaded_file($this -> data['File']['image']['tmp_name']))
+			{
+				Configure::write('debug', 0);
+				$fileData = fread(fopen($this -> data['File']['image']['tmp_name'], "r"), $this -> data['File']['image']['size']);
+				$permitted = array(
+						'image/gif',
+						'image/jpeg',
+						'image/pjpeg',
+						'image/png'
+				);
+				$typeOK = false;
+				foreach ($permitted as $type)
+				{
+					if ($type == $this -> data['File']['image']['type'])
+					{
+						$typeOK = true;
+						break;
+					}
+				}
+				if (!$typeOK)
+				{
+					$this -> Session -> setFlash(__('Invalid image type.', true));
+					$this -> redirect('/organizations/addlogo/' . $id);
+				}
+				$this -> Organization -> set('logo_name', $this -> data['File']['image']['name']);
+				$this -> Organization -> set('logo_type', $this -> data['File']['image']['type']);
+				$this -> Organization -> set('logo_size', $this -> data['File']['image']['size']);
+				$this -> Organization -> set('logo', $fileData);
+				if ($this -> data['File']['image']['size'] > 20000)
+				{
+					$this -> Session -> setFlash(__('Image is too large.', true));
+					$this -> redirect('/organizations/addlogo/' . $id);
+				}
+				if ($this -> Organization -> save())
+				{
+					$this -> Session -> setFlash(__('Logo uploaded.', true));
+					$this -> redirect(array(
+							'action' => 'view',
+							$id
+					));
+					exit();
+				}
+				else
+				{
+					$this -> Session -> setFlash(__('Error in upload.', true));
+					$this -> redirect(array(
+							'action' => 'view',
+							$id
+					));
+					exit();
+				}
+			}
+
+			$this -> set('organization', $this -> Organization -> read(null, $id));
+	}
+
+		function getlogo($id = null)
+		{
+			$org = $this -> Organization -> read(null, $id);
+			if ($org['Organization']['status'] == 'Frozen' || !$id)
+			{
+				$this -> Session -> setFlash(__('Invalid organization', true));
+				$this -> redirect(array('action' => 'index'));
+			}
+
+			$this -> set('inpage', true);
+
+			$file = $this -> Organization -> findById($id);
+			$logo = array();
+			$logo['name'] = $file['Organization']['logo_name'];
+			$logo['type'] = $file['Organization']['logo_type'];
+			$logo['data'] = $file['Organization']['logo'];
+
+			if ($logo['data'] == null)
+			{
+				return false;
+			}
+			else
+			{
+				debug($logo);
+				$this -> set('file', $logo);
+				$this -> render('download', 'image');
+				return true;
+			}
+		}
 
 }
 ?>
