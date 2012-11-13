@@ -79,9 +79,9 @@
                $message = $this -> Html -> tag('div', $this -> Session -> flash(), array('id' => 'right'));
             }
             else
-            if ($this -> Session -> read('USER.NAME') != null)
+            if ($this -> Session -> read('User.name') != null)
             {
-               $message = $this -> Html -> tag('div', "Welcome, " . $this -> Session -> read('USER.NAME'), array('id' => 'right'));
+               $message = $this -> Html -> tag('div', "Welcome, " . $this -> Session -> read('User.name'), array('id' => 'right'));
             }
             else
             {

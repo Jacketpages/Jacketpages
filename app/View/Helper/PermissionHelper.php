@@ -42,7 +42,7 @@ class PermissionHelper extends AppHelper
    
    private function isLevel($level)
    {
-      $session_level = $this -> Session -> read('USER.LEVEL');
+      $session_level = $this -> Session -> read('User.level');
       if ($session_level == $level)
       {
          return true;
@@ -52,6 +52,6 @@ class PermissionHelper extends AppHelper
    
    public function check($viewPath, $view)
    {
-   	return $this -> Acl -> check($viewPath . "/" . $view, 'Role/' . $this -> Session -> read('USER.LEVEL'));
+   	return $this -> Acl -> check($viewPath . "/" . $view, 'Role/' . $this -> Session -> read('User.level'));
    }
 }

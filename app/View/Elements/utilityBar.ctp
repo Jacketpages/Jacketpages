@@ -59,7 +59,7 @@ else
    $profile = $this -> Html -> link('Account Profile', array(
       'controller' => 'users',
       'action' => 'view',
-      $this -> Session -> read('USER.ID')
+      $this -> Session -> read('User.id')
    ));
    $logout = $this -> Html -> link('Logout', array(
       'controller' => 'users',
@@ -82,7 +82,7 @@ else
    $viewMyOrgs = $this -> Html -> link('View My Organizations', array(
       'controller' => 'organizations',
       'action' => 'my_orgs',
-      $this -> Session -> read('USER.ID')
+      $this -> Session -> read('User.id')
    ));
    
    $inactiveOrgs = $this -> Html -> link('View Inactive Organizations', array(

@@ -33,8 +33,9 @@ class OrganizationsController extends AppController
 	public function index($letter = null, $category = null, $inactive_page = null)
 	{
 		// Set page view permissions
-		$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'orgCreatePerm'));
-		$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'orgExportPerm'));
+		$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgCreatePerm'));
+		$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgExportPerm'));
+		$this -> set('orgAdminView', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgAdminView'));
 
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))
@@ -47,7 +48,7 @@ class OrganizationsController extends AppController
 		{
 			$this -> Session -> delete('Search');
 		}
-		$org_status = 'Organization.STATUS';
+		$org_status = 'Organization.status';
 		if ($inactive_page)
 		{
 			$org_status = $org_status . " =";

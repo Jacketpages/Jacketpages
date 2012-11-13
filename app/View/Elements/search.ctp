@@ -32,29 +32,18 @@
 			for ($i = 0; $i < count($alpha); $i++)
 			{
 				echo "<li>\n";
-				if ($my_bills)
-				{
 					echo $this -> Html -> link($alpha[$i], array(
 						'controller' => strtolower($this -> params['controller']),
-						'action' => 'my_bills',
+						'action' => $action,
 						strtolower($alpha[$i])
 					));
-				}
-				else
-				{
-					echo $this -> Html -> link($alpha[$i], array(
-						'controller' => strtolower($this -> params['controller']),
-						'action' => 'index',
-						strtolower($alpha[$i])
-					));
-				}
 				echo "&nbsp";
 				echo "</li>\n";
 			}
 			echo "<li>\n";
 			echo $this -> Html -> link('ALL', array(
 				'controller' => strtolower($this -> params['controller']),
-				'action' => 'index'
+				'action' => $action
 			));
 			?>
 			</li>

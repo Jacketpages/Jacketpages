@@ -3,6 +3,7 @@
  * @author Stephen Roca
  * @since 06/22/2012
  */
+ $this -> Html -> addCrumb('SGA People', '/sga_people');
  $this -> Paginator -> options(array(
       'update' => '#forupdate',
       'indicator' => '#indicator',

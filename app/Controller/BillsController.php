@@ -23,10 +23,10 @@ class BillsController extends AppController
 	 * that user
 	 * @param $id - a user's id
 	 */
-	public function index($letter = null, $id = null)
+	public function index($letter = null, $id = null, $onAgenda = null)
 	{
 		// Set page view permissions
-		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'billExportPerm'));
+		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'billExportPerm'));
 
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))
@@ -34,7 +34,8 @@ class BillsController extends AppController
 			$this -> Session -> write('Search.keyword', $this -> request -> data['Bill']['keyword']);
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
-		else if (!$this -> RequestHandler -> isAjax())
+		else
+		if (!$this -> RequestHandler -> isAjax())
 		{
 			$this -> Session -> delete('Search');
 		}
@@ -54,10 +55,10 @@ class BillsController extends AppController
 			$this -> Session -> write($this -> name . '.Undergraduate', 1);
 			$this -> Session -> write($this -> name . '.Graduate', 1);
 		}
-		else 
+		else
 		{
 			$this -> Session -> write($this -> name . '.On Agenda', $this -> data['Bill']['On Agenda']);
-			$this -> Session -> write($this -> name . '.Authored', $this -> data['Bill']['Authored']);			
+			$this -> Session -> write($this -> name . '.Authored', $this -> data['Bill']['Authored']);
 			$this -> Session -> write($this -> name . '.Awaiting Author', $this -> data['Bill']['Awaiting Author']);
 			$this -> Session -> write($this -> name . '.Passed', $this -> data['Bill']['Passed']);
 			$this -> Session -> write($this -> name . '.Failed', $this -> data['Bill']['Failed']);
@@ -90,18 +91,21 @@ class BillsController extends AppController
 		if ($this -> Session -> read($this -> name . '.Graduate'))
 			$categories[] = 'Graduate';
 
+		if ($onAgenda)
+			$statuses = 3;
+
 		/* END CHECKBOX FILTER LOGIC*/
 
 		$this -> paginate = array(
 			'conditions' => array(
-				'Bill.STATUS' => $statuses,
-				'Bill.CATEGORY' => $categories,
+				'Bill.status' => $statuses,
+				'Bill.category' => $categories,
 				'OR' => array(
-					array('Bill.TITLE LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-					array('Bill.DESCRIPTION LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-					array('Bill.NUMBER LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+					array('Bill.title LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+					array('Bill.description LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+					array('Bill.number LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
 				),
-				array('Bill.TITLE LIKE' => $letter . '%')
+				array('Bill.title LIKE' => $letter . '%')
 			),
 			'limit' => 20
 		);
@@ -109,7 +113,7 @@ class BillsController extends AppController
 		// If given a user's id then filter to show only that user's bills
 		if ($id != null)
 		{
-			$this -> set('bills', $this -> paginate('Bill', array('SUBMITTER' => $id)));
+			$this -> set('bills', $this -> paginate('Bill', array('submitter' => $id)));
 		}
 		else
 		{
@@ -123,7 +127,7 @@ class BillsController extends AppController
 	 */
 	public function view($id = null)
 	{
-		
+
 		// Set which bill to retrieve from the database.
 		$this -> Bill -> id = $id;
 		$bill = $this -> Bill -> read();
@@ -238,18 +242,24 @@ class BillsController extends AppController
 			{
 				$this -> request -> data['Authors']['undr_auth_id'] = 1;
 			}
-			
+
 			if ($this -> Bill -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The bill has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				$bill = $this -> Bill -> find('first', array(
+					'conditions' => array('submitter' => $this -> Session -> read('User.id')),
+					'order' => 'Bill.id DESC'
+				));
+				$this -> redirect(array(
+					'action' => 'view',
+					$bill['Bill']['id']
+				));
 			}
 			else
 			{
 				$this -> Session -> setFlash('Unable to add bill.');
 			}
 		}
-
 
 		$this -> setOrganizationNames();
 		// Set the graduate authors drop down list
@@ -258,8 +268,8 @@ class BillsController extends AppController
 		$sga_graduate = $this -> SgaPerson -> find('list', array(
 			'fields' => array('name_department'),
 			'conditions' => array(
-				'STATUS' => 'Active',
-				'HOUSE' => 'Graduate'
+				'status' => 'Active',
+				'house' => 'Graduate'
 			),
 			'recursive' => 0
 		));
@@ -269,8 +279,8 @@ class BillsController extends AppController
 		$sga_undergraduate = $this -> SgaPerson -> find('list', array(
 			'fields' => array('name_department'),
 			'conditions' => array(
-				'STATUS' => 'Active',
-				'HOUSE' => 'Undergraduate'
+				'status' => 'Active',
+				'house' => 'Undergraduate'
 			),
 			'recursive' => 0
 		));
@@ -286,19 +296,13 @@ class BillsController extends AppController
 	public function edit($id = null)
 	{
 		//TODO Implement
-		
+
 		//TODO move the below statement because they won't both
 		// be in the post data at the same time
-		if ($this -> request -> data['Authors']['grad_auth_appr'] 
-			&& $this -> request -> data['Authors']['undr_auth_appr'] 
-			&& $this -> request -> data['Bill']['status'] == 1)
-		{
-			$this -> request -> data['Bill']['status'] = 2;
-		}
 		$this -> Bill -> id = $id;		$this -> Bill -> set('last_mod_date', date('Y-m-d h:i:s'));
 		$this -> Bill -> set('last_mod_by', $this -> Session -> read('User.id'));
-			$this -> setOrganizationNames();
-			debug($this -> request -> data);
+		$this -> setOrganizationNames();
+		debug($this -> request -> data);
 		if ($this -> request -> is('get'))
 		{
 			$this -> Bill -> id = $id;
@@ -310,11 +314,14 @@ class BillsController extends AppController
 		else
 		{
 			$this -> loadModel('BillAuthor');
-			$this -> request -> data['Authors']['id']= $this -> request -> data['Bill']['auth_id'];
-			if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
+			$this -> request -> data['Authors']['id'] = $this -> request -> data['Bill']['auth_id'];			if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 			{
-				$this -> Bill -> id = $id;
-				
+				$savedBill = $this -> Bill -> findById($id);
+				if ($savedBill['Authors']['grad_auth_appr'] && $savedBill['Authors']['undr_auth_appr'] && $savedBill['Bill']['status'] == 1)
+				{
+					$savedBill['Bill']['status'] = 2;
+				}
+				$this -> Bill -> save($savedBill);
 				$this -> Session -> setFlash('The Bill has been saved.');
 				// $this -> redirect(array('action' => 'index'));
 			}
@@ -365,19 +372,20 @@ class BillsController extends AppController
 		$this -> loadModel('User');
 		$this -> set('GradAuthor', $this -> User -> find('first', array(
 			'fields' => array('name'),
-			'conditions' => array('User.sga_id' => $grad_id
-		
-			)
+			'conditions' => array('User.sga_id' => $grad_id)
 		)));
-		
+
 		$this -> set('UnderAuthor', $this -> User -> find('first', array(
 			'fields' => array('name'),
-			'conditions' => array('User.sga_id' => $undr_id
-		
-			)
+			'conditions' => array('User.sga_id' => $undr_id)
 		)));
 
 	}
 
+	public function onAgenda($letter = null, $id = null)
+	{
+		$this -> index($letter, $id, true);
+	}
+	
 }
 ?>

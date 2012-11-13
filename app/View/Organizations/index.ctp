@@ -120,7 +120,7 @@ $this -> start('search');
 	<?php
 	echo $this -> element('organizationTable', array(
 		'organizations' => $organizations,
-		'admin' => $permitted
+		'admin' => $orgAdminView
 	));
 	echo $this -> element('paging');
 	// Implement Ajax for this page.

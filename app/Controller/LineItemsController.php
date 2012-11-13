@@ -9,6 +9,13 @@ class LineItemsController extends AppController
 {
 	public $helpers = array('Form');
 
+	public function index($id = null, $state = null)
+	{
+		$lineitems = $this -> LineItem -> find('all', array('conditions' => array('bill_id' => $id, 'state' => $state)));
+		$this -> request -> data = $lineitems;
+		$this -> set('lineitems', $this -> request -> data);
+	}
+
 	public function view($id = null)
 	{
 		$this -> set('lineitem', $this -> LineItem -> findById($id));

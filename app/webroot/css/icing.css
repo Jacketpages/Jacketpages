@@ -334,7 +334,7 @@ margin: 12px 0 0 0;
  */
 #footer
 {
-	background: url(../img/bgFooter2.png) no-repeat;
+	background: url(../img/bgFooter2.png) no-repeat center;
 	clear: both;
 	color: #666;
 	height: 57px;
