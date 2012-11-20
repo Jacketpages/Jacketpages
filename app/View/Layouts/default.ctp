@@ -5,8 +5,8 @@
  * @since 4/17/2012
  */
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
         <?php echo $this -> Html -> charset();?>
         <title><?php echo 'JacketPages';?>|<?php echo $title_for_layout;?></title>
@@ -36,6 +36,7 @@
       // debug($stuff);
         ?>
         <script type="text/javascript">
+        
 			// @TODO Generate this script using the HTML and Js helpers
 			$(document).ready(function() {
 				/**

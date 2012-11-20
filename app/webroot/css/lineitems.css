@@ -1,0 +1,19 @@
+/**
+ * 	@author Stephen Roca
+ *  This css is to manage the LineItems index page
+ */
+
+#LineItem td:first-child
+{
+	width: 1%;
+}
+
+#LineItem td:nth-child(2)
+{
+	width: 10%;
+}
+
+#LineItem td:nth-child(3)
+{
+	width: 20%;
+}
