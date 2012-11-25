@@ -55,21 +55,21 @@ CREATE TABLE IF NOT EXISTS BILL_AUTHORS(
     id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key.',
     PRIMARY KEY (id),
     bill_id int(11),
-    grad_auth_id int(11) NOT NULL DEFAULT 0 COMMENT 'The bill\'s Graduate author. (Foreign Key to Users Table)',
-    FOREIGN KEY (grad_auth_id) REFERENCES USERS(id),
+    grad_auth_id int(11) DEFAULT 0 COMMENT 'The bill\'s Graduate author. (Foreign Key to Users Table)',
+    -- FOREIGN KEY (grad_auth_id) REFERENCES SGA_PEOPLE(id),
     grad_auth_appr bit DEFAULT 0 COMMENT 'The bill\'s Graduate author\'s approval. (Yes[1] or No[0])',
-    undr_auth_id int(11) NOT NULL DEFAULT 0 COMMENT 'The bill\'s Undergraduate author. (Foreign Key to Users Table)',
-    FOREIGN KEY (undr_auth_id) REFERENCES USERS(id),
+    undr_auth_id int(11) DEFAULT 0 COMMENT 'The bill\'s Undergraduate author. (Foreign Key to Users Table)',
+    -- FOREIGN KEY (undr_auth_id) REFERENCES SGA_PEOPLE(id),
     undr_auth_appr bit DEFAULT 0 COMMENT 'The bill\'s Undergraduate author\'s approval. (Yes[1] or No[0])',
-    grad_pres_id int(11) NOT NULL DEFAULT 0 COMMENT 'The bill\'s Graduate President\'s Signature. (Foreign Key to Users Table)',
+    grad_pres_id int(11) DEFAULT 0 COMMENT 'The bill\'s Graduate President\'s Signature. (Foreign Key to Users Table)',
     -- FOREIGN KEY (GRAD_PRES_ID) REFERENCES USERS(id),
-    grad_secr_id int(11) NOT NULL DEFAULT 0 COMMENT 'The bill\'s Graduate Secretary\'s Signature. (Foreign Key to Users Table)',
+    grad_secr_id int(11) DEFAULT 0 COMMENT 'The bill\'s Graduate Secretary\'s Signature. (Foreign Key to Users Table)',
     -- FOREIGN KEY (GRAD_SECR_ID) REFERENCES USERS(id),
-    undr_pres_id int(11) NOT NULL DEFAULT 0 COMMENT 'The bill\'s Undergraduate President\'s Signature. (Foreign Key to Users Table)',
+    undr_pres_id int(11) DEFAULT 0 COMMENT 'The bill\'s Undergraduate President\'s Signature. (Foreign Key to Users Table)',
     -- FOREIGN KEY (UNDR_PRES_ID) REFERENCES USERS(id),
-    undr_secr_id int(11) NOT NULL DEFAULT 0 COMMENT 'The bill\'s Undergaduate Secretary\'s Signature. (Foreign Key to Users Table)',
+    undr_secr_id int(11) DEFAULT 0 COMMENT 'The bill\'s Undergaduate Secretary\'s Signature. (Foreign Key to Users Table)',
     -- FOREIGN KEY (UNDR_SECR_ID) REFERENCES USERS(id),
-    vp_fina_id int(11) NOT NULL DEFAULT 0 COMMENT 'The bill\'s Vice President of Finance\'s Signature. (Foreign Key to Users Table)'
+    vp_fina_id int(11) DEFAULT 0 COMMENT 'The bill\'s Vice President of Finance\'s Signature. (Foreign Key to Users Table)'
     -- FOREIGN KEY (VP_FINA_ID) REFERENCES USERS(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of a bill\'s authors.';
 -- DROP TABLE BILL_AUTHORS;
@@ -232,3 +232,26 @@ CREATE TABLE IF NOT EXISTS DOCUMENTS(
     file mediumblob COMMENT 'The body or contents of the charter.',
     last_updated TIMESTAMP NOT NULL COMMENT 'The date the charter was last updated.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of organization\'s charters.';
+
+/*LINE_ITEM_REVISIONS TABLE STRUCTURE*/
+CREATE TABLE IF NOT EXISTS LINE_ITEM_REVISIONS(
+    id int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key.',
+    PRIMARY KEY(id),
+	line_item_id int(11) NOT NULL COMMENT 'The line items old id.',
+	line_number int(11) NOT NULL DEFAULT 1 COMMENT 'The line item\'s number.',
+    bill_id int(11) NOT NULL COMMENT 'The line item\'s corresponding bill id. (Foreign Key to Bills Table)',
+    FOREIGN KEY (bill_id) REFERENCES BILLS(id),
+    parent_id int(11) DEFAULT NULL COMMENT 'The line item\'s reference to it\'s previous or parent version.',
+    FOREIGN KEY (parent_id) REFERENCES LINE_ITEMS(id),
+    state varchar(50) NOT NULL DEFAULT '' COMMENT 'The line item\'s state. (Submitted, JFC, Undergraduate, Graduate, Conference, Final)',
+    name varchar(50) NOT NULL DEFAULT '' COMMENT 'The line item\'s name.',
+    cost_per_unit DECIMAL(10,2) NOT NULL DEFAULT 0 COMMENT 'The cost per one unit of the line item.',
+    quantity DECIMAL(10,2) NOT NULL DEFAULT 0 COMMENT 'The quantity of that line item.',
+    total_cost DECIMAL(10,2) NOT NULL DEFAULT 0 COMMENT 'The total cost of that line item. (COST_PER_UNIT * QUANTITY)',
+    amount DECIMAL(10,2) NOT NULL DEFAULT 0 COMMENT 'The amount requested.',
+    account varchar(50) NOT NULL DEFAULT '' COMMENT 'The account the line item falls under. (Prior Year, Capital Outlay, ULR, GLR)',
+    type varchar(50) NOT NULL DEFAULT '' COMMENT 'The type of line item.',
+    comments text COMMENT 'Any comments that need to be considered with the line item.',
+	revision int(2) NOT NULL DEFAULT 1,
+	deleted bit	DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of the line item revisions for a specific bill.';

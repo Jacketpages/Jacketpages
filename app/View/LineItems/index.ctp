@@ -31,7 +31,6 @@ echo $this -> Html -> tableHeaders(array(
 	''
 ));
 echo $this -> Form -> create();
-//debug($lineitems);
 foreach ($lineitems as $key => $lineitem)
 {
 	echo $this -> Html -> tableCells(array(
