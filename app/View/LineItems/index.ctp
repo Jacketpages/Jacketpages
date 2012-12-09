@@ -34,8 +34,7 @@ echo $this -> Form -> create();
 foreach ($lineitems as $key => $lineitem)
 {
 	echo $this -> Html -> tableCells(array(
-		$this -> Form -> text('LineItem.line_number', array(
-			'readonly' => true,
+		$this -> Form -> label('LineItem.line_number',$key + 1, array(
 			'label' => '',
 			'value' => $key + 1,
 			'id' => 'LineItemLineNumber' . ($key + 1)

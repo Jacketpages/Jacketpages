@@ -293,12 +293,8 @@ class BillsController extends AppController
 	 * Edit an existing bill
 	 * @param id - the id of the bill to edit
 	 */
-	public function edit($id = null)
+	public function edit_index($id = null)
 	{
-		//TODO Implement
-
-		//TODO move the below statement because they won't both
-		// be in the post data at the same time
 		$this -> Bill -> id = $id;		$this -> Bill -> set('last_mod_date', date('Y-m-d h:i:s'));
 		$this -> Bill -> set('last_mod_by', $this -> Session -> read('User.id'));
 		$this -> setOrganizationNames();
@@ -323,7 +319,7 @@ class BillsController extends AppController
 				}
 				$this -> Bill -> save($savedBill);
 				$this -> Session -> setFlash('The Bill has been saved.');
-				// $this -> redirect(array('action' => 'index'));
+				$this -> redirect(array('action' => 'index'));
 			}
 			else
 			{

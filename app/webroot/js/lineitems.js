@@ -14,7 +14,7 @@ function get(id)
 
 /**
  * Moves a specific line item down one
- * @param int pos
+ * @param int pos - row position
  */
 function moveDown(pos)
 {
@@ -23,7 +23,7 @@ function moveDown(pos)
 
 /**
  * Moves a specific line item up one
- * @param int pos
+ * @param int pos - row position
  */
 function moveUp(pos)
 {
@@ -33,8 +33,8 @@ function moveUp(pos)
 /**
  * A helper function to implement moveUp and moveDown. Does the actual work of
  * the two methods
- * @param int pos
- * @param int moveTo
+ * @param int pos - row position
+ * @param int moveTo - row position to move to
  */
 function move(pos, moveTo)
 {
@@ -63,7 +63,7 @@ function move(pos, moveTo)
 
 /**
  * Adds a blank row to the table of lineitems.
- * @param int pos
+ * @param int pos - row position
  */
 function addRow(pos)
 {
@@ -85,7 +85,7 @@ function addRow(pos)
 
 /**
  * Deletes a row from the table of lineitems.
- * @param int pos
+ * @param int pos - row position
  */
 function deleteRow(pos)
 {

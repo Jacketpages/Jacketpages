@@ -27,7 +27,7 @@ echo $this -> Html -> nestedList(array(
 $this -> end();
 $this -> start('search');
 
-echo $this -> element('search');
+echo $this -> element('search', array('action' =>  'index', 'endForm' => 1));
 ?>
 
 
