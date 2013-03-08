@@ -50,7 +50,7 @@ else
 	), array('class' => 'links'));
 	foreach ($organizations as $organization)
 	{
-		if (strlen($organization['Organization']['logo_name']) < 1)
+		if (strlen($organization['Organization']['logo_path']) < 1)
 		{
 			$logo = $this -> Html -> image('/img/default_logo.gif', array('width' => '60'));
 		}

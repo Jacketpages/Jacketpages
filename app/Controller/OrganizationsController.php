@@ -59,9 +59,9 @@ class OrganizationsController extends AppController
 		}
 
 		// Performs a SELECT on the Organization table with the following conditions:
-		// WHERE (NAME LIKE '%<KEYWORD>%' OR DESCRIPTION LIKE '%<KEYWORD>%' OR SHORT_NAME
+		// WHERE (name LIKE '%<KEYWORD>%' OR DESCRIPTION LIKE '%<KEYWORD>%' OR SHORT_name
 		// LIKE '%<KEYWORD>%')
-		// AND NAME LIKE '<LETTER>%' AND STATUS != 'Inactive' AND CATEGORY.NAME LIKE
+		// AND name LIKE '<LETTER>%' AND STATUS != 'Inactive' AND CATEGORY.name LIKE
 		// '%<CATEGORY>%'
 		$this -> paginate = array(
 			'conditions' => array('AND' => array(
@@ -84,12 +84,12 @@ class OrganizationsController extends AppController
 		}
 		// Sets the users variable for the view
 		$this -> set('organizations', $this -> paginate('Organization'));
-		$orgNames = $this -> Organization -> find('all', array('fields' => 'name'));
+		$orgnames = $this -> Organization -> find('all', array('fields' => 'name'));
 		// Create the array for the javascript autocomplete
 		$just_names = array();
-		foreach ($orgNames as $orgName)
+		foreach ($orgnames as $orgname)
 		{
-			$just_names[] = $orgName['Organization']['name'];
+			$just_names[] = $orgname['Organization']['name'];
 		}
 		$this -> set('names_to_autocomplete', $just_names);
 	}
@@ -110,18 +110,23 @@ class OrganizationsController extends AppController
 	 */
 	public function my_orgs($id = null)
 	{
+		$org_ids = null;
 		$this -> loadModel('Membership');
-		$org_ids = $this -> Membership -> find('list', array(
+		$ids = $this -> Membership -> find('list', array(
 			'conditions' => array('user_id' => $id),
 			'fields' => array(
-				'id',
 				'org_id'
 			)
 		));
-		debug($org_ids);
+		
+		foreach($ids as $id)
+		{
+			$org_ids[] = $id;
+		}
+		
 		if ($org_ids != null)
 		{
-			$this -> set('organizations', $this -> Organization -> find('all', array('conditions' => array('IN' => array('id' => $org_ids)))));
+			$this -> set('organizations', $this -> Organization -> find('all', array('conditions' => array('Organization.id' => $org_ids))));
 		}
 	}
 
@@ -224,7 +229,7 @@ class OrganizationsController extends AppController
 		{
 			if ($this -> Organization -> save($this -> request -> data))
 			{
-				CakeLog::write('info', 'User[' . $this -> Session -> read('USER.NAME') . '] has edited Organization[' . $this -> request -> data['Organization']['NAME'] . ']');
+				CakeLog::write('info', 'User[' . $this -> Session -> read('USER.name') . '] has edited Organization[' . $this -> request -> data['Organization']['name'] . ']');
 				$this -> Session -> setFlash('The organization has been saved.');
 				$this -> redirect(array(
 					'action' => 'view',
@@ -233,7 +238,7 @@ class OrganizationsController extends AppController
 			}
 			else
 			{
-				CakeLog::write('error', 'User[' . $this -> Session -> read('USER.NAME') . '] was unable to edit Organization[' . $this -> request -> data['Organization']['NAME'] . ']');
+				CakeLog::write('error', 'User[' . $this -> Session -> read('USER.name') . '] was unable to edit Organization[' . $this -> request -> data['Organization']['name'] . ']');
 				$this -> Session -> setFlash('Unable to edit the organization.');
 			}
 		}
@@ -246,24 +251,24 @@ class OrganizationsController extends AppController
 	public function export()
 	{
 		$organizations = $this -> Organization -> find('all', array('fields' => array(
-				'Organization.ID',
-				'Organization.NAME',
-				'Organization.STATUS',
-				'Organization.CONTACT_NAME',
-				'User.EMAIL'
+				'Organization.id',
+				'Organization.name',
+				'Organization.status',
+				'Organization.contact_name',
+				'User.email'
 			)));
 		$this -> loadModel('Membership');
 		$build_export[] = array(
 				"Organization",
 				"Status",
 				"Organization Contact",
-				"Organization Contact's Email",
+				"Organization Contact's email",
 				"President",
-				"President's Email",
+				"President's email",
 				"Treasurer",
-				"Treasurer's Email",
+				"Treasurer's email",
 				"Advisor",
-				"Advisor's Email",
+				"Advisor's email",
 			);
 		foreach ($organizations as $organization)
 		{
@@ -272,30 +277,30 @@ class OrganizationsController extends AppController
 				'Treasurer',
 				'Advisor'
 			);
-			$president = $this -> Membership -> findByRoleAndOrgId('President', $organization['Organization']['ID'], array(
-				'NAME',
-				'User.EMAIL'
+			$president = $this -> Membership -> findByRoleAndOrgId('President', $organization['Organization']['id'], array(
+				'name',
+				'User.email'
 			));
-			$treasurer = $this -> Membership -> findByRoleAndOrgId('Treasurer', $organization['Organization']['ID'], array(
-				'NAME',
-				'User.EMAIL'
+			$treasurer = $this -> Membership -> findByRoleAndOrgId('Treasurer', $organization['Organization']['id'], array(
+				'name',
+				'User.email'
 			));
-			$advisor = $this -> Membership -> findByRoleAndOrgId('Advisor', $organization['Organization']['ID'], array(
-				'NAME',
-				'User.EMAIL'
+			$advisor = $this -> Membership -> findByRoleAndOrgId('Advisor', $organization['Organization']['id'], array(
+				'name',
+				'User.email'
 			));
 			
 			$build_export[] = array(
-				$organization['Organization']['NAME'],
-				$organization['Organization']['STATUS'],
-				$organization['Organization']['CONTACT_NAME'],
-				$organization['User']['EMAIL'],
-				$president['Membership']['NAME'],
-				$president['User']['EMAIL'],
-				$treasurer['Membership']['NAME'],
-				$treasurer['User']['EMAIL'],
-				$advisor['Membership']['NAME'],
-				$advisor['User']['EMAIL'],
+				$organization['Organization']['name'],
+				$organization['Organization']['status'],
+				$organization['Organization']['contact_name'],
+				$organization['User']['email'],
+				$president['Membership']['name'],
+				$president['User']['email'],
+				$treasurer['Membership']['name'],
+				$treasurer['User']['email'],
+				$advisor['Membership']['name'],
+				$advisor['User']['email'],
 			);
 		}
 		$this -> layout = 'csv';

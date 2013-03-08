@@ -23,7 +23,10 @@ $orgs = $this -> Html -> link('Organizations', '#');
 $sga = $this -> Html -> link('Student Government', '#');
 if (!$this -> Permission -> isLoggedIn())
 {
-   $loginTopLevel = $this -> Html -> link('Login', '#');
+   $loginTopLevel = $this -> Html -> link('Login', array(
+      'controller' => 'users',
+      'action' => 'login'
+   ));
 }
 else
 {
@@ -100,8 +103,7 @@ if ($this -> Permission -> isSGA())
 
    $agendaBills = $this -> Html -> link('View Bills on Agenda', array(
       'controller' => 'bills',
-      'action' => 'index',
-      'Agenda',
+      'action' => 'onAgenda',
    ));
 }
 

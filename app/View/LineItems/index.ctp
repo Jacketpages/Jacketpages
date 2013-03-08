@@ -33,38 +33,41 @@ echo $this -> Html -> tableHeaders(array(
 echo $this -> Form -> create();
 foreach ($lineitems as $key => $lineitem)
 {
+	// echo $this -> Form -> hidden('LineItem.' . $key . '.id', array(
+		// 'value' => $lineitem['LineItem']['id'],
+		// 'id' => 'LineItemId' . ($key + 1)));
 	echo $this -> Html -> tableCells(array(
-		$this -> Form -> label('LineItem.line_number',$key + 1, array(
+		$this -> Form -> label('LineItem.' . $key .'.line_number',$key + 1, array(
 			'label' => '',
 			'value' => $key + 1,
 			'id' => 'LineItemLineNumber' . ($key + 1)
 		)),
-		$this -> Form -> text('LineItem.state', array(
+		$this -> Form -> text('LineItem.' . $key . '.state', array(
 			'label' => '',
 			'value' => $lineitem['LineItem']['state'],
 			'id' => 'LineItemState' . ($key + 1)
 		)),
-		$this -> Form -> text('LineItem.name', array(
+		$this -> Form -> text('LineItem.' . $key . '.name', array(
 			'label' => '',
 			'value' => $lineitem['LineItem']['name'],
 			'id' => 'LineItemName' . ($key + 1)
 		)),
-		$this -> Form -> text('LineItem.cost_per_unit', array(
+		$this -> Form -> text('LineItem.' . $key . '.cost_per_unit', array(
 			'label' => '',
 			'value' => $lineitem['LineItem']['cost_per_unit'],
 			'id' => 'LineItemCostPerUnit' . ($key + 1)
 		)),
-		$this -> Form -> text('LineItem.quantity', array(
+		$this -> Form -> text('LineItem.' . $key . '.quantity', array(
 			'label' => '',
 			'value' => $lineitem['LineItem']['quantity'],
 			'id' => 'LineItemQuantity' . ($key + 1)
 		)),
-		$this -> Form -> text('LineItem.total_cost', array(
+		$this -> Form -> text('LineItem.' . $key . '.total_cost', array(
 			'label' => '',
 			'value' => $lineitem['LineItem']['total_cost'],
 			'id' => 'LineItemTotalCost' . ($key + 1)
 		)),
-		$this -> Form -> text('LineItem.amount', array(
+		$this -> Form -> text('LineItem.' . $key . '.amount', array(
 			'label' => '',
 			'value' => $lineitem['LineItem']['amount'],
 			'id' => 'LineItemAmount' . ($key + 1)
@@ -93,7 +96,7 @@ foreach ($lineitems as $key => $lineitem)
 }
 echo $this -> Html -> tableEnd();
 
-echo $this -> Form -> end('Submit');
+echo $this -> Form -> submit('Submit');
 echo $this -> Form -> button('Copy to JFC', array(
 	'controller' => 'lineitems',
 	'action' => 'copy'

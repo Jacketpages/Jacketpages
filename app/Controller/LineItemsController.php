@@ -8,9 +8,18 @@
 class LineItemsController extends AppController
 {
 	public $helpers = array('Form');
+	
+	public function beforeFilter()
+	{
+		$this -> Security -> unlockedActions = array('index');
+		$this->Security->csrfCheck = false;
+		//$this->Security->validatePost = false;
+	}
 
 	public function index($id = null, $state = null)
 	{
+		debug($this -> request -> data);
+		debug($_POST);
 		if ($this -> request -> is('get'))
 		{
 			$lineitems = $this -> LineItem -> find('all', array('conditions' => array(
@@ -35,7 +44,7 @@ class LineItemsController extends AppController
 				if ($lineitem['LineItem']['id'] == null)
 				{
 					$this -> LineItem -> create();
-					if (!$this -> LineItem -> save($lineitem))
+					//if (!$this -> LineItem -> saveAll($lineitem))
 					{
 						//log error, set flash message, and get out of method
 					}

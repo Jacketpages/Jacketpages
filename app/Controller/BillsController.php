@@ -380,6 +380,11 @@ class BillsController extends AppController
 
 	public function onAgenda($letter = null, $id = null)
 	{
+		$this -> Session -> write($this -> name . '.Awaiting Author', 0);
+		$this -> Session -> write($this -> name . '.Authored', 0);
+		$this -> Session -> write($this -> name . '.Passed', 0);
+		$this -> Session -> write($this -> name . '.Failed', 0);
+		$this -> Session -> write($this -> name . '.Archived', 0);
 		$this -> index($letter, $id, true);
 	}
 	
