@@ -112,21 +112,14 @@ class OrganizationsController extends AppController
 	{
 		$org_ids = null;
 		$this -> loadModel('Membership');
-		$ids = $this -> Membership -> find('list', array(
-			'conditions' => array('user_id' => $id),
-			'fields' => array(
-				'org_id'
-			)
-		));
 		
-		foreach($ids as $id)
+		$memberships = $this -> Membership -> find('all', array(
+			'conditions' => array('user_id' => $id
+		)));
+
+		if ($memberships != null)
 		{
-			$org_ids[] = $id;
-		}
-		
-		if ($org_ids != null)
-		{
-			$this -> set('organizations', $this -> Organization -> find('all', array('conditions' => array('Organization.id' => $org_ids))));
+			$this -> set('memberships', $memberships);
 		}
 	}
 
