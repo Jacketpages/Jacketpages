@@ -50,16 +50,7 @@ else
 	), array('class' => 'links'));
 	foreach ($organizations as $organization)
 	{
-		if (strlen($organization['Organization']['logo_path']) < 1)
-		{
-			$logo = $this -> Html -> image('/img/default_logo.gif', array('width' => '60'));
-		}
-		else
-		{
-			$logo = $this -> Html -> image('/organizations/getLogo/' . 
-				$organization['Organization']['id']
-			, array('width' => '60'));
-		}
+		$logo = $this -> Html -> image($organization['Organization']['logo_path'], array('width' => '60'));
 		$summary = $organization['Organization']['description'];
 		//$summary = Sanitize::html($summary, array('remove' => TRUE));
 		if (strlen($summary) > 200)

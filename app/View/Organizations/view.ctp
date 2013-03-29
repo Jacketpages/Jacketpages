@@ -44,7 +44,7 @@ echo $this -> Html -> nestedList(array(
 		'admin' => false
 	)),
 	$this -> Html -> link(__('View/Add Documents', true), array(
-		'controller' => 'charters',
+		'controller' => 'documents',
 		'action' => 'index',
 		$organization['Organization']['id'],
 		'admin' => false

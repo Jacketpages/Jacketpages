@@ -46,30 +46,35 @@ class DocumentsController extends Controller
 	
 	public function view($id = null)
 	{
-		if (! $id)
-		{
-			$this->Session->setFlash ( __ ( 'Invalid file.', true ) );
-			$this->redirect ( array ('action' => '/') );
-		}
-		$this->set ( 'inpage', false );
-		//Configure::write('debug', 0);
-		$file = $this->Document->findById ( $id );
-		$document = array ();
-		$document ['name'] = $file ['Document'] ['name'];
-		$document ['type'] = $file ['Document'] ['type'];
-		$document ['data'] = $file ['Document'] ['file'];
+		$file = $this->Document->findById($id);
+		debug(Configure::version());
+		$this->response->file($file['Document']['path'] . $file['Document']['name']);
+    	//Return reponse object to prevent controller from trying to render a view
+		return $this->response;
+		// if (! $id)
+		// {
+		// 	$this->Session->setFlash ( __ ( 'Invalid file.', true ) );
+		// 	$this->redirect ( array ('action' => '/') );
+		// }
+		// $this->set ( 'inpage', false );
+		// //Configure::write('debug', 0);
+		// $file = $this->Document->findById ( $id );
+		// $document = array ();
+		// $document ['name'] = $file ['Document'] ['name'];
+		// $document ['type'] = $file ['Document'] ['type'];
+		// $document ['data'] = $file ['Document'] ['file'];
 		
-		if ($document ['data'] == null)
-		{
-			$this->Session->setFlash ( __ ( 'Invalid file.', true ) );
-			$this->redirect ( array ('action' => '/') );
-		}
-		else
-		{
-			$this->set ( 'file', $document );
-			return $this->render ( 'download', 'document' );
-			
-		}
+		// if ($document ['data'] == null)
+		// {
+		// 	$this->Session->setFlash ( __ ( 'Invalid file.', true ) );
+		// 	$this->redirect ( array ('action' => '/') );
+		// }
+		// else
+		// {
+		// 	$this->set ( 'file', $document );
+		// 	return $this->render ( 'download', 'document' );
+
+		// }
 	}
 }
 
