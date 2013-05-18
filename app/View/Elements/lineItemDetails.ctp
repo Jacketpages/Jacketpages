@@ -1,8 +1,19 @@
 <?php
+/**
+* @author Stephen Roca
+* @since ???
+*
+*
+* @param $lineitems
+* @param $showAll
+* @param $states
+**/
+$showEditAndDeleteButtons = 1;
+
 if ($lineitems != null)
 {
 	echo $this -> Html -> tableBegin(array('class' => 'listing'));
-	echo $this -> Html -> tableHeaders(array(
+	$tableHeaders = array(
 		'#',
 		'Name',
 		'Cost/Unit',
@@ -10,22 +21,33 @@ if ($lineitems != null)
 		'TC',
 		'AR',
 		'Account',
-		'State',
-		'',
-		''
-	));
+		'State');
+	if($showEditAndDeleteButtons)
+	{
+		$tableHeaders[] = '';
+		$tableHeaders[] = '';
+	}
+	echo $this -> Html -> tableHeaders( $tableHeaders
+	);
 	foreach ($lineitems as $lineitem)
 	{
-		echo $this -> Html -> tableCells(array(
+		$tableCells = array(
 			$lineitem['LineItem']['line_number'],
-			$this -> Html -> link($lineitem['LineItem']['name'], array('controller' => 'LineItems', 'action' => 'view', $lineitem['LineItem']['id'])),
+			$this -> Html -> link($lineitem['LineItem']['name'],array('controller' => 'LineItems', 'action' => 'view', $lineitem['LineItem']['id'])),
 			$lineitem['LineItem']['cost_per_unit'],
 			$lineitem['LineItem']['quantity'],
 			$lineitem['LineItem']['total_cost'],
 			$lineitem['LineItem']['line_number'],
 			$lineitem['LineItem']['account'],
 			$lineitem['LineItem']['state']
-		));
+		);
+		if($showEditAndDeleteButtons)
+		{
+			$tableCells[] = $this -> Html -> link("Edit", array('controller' => 'LineItems', 'action' => 'edit', $lineitem['LineItem']['id']));
+			$tableCells[] = $this -> Html -> link("Delete", array('controller' => 'LineItems', 'action' => 'delete',$lineitem['LineItem']['id']));
+		}
+
+		echo $this -> Html -> tableCells( $tableCells);
 	}
 	echo $this -> Html -> tableEnd();
 	echo $this -> Html -> tag('h1', 'Amounts');

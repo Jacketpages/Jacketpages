@@ -10,14 +10,14 @@ $this -> start('middle');
 
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 
-echo $this -> Html -> tableCells(array('Bill', $lineitem['Bill']['TITLE']));
-echo $this -> Html -> tableCells(array('State', $lineitem['LineItem']['STATE']));
-echo $this -> Html -> tableCells(array('Name', $lineitem['LineItem']['NAME']));
-echo $this -> Html -> tableCells(array('Cost Per Unit', $lineitem['LineItem']['COST_PER_UNIT']));
-echo $this -> Html -> tableCells(array('Quantity', $lineitem['LineItem']['QUANTITY']));
-echo $this -> Html -> tableCells(array('Total Cost', $lineitem['LineItem']['TOTAL_COST']));
-echo $this -> Html -> tableCells(array('Amount', $lineitem['LineItem']['AMOUNT']));
-echo $this -> Html -> tableCells(array('Account', $lineitem['LineItem']['ACCOUNT']));
+echo $this -> Html -> tableCells(array('Bill', $lineitem['Bill']['title']));
+echo $this -> Html -> tableCells(array('State', $lineitem['LineItem']['state']));
+echo $this -> Html -> tableCells(array('Name', $lineitem['LineItem']['name']));
+echo $this -> Html -> tableCells(array('Cost Per Unit', $lineitem['LineItem']['cost_per_unit']));
+echo $this -> Html -> tableCells(array('Quantity', $lineitem['LineItem']['quantity']));
+echo $this -> Html -> tableCells(array('Total Cost', $lineitem['LineItem']['total_cost']));
+echo $this -> Html -> tableCells(array('Amount', $lineitem['LineItem']['amount']));
+echo $this -> Html -> tableCells(array('Account', $lineitem['LineItem']['account']));
 
 echo $this -> Html -> tableEnd();
 

@@ -75,7 +75,7 @@ echo $this -> Html -> tableCells(array(
 	$president['Membership']['name'],
 	$president['Membership']['title']
 ));
-if ($treasurer['Membership']['name'])
+if ($treasurer)
 {
 	echo $this -> Html -> tableCells(array(
 		$treasurer['Membership']['name'],

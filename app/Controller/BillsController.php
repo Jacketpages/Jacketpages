@@ -127,7 +127,6 @@ class BillsController extends AppController
 	 */
 	public function view($id = null)
 	{
-
 		// Set which bill to retrieve from the database.
 		$this -> Bill -> id = $id;
 		$bill = $this -> Bill -> read();
@@ -137,31 +136,31 @@ class BillsController extends AppController
 		// pass to the view.
 		$this -> loadModel('LineItem');
 		$this -> set('submitted', $this -> LineItem -> find('all', array('conditions' => array(
-				'BILL_ID' => $id,
+				'bill_id' => $id,
 				'STATE' => 'Submitted'
 			))));
 		$this -> set('jfc', $this -> LineItem -> find('all', array('conditions' => array(
-				'BILL_ID' => $id,
+				'bill_id' => $id,
 				'STATE' => 'JFC'
 			))));
 		$this -> set('graduate', $this -> LineItem -> find('all', array('conditions' => array(
-				'BILL_ID' => $id,
+				'bill_id' => $id,
 				'STATE' => 'Graduate'
 			))));
 		$this -> set('undergraduate', $this -> LineItem -> find('all', array('conditions' => array(
-				'BILL_ID' => $id,
+				'bill_id' => $id,
 				'STATE' => 'Undergraduate'
 			))));
 		$this -> set('conference', $this -> LineItem -> find('all', array('conditions' => array(
-				'BILL_ID' => $id,
+				'bill_id' => $id,
 				'STATE' => 'Conference'
 			))));
 		$this -> set('all', $this -> LineItem -> find('all', array(
-			'conditions' => array('BILL_ID' => $id),
+			'conditions' => array('bill_id' => $id),
 			'order' => array("FIELD(STATE, 'Submitted','JFC', 'Graduate', 'Undergraduate', 'Conference', 'Final')")
 		)));
 		$this -> set('final', $this -> LineItem -> find('all', array('conditions' => array(
-				'BILL_ID' => $id,
+				'bill_id' => $id,
 				'STATE' => 'Final'
 			))));
 		// Set the amounts for prior year, capital outlay, and total
@@ -183,7 +182,7 @@ class BillsController extends AppController
 				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Conference',TOTAL_COST, 0)) AS CO_CONFERENCE",
 				"SUM(IF(STATE = 'Conference',TOTAL_COST, 0)) AS TOTAL_CONFERENCE"
 			),
-			'conditions' => array('BILL_ID' => $id)
+			'conditions' => array('bill_id' => $id)
 		));
 		$this -> set('totals', $totals[0][0]);
 		/* Create an array of states to easily loop through and display the
@@ -226,7 +225,7 @@ class BillsController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			$this -> Bill -> create();
-			$this -> request -> data['Bill']['number'] = $this -> getValidNumber($this -> request -> data['Bill']['category']);
+			//TODO There is a built in method for below instead of doing "=" replace later
 			$this -> request -> data['Bill']['submitter'] = $this -> Session -> read('User.id');
 			$this -> request -> data['Bill']['last_mod_by'] = $this -> Session -> read('User.id');
 			$this -> request -> data['Bill']['status'] = 1;
@@ -295,7 +294,8 @@ class BillsController extends AppController
 	 */
 	public function edit_index($id = null)
 	{
-		$this -> Bill -> id = $id;		$this -> Bill -> set('last_mod_date', date('Y-m-d h:i:s'));
+		$this -> Bill -> id = $id;
+		$this -> Bill -> set('last_mod_date', date('Y-m-d h:i:s'));
 		$this -> Bill -> set('last_mod_by', $this -> Session -> read('User.id'));
 		$this -> setOrganizationNames();
 		debug($this -> request -> data);
@@ -310,7 +310,9 @@ class BillsController extends AppController
 		else
 		{
 			$this -> loadModel('BillAuthor');
-			$this -> request -> data['Authors']['id'] = $this -> request -> data['Bill']['auth_id'];			if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
+			$this -> request -> data['Authors']['id'] = $this -> request -> data['Bill']['auth_id'];
+
+			if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 			{
 				$savedBill = $this -> Bill -> findById($id);
 				if ($savedBill['Authors']['grad_auth_appr'] && $savedBill['Authors']['undr_auth_appr'] && $savedBill['Bill']['status'] == 1)
@@ -319,7 +321,8 @@ class BillsController extends AppController
 				}
 				$this -> Bill -> save($savedBill);
 				$this -> Session -> setFlash('The Bill has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				$this -> redirect(array('action' => 'index'));
+
 			}
 			else
 			{
@@ -387,6 +390,89 @@ class BillsController extends AppController
 		$this -> Session -> write($this -> name . '.Archived', 0);
 		$this -> index($letter, $id, true);
 	}
-	
+
+	public function submit($id)
+	{
+		$this -> setBillStatus($id,2,true);
+	}
+
+	public function general_info()
+	{
+		$this -> setOrganizationNames();
+	}
+
+	public function authors_signatures($id)
+	{
+		$this -> loadModel('BillAuthor');
+		$bill_authors = $this -> BillAuthor -> findById($id);
+		$this -> BillAuthor -> id = $id;
+		$bill = $this -> Bill -> findByAuthId($id, array('id'));
+		debug($bill);
+		if ($this -> request -> is('get'))
+		{
+			$this -> request -> data = $this -> BillAuthor -> read();
+			$this -> set('membership', $this -> BillAuthor -> read(null, $id));
+		}
+		else
+		{
+			if ($this -> BillAuthor -> save($this -> request -> data))
+			{
+				// After the bill is saved check whether both authors have signed it and send it
+				// to the 'Authored' state.
+				$fields = array(
+					'grad_auth_appr',
+					'undr_auth_appr'
+				);
+				$authors = $this -> BillAuthor -> findById($id, $fields);
+				if ($authors['BillAuthor']['grad_auth_appr'] && $authors['BillAuthor']['undr_auth_appr'])
+				{
+					$bill = $this -> Bill -> findByAuthId($id, array('id'));
+					$this -> setBillStatus($bill['Bill']['id'],3, $bill['Bill']['category']);
+				}
+				$this -> Session -> setFlash('The membership has been saved.');
+				//$this -> redirect(array('controller' => 'bills', 'action' => 'view',));
+			}
+			else
+			{
+				$this -> Session -> setFlash('Unable to edit the membership.');
+			}
+		}
+		$this -> setAuthorNames($bill_authors['BillAuthor']['grad_auth_id'], $bill_authors['BillAuthor']['undr_auth_id']);
+		$this -> set('authors', $bill_authors);
+	}
+
+	public function votes($id)
+	{
+		// Find out if the person has voted.
+		// If not then be sure to display a vote option
+
+	}
+
+	public function putOnAgenda($id)
+	{
+		$this -> setBillStatus($id,4,true);
+	}
+
+	private function setBillStatus($id, $state, $redirect = false, $category = null)
+	{
+		//@formatter:off
+		if($id != null && in_array($state, array(1,2,3,4,5,6,7)))//@formatter:on
+		{
+			$this -> Bill -> id = $id;
+			$this -> Bill -> saveField('status', "$state");
+			if($state == 3 && $category != null)
+			{
+				$this -> Bill -> saveField('number', $this -> getValidNumber($category));
+			}
+			if ($redirect)
+			{
+				$this -> redirect(array(
+					'action' => 'view',
+					$id
+				));
+			}
+		}
+	}
+
 }
 ?>

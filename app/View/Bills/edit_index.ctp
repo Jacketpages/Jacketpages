@@ -21,7 +21,7 @@ echo $this -> Html -> nestedList(array(
 	)),
 	$this -> Html -> link('Update Bill Votes', array(
 		'action' => 'votes',
-		$bill['Bill']['auth_id']
+		$bill['Bill']['id']
 	))
 ));
 $this -> end();

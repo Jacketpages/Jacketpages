@@ -45,19 +45,18 @@ class OrganizationsController extends AppController
 	*/
 	public function getcharterFiles()
 	{
-		$orgs = $this -> Organization -> query("SELECT organization_id, name, file from charters where size != 0");
+		$orgs = $this -> Organization -> query("SELECT organization_id, name, file from charters where organization_id > 44723 and size != 0");
 		for ($i = 0; $i < count($orgs); $i++)
 		{
 			$dir = new Folder();
-			if(!$dir -> cd("../webroot/img" . DS . $orgs[$i]["charters"]["organization_id"]))
+				if(!$dir -> cd(".." . DS . "webroot" . DS . "files". DS . $orgs[$i]["charters"]["organization_id"]))
 			{
-				$dir = new Folder("../webroot/img/" . $orgs[$i]["charters"]["organization_id"], true, 0744);				
+				$dir = new Folder(".." . DS . "webroot" . DS . "files". DS . $orgs[$i]["charters"]["organization_id"], true, 0744);				
 			}
 			$file = new File($dir -> pwd() . DS . $orgs[$i]["charters"]["name"], true, 0744);
 			$file -> write($orgs[$i]['charters']['file']);
 			$file -> close();
 		}
-		debug($orgs);
 	}
 	/**
 	* @deprecated 
@@ -68,9 +67,9 @@ class OrganizationsController extends AppController
 		for ($i = 0; $i < count($orgs); $i++)
 		{
 			$dir = new Folder();
-			if(!$dir -> cd("../webroot/img" . DS . $orgs[$i]["budgets"]["organization_id"]))
+			if(!$dir -> cd(".." . DS . "webroot" . DS . "files". DS . $orgs[$i]["budgets"]["organization_id"]))
 			{
-				$dir = new Folder("../webroot/img/" . $orgs[$i]["budgets"]["organization_id"], true, 0744);				
+				$dir = new Folder(".." . DS . "webroot" . DS . "files". DS . $orgs[$i]["budgets"]["organization_id"], true, 0744);				
 			}
 			$file = new File($dir -> pwd() . DS . $orgs[$i]["budgets"]["name"], true, 0744);
 			$file -> write($orgs[$i]['budgets']['file']);
@@ -113,7 +112,7 @@ class OrganizationsController extends AppController
 					for($j = 0; $j < count($files[1]); $j++)
 					{
 						$path = "/files/" . $folders[0][$i] . "/";
-						$this -> Organization -> query("INSERT INTO DOCUMENTS (org_id, name, path, last_updated) VALUES(" . $folders[0][$i] . ",'" . $files[1][$j] . "','" . $path . "', NOW())");
+						$this -> Organization -> query("INSERT INTO DOCUMENTS (org_id, name, path, last_updated) VALUES(" . $folders[0][$i] . ",'" . addslashes($files[1][$j]) . "','" . $path . "', NOW())");
 					}
 					$dir -> cd($dir -> pwd() . DS . "..");
 				}

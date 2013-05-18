@@ -11,8 +11,8 @@ class LineItemsController extends AppController
 	
 	public function beforeFilter()
 	{
-		$this -> Security -> unlockedActions = array('index');
-		$this->Security->csrfCheck = false;
+		//$this -> Security -> unlockedActions = array('index');
+		//$this->Security->csrfCheck = false;
 		//$this->Security->validatePost = false;
 	}
 
@@ -115,7 +115,45 @@ class LineItemsController extends AppController
 
 	public function delete($id = null)
 	{
+		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
+		if ($this -> LineItem -> delete($id))
+		{
+			$this -> Session -> setFlash(__('Line Item deleted.', true));
+			$this -> redirect(array('controller' => 'bills', 'action' => 'view', $lineitem['LineItem']['bill_id']));
+		}
+		$this -> Session -> setFlash(__('Line Item was not deleted.', true));
+	}
 
+	//TODO Doesn't work yet. Still putting it together.
+	public function edit($id)
+	{
+		$this -> loadModel('Bill');
+		$this -> set('bill', $this -> Bill -> find('first', array(
+			'conditions' => array('Bill.id' => $id),
+			'fields' => array(
+				'title',
+				'type',
+				'id'
+			)
+		)));
+		$this -> LineItem -> id = $id;
+		if ($this -> request -> is('get'))
+		{
+			$this -> request -> data = $this -> LineItem -> read();
+			$this -> set('membership', $this -> LineItem -> read(null, $id));
+		}
+		else
+		{
+			if ($this -> LineItem -> save($this -> request -> data))
+			{
+				$this -> Session -> setFlash('The membership has been saved.');
+				$this -> redirect(array('action' => 'index'));
+			}
+			else
+			{
+				$this -> Session -> setFlash('Unable to edit the membership.');
+			}
+		}
 	}
 
 	/**

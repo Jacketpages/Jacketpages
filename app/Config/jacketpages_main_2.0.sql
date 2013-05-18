@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS DOCUMENTS(
     PRIMARY KEY(id),
     org_id int(11) NOT NULL DEFAULT 0 COMMENT 'The organization to which the document refers.',
     FOREIGN KEY (org_id) REFERENCES ORGANIZATIONS(id),
-    name varchar(50) NOT NULL DEFAULT '' COMMENT 'The name of the document.',
+    name varchar(100) NOT NULL DEFAULT '' COMMENT 'The name of the document.',
     path varchar(200) NOT NULL DEFAULT '' COMMENT 'The path to the document.',
     last_updated TIMESTAMP NOT NULL COMMENT 'The date the document was last updated.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of organization\'s documents.';

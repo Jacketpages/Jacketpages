@@ -6,7 +6,7 @@
 
 $this -> extend("/Common/common");
 $this -> start('sidebar');
-echo $this -> Html -> nestedList(array(
+$sidebar = array(
 	$this -> Html -> link('Add Line Item', array(
 		'controller' => 'line_items',
 		'action' => 'add',
@@ -15,8 +15,26 @@ echo $this -> Html -> nestedList(array(
 	$this -> Html -> link(__('Update Bill', true), array(
 		'action' => 'edit',
 		$bill['Bill']['id']
-	))
-), array(), array('id' => 'underline'));
+	)));
+	if($bill['Bill']['status'] == 1)
+	{
+		$sidebar[] = $this -> Html -> link(__('Submit Bill', true), array(
+		'action' => 'submit',
+		$bill['Bill']['id']
+	));
+	}
+	if($bill['Bill']['status'] == 3)
+	{
+		$sidebar[] = $this -> Html -> link(__('Place on Agenda', true), array(
+		'action' => 'putOnAgenda',
+		$bill['Bill']['id']
+	));
+	}
+	if($sidebar != null)
+	{
+		echo $this -> Html -> nestedList( $sidebar
+		, array(), array('id' => 'underline'));
+	}
 $this -> end();
 $this -> assign("title", "Bill");
 $this -> start('middle');
@@ -77,7 +95,7 @@ echo $this -> Html -> tableCells(array(
 echo $this -> Html -> tableEnd();
 
 
-if ($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 3)
+if ($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4)
 {
 echo $this -> Html -> tableBegin(array(
 	'class' => 'list',
