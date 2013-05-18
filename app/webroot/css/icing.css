@@ -3,7 +3,7 @@
  * @author Michael Ellis
  * @author Michael Mealling
  *
- * Adapted from and adaptation of
+ * Adapted from an adaptation of
  * Georgia Tech's general css layout.
  */
 
@@ -204,6 +204,7 @@ margin: 12px 0 0 0;
 {
 	font-size: 13px;
 	font-weight: normal;
+	padding-left: 7px;
 }
 /**
  * 	Defines the middle of the page where most
@@ -302,7 +303,7 @@ margin: 12px 0 0 0;
 .utilityMenu ul li ul li
 {
 	display: inline;
-	/*	min-width:100px;*/
+	border-left-style: none;
 	text-align: left;
 	text-transform: none;
 	font-weight: normal;

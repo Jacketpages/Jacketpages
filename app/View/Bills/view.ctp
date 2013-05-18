@@ -6,35 +6,48 @@
 
 $this -> extend("/Common/common");
 $this -> start('sidebar');
-$sidebar = array(
-	$this -> Html -> link('Add Line Item', array(
+$updateBillAction = 'general_info';
+if ($this -> Session -> read('Sga.id') != null)
+{
+	$updateBillAction = 'edit_index';
+}
+$sidebar = array();
+//@formatter:off
+if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < 3) 
+		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
+{
+	$sidebar[] = $this -> Html -> link('Add Line Item', array(
 		'controller' => 'line_items',
 		'action' => 'add',
 		$bill['Bill']['id']
-	)),
-	$this -> Html -> link(__('Update Bill', true), array(
-		'action' => 'edit',
-		$bill['Bill']['id']
-	)));
-	if($bill['Bill']['status'] == 1)
-	{
-		$sidebar[] = $this -> Html -> link(__('Submit Bill', true), array(
+	));
+}
+$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
+	'action' => $updateBillAction,
+	$bill['Bill']['id']
+));
+$sidebar[] = $this -> Html -> link('Delete Bill', array(
+	'action' => 'delete',
+	$bill['Bill']['id']
+), array('style' => 'color:red'));
+if ($bill['Bill']['status'] == 1)
+{
+	$sidebar[] = $this -> Html -> link(__('Submit Bill', true), array(
 		'action' => 'submit',
 		$bill['Bill']['id']
 	));
-	}
-	if($bill['Bill']['status'] == 3)
-	{
-		$sidebar[] = $this -> Html -> link(__('Place on Agenda', true), array(
+}
+if ($bill['Bill']['status'] == 3)
+{
+	$sidebar[] = $this -> Html -> link(__('Place on Agenda', true), array(
 		'action' => 'putOnAgenda',
 		$bill['Bill']['id']
 	));
-	}
-	if($sidebar != null)
-	{
-		echo $this -> Html -> nestedList( $sidebar
-		, array(), array('id' => 'underline'));
-	}
+}
+if ($sidebar != null)
+{
+	echo $this -> Html -> nestedList($sidebar, array(), array('id' => 'underline'));
+}
 $this -> end();
 $this -> assign("title", "Bill");
 $this -> start('middle');
@@ -94,13 +107,12 @@ echo $this -> Html -> tableCells(array(
 ));
 echo $this -> Html -> tableEnd();
 
-
 if ($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4)
 {
-echo $this -> Html -> tableBegin(array(
-	'class' => 'list',
-	'width' => '50%'
-));
+	echo $this -> Html -> tableBegin(array(
+		'class' => 'list',
+		'width' => '50%'
+	));
 	echo $this -> Html -> tag('h1', 'Outcomes:');
 	if ($bill['Bill']['category'] == 'Graduate' || $bill['Bill']['category'] == 'Joint')
 	{
@@ -153,12 +165,12 @@ echo $this -> Html -> tableBegin(array(
 		$cabstains[] = 'Abstains';
 		$cabstains[] = $bill['UCC']['abstains'];
 	}
-echo $this -> Html -> tableHeaders($titles);
-echo $this -> Html -> tableCells($dates);
-echo $this -> Html -> tableCells($yeas);
-echo $this -> Html -> tableCells($nays);
-echo $this -> Html -> tableCells($abstains);
-echo $this -> Html -> tableEnd();
+	echo $this -> Html -> tableHeaders($titles);
+	echo $this -> Html -> tableCells($dates);
+	echo $this -> Html -> tableCells($yeas);
+	echo $this -> Html -> tableCells($nays);
+	echo $this -> Html -> tableCells($abstains);
+	echo $this -> Html -> tableEnd();
 }
 if ($submitted == null)
 {

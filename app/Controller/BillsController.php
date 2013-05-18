@@ -92,7 +92,7 @@ class BillsController extends AppController
 			$categories[] = 'Graduate';
 
 		if ($onAgenda)
-			$statuses = 3;
+			$statuses = 4;
 
 		/* END CHECKBOX FILTER LOGIC*/
 
@@ -329,6 +329,23 @@ class BillsController extends AppController
 				$this -> Session -> setFlash('Unable to edit the Bill.');
 			}
 		}
+	}
+
+	public function delete($id = null)
+	{
+		if (!$id)
+		{
+			$this -> Session -> setFlash(__('Invalid ID for document', true));
+			$this -> redirect(array('action' => 'index'));
+		}
+		
+		if ($this -> Bill -> delete($id, true))
+		{
+			$this -> Session -> setFlash(__('Bill deleted.', true));
+			$this -> redirect(array('controller' => 'bills', 'action' => 'index', $org_id));
+		}
+		$this -> Session -> setFlash(__('Bill was not deleted.', true));
+		$this -> redirect(array('controller' => 'bills','action' => 'index'));
 	}
 
 	/**

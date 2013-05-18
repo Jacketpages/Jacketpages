@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS LINE_ITEMS(
     PRIMARY KEY(id),
 	 line_number int(11) NOT NULL DEFAULT 1 COMMENT 'The line item\'s number.',
     bill_id int(11) NOT NULL COMMENT 'The line item\'s corresponding bill id. (Foreign Key to Bills Table)',
-    FOREIGN KEY (bill_id) REFERENCES BILLS(id),
+    FOREIGN KEY (bill_id) REFERENCES BILLS(id) ON DELETE CASCADE,
     parent_id int(11) DEFAULT NULL COMMENT 'The line item\'s reference to it\'s previous or parent version.',
     FOREIGN KEY (parent_id) REFERENCES LINE_ITEMS(id),
     state varchar(50) NOT NULL DEFAULT '' COMMENT 'The line item\'s state. (Submitted, JFC, Undergraduate, Graduate, Conference, Final)',
