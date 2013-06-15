@@ -85,5 +85,9 @@ if ($lineitems != null)
 else
 {
 	echo "There are no line items for this state.";
+	echo $this -> Form -> create('LineItem', array('action' => 'copy/758/Submitted/' . $form_state, 'style' => 'display: inline;'));
+	$input = $this -> Form -> input('LineItem.state',array('options' => $eligibleStates, 'label' => false, 'style' => "width: 21%;",'div'=> array('id' => 'inlineInput')));
+	echo "Copy line items from " . $input . " state.";
+	echo $this -> Form -> end('Copy');
 }
 ?>

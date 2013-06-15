@@ -38,8 +38,8 @@ echo $this -> Html -> nestedList(array(
 		'owner' => false
 	)),
 	$this -> Html -> link(__('Edit Officers/Roster', true), array(
-		'controller' => 'organizations',
-		'action' => 'roster',
+		'controller' => 'memberships',
+		'action' => 'index',
 		$organization['Organization']['id'],
 		'admin' => false
 	)),
@@ -66,10 +66,13 @@ $this -> end();
 // Define the main information for this view.
 $this -> assign('title', $organization['Organization']['name']);
 $this -> start('middle');
+?>
+<div id="orgInfo">
+<div id="orgInfoLeft">
+	<?php
 echo $this -> Html -> tag('h3', 'Officers:');
 echo $this -> Html -> tableBegin(array(
-	'class' => 'listing',
-	'id' => 'halftable'
+	'class' => 'listing'
 ));
 echo $this -> Html -> tableCells(array(
 	$president['Membership']['name'],
@@ -107,7 +110,10 @@ echo $this -> Html -> nestedList(array(
 	'Organization Contact: ' . $organization['User']['name'],
 	'External Website: ' . $this -> Html -> link($organization['Organization']['website']),
 	'Meetings: ' . $organization['Organization']['meeting_information']
-));
+),array('id' => 'description'));
+echo "</div>";
+echo $this -> Html -> image($organization['Organization']['logo_path'],array('id' => 'logo','width' => '215','height' => '300'));
+echo "</div>";
 echo $this -> Html -> tag('h1', 'Budgets');
 echo $this -> Html -> tag('h1', 'Bills');
 

@@ -8,7 +8,7 @@
 class LineItemsController extends AppController
 {
 	public $helpers = array('Form');
-	
+
 	public function beforeFilter()
 	{
 		//$this -> Security -> unlockedActions = array('index');
@@ -119,7 +119,11 @@ class LineItemsController extends AppController
 		if ($this -> LineItem -> delete($id))
 		{
 			$this -> Session -> setFlash(__('Line Item deleted.', true));
-			$this -> redirect(array('controller' => 'bills', 'action' => 'view', $lineitem['LineItem']['bill_id']));
+			$this -> redirect(array(
+				'controller' => 'bills',
+				'action' => 'view',
+				$lineitem['LineItem']['bill_id']
+			));
 		}
 		$this -> Session -> setFlash(__('Line Item was not deleted.', true));
 	}
@@ -181,6 +185,27 @@ class LineItemsController extends AppController
 		else if (strcmp($one['LineItem']['account'], $other['LineItem']['account']))
 			$flag[] = false;
 		return $flag;
+	}
+
+	// Take out from state and pass it in through the form.
+	public function copy($bill_id, $from_state, $to_state)
+	{
+		debug($this -> request -> data);
+		$lineitems = $this -> LineItem -> findAllByBillIdAndState($bill_id, $this -> request ->data['LineItem']['state']);
+		for ($i = 0; $i < count($lineitems); $i++)
+		{
+			$lineitems[$i]['LineItem']['id'] = null;
+			$lineitems[$i]['LineItem']['state'] = $to_state;
+		}
+		if ($this -> LineItem -> saveAll($lineitems))
+		{
+			$this -> Session -> setFlash('Line Items were copied.');
+			$this -> redirect(array('controller' => 'bills', 'action'=>'view', $bill_id));
+		}
+		else
+		{
+			$this -> Session -> setFlash('Line Items copy failed.');
+		}
 	}
 
 }

@@ -3,6 +3,8 @@
  * @author Stephen Roca
  * @since 06/26/2012
  */
+App::uses('CakeEmail', 'Network/Email');
+
 class BillsController extends AppController
 {
 	public $helpers = array(
@@ -34,8 +36,7 @@ class BillsController extends AppController
 			$this -> Session -> write('Search.keyword', $this -> request -> data['Bill']['keyword']);
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
-		else
-		if (!$this -> RequestHandler -> isAjax())
+		else if (!$this -> RequestHandler -> isAjax())
 		{
 			$this -> Session -> delete('Search');
 		}
@@ -137,23 +138,23 @@ class BillsController extends AppController
 		$this -> loadModel('LineItem');
 		$this -> set('submitted', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
-				'STATE' => 'Submitted'
+				'state' => 'Submitted'
 			))));
 		$this -> set('jfc', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
-				'STATE' => 'JFC'
+				'state' => 'JFC'
 			))));
 		$this -> set('graduate', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
-				'STATE' => 'Graduate'
+				'state' => 'Graduate'
 			))));
 		$this -> set('undergraduate', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
-				'STATE' => 'Undergraduate'
+				'state' => 'Undergraduate'
 			))));
 		$this -> set('conference', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
-				'STATE' => 'Conference'
+				'state' => 'Conference'
 			))));
 		$this -> set('all', $this -> LineItem -> find('all', array(
 			'conditions' => array('bill_id' => $id),
@@ -161,7 +162,7 @@ class BillsController extends AppController
 		)));
 		$this -> set('final', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
-				'STATE' => 'Final'
+				'state' => 'Final'
 			))));
 		// Set the amounts for prior year, capital outlay, and total
 		$totals = $this -> LineItem -> find('all', array(
@@ -188,7 +189,10 @@ class BillsController extends AppController
 		/* Create an array of states to easily loop through and display the
 		 * totals for the individual accounts
 		 */
-		$this -> set('states', $this -> LineItem -> query("SELECT DISTINCT STATE FROM LINE_ITEMS AS LineItem where STATE != 'Final'"));
+		$this -> set('states', $this -> LineItem -> find('all', array(
+			'fields' => array('DISTINCT state'),
+			'conditions' => array('state !=' => 'Final')
+		)));
 	}
 
 	function getValidNumber($category)
@@ -335,17 +339,24 @@ class BillsController extends AppController
 	{
 		if (!$id)
 		{
-			$this -> Session -> setFlash(__('Invalid ID for document', true));
+			$this -> Session -> setFlash(__('Invalid ID for Bill', true));
 			$this -> redirect(array('action' => 'index'));
 		}
-		
+
 		if ($this -> Bill -> delete($id, true))
 		{
 			$this -> Session -> setFlash(__('Bill deleted.', true));
-			$this -> redirect(array('controller' => 'bills', 'action' => 'index', $org_id));
+			$this -> redirect(array(
+				'controller' => 'bills',
+				'action' => 'index',
+				$org_id
+			));
 		}
 		$this -> Session -> setFlash(__('Bill was not deleted.', true));
-		$this -> redirect(array('controller' => 'bills','action' => 'index'));
+		$this -> redirect(array(
+			'controller' => 'bills',
+			'action' => 'index'
+		));
 	}
 
 	/**
@@ -408,9 +419,10 @@ class BillsController extends AppController
 		$this -> index($letter, $id, true);
 	}
 
+	// TODO Add email functionality to email authors.
 	public function submit($id)
 	{
-		$this -> setBillStatus($id,2,true);
+		$this -> setBillStatus($id, 2, true);
 	}
 
 	public function general_info()
@@ -444,7 +456,7 @@ class BillsController extends AppController
 				if ($authors['BillAuthor']['grad_auth_appr'] && $authors['BillAuthor']['undr_auth_appr'])
 				{
 					$bill = $this -> Bill -> findByAuthId($id, array('id'));
-					$this -> setBillStatus($bill['Bill']['id'],3, $bill['Bill']['category']);
+					$this -> setBillStatus($bill['Bill']['id'], 3, $bill['Bill']['category']);
 				}
 				$this -> Session -> setFlash('The membership has been saved.');
 				//$this -> redirect(array('controller' => 'bills', 'action' => 'view',));
@@ -467,7 +479,7 @@ class BillsController extends AppController
 
 	public function putOnAgenda($id)
 	{
-		$this -> setBillStatus($id,4,true);
+		$this -> setBillStatus($id, 4, true);
 	}
 
 	private function setBillStatus($id, $state, $redirect = false, $category = null)
@@ -477,7 +489,7 @@ class BillsController extends AppController
 		{
 			$this -> Bill -> id = $id;
 			$this -> Bill -> saveField('status', "$state");
-			if($state == 3 && $category != null)
+			if ($state == 3 && $category != null)
 			{
 				$this -> Bill -> saveField('number', $this -> getValidNumber($category));
 			}
@@ -489,6 +501,16 @@ class BillsController extends AppController
 				));
 			}
 		}
+	}
+
+	public function email()
+	{
+		$email = new CakeEmail();
+		$email->config('gmail');
+		$email -> from(array('from@gmail.com' => 'JacketPages'));
+		$email -> to('to@gatech.edu');
+		$email -> subject('Subject');
+		$email -> send('Message');
 	}
 
 }

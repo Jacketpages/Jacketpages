@@ -41,6 +41,14 @@ echo $this -> Form -> end('Submit');
 		var account = $("#account option:selected").val();
 		var cost_per_unit = $("#cost_per_unit").val();
 		var quantity = $("#quantity").val();
+		if(cost_per_unit.charAt(0) == "$")
+		{
+			cost_per_unit = cost_per_unit.slice(1);
+		}
+		if(quantity.charAt(0) == "$")
+		{
+			quantity = quantity.slice(1);
+		}
 		var totalCost = cost_per_unit * quantity;
 		$("#total_cost").val(totalCost);
 		if(account == 'CO') {

@@ -8,16 +8,16 @@
  */
 
 .error-message {
-background: #FFEFEF none repeat scroll 0 0;
-font-size: 10px;
+	background: #FFEFEF none repeat scroll 0 0;
+	font-size: 10px;
 }
 
-*{
+* {
 	font-family: "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
 }
 
-select{
-	width:100%;
+select {
+	width: 100%;
 }
 #category {
 	width: 90%;
@@ -32,31 +32,27 @@ label {
  * Remove the automatic margin and padding added
  * to these elements.
  */
-body, div, ul
-{
+body, div, ul {
 	margin: 0;
 	padding: 0;
 }
 /**
  * 	Removes the underline and highlighting of links.
  */
-.links a
-{
+.links a {
 	text-decoration: none;
 	color: black;
 }
 /**
  * 	Highlights links in gold on hover.
  */
-.links a:hover, .links a:active
-{
+.links a:hover, .links a:active {
 	color: #C5A757;
 }
 /**
  * 	Formats the heading of the middle content.
  */
-h1
-{
+h1 {
 	font-size: 16px;
 	font-weight: bold;
 	line-height: 24px;
@@ -65,8 +61,7 @@ h1
 	z-index: 0;
 }
 
-h2
-{
+h2 {
 	font-size: 14px;
 	font-weight: bold;
 	margin-left: 25px;
@@ -74,18 +69,17 @@ h2
 	border-bottom: 1px solid #DDD;
 }
 h3 {
-font-size: 14px;
-font-weight: bold;
-line-height: 24px;
-margin: 12px 0 0 0;
-/*margin-top: 12px;*/
-/*margin-bottom: 0;*/
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 24px;
+	margin: 12px 0 0 0;
+	/*margin-top: 12px;*/
+	/*margin-bottom: 0;*/
 }
 /**
  * Yep, this is currenty useless. Just a container.
  */
-#header
-{
+#header {
 
 }
 
@@ -93,8 +87,7 @@ margin: 12px 0 0 0;
  * Holds and automatically resizes the Jacketpages
  * header logo.
  */
-#logoWrapper
-{
+#logoWrapper {
 	background: transparent url(../img/jpHeader.jpg) no-repeat scroll center top;
 	top: -2px;
 	min-height: 125px;
@@ -104,8 +97,7 @@ margin: 12px 0 0 0;
  * Repeats the picture used for the utility bar across
  * the screen.
  */
-#utilityBarWrapper
-{
+#utilityBarWrapper {
 	background: #f8da8a url(../img/jpUtility.gif) repeat-x center bottom;
 	min-height: 25px;
 	text-align: center;
@@ -113,8 +105,7 @@ margin: 12px 0 0 0;
 /**
  * Houses the generated utility bar links.
  */
-#utilityBar
-{
+#utilityBar {
 	background: transparent center;
 	margin-left: auto;
 	margin-right: auto;
@@ -125,8 +116,7 @@ margin: 12px 0 0 0;
  * Repeats the picture used for the breadcrumbs section
  * across the screen.
  */
-#breadCrumbWrapper
-{
+#breadCrumbWrapper {
 	background: transparent url(../img/bgBreadcrumb.gif) repeat-x scroll center bottom;
 	border-bottom: 1px solid #E1E1E1;
 	height: 20px;
@@ -135,8 +125,7 @@ margin: 12px 0 0 0;
 /**
  * Houses the generated breadcrumbs.
  */
-#breadCrumbs
-{
+#breadCrumbs {
 	margin-left: auto;
 	margin-right: auto;
 	width: 960px;
@@ -145,17 +134,15 @@ margin: 12px 0 0 0;
 	font-size: 12px;
 	color: #666;
 }
-#breadCrumbs a
-{
+#breadCrumbs a {
 	color: #666;
 	text-decoration: none;
 }
 /**
  * 	Houses the sidebar and main content
  */
-#content
-{
-/*	width: 100%;*/
+#content {
+	/*	width: 100%;*/
 	z-index: 80;
 	width: 960px;
 	margin: 0px auto 0px auto;
@@ -164,8 +151,7 @@ margin: 12px 0 0 0;
 /**
  * Houses the sidebar.
  */
-#sidebar
-{
+#sidebar {
 	margin: 18px 0px 0px 0px;
 	padding: 0 0px;
 	float: left;
@@ -175,11 +161,10 @@ margin: 12px 0 0 0;
  * Removes the bullet from the top level list
  * items and edits their font formatting.
  */
-#sidebar ul li
-{
+#sidebar ul li {
 	font-size: 13px;
 	list-style: none;
-/*	padding-left: 12px;*/
+	/*	padding-left: 12px;*/
 	padding-bottom: 3px;
 	padding-top: 3px;
 	font-weight: bold;
@@ -190,9 +175,8 @@ margin: 12px 0 0 0;
  *  list item in nested lists added on top of
  *  the general sidebar
  */
-#sidebar #underline:last-child
-{
-/*	margin: 0 0 0 12px;*/
+#sidebar #underline:last-child {
+	/*	margin: 0 0 0 12px;*/
 	padding-left: 0px;
 	border-bottom: 1px solid #DDD;
 }
@@ -200,8 +184,7 @@ margin: 12px 0 0 0;
  * Differentiates the nested list elemenst by
  * editing their size and weight
  */
-#sidebar ul li ul li
-{
+#sidebar ul li ul li {
 	font-size: 13px;
 	font-weight: normal;
 	padding-left: 7px;
@@ -210,8 +193,7 @@ margin: 12px 0 0 0;
  * 	Defines the middle of the page where most
  *  of the content will be generated
  */
-#middle
-{
+#middle {
 	float: right;
 	width: 780px;
 	min-height: 400px;
@@ -220,8 +202,7 @@ margin: 12px 0 0 0;
 /**
  * 	Defines how paragraphs are displayed in the middle
  */
-#middle p
-{
+#middle p {
 	font-size: 14px;
 	line-height: 24px;
 	padding-left: 0;
@@ -229,8 +210,7 @@ margin: 12px 0 0 0;
 	text-align: justify;
 }
 
-#middle ul
-{
+#middle ul {
 	/*padding-left: 40px;*/
 }
 /**
@@ -240,8 +220,7 @@ margin: 12px 0 0 0;
 /**
  * 	Style the main menu. Top level list
  */
-.utilityMenu ul li
-{
+.utilityMenu ul li {
 	display: inline;
 	list-style: none;
 	position: relative;
@@ -259,8 +238,7 @@ margin: 12px 0 0 0;
  * 	Be sure to include the down arrow to the right
  *  of the menu link.
  */
-.utilityMenu ul li a:after
-{
+.utilityMenu ul li a:after {
 	content: url('../img/down.gif');
 	position: absolute;
 	top: 5px;
@@ -269,8 +247,7 @@ margin: 12px 0 0 0;
 /**
  * 	Position the top level list.
  */
-.utilityMenu ul li a
-{
+.utilityMenu ul li a {
 	/*	border-left: 1px solid #f9de95;*/
 	display: block;
 	padding: 3px 10px;
@@ -280,15 +257,13 @@ margin: 12px 0 0 0;
 /**
  * 	Highlight the link text in black on hover.
  */
-.utilityMenu ul li a:hover
-{
+.utilityMenu ul li a:hover {
 	color: black;
 }
 /**
  * 	Style the submenu. Make the background color white.
  */
-.utilityMenu ul li ul
-{
+.utilityMenu ul li ul {
 	position: absolute;
 	visibility: hidden;
 	background: #ffffff;
@@ -300,8 +275,7 @@ margin: 12px 0 0 0;
 /**
  * 	Format the font and include box shadow.
  */
-.utilityMenu ul li ul li
-{
+.utilityMenu ul li ul li {
 	display: inline;
 	border-left-style: none;
 	text-align: left;
@@ -313,8 +287,7 @@ margin: 12px 0 0 0;
 /**
  * 	Remove the border from the submenu links and set a standard width.
  */
-.utilityMenu ul li ul li a
-{
+.utilityMenu ul li ul li a {
 	border-style: none;
 	width: 150px;
 	float: left;
@@ -322,8 +295,7 @@ margin: 12px 0 0 0;
 /**
  * 	Remove the image added at the top level list.
  */
-.utilityMenu ul li ul li a:after
-{
+.utilityMenu ul li ul li a:after {
 	content: none;
 }
 /**
@@ -333,8 +305,7 @@ margin: 12px 0 0 0;
 /**
  * 	Define the image, position, and font formatting of the footer
  */
-#footer
-{
+#footer {
 	background: url(../img/bgFooter2.png) no-repeat center;
 	clear: both;
 	color: #666;
@@ -346,45 +317,38 @@ margin: 12px 0 0 0;
 }
 
 /*@TODO Need to go through the following css rules and weed out the unnecessary stuff*/
-#left
-{
+#left {
 	float: left;
 }
-#right
-{
+#right {
 	float: right;
 }
-#alphabet
-{
+#alphabet {
 	position: relative;
 	height: 30px;
 	width: 100%;
 	margin-bottom: 10px;
 	font-size: 12px;
 }
-#leftHalf
-{
+#leftHalf {
 	left: 0;
 	width: 50%;
 	float: left;
 }
-#rightHalf
-{
+#rightHalf {
 	width: 50%;
 	height: 24px;
 	float: right;
 	right: 0;
 	bottom: 0;
 }
-#rightHalf ul
-{
+#rightHalf ul {
 	bottom: 0;
-	padding-left:0;
+	padding-left: 0;
 	font-size: 11.25px;
 	padding-top: 5px;
 }
-#rightHalf ul li
-{
+#rightHalf ul li {
 	/*	font-size: 110%;*/
 	/*	font-weight: bold;*/
 	/*	line-height: 17px;*/
@@ -392,8 +356,7 @@ margin: 12px 0 0 0;
 	width: auto;
 	display: inline;
 }
-#rightHalf ul li a
-{
+#rightHalf ul li a {
 	text-decoration: none;
 	display: block;
 	color: #666;
@@ -401,36 +364,32 @@ margin: 12px 0 0 0;
 	display: inline;
 }
 
-input, textarea
-{
+input, textarea {
 	clear: both;
 	border: 1px solid #dadada;
 	color: #000000;
 	/*padding: 0.3em;*/
-	width: 100%;	
+	width: 100%;
 }
 
-input#search
-{
-	
+input#search {
+
 	width: 83%;
 }
 
-search
-{
+search {
 	clear: both;
 	border: 1px solid #dadada;
 	color: #000000;
 	padding: 0.3em;
-	width: 80%;	
+	width: 80%;
 }
 
 /**
  * 	Defines the table attributes when a list is generated
  * 	such as users or bills
  */
-.listing
-{
+.listing {
 	border-right: 0;
 	margin-bottom: 10px;
 	width: 100%;
@@ -441,16 +400,14 @@ search
 /**
  * 	Color the table data links dark blue
  */
-.listing td a
-{
+.listing td a {
 	color: #001C3A;
 }
 
 /**
  * 	Style the table headers padding, color, and borders
  */
-.listing th
-{
+.listing th {
 	border: 0;
 	border-bottom: 2px solid #555;
 	text-align: left;
@@ -462,16 +419,14 @@ search
  * 	Alternate the background color of the table rows to
  *  help visually differentiate data
  */
-.listing tr:nth-child(2n) td
-{
+.listing tr:nth-child(2n) td {
 	background: #f5f5f5;
 }
 
 /**
  * 	Define padding, border, and size for the table data
  */
-.listing tr td
-{
+.listing tr td {
 	border-bottom: 1px solid #DDD;
 	padding: 5px;
 	font-size: 14px;
@@ -481,16 +436,14 @@ search
  * 	Adds a - character for when the list is
  *  in ascending sorted order
  */
-.listing th a.asc:after
-{
+.listing th a.asc:after {
 	content: ' -';
 }
 /**
  * 	Adds a - character for when the list is
  *  in descending sorted order
  */
-.listing th a.desc:after
-{
+.listing th a.desc:after {
 	content: ' +';
 }
 
@@ -499,8 +452,7 @@ search
  * 	and links that appear underneath lists of searchable
  * 	items
  */
-.paging
-{
+.paging {
 	text-align: center;
 	background: white;
 	color: #CCC;
@@ -515,8 +467,7 @@ search
  * 	Removes and colors the links defined for the pagination
  *  numbers and links
  */
-.paging a
-{
+.paging a {
 	text-decoration: none;
 	color: #001C3A;
 }
@@ -524,16 +475,14 @@ search
 /**
  * 	Halfs the width of a table
  */
-#halftable
-{
+#halftable {
 	width: 50%;
 }
 
 /**
  * 	Formatting for the submit button
  */
-input[type=submit]
-{
+input[type=submit] {
 	color: #FFF;
 	text-align: center;
 	font-weight: bold;
@@ -581,14 +530,53 @@ table.list tr:nth-child(2n) td {
 }
 
 #checkboxlist {
-display: inline;
-width: 10px;
-font-size: 13px;
-color: #666;
-font-weight: normal;
+	display: inline;
+	width: 10px;
+	font-size: 13px;
+	color: #666;
+	font-weight: normal;
 }
 
-#filter{
+#filter {
 	padding-left: 10px;
-list-style: none;
+	list-style: none;
+}
+
+#description li {
+	background: url('../img/bullet.png') no-repeat 1px 6px;
+	font-size: 14px;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 17px;
+	list-style: none;
+	margin-left: 12px;
+	margin-top: 12px;
+	margin-bottom: -6px;
+	padding-left: 16px;
+	color: #666;
+}
+
+#middle a {
+	color: #001C3A;
+}
+
+#logo {
+	text-align: right;
+	display:inline;
+}
+
+#orgInfoLeft {
+	display:inline;
+}
+
+#orgInfo {
+	display:inline-block;
+	position: relative;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+#inlineInput
+{
+	display:inline;
 }

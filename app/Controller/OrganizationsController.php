@@ -396,44 +396,6 @@ class OrganizationsController extends AppController
 		$this -> set('export', $build_export);
 	}
 
-	public function roster($id = null)
-	{
-		$this -> loadModel('Membership');
-		$officers = $this -> Membership -> find('all', array(
-			'conditions' => array('AND' => array(
-				'Membership.org_id' => $id,
-				'Membership.role <>' => 'Member',
-				'Membership.start_date LIKE' => '2011%'
-				)),
-			'fields' => array(
-				'Membership.role',
-				'Membership.name',
-				'Membership.status',
-				'Membership.title'
-				)
-			));
-
-		$members = $this -> Membership -> find('all', array(
-			'conditions' => array('AND' => array(
-				'Membership.org_id' => $id,
-				'Membership.role' => 'Member'
-				)),
-			'fields' => array(
-				'Membership.role',
-				'Membership.name',
-				'Membership.status',
-				'Membership.title'
-				)
-			));
-		$pending_members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
-			'Membership.role' => 'Pending',
-			'Membership.org_id' => $id
-			))));
-		$this -> set('officers', $officers);
-		$this -> set('members', $members);
-		$this -> set('pending_members', $pending_members);
-	}
-
 	public function addlogo($id = null)
 	{
 		$org = $this -> Organization -> read(null, $id);

@@ -8,13 +8,19 @@ echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableHeaders(array(
 	'Officer (Edit)',
 	'Role',
-	$this -> Html -> link('Remove', array('controller' => 'membership', 'action' => 'delete'))
+	''
 ));
 foreach ($officers as $officer)
 {
 	echo $this -> Html -> tableCells(array(
 		$officer['Membership']['name'],
-		$officer['Membership']['role']
+		$officer['Membership']['role'],
+		$this -> Html -> link('Remove', array(
+			'controller' => 'memberships',
+			'action' => 'delete',
+			$officer['Membership']['id'],
+			$orgId
+		))
 	));
 
 }
@@ -28,7 +34,15 @@ echo $this -> Html -> tableHeaders(array(
 ));
 foreach ($members as $member)
 {
-	echo $this -> Html -> tableCells(array($member['Membership']['name']));
+	echo $this -> Html -> tableCells(array(
+		$member['Membership']['name'],
+		$this -> Html -> link('Remove', array(
+			'controller' => 'memberships',
+			'action' => 'delete',
+			$member['Membership']['id'],
+			$orgId
+		))
+	));
 
 }
 echo $this -> Html -> tableEnd();
@@ -37,11 +51,19 @@ echo $this -> Html -> tag('h1', 'Pending Members');
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableHeaders(array(
 	'Pending Member (Edit)',
-	$this -> Html -> link('Accept', array('controller' => 'membership', 'action' => 'accept'))
+	''
 ));
 foreach ($pending_members as $pending_member)
 {
-	echo $this -> Html -> tableCells(array($pending_member['Membership']['name']));
+	echo $this -> Html -> tableCells(array(
+		$pending_member['Membership']['name'],
+		$this -> Html -> link('Accept', array(
+			'controller' => 'memberships',
+			'action' => 'accept',
+			$pending_member['Membership']['id'],
+			$orgId
+		))
+	));
 
 }
 echo $this -> Html -> tableEnd();

@@ -117,6 +117,24 @@ class UsersController extends AppController
 			}
 		}
 	}
+	
+	public function delete($id = null)
+	{
+		$this -> User -> id = $id;
+		if($this -> User -> saveField('status', 'Inactive'))
+		{
+			$this -> Session -> setFlash(__('User deleted.', true));
+			$this -> redirect(array(
+				'controller' => 'users',
+				'action' => 'index'
+			));
+		}
+		$this -> Session -> setFlash(__('User was not able to be deleted.', true));
+		$this -> redirect(array(
+			'controller' => 'users',
+			'action' => 'index'
+		));
+	}
 
 	/**
 	 * Allows the editing of a specific User.
@@ -199,7 +217,7 @@ class UsersController extends AppController
 	 */
 	public function logout()
 	{
-		$this -> Session -> delete('USER');
+		$this -> Session -> destroy();
 		$this -> redirect($this -> Auth -> logout());
 	}
 }

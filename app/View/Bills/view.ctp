@@ -103,7 +103,11 @@ echo $this -> Html -> tableCells(array(
 ));
 echo $this -> Html -> tableCells(array(
 	'Organization',
-	$bill['Organization']['name']
+	$this -> Html -> link($bill['Organization']['name'], array(
+		'controller' => 'organizations',
+		'action' => 'view',
+		$bill['Organization']['id']
+	)),
 ));
 echo $this -> Html -> tableEnd();
 
@@ -180,6 +184,12 @@ if ($submitted == null)
 <script>
 	$(function() {
 		$("#tabs").tabs();
+		$("#tabs").tabs("option", "active", localStorage.selected);
+		$("#tabs").tabs({
+			activate : function(event, ui) {
+				localStorage.selected = $("#tabs").tabs("option", "active");
+			}
+		});
 	}); 
 </script>
 <div id="tabs">
@@ -213,19 +223,39 @@ if ($submitted == null)
 	)), array('id' => 'tabs-1'));
 	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
 		'lineitems' => $jfc,
-		'showAll' => 0
+		'showAll' => 0,
+		'eligibleStates' => array('Submitted' => 'Submitted'),
+		'form_state' => 'JFC'
 	)), array('id' => 'tabs-2'));
 	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
 		'lineitems' => $graduate,
-		'showAll' => 0
+		'showAll' => 0,
+		'eligibleStates' => array(
+			'Submitted' => 'Submitted',
+			'JFC' => 'JFC'
+		),
+		'form_state' => 'Graduate'
 	)), array('id' => 'tabs-3'));
 	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
 		'lineitems' => $undergraduate,
-		'showAll' => 0
+		'showAll' => 0,
+		'eligibleStates' => array(
+			'Submitted' => 'Submitted',
+			'JFC' => 'JFC',
+			'Graduate' => 'Graduate'
+		),
+		'form_state' => 'Undergraduate'
 	)), array('id' => 'tabs-4'));
 	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
 		'lineitems' => $conference,
-		'showAll' => 0
+		'showAll' => 0,
+		'eligibleStates' => array(
+			'Submitted' => 'Submitted',
+			'JFC' => 'JFC',
+			'Graduate' => 'Graduate',
+			'Undergraduate' => 'Undergraduate'
+		),
+		'form_state' => 'Conference'
 	)), array('id' => 'tabs-5'));
 	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
 		'lineitems' => $all,
@@ -233,7 +263,15 @@ if ($submitted == null)
 	)), array('id' => 'tabs-6'));
 	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
 		'lineitems' => $final,
-		'showAll' => 0
+		'showAll' => 0,
+		'eligibleStates' => array(
+			'Submitted',
+			'JFC',
+			'Graduate',
+			'Undergraduate',
+			'Conference'
+		),
+		'form_state' => 'Final'
 	)), array('id' => 'tabs-7'));
 	?>
 </div>
