@@ -97,6 +97,7 @@ class LineItemsController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			$this -> LineItem -> create();
+			$this -> request -> data = $this -> stripDollarSign($this -> request -> data, 'LineItem',array('cost_per_unit','quantity'));
 			if ($this -> LineItem -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The user has been saved.');
@@ -206,6 +207,15 @@ class LineItemsController extends AppController
 		{
 			$this -> Session -> setFlash('Line Items copy failed.');
 		}
+	}
+
+	private function stripDollarSign($data = array(), $model = "", $fields = array())
+	{
+		foreach($fields as $field)
+		{
+			$data[$model][$field] = str_replace('$','', $data[$model][$field]);
+		}
+		return $data;
 	}
 
 }

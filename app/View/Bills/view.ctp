@@ -21,11 +21,11 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		'action' => 'add',
 		$bill['Bill']['id']
 	));
+	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
+		'action' => $updateBillAction,
+		$bill['Bill']['id']
+	));
 }
-$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
-	'action' => $updateBillAction,
-	$bill['Bill']['id']
-));
 $sidebar[] = $this -> Html -> link('Delete Bill', array(
 	'action' => 'delete',
 	$bill['Bill']['id']
@@ -232,7 +232,8 @@ if ($submitted == null)
 		'showAll' => 0,
 		'eligibleStates' => array(
 			'Submitted' => 'Submitted',
-			'JFC' => 'JFC'
+			'JFC' => 'JFC',
+			'Undergraduate' => 'Undergraduate'
 		),
 		'form_state' => 'Graduate'
 	)), array('id' => 'tabs-3'));

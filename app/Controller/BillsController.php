@@ -245,7 +245,7 @@ class BillsController extends AppController
 			{
 				$this -> request -> data['Authors']['undr_auth_id'] = 1;
 			}
-
+			$this -> request -> data['Authors']['category'] = $this -> request -> data['Bill']['category'];
 			if ($this -> Bill -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The bill has been saved.');

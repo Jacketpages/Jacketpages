@@ -79,7 +79,7 @@ class Bill extends AppModel
 					'Graduate',
 					'Conference'
 				)
-			), )
+			), ),
 	);
 }
 ?>
