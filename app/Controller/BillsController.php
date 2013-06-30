@@ -302,7 +302,6 @@ class BillsController extends AppController
 		$this -> Bill -> set('last_mod_date', date('Y-m-d h:i:s'));
 		$this -> Bill -> set('last_mod_by', $this -> Session -> read('User.id'));
 		$this -> setOrganizationNames();
-		debug($this -> request -> data);
 		if ($this -> request -> is('get'))
 		{
 			$this -> Bill -> id = $id;
@@ -480,6 +479,7 @@ class BillsController extends AppController
 	public function putOnAgenda($id)
 	{
 		$this -> setBillStatus($id, 4, true);
+		
 	}
 
 	private function setBillStatus($id, $state, $redirect = false, $category = null)
@@ -488,7 +488,7 @@ class BillsController extends AppController
 		if($id != null && in_array($state, array(1,2,3,4,5,6,7)))//@formatter:on
 		{
 			$this -> Bill -> id = $id;
-			$this -> Bill -> saveField('status', "$state");
+			$this -> Bill -> saveField('status', $state);
 			if ($state == 3 && $category != null)
 			{
 				$this -> Bill -> saveField('number', $this -> getValidNumber($category));
@@ -501,16 +501,39 @@ class BillsController extends AppController
 				));
 			}
 		}
+		else {
+			$this -> log("Bill id null or bill state incorrect. Bill id: $id Bill state: $state", 'debug');
+		}
 	}
 
 	public function email()
 	{
 		$email = new CakeEmail();
-		$email->config('gmail');
+		$email -> config('gmail');
 		$email -> from(array('from@gmail.com' => 'JacketPages'));
 		$email -> to('to@gatech.edu');
 		$email -> subject('Subject');
 		$email -> send('Message');
+	}
+
+	public function process($id = null)
+	{
+		//Decide status based on number of votes
+		//Check whether the final lineitems tab is populated.
+		$this -> Bill -> id = $id;
+		$this -> loadModel('LineItem');
+		$finalLineItems = $this -> LineItem -> find('count', array('conditions' => array(
+				'state' => 'Final',
+				'bill_id' => $id
+			)));
+		if ($finalLineItems == null)
+		{
+			//Update the bill status
+		}
+		else
+		{
+			$this -> Session -> flash('Messed up.');
+		}
 	}
 
 }

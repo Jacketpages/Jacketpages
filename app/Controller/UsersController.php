@@ -54,7 +54,15 @@ class UsersController extends AppController
 					),
 					array('User.name LIKE' => $letter . '%')
 				)),
-			'limit' => 20
+			'limit' => 20,
+			'fields' => array(
+				'User.id',
+				'User.name',
+				'User.gt_user_name',
+				'User.email',
+				'User.level',
+				'User.phone'
+			)
 		);
 		// If the request is ajax then change the layout to return just the updated user
 		// list
@@ -72,7 +80,15 @@ class UsersController extends AppController
 	 */
 	public function view($id = null)
 	{
-		$this -> set('userDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'userDelete'));
+		$this -> set('userDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userDelete'));
+		
+		$userEditPerm = $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userEditPerm');
+		if(!$userEditPerm && $id == $this -> Session -> read('User.id'))
+		{
+			$userEditPerm = true;
+		}
+		$this -> set('userEditPerm', $userEditPerm );
+		
 		// Set which user to retrieve from the database.
 		$this -> User -> id = $id;
 		$this -> set('user', $this -> User -> read());
@@ -117,11 +133,11 @@ class UsersController extends AppController
 			}
 		}
 	}
-	
+
 	public function delete($id = null)
 	{
 		$this -> User -> id = $id;
-		if($this -> User -> saveField('status', 'Inactive'))
+		if ($this -> User -> saveField('status', 'Inactive'))
 		{
 			$this -> Session -> setFlash(__('User deleted.', true));
 			$this -> redirect(array(
@@ -220,5 +236,6 @@ class UsersController extends AppController
 		$this -> Session -> destroy();
 		$this -> redirect($this -> Auth -> logout());
 	}
+
 }
 ?>

@@ -16,12 +16,15 @@ class MembershipsController extends AppController
 	public function index($id = null)
 	{
 		$this -> loadModel('Membership');
+		$db = ConnectionManager::getDataSource('default');
 		$officers = $this -> Membership -> find('all', array(
 			'conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
 					'Membership.role <>' => 'Member',
-					'Membership.start_date LIKE' => '2011%',
-					'Membership.end_date <' => '0000-00-00'
+					'OR' => array(
+						$db -> expression('Membership.end_date >= NOW()'),
+						'Membership.end_date' => '0000-00-00'
+					)
 				)),
 			'fields' => array(
 				'Membership.role',
@@ -29,14 +32,18 @@ class MembershipsController extends AppController
 				'Membership.status',
 				'Membership.title',
 				'Membership.id',
-			)
+			),
+			'recursive' => 0
 		));
 
 		$members = $this -> Membership -> find('all', array(
 			'conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
 					'Membership.role' => 'Member',
-					'Membership.end_date' => '0000-00-00'
+					'OR' => array(
+						$db -> expression('Membership.end_date >= NOW()'),
+						'Membership.end_date' => '0000-00-00'
+					)
 				)),
 			'fields' => array(
 				'Membership.role',
@@ -53,7 +60,7 @@ class MembershipsController extends AppController
 		$this -> set('officers', $officers);
 		$this -> set('members', $members);
 		$this -> set('pending_members', $pending_members);
-		$this -> set('orgId',$id);
+		$this -> set('orgId', $id);
 	}
 
 	/**
@@ -125,7 +132,11 @@ class MembershipsController extends AppController
 		if ($this -> Membership -> saveField('status', 'Active'))
 		{
 			$this -> Session -> setFlash('The member has been accepted.');
-			$this -> redirect(array('controller' => 'memberships','action' => 'index', $orgId));
+			$this -> redirect(array(
+				'controller' => 'memberships',
+				'action' => 'index',
+				$orgId
+			));
 		}
 		else
 		{

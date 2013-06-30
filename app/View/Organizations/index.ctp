@@ -120,7 +120,8 @@ $this -> start('search');
 	<?php
 	echo $this -> element('organizationTable', array(
 		'organizations' => $organizations,
-		'admin' => $orgAdminView
+		'admin' => $orgAdminView,
+		'orgEditDeletePerm' => $orgEditDeletePerm
 	));
 	echo $this -> element('paging');
 	// Implement Ajax for this page.
@@ -134,7 +135,7 @@ var avaliableTags = <?php echo json_encode($names_to_autocomplete)?>
 	;
 	$("#search").autocomplete({
 		source : avaliableTags
-	});
+	}, open: function( event, ui ) {$('#ui-id-1').style("width: 300")});
 	});
 </script>
 <?php

@@ -27,6 +27,7 @@ if ($lineitems != null)
 		$tableHeaders[] = '';
 		$tableHeaders[] = '';
 	}
+	$tableHeaders[] = '';
 	echo $this -> Html -> tableHeaders( $tableHeaders
 	);
 	foreach ($lineitems as $lineitem)
@@ -46,7 +47,10 @@ if ($lineitems != null)
 			$tableCells[] = $this -> Html -> link("Edit", array('controller' => 'LineItems', 'action' => 'edit', $lineitem['LineItem']['id']));
 			$tableCells[] = $this -> Html -> link("Delete", array('controller' => 'LineItems', 'action' => 'delete',$lineitem['LineItem']['id']));
 		}
-
+		if(!$lineitem['LineItem']['struck'])
+		{
+			$tableCells[] = $this -> Html -> link("Strike", array('controller' => 'LineItems', 'action' => 'strikeLineItem',$lineitem['LineItem']['id']));
+		}
 		echo $this -> Html -> tableCells( $tableCells);
 	}
 	echo $this -> Html -> tableEnd();

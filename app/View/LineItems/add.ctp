@@ -8,10 +8,10 @@ echo $this -> Form -> hidden('bill_id', array(
 				));
 echo $this -> Form -> input('name', array('label' => 'Line Item Name'));
 echo $this -> Form -> input('account', array('id' => 'account', 'label' => 'Account', 'options' => array(
-								'PY' => 'Prior Year',
-								'CO' => 'Capital Outlay',
-								'ULR' => 'Undergraduate Legislative Reserve',
-								'GLR' => 'Graduate Legislative Reserve'
+								'PY' => array('name'=> 'Prior Year', 'value' => 'Prior Year', 'title' => 'Prior year description.'),
+								'CO' => array('name' => 'Capital Outlay', 'value' => 'Capital Outlay', 'title' => 'Capital Outlay description.'),
+								'ULR' => array('name' => 'Undergraduate Legislative Reserve', 'value' => 'Undergraduate Legislative Reserve', 'title' => 'desc'),
+								'GLR' => array('name' => 'Graduate Legislative Reserve', 'value' => 'Graduate Legislative Reserve', 'title' => 'White on rice on a paper plate in a snowstorm')
 						)));
 echo $this -> Form -> input('state', array('label' => 'State', 'options' => array(
 								'Submitted' => 'Submitted',

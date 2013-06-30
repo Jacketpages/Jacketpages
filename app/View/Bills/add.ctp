@@ -23,6 +23,7 @@ echo $this -> Form -> input('type', array(
 ));
 echo $this -> Form -> input('category', array(
 	'label' => 'Category',
+	'type' => 'select',
 	'options' => array(
 		'Joint' => 'Joint',
 		'Graduate' => 'Graduate',

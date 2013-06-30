@@ -97,7 +97,10 @@ class LineItemsController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			$this -> LineItem -> create();
-			$this -> request -> data = $this -> stripDollarSign($this -> request -> data, 'LineItem',array('cost_per_unit','quantity'));
+			$this -> request -> data = $this -> stripDollarSign($this -> request -> data, 'LineItem', array(
+				'cost_per_unit',
+				'quantity'
+			));
 			if ($this -> LineItem -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The user has been saved.');
@@ -192,7 +195,7 @@ class LineItemsController extends AppController
 	public function copy($bill_id, $from_state, $to_state)
 	{
 		debug($this -> request -> data);
-		$lineitems = $this -> LineItem -> findAllByBillIdAndState($bill_id, $this -> request ->data['LineItem']['state']);
+		$lineitems = $this -> LineItem -> findAllByBillIdAndState($bill_id, $this -> request -> data['LineItem']['state']);
 		for ($i = 0; $i < count($lineitems); $i++)
 		{
 			$lineitems[$i]['LineItem']['id'] = null;
@@ -201,7 +204,11 @@ class LineItemsController extends AppController
 		if ($this -> LineItem -> saveAll($lineitems))
 		{
 			$this -> Session -> setFlash('Line Items were copied.');
-			$this -> redirect(array('controller' => 'bills', 'action'=>'view', $bill_id));
+			$this -> redirect(array(
+				'controller' => 'bills',
+				'action' => 'view',
+				$bill_id
+			));
 		}
 		else
 		{
@@ -211,11 +218,23 @@ class LineItemsController extends AppController
 
 	private function stripDollarSign($data = array(), $model = "", $fields = array())
 	{
-		foreach($fields as $field)
+		foreach ($fields as $field)
 		{
-			$data[$model][$field] = str_replace('$','', $data[$model][$field]);
+			$data[$model][$field] = str_replace('$', '', $data[$model][$field]);
 		}
 		return $data;
+	}
+
+	public function strikeLineItem($id)
+	{
+		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
+		$this -> LineItem -> id = $id;
+		$this -> LineItem -> saveField('struck', 1);
+		$this -> redirect(array(
+			'controller' => 'bills',
+			'action' => 'view',
+			$lineitem['LineItem']['bill_id']
+		));
 	}
 
 }

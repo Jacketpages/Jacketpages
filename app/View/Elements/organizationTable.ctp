@@ -29,7 +29,8 @@ if ($admin)
 			$this -> Html -> link(__('Edit', true), array(
 				'action' => 'edit',
 				$organization['Organization']['id']
-			)), $this -> Html -> link(__('Delete', true), array(
+			)),
+			$this -> Html -> link(__('Delete', true), array(
 				'action' => 'delete',
 				$organization['Organization']['id']
 			), null, sprintf(__('Are you sure you want to delete this organization?', true)))
@@ -45,8 +46,6 @@ else
 		'',
 		$this -> Paginator -> sort('NAME', 'Name'),
 		'Description',
-		'',
-		''
 	), array('class' => 'links'));
 	foreach ($organizations as $organization)
 	{
@@ -63,15 +62,7 @@ else
 				'action' => 'view',
 				$organization['Organization']['id']
 			)),
-			$summary,
-			$this -> Html -> link(__('Edit', true), array(
-				'action' => 'edit',
-				$organization['Organization']['id']
-			)),
-			$this -> Html -> link(__('Delete', true), array(
-				'action' => 'delete',
-				$organization['Organization']['id']
-			), null, sprintf(__('Are you sure you want to delete this organization?', true)))
+			$summary
 		));
 	}
 	echo $this -> Html -> tableEnd();

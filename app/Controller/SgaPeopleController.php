@@ -61,7 +61,7 @@ class SgaPeopleController extends AppController
 	 */
 	public function view()
 	{
-		// TODO Implement
+		// TODO Implement	
 	}
 
 	/**

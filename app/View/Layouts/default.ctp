@@ -15,7 +15,7 @@
 		// echo $this -> Html -> meta('icon');
 		echo $this -> Html -> css('icing');
 		echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
-		echo $this -> Html -> css('ui-lightness');
+		echo $this -> Html -> css('jquery-ui-1.10.3.custom');
 		// Include Jquery
 		echo $this -> Html -> script('jquery.min.js');
 		echo $this -> Html -> script('jquery-ui.js');

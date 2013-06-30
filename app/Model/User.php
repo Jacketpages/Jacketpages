@@ -9,14 +9,14 @@ class User extends AppModel
 	public $virtualFields = array('name' => 'CONCAT(first_name, " ", last_name)');
 
 	public $belongsTo = array(
-		'LOCAL_ADDR' => array(
-			'className' => 'Location',
-			'foreignKey' => 'local_addr'
-		),
-		'HOME_ADDR' => array(
-			'className' => 'Location',
-			'foreignKey' => 'home_addr'
-		)
+		// 'LOCAL_ADDR' => array(
+			// 'className' => 'Location',
+			// 'foreignKey' => 'local_addr'
+		// ),
+		// 'HOME_ADDR' => array(
+			// 'className' => 'Location',
+			// 'foreignKey' => 'home_addr'
+		// )
 	);
 	public $validate = array(
 		'gt_user_name' => array('rule' => 'notEmpty'),

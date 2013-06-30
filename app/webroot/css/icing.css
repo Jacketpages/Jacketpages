@@ -7,6 +7,20 @@
  * Georgia Tech's general css layout.
  */
 
+  .ui-autocomplete {
+  	width: inherit;
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+  * html .ui-autocomplete {
+    height: 100px;
+  }
+
 .error-message {
 	background: #FFEFEF none repeat scroll 0 0;
 	font-size: 10px;

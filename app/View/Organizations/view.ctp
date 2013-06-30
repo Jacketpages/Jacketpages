@@ -25,42 +25,58 @@ echo $this -> Html -> addCrumb($organization['Organization']['name'], '/organiza
 
 // Define any extra sidebar links for this view
 $this -> start('sidebar');
-echo $this -> Html -> nestedList(array(
-	$this -> Html -> link(__('Edit Information', true), array(
+$sidebar = array();
+
+if($orgEditPerm)
+{
+	$sidebar[] = $this -> Html -> link(__('Edit Information', true), array(
 		'action' => 'edit',
 		$organization['Organization']['id']
-	)),
-	$this -> Html -> link(__('Edit Logo', true), array(
+	));
+	$sidebar[] = $this -> Html -> link(__('Edit Logo', true), array(
 		'action' => 'addlogo',
 		$organization['Organization']['id'],
 		'officer' => false,
 		'admin' => false,
 		'owner' => false
-	)),
-	$this -> Html -> link(__('Edit Officers/Roster', true), array(
+	));
+	$sidebar[] = $this -> Html -> link(__('Edit Officers/Roster', true), array(
 		'controller' => 'memberships',
 		'action' => 'index',
 		$organization['Organization']['id'],
 		'admin' => false
-	)),
-	$this -> Html -> link(__('View/Add Documents', true), array(
+	));
+}
+
+if($orgViewDocumentsPerm)
+{
+	$sidebar[] = $this -> Html -> link(__('View/Add Documents', true), array(
 		'controller' => 'documents',
 		'action' => 'index',
 		$organization['Organization']['id'],
 		'admin' => false
-	)),
-	$this -> Html -> link(__('Join Organization', true), array(
+	));
+}
+
+if(!$orgJoinOrganizationPerm)
+{
+	$sidebar[] = $this -> Html -> link(__('Join Organization', true), array(
 		'action' => 'join',
 		$organization['Organization']['id'],
 		'admin' => false,
 		'owner' => false,
 		'officer' => false
-	), null, sprintf(__('Are you sure you want to join %s?', true), $organization['Organization']['name'])),
+	), null, sprintf(__('Are you sure you want to join %s?', true), $organization['Organization']['name']));
+}
+
+if($orgAdminPerm)
+{
 	$this -> Html -> link(__('Delete Organization', true), array(
 		'action' => 'delete',
 		$organization['Organization']['id']
-	), null, sprintf(__('Are you sure you want to delete %s?', true), $organization['Organization']['name']))
-), array(), array('id' => 'underline'));
+	), null, sprintf(__('Are you sure you want to delete %s?', true), $organization['Organization']['name']));
+}
+echo $this -> Html -> nestedList($sidebar, array(), array('id' => 'underline'));
 $this -> end();
 
 // Define the main information for this view.
