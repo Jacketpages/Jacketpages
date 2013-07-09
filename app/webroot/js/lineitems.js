@@ -109,8 +109,8 @@ function correctNumbers()
 		cells[0].getElementsByTagName("label")[0].setAttribute("id", "LineItemLineNumber" + i);
 		cells[0].getElementsByTagName("label")[0].setAttribute("value", i);
 		cells[0].getElementsByTagName("label")[0].innerHTML = i;
+		i = i - 1;
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", "LineItemState" + i);
-		cells[1].getElementsByTagName("input")[0].setAttribute("value", i);
 		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][state]");
 		cells[2].getElementsByTagName("input")[0].setAttribute("id", "LineItemName" + i);
 		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][name]");
@@ -122,6 +122,7 @@ function correctNumbers()
 		cells[5].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][total_cost]");
 		cells[6].getElementsByTagName("input")[0].setAttribute("id", "LineItemAmount" + i);
 		cells[6].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][amount]");
+		i = i + 1;
 		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp(" + i + ")");
 		cells[8].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown(" + i + ")");
 		cells[9].getElementsByTagName("button")[0].setAttribute("onclick", "addRow(" + i + ")");

@@ -13,6 +13,7 @@ $this -> extend('/Common/common');
 $this -> assign('title', 'LineItems');
 $this -> start('middle');
 
+echo $this -> Form -> create();
 echo $this -> Html -> tableBegin(array(
 	'class' => 'listing',
 	'id' => 'LineItemsTable'
@@ -30,12 +31,13 @@ echo $this -> Html -> tableHeaders(array(
 	'',
 	''
 ));
-echo $this -> Form -> create();
+
 foreach ($lineitems as $key => $lineitem)
 {
-	// echo $this -> Form -> hidden('LineItem.' . $key . '.id', array(
-		// 'value' => $lineitem['LineItem']['id'],
-		// 'id' => 'LineItemId' . ($key + 1)));
+	debug($key);
+	echo $this -> Form -> hidden('LineItem.' . $key . '.id', array(
+		 'value' => $lineitem['LineItem']['id'],
+		 'id' => 'LineItemId' . ($key + 1)));
 	echo $this -> Html -> tableCells(array(
 		$this -> Form -> label('LineItem.' . $key .'.line_number',$key + 1, array(
 			'label' => '',
@@ -96,7 +98,7 @@ foreach ($lineitems as $key => $lineitem)
 }
 echo $this -> Html -> tableEnd();
 
-echo $this -> Form -> submit('Submit');
+echo $this -> Form -> end('Submit');
 echo $this -> Form -> button('Copy to JFC', array(
 	'controller' => 'lineitems',
 	'action' => 'copy'

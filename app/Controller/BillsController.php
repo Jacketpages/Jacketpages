@@ -469,17 +469,49 @@ class BillsController extends AppController
 		$this -> set('authors', $bill_authors);
 	}
 
-	public function votes($id)
+	public function votes($bill_id, $votes_id = null)
 	{
-		// Find out if the person has voted.
-		// If not then be sure to display a vote option
-
+		$this -> loadModel('BillVotes');
+		if ($this -> request -> is('get'))
+		{
+			debug("Bad");
+			$this -> BillVotes -> id = $votes_id;
+			$this -> request -> data = $this -> BillVotes -> read();
+		}
+		else
+		{
+			if ($votes_id == null)
+			{
+				$this -> BillVotes -> create();
+				$this -> BillVotes -> set('date', date('Y-m-d'));
+				if ($this -> BillVotes -> save($this -> request -> data))
+				{
+					$this -> Bill -> id = $bill_id;
+					$this -> Bill -> saveField('gss_id', $this -> BillVotes -> getInsertID());
+					$this -> redirect(array(
+						'controller' => 'bills',
+						'action' => 'view',
+						$bill_id
+					));
+				}
+			}
+			else
+			{
+				$this -> BillVotes -> id = $votes_id;
+				$this -> BillVotes -> save($this -> request -> data);
+				$this -> redirect(array(
+					'controller' => 'bills',
+					'action' => 'view',
+					$bill_id
+				));
+			}
+		}
 	}
 
 	public function putOnAgenda($id)
 	{
 		$this -> setBillStatus($id, 4, true);
-		
+
 	}
 
 	private function setBillStatus($id, $state, $redirect = false, $category = null)
@@ -501,7 +533,8 @@ class BillsController extends AppController
 				));
 			}
 		}
-		else {
+		else
+		{
 			$this -> log("Bill id null or bill state incorrect. Bill id: $id Bill state: $state", 'debug');
 		}
 	}

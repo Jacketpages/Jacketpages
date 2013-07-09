@@ -123,10 +123,12 @@ $config['alias'] = array(
  */
 $config['roles'] = array(
 	'Role/admin' => null,
-	'Role/power' => null,
-	'Role/site_admin' => 'Role/org_admin',
-	'Role/org_admin' => 'Role/general',
-	'Role/general' => null,
+	'Role/sga_admin' => 'Role/sga_exec',
+	'Role/sga_exec' => 'Role/sga_user',
+	'Role/sga_user' => 'Role/gt_member',
+	'Role/lace' => 'Role/gt_member',
+	'Role/sofo' => 'Role/gt_member',
+	'Role/gt_member' => null,
 );
 
 /**
@@ -135,8 +137,8 @@ $config['roles'] = array(
 $config['rules'] = array(
 	'allow' => array(
 		'*' => 'Role/admin',
-		'Users/*' => 'Role/power',
-		'orgCreatePerm' => 'Role/power',
+		'Users/*' => 'Role/sga_admin',
+		'orgCreatePerm' => 'Role/sga_admin',
 	),
 	'deny' => array(
 	),

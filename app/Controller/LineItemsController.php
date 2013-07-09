@@ -19,7 +19,6 @@ class LineItemsController extends AppController
 	public function index($id = null, $state = null)
 	{
 		debug($this -> request -> data);
-		debug($_POST);
 		if ($this -> request -> is('get'))
 		{
 			$lineitems = $this -> LineItem -> find('all', array('conditions' => array(
@@ -35,16 +34,17 @@ class LineItemsController extends AppController
 					'bill_id' => $id,
 					'state' => $state
 				)));
-			$newLineItems = $this -> request -> data;
+			$newLineItems = $this -> request -> data['LineItem'];
 			$this -> loadModel('LineItemRevisions');
 			foreach ($newLineItems as $lineitem)
 			{
+				$lineitem['bill_id'] = $id;
 				// If it's a new line item then save it.
 				// Changelog insert is managed by a MySQL Trigger
-				if ($lineitem['LineItem']['id'] == null)
+				if ($lineitem['id'] == null)
 				{
 					$this -> LineItem -> create();
-					//if (!$this -> LineItem -> saveAll($lineitem))
+					if (!$this -> LineItem -> saveAll($lineitem))
 					{
 						//log error, set flash message, and get out of method
 					}
@@ -53,14 +53,22 @@ class LineItemsController extends AppController
 				{
 					foreach ($oldLineItems as $oldlineitem)
 					{
-						if ($lineitem['LineItem']['id'] == $oldlineitem['LineItem']['id'])
+						if ($lineitem['id'] == $oldlineitem['LineItem']['id'])
 						{
-							if (!compare($lineitem, $oldlineitem))
+							if (!$this -> compare($lineitem, $oldlineitem))
 							{
-								$this -> LineItem -> id = $lineitem['LineItem']['id'];
+								debug("Adding stuff");
+								$this -> LineItem -> id = $lineitem['id'];
 								$this -> LineItem -> save($lineitem);
+								$this -> loadModel('LineItemRevision');
+								debug($lineitem);
+								$revision_number = $this -> LineItemRevision -> find('first', array(
+									'conditions' => array('LINE_ITEM_ID' => $lineitem['id']),
+									'fields' => array('IFNULL(MAX(REVISION),0) as revision')
+								));
+								debug($this -> LineItemRevision -> query("SELECT MAX(REVISION) FROM LINE_ITEM_REVISIONS WHERE LINE_ITEM_ID = " . $lineitem['id'] . ";"));
 								$this -> LineItemRevision -> create();
-								$this -> LineItemRevision -> set('revision', $this -> LineItemRevision -> query("SELECT MAX(REVISION) FROM LINE_ITEM_REVISIONS WHERE LINE_ITEM_ID = " . $lineitem['LineItem']['id'] . ";"));
+								$this -> LineItemRevision -> set('revision', max($revision_number[0]['revision'], 0));
 								$this -> LineItemRevision -> set('deleted', 0);
 								$this -> LineItemRevision -> save($lineitem);
 								break;
@@ -69,6 +77,7 @@ class LineItemsController extends AppController
 					}
 				}
 			}
+			//$this -> redirect(array('controller' => 'bills', 'action' => 'view',$id));
 		}
 	}
 
@@ -176,18 +185,18 @@ class LineItemsController extends AppController
 	private function compare($one, $other)
 	{
 		$flag = true;
-		if (strcmp($one['LineItem']['name'], $other['LineItem']['name']))
-			$flag[] = false;
-		else if (strcmp($one['LineItem']['cost_per_unit'], $other['LineItem']['cost_per_unit']))
-			$flag[] = false;
-		else if (strcmp($one['LineItem']['quantity'], $other['LineItem']['quantity']))
-			$flag[] = false;
-		else if (strcmp($one['LineItem']['total_cost'], $other['LineItem']['total_cost']))
-			$flag[] = false;
-		else if (strcmp($one['LineItem']['amount'], $other['LineItem']['amount']))
-			$flag[] = false;
-		else if (strcmp($one['LineItem']['account'], $other['LineItem']['account']))
-			$flag[] = false;
+		if (strcmp($one['name'], $other['LineItem']['name']))
+			$flag = false;
+		else if (strcmp($one['cost_per_unit'], $other['LineItem']['cost_per_unit']))
+			$flag = false;
+		else if (strcmp($one['quantity'], $other['LineItem']['quantity']))
+			$flag = false;
+		else if (strcmp($one['total_cost'], $other['LineItem']['total_cost']))
+			$flag = false;
+		else if (strcmp($one['amount'], $other['LineItem']['amount']))
+			$flag = false;
+		//else if (strcmp($one['account'], $other['LineItem']['account']))
+		//	$flag[] = false;
 		return $flag;
 	}
 
