@@ -77,7 +77,7 @@ class LineItemsController extends AppController
 					}
 				}
 			}
-			//$this -> redirect(array('controller' => 'bills', 'action' => 'view',$id));
+			$this -> redirect(array('controller' => 'bills', 'action' => 'view',$id));
 		}
 	}
 
@@ -245,6 +245,20 @@ class LineItemsController extends AppController
 			$lineitem['LineItem']['bill_id']
 		));
 	}
+	
+	public function unstrikeLineItem($id)
+	{
+		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
+		$this -> LineItem -> id = $id;
+		$this -> LineItem -> saveField('struck', 0);
+		$this -> redirect(array(
+			'controller' => 'bills',
+			'action' => 'view',
+			$lineitem['LineItem']['bill_id']
+		));
+	}
+
+
 
 }
 ?>

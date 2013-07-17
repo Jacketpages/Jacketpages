@@ -20,7 +20,6 @@ echo $this -> Html -> tableBegin(array(
 ));
 echo $this -> Html -> tableHeaders(array(
 	'#',
-	'State',
 	'Name',
 	'Cost Per Unit',
 	'Quantity',
@@ -43,11 +42,6 @@ foreach ($lineitems as $key => $lineitem)
 			'label' => '',
 			'value' => $key + 1,
 			'id' => 'LineItemLineNumber' . ($key + 1)
-		)),
-		$this -> Form -> text('LineItem.' . $key . '.state', array(
-			'label' => '',
-			'value' => $lineitem['LineItem']['state'],
-			'id' => 'LineItemState' . ($key + 1)
 		)),
 		$this -> Form -> text('LineItem.' . $key . '.name', array(
 			'label' => '',
@@ -76,22 +70,22 @@ foreach ($lineitems as $key => $lineitem)
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',
-			'onclick' => "moveUp(" . ($key + 1) . ")",
+			'onclick' => "moveUp(" . ($key) . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('down.gif'), array(
 			'type' => 'button',
-			'onclick' => "moveDown(" . ($key + 1) . ")",
+			'onclick' => "moveDown(" . ($key) . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 			'type' => 'button',
-			'onclick' => "addRow(" . ($key + 1) . ")",
+			'onclick' => "addRow(" . ($key) . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 			'type' => 'button',
-			'onclick' => "deleteRow(" . ($key + 1) . ")",
+			'onclick' => "deleteRow(" . ($key) . ")",
 			'escape' => false
 		)),
 	), array('id' => 'LineItem'));

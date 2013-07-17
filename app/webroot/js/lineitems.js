@@ -43,11 +43,11 @@ function move(pos, moveTo)
 	// then swap the two rows
 	if (moveTo > 0 && !(rows[moveTo] == undefined))
 	{
-		var name = get("LineItemName" + pos).getAttribute("value");
-		var cost = get("LineItemCostPerUnit" + pos).getAttribute("value");
-		var qty = get("LineItemQuantity" + pos).getAttribute("value");
-		var tc = get("LineItemTotalCost" + pos).getAttribute("value");
-		var amt = get("LineItemAmount" + pos).getAttribute("value");
+		var name = get("LineItemName" + pos).value;
+		var cost = get("LineItemCostPerUnit" + pos).value;
+		var qty = get("LineItemQuantity" + pos).value;
+		var tc = get("LineItemTotalCost" + pos).value;
+		var amt = get("LineItemAmount" + pos).value;
 		get("LineItemName" + pos).setAttribute("value", get("LineItemName" + moveTo).getAttribute("value"));
 		get("LineItemCostPerUnit" + pos).setAttribute("value", get("LineItemCostPerUnit" + moveTo).getAttribute("value"));
 		get("LineItemQuantity" + pos).setAttribute("value", get("LineItemQuantity" + moveTo).getAttribute("value"));
@@ -110,22 +110,20 @@ function correctNumbers()
 		cells[0].getElementsByTagName("label")[0].setAttribute("value", i);
 		cells[0].getElementsByTagName("label")[0].innerHTML = i;
 		i = i - 1;
-		cells[1].getElementsByTagName("input")[0].setAttribute("id", "LineItemState" + i);
-		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][state]");
-		cells[2].getElementsByTagName("input")[0].setAttribute("id", "LineItemName" + i);
-		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][name]");
-		cells[3].getElementsByTagName("input")[0].setAttribute("id", "LineItemCostPerUnit" + i);
-		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][cost_per_unit]");
-		cells[4].getElementsByTagName("input")[0].setAttribute("id", "LineItemQuantity" + i);
-		cells[4].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][quantity]");
-		cells[5].getElementsByTagName("input")[0].setAttribute("id", "LineItemTotalCost" + i);
-		cells[5].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][total_cost]");
-		cells[6].getElementsByTagName("input")[0].setAttribute("id", "LineItemAmount" + i);
-		cells[6].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][amount]");
+		cells[1].getElementsByTagName("input")[0].setAttribute("id", "LineItemName" + i);
+		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][name]");
+		cells[2].getElementsByTagName("input")[0].setAttribute("id", "LineItemCostPerUnit" + i);
+		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][cost_per_unit]");
+		cells[3].getElementsByTagName("input")[0].setAttribute("id", "LineItemQuantity" + i);
+		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][quantity]");
+		cells[4].getElementsByTagName("input")[0].setAttribute("id", "LineItemTotalCost" + i);
+		cells[4].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][total_cost]");
+		cells[5].getElementsByTagName("input")[0].setAttribute("id", "LineItemAmount" + i);
+		cells[5].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][amount]");
+		cells[6].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp(" + i + ")");
+		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown(" + i + ")");
+		cells[8].getElementsByTagName("button")[0].setAttribute("onclick", "addRow(" + i + ")");
+		cells[9].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow(" + i + ")");
 		i = i + 1;
-		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp(" + i + ")");
-		cells[8].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown(" + i + ")");
-		cells[9].getElementsByTagName("button")[0].setAttribute("onclick", "addRow(" + i + ")");
-		cells[10].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow(" + i + ")");
 	}
 }
