@@ -21,10 +21,11 @@ echo $this -> Html -> tableBegin(array(
 echo $this -> Html -> tableHeaders(array(
 	'#',
 	'Name',
-	'Cost Per Unit',
-	'Quantity',
+	array('Cost (Each)' => array('width' => '100px')),
+	'Qty',
 	'Total Cost',
 	'Amount',
+	'Account',
 	'',
 	'',
 	'',
@@ -33,59 +34,85 @@ echo $this -> Html -> tableHeaders(array(
 
 foreach ($lineitems as $key => $lineitem)
 {
-	debug($key);
-	echo $this -> Form -> hidden('LineItem.' . $key . '.id', array(
-		 'value' => $lineitem['LineItem']['id'],
-		 'id' => 'LineItemId' . ($key + 1)));
 	echo $this -> Html -> tableCells(array(
-		$this -> Form -> label('LineItem.' . $key .'.line_number',$key + 1, array(
-			'label' => '',
+		$this -> Form -> hidden($key . '.LineItem.id', array(
+			'value' => $lineitem['LineItem']['id'],
+			'id' => 'LineItemId' . $key
+		)) . 
+		$this -> Form -> label($key . '.LineItem.line_number', $key + 1, array(
+			'label' => false,
 			'value' => $key + 1,
-			'id' => 'LineItemLineNumber' . ($key + 1)
+			'id' => 'LineItemLineNumber' . $key
 		)),
-		$this -> Form -> text('LineItem.' . $key . '.name', array(
-			'label' => '',
+		$this -> Form -> text($key .'.LineItem.name', array(
+			'label' => false,
 			'value' => $lineitem['LineItem']['name'],
-			'id' => 'LineItemName' . ($key + 1)
+			'id' => 'LineItemName' . $key
 		)),
-		$this -> Form -> text('LineItem.' . $key . '.cost_per_unit', array(
-			'label' => '',
+		$this -> Form -> text($key .'.LineItem.cost_per_unit', array(
+			'label' => false,
 			'value' => $lineitem['LineItem']['cost_per_unit'],
-			'id' => 'LineItemCostPerUnit' . ($key + 1)
+			'id' => 'LineItemCostPerUnit' . $key
 		)),
-		$this -> Form -> text('LineItem.' . $key . '.quantity', array(
-			'label' => '',
+		$this -> Form -> text($key .'.LineItem.quantity', array(
+			'label' => false,
 			'value' => $lineitem['LineItem']['quantity'],
-			'id' => 'LineItemQuantity' . ($key + 1)
+			'id' => 'LineItemQuantity' . $key
 		)),
-		$this -> Form -> text('LineItem.' . $key . '.total_cost', array(
-			'label' => '',
+		$this -> Form -> text($key .'.LineItem.total_cost', array(
+			'label' => false,
 			'value' => $lineitem['LineItem']['total_cost'],
-			'id' => 'LineItemTotalCost' . ($key + 1)
+			'id' => 'LineItemTotalCost' . $key
 		)),
-		$this -> Form -> text('LineItem.' . $key . '.amount', array(
-			'label' => '',
+		$this -> Form -> text($key .'.LineItem.amount', array(
+			'label' => false,
 			'value' => $lineitem['LineItem']['amount'],
-			'id' => 'LineItemAmount' . ($key + 1)
+			'id' => 'LineItemAmount' . $key
+		)),
+		$this -> Form -> input($key .'.LineItem.account', array(
+			'id' => 'LineItemAccount' . $key,
+			'label' => false,
+			'options' => array(
+				'PY' => array(
+					'name' => 'Prior Year',
+					'value' => 'Prior Year',
+					'title' => 'Prior year description.'
+				),
+				'CO' => array(
+					'name' => 'Capital Outlay',
+					'value' => 'Capital Outlay',
+					'title' => 'Capital Outlay description.'
+				),
+				'ULR' => array(
+					'name' => 'Undergraduate Legislative Reserve',
+					'value' => 'Undergraduate Legislative Reserve',
+					'title' => 'desc'
+				),
+				'GLR' => array(
+					'name' => 'Graduate Legislative Reserve',
+					'value' => 'Graduate Legislative Reserve',
+					'title' => 'White on rice on a paper plate in a snowstorm'
+				)
+			)
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',
-			'onclick' => "moveUp(" . ($key) . ")",
+			'onclick' => "moveUp(" . $key . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('down.gif'), array(
 			'type' => 'button',
-			'onclick' => "moveDown(" . ($key) . ")",
+			'onclick' => "moveDown(" . $key . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 			'type' => 'button',
-			'onclick' => "addRow(" . ($key) . ")",
+			'onclick' => "addRow(" . $key . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 			'type' => 'button',
-			'onclick' => "deleteRow(" . ($key) . ")",
+			'onclick' => "deleteRow(" . $key . ")",
 			'escape' => false
 		)),
 	), array('id' => 'LineItem'));

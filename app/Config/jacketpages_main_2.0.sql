@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS LINE_ITEMS(
     account varchar(50) NOT NULL DEFAULT '' COMMENT 'The account the line item falls under. (Prior Year, Capital Outlay, ULR, GLR)',
     type varchar(50) NOT NULL DEFAULT '' COMMENT 'The type of line item.',
     comments text COMMENT 'Any comments that need to be considered with the line item.',
-    struck bit COMMENT 'The line item has been struck, has been deleted but deletion needs to be recorded on actual bill.',
+    struck int(1) COMMENT 'The line item has been struck, has been deleted but deletion needs to be recorded on actual bill.',
     last_mod_by int(11) NOT NULL DEFAULT 0 COMMENT 'The user who last modified the line item. (Foreign Key to Users Table)',
 	 last_mod_date timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'The date on which the line item was last modified.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of the line items for a specific bill.';

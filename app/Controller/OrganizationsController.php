@@ -25,6 +25,20 @@ class OrganizationsController extends AppController
 		'Csv'
 	);
 
+	public function beforeFilter()
+	{
+		switch ($this -> params['action'])
+		{
+			case 'view' :
+				$this -> set('orgEditPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgEditPerm'));
+				$this -> set('orgViewDocumentsPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgViewDocumentsPerm'));
+				$this -> set('orgAdminPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgAdminPerm'));
+				break;
+			default :
+				break;
+		}
+	}
+	
 	/**
 	 * @deprecated
 	 */
@@ -224,10 +238,6 @@ class OrganizationsController extends AppController
 	 */
 	public function view($id = null)
 	{
-		// Set page view permissions
-		$this -> set('orgEditPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgEditPerm'));
-		$this -> set('orgViewDocumentsPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgViewDocumentsPerm'));
-		$this -> set('orgAdminPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgAdminPerm'));
 
 		// Set which organization to retrieve from the database.
 		$this -> Organization -> id = $id;

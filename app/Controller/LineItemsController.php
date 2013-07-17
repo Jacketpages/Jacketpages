@@ -16,69 +16,75 @@ class LineItemsController extends AppController
 		//$this->Security->validatePost = false;
 	}
 
-	public function index($id = null, $state = null)
+	public function index($bill_id = null, $state = null)
 	{
-		debug($this -> request -> data);
 		if ($this -> request -> is('get'))
 		{
 			$lineitems = $this -> LineItem -> find('all', array('conditions' => array(
-					'bill_id' => $id,
+					'bill_id' => $bill_id,
 					'state' => $state
 				)));
 			$this -> set('lineitems', $lineitems);
 		}
-
-		if ($this -> request -> is('post'))
+		debug($this -> request -> data);
+		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
-			$oldLineItems = $this -> LineItem -> find('all', array('conditions' => array(
-					'bill_id' => $id,
-					'state' => $state
-				)));
-			$newLineItems = $this -> request -> data['LineItem'];
-			$this -> loadModel('LineItemRevisions');
-			foreach ($newLineItems as $lineitem)
-			{
-				$lineitem['bill_id'] = $id;
-				// If it's a new line item then save it.
-				// Changelog insert is managed by a MySQL Trigger
-				if ($lineitem['id'] == null)
-				{
-					$this -> LineItem -> create();
-					if (!$this -> LineItem -> saveAll($lineitem))
-					{
-						//log error, set flash message, and get out of method
-					}
-				}
-				else
-				{
-					foreach ($oldLineItems as $oldlineitem)
-					{
-						if ($lineitem['id'] == $oldlineitem['LineItem']['id'])
-						{
-							if (!$this -> compare($lineitem, $oldlineitem))
-							{
-								debug("Adding stuff");
-								$this -> LineItem -> id = $lineitem['id'];
-								$this -> LineItem -> save($lineitem);
-								$this -> loadModel('LineItemRevision');
-								debug($lineitem);
-								$revision_number = $this -> LineItemRevision -> find('first', array(
-									'conditions' => array('LINE_ITEM_ID' => $lineitem['id']),
-									'fields' => array('IFNULL(MAX(REVISION),0) as revision')
-								));
-								debug($this -> LineItemRevision -> query("SELECT MAX(REVISION) FROM LINE_ITEM_REVISIONS WHERE LINE_ITEM_ID = " . $lineitem['id'] . ";"));
-								$this -> LineItemRevision -> create();
-								$this -> LineItemRevision -> set('revision', max($revision_number[0]['revision'], 0));
-								$this -> LineItemRevision -> set('deleted', 0);
-								$this -> LineItemRevision -> save($lineitem);
-								break;
-							}
-						}
-					}
-				}
-			}
-			$this -> redirect(array('controller' => 'bills', 'action' => 'view',$id));
+			$existingLineItems = $this -> LineItem -> find('all', array('conditions' => array('bill_id' => $bill_id, 'state' => $state),'recursive' => -1));
+			debug($existingLineItems);
+			
 		}
+		// if ($this -> request -> is('post') || $this -> request -> is('put'))
+		// {
+			// $oldLineItems = $this -> LineItem -> find('all', array('conditions' => array(
+					// 'bill_id' => $id,
+					// 'state' => $state
+				// )));
+			// $newLineItems = $this -> request -> data['LineItem'];
+			// $this -> loadModel('LineItemRevisions');
+			// foreach ($newLineItems as $lineitem)
+			// {
+				// $lineitem['bill_id'] = $id;
+				// // If it's a new line item then save it.
+				// // Changelog insert is managed by a MySQL Trigger
+				// if ($lineitem['id'] == null)
+				// {
+					// $this -> LineItem -> create();
+					// if (!$this -> LineItem -> saveAll($lineitem))
+					// {
+						// //log error, set flash message, and get out of method
+					// }
+				// }
+				// else
+				// {
+					// foreach ($oldLineItems as $oldlineitem)
+					// {
+						// if ($lineitem['id'] == $oldlineitem['LineItem']['id'])
+						// {
+							// if (!$this -> compare($lineitem, $oldlineitem))
+							// {
+								// $this -> LineItem -> id = $lineitem['id'];
+								// $this -> LineItem -> save($lineitem);
+								// $this -> loadModel('LineItemRevision');
+								// $revision_number = $this -> LineItemRevision -> find('first', array(
+									// 'conditions' => array('LINE_ITEM_ID' => $lineitem['id']),
+									// 'fields' => array('IFNULL(MAX(REVISION),0) as revision')
+								// ));
+								// debug($this -> LineItemRevision -> query("SELECT MAX(REVISION) FROM LINE_ITEM_REVISIONS WHERE LINE_ITEM_ID = " . $lineitem['id'] . ";"));
+								// $this -> LineItemRevision -> create();
+								// $this -> LineItemRevision -> set('revision', max($revision_number[0]['revision'], 0));
+								// $this -> LineItemRevision -> set('deleted', 0);
+								// $this -> LineItemRevision -> set('line_item_id', $lineitem['id']);
+								// unset($lineitem['id']);
+								// if($this -> LineItemRevision -> save($lineitem))
+									// debug("Good");
+								// break;
+							// }
+						// }
+					// }
+				// }
+			// }
+			// //$this -> redirect(array('controller' => 'bills', 'action' => 'view', $id));
+		// }
 	}
 
 	public function view($id = null)
@@ -201,7 +207,7 @@ class LineItemsController extends AppController
 	}
 
 	// Take out from state and pass it in through the form.
-	public function copy($bill_id, $from_state, $to_state)
+	public function copy($bill_id, $to_state)
 	{
 		debug($this -> request -> data);
 		$lineitems = $this -> LineItem -> findAllByBillIdAndState($bill_id, $this -> request -> data['LineItem']['state']);

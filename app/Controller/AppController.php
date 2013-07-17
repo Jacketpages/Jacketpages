@@ -36,23 +36,7 @@ class AppController extends Controller
 		'Session'
 	);
 
-	/**
-	 * Bill categories
-	 */
-	public $JOINT1 = 'Joint';
-	public $UNDERGRADUATE = 'Undergraduate';
-	public $GRADUATE = 'Graduate';
-	public $CONFERENCE = 'Conference';
-
-	/**
-	 * Bill Statuses
-	 */
-	public $AWAITING_AUTHOR = '1';
-	public $AUTHORED = '2';
-	public $AGENDA = '3';
-	public $PASSED = '4';
-	public $FAILED = '5';
-	public $TABLED = '6';
+	public $BILLS = "bills";
 
 	/**
 	 * Users that aren't logged in have access to the following actions.

@@ -20,6 +20,7 @@ class BillsController extends AppController
 		'Session'
 	);
 
+	
 	/**
 	 * A table listing of bills. If given a user's id then displays all the bills for
 	 * that user
@@ -27,6 +28,7 @@ class BillsController extends AppController
 	 */
 	public function index($letter = null, $id = null, $onAgenda = null)
 	{
+		CakeLog::info("Entering BillsController::index.", $this -> BILLS);
 		// Set page view permissions
 		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'billExportPerm'));
 
@@ -120,6 +122,7 @@ class BillsController extends AppController
 		{
 			$this -> set('bills', $this -> paginate('Bill'));
 		}
+		CakeLog::info("Exiting BillsController::index.", $this -> BILLS);
 	}
 
 	/**
@@ -396,15 +399,25 @@ class BillsController extends AppController
 	{
 		$this -> loadModel('BillAuthor');
 		$this -> loadModel('User');
-		$this -> set('GradAuthor', $this -> User -> find('first', array(
+		$gradAuthor = $this -> User -> find('first', array(
 			'fields' => array('name'),
 			'conditions' => array('User.sga_id' => $grad_id)
-		)));
-
-		$this -> set('UnderAuthor', $this -> User -> find('first', array(
+		));
+		if($gradAuthor == null)
+		{
+			$gradAuthor = array("User" => array("name" => "Awaiting Author Signature"));
+		}
+		$undrAuthor = $this -> User -> find('first', array(
 			'fields' => array('name'),
 			'conditions' => array('User.sga_id' => $undr_id)
-		)));
+		));
+		if($undrAuthor == null)
+		{
+			$undrAuthor = array("User" => array("name" => "Awaiting Author Signature"));
+		}
+		$this -> set('GradAuthor', $gradAuthor);
+
+		$this -> set('UnderAuthor', $undrAuthor);
 
 	}
 

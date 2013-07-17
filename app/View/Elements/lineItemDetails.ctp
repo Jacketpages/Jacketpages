@@ -27,7 +27,7 @@ if ($lineitems != null)
 		$tableHeaders[] = '';
 		$tableHeaders[] = '';
 	}
-	if (!$first)
+	if (!isset($first))
 		$tableHeaders[] = '';
 	echo $this -> Html -> tableHeaders($tableHeaders);
 	foreach ($lineitems as $lineitem)
@@ -116,9 +116,9 @@ if ($lineitems != null)
 }
 else
 {
-	echo "There are no line items for this state.";
+	echo "There are no line items for this state. ";
 	echo $this -> Form -> create('LineItem', array(
-		'action' => 'copy/758/Submitted/' . $form_state,
+		'action' => ('copy/' . $this -> params['pass'][0] . '/' . $form_state),
 		'style' => 'display: inline;'
 	));
 	$input = $this -> Form -> input('LineItem.state', array(
