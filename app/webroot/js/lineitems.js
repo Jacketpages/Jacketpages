@@ -37,28 +37,28 @@ function move(pos, moveTo) {
 	var rows = get("LineItemsTable").rows;
 	// If the position to move to is not first row (table headers) and it is defined
 	// then swap the two rows
-	if (moveTo >= 0 && !(rows[moveTo] == undefined)) {
-		var id = "";
-		//if (get("LineItemId" + pos) != null)
-			id = get("LineItemId" + pos).value;
+	if (moveTo >= 0 && !(rows[moveTo] == undefined)) 
+	{
+		// Save the values from the current row
+		var id = get("LineItemId" + pos).value;
 		var name = get("LineItemName" + pos).value;
 		var cost = get("LineItemCostPerUnit" + pos).value;
 		var qty = get("LineItemQuantity" + pos).value;
 		var tc = get("LineItemTotalCost" + pos).value;
 		var amt = get("LineItemAmount" + pos).value;
 		var account = get("LineItemAccount" + pos).value;
-
-		//if (get("LineItemId" + moveTo) != null)
-			get("LineItemId" + pos).value = get("LineItemId" + moveTo).value;
+		
+		// Set the values of the current row to the row that of the row being moved to
+		get("LineItemId" + pos).value = get("LineItemId" + moveTo).value;
 		get("LineItemName" + pos).value = get("LineItemName" + moveTo).value;
 		get("LineItemCostPerUnit" + pos).value = get("LineItemCostPerUnit" + moveTo).value;
 		get("LineItemQuantity" + pos).value = get("LineItemQuantity" + moveTo).value;
 		get("LineItemTotalCost" + pos).value = get("LineItemTotalCost" + moveTo).value;
 		get("LineItemAmount" + pos).value = get("LineItemAmount" + moveTo).value;
 		get("LineItemAccount" + pos).value = get("LineItemAccount" + moveTo).value;
-
-		//if (get("LineItemId" + moveTo) != null)
-			get("LineItemId" + moveTo).value = id;
+		
+		// Set the row being moved to, to the values of the current row
+		get("LineItemId" + moveTo).value = id;
 		get("LineItemName" + moveTo).value = name;
 		get("LineItemCostPerUnit" + moveTo).value = cost;
 		get("LineItemQuantity" + moveTo).value = qty;
