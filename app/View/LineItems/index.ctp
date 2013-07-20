@@ -39,10 +39,14 @@ foreach ($lineitems as $key => $lineitem)
 			'value' => $lineitem['LineItem']['id'],
 			'id' => 'LineItemId' . $key
 		)) . 
+		$this -> Form -> hidden($key . '.LineItem.line_number', array(
+			'value' => $key + 1,
+			'id' => 'LineItemLineNumber' . $key
+		)) . 
 		$this -> Form -> label($key . '.LineItem.line_number', $key + 1, array(
 			'label' => false,
 			'value' => $key + 1,
-			'id' => 'LineItemLineNumber' . $key
+			'id' => 'LineNumber' . $key
 		)),
 		$this -> Form -> text($key .'.LineItem.name', array(
 			'label' => false,

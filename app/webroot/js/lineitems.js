@@ -109,28 +109,32 @@ function correctNumbers() {
 	// Go through the rows and make sure their ids and js methods refer to the
 	// correct row number.
 
-	for (var i = 1; i < rows.length; i++) {
-		var cells = rows[i].cells;
-		i = i - 1;
+	for (var i = 1; i < rows.length - 1; i++) {
+		var cells = rows[i + 1].cells;
 		cells[0].getElementsByTagName("input")[0].setAttribute("id", "LineItemId" + i);
-		cells[0].getElementsByTagName("label")[0].setAttribute("id", "LineItemLineNumber" + i);
+		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][id]");
+		cells[0].getElementsByTagName("input")[1].setAttribute("id", "LineItemLineNumber" + i);
+		get("LineItemLineNumber" + i).value = i + 1;
+		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + i + "][LineItem][line_number]");
+		cells[0].getElementsByTagName("label")[0].setAttribute("id", "LineNumber" + i);
 		cells[0].getElementsByTagName("label")[0].setAttribute("value", i + 1);
 		cells[0].getElementsByTagName("label")[0].innerHTML = i + 1;
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", "LineItemName" + i);
-		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][name]");
+		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][name]");
 		cells[2].getElementsByTagName("input")[0].setAttribute("id", "LineItemCostPerUnit" + i);
-		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][cost_per_unit]");
+		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][cost_per_unit]");
 		cells[3].getElementsByTagName("input")[0].setAttribute("id", "LineItemQuantity" + i);
-		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][quantity]");
+		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][quantity]");
 		cells[4].getElementsByTagName("input")[0].setAttribute("id", "LineItemTotalCost" + i);
-		cells[4].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][total_cost]");
+		cells[4].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][total_cost]");
 		cells[5].getElementsByTagName("input")[0].setAttribute("id", "LineItemAmount" + i);
-		cells[5].getElementsByTagName("input")[0].setAttribute("name", "data[LineItem][" + i + "][amount]");
+		cells[5].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][amount]");
 		cells[6].firstChild.firstChild.setAttribute("id", "LineItemAccount" + i);
+		cells[6].firstChild.firstChild.setAttribute("name", "data[" + i + "][LineItem][account]");
 		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp(" + i + ")");
 		cells[8].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown(" + i + ")");
 		cells[9].getElementsByTagName("button")[0].setAttribute("onclick", "addRow(" + i + ")");
 		cells[10].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow(" + i + ")");
-		i = i + 1;
+
 	}
 }
