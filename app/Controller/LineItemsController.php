@@ -18,6 +18,7 @@ class LineItemsController extends AppController
 
 	public function index($bill_id = null, $state = null)
 	{
+		debug($this -> request -> data);
 		date_default_timezone_set('EST5EDT');
 		if ($this -> request -> is('get'))
 		{
@@ -38,7 +39,9 @@ class LineItemsController extends AppController
 			);
 			$existingLineItems = $this -> LineItem -> find('all', $conditions);
 			$existingLineItemIds = Hash::extract($existingLineItems, '{n}.LineItem.id');
-			$newLineItems = $this -> request -> data;
+
+				$newLineItems = $this -> request -> data;
+			
 			$newLineItemIds = Hash::extract($newLineItems, '{n}.LineItem.id');
 			foreach ($existingLineItemIds as $id)
 			{
@@ -77,7 +80,11 @@ class LineItemsController extends AppController
 					}
 				}
 			}
-			$this -> redirect(array('controller' => 'bills', 'action' => 'view', $bill_id));
+			// $this -> redirect(array(
+			// 'controller' => 'bills',
+			// 'action' => 'view',
+			// $bill_id
+			// ));
 
 		}
 	}
@@ -117,30 +124,30 @@ class LineItemsController extends AppController
 		$this -> loadModel('LineItemRevision');
 		$this -> LineItemRevision -> create();
 
-			$lirid = $this -> LineItemRevision -> find('first', array(
-				'fields' => array('id'),
-				'conditions' => array('line_item_id' => $data['LineItem']['id']),
-				'order' => array('id DESC')
-			));
-			$lineItemRevision = $this -> LineItemRevision -> findById($lirid['LineItemRevision']['id']);
-			$this -> LineItemRevision -> save($this -> prepareRevision($lineItemRevision, $data));
+		$lirid = $this -> LineItemRevision -> find('first', array(
+			'fields' => array('id'),
+			'conditions' => array('line_item_id' => $data['LineItem']['id']),
+			'order' => array('id DESC')
+		));
+		$lineItemRevision = $this -> LineItemRevision -> findById($lirid['LineItemRevision']['id']);
+		$this -> LineItemRevision -> save($this -> prepareRevision($lineItemRevision, $data));
 	}
-	
+
 	private function prepareRevision($one, $two)
 	{
 		unset($one['LineItemRevision']['id']);
-		$one['LineItemRevision']['name']=$two['LineItem']['name'];
-		$one['LineItemRevision']['cost_per_unit']=$two['LineItem']['cost_per_unit'];
-		$one['LineItemRevision']['total_cost']=$two['LineItem']['total_cost'];
-		$one['LineItemRevision']['amount']=$two['LineItem']['amount'];
-		$one['LineItemRevision']['account']=$two['LineItem']['account'];
+		$one['LineItemRevision']['name'] = $two['LineItem']['name'];
+		$one['LineItemRevision']['cost_per_unit'] = $two['LineItem']['cost_per_unit'];
+		$one['LineItemRevision']['total_cost'] = $two['LineItem']['total_cost'];
+		$one['LineItemRevision']['amount'] = $two['LineItem']['amount'];
+		$one['LineItemRevision']['account'] = $two['LineItem']['account'];
 		$one['LineItemRevision']['type'] = 'General';
 		$one['LineItemRevision']['mod_by'] = $this -> Session -> read('User.id');
 		$one['LineItemRevision']['mod_date'] = date('Y-m-d h:i:s');
 		$one['LineItemRevision']['revision'] = max(1, $one['LineItemRevision']['revision'] + 1);
 		return $one;
 	}
-	
+
 	private function compare($new, $old)
 	{
 		$flag = true;
@@ -163,10 +170,12 @@ class LineItemsController extends AppController
 			$flag = false;
 		return $flag;
 	}
-	
+
 	public function view($id = null)
 	{
-		$this -> set('lineitem', $this -> LineItem -> findById($id));
+		$lineitem = $this -> LineItem -> findById($id);
+		$this -> set('lineitem', $lineitem);
+		$this -> set('parent', $this -> LineItem -> findById($lineitem['LineItem']['parent_id']));
 	}
 
 	/**
@@ -268,25 +277,40 @@ class LineItemsController extends AppController
 	// Take out from state and pass it in through the form.
 	public function copy($bill_id, $to_state)
 	{
-		$lineitems = $this -> LineItem -> findAllByBillIdAndState($bill_id, $this -> request -> data['LineItem']['state']);
-		for ($i = 0; $i < count($lineitems); $i++)
+		// If $to_state is Final then don't copy stuck line items
+		if ($to_state == 'Final')
 		{
-			$lineitems[$i]['LineItem']['id'] = null;
-			$lineitems[$i]['LineItem']['state'] = $to_state;
-		}
-		if ($this -> LineItem -> saveAll($lineitems))
-		{
-			$this -> Session -> setFlash('Line Items were copied.');
-			$this -> redirect(array(
-				'controller' => 'bills',
-				'action' => 'view',
-				$bill_id
-			));
+			$lineitems = $this -> LineItem -> findAllByBillIdAndStateAndStruck($bill_id, $this -> request -> data['LineItem']['state'], 0);
 		}
 		else
 		{
-			$this -> Session -> setFlash('Line Items copy failed.');
+			$lineitems = $this -> LineItem -> findAllByBillIdAndState($bill_id, $this -> request -> data['LineItem']['state']);
 		}
+		debug($lineitems);
+		for ($i = 0; $i < count($lineitems); $i++)
+		{
+			$lineitems[$i]['LineItem']['parent_id'] = $lineitems[$i]['LineItem']['id'];
+			$lineitems[$i]['LineItem']['id'] = null;
+			$lineitems[$i]['LineItem']['state'] = $to_state;
+		}
+		// if ($this -> LineItem -> saveAll($lineitems))
+		// {
+		foreach ($lineitems as $lineitem)
+		{
+			$this -> LineItem -> save($lineitem);
+			$this -> createLineItemRevision($lineitem, $this -> LineItem -> getInsertId());
+		}
+		$this -> Session -> setFlash('Line Items were copied.');
+		$this -> redirect(array(
+			'controller' => 'bills',
+			'action' => 'view',
+			$bill_id
+		));
+		// }
+		// else
+		// {
+		// $this -> Session -> setFlash('Line Items copy failed.');
+		// }
 	}
 
 	private function stripDollarSign($data = array(), $model = "", $fields = array())

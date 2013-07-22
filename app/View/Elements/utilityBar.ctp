@@ -199,6 +199,8 @@ if ($this -> Permission -> isAdmin())
 {
    echo $this -> Html -> nestedList($adminList);
 }
+
+echo $this -> Html -> nestedList(array($this -> Html -> link('Help','')));
 ?>
 </div>
 </div> 

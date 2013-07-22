@@ -157,7 +157,10 @@ class BillsController extends AppController
 				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Conference',TOTAL_COST, 0)) AS CO_CONFERENCE",
 				"SUM(IF(STATE = 'Conference',TOTAL_COST, 0)) AS TOTAL_CONFERENCE"
 			),
-			'conditions' => array('bill_id' => $id, 'struck <>' => 1)
+			'conditions' => array(
+				'bill_id' => $id,
+				'struck <>' => 1
+			)
 		));
 		$this -> set('totals', $totals[0][0]);
 		/* Create an array of states to easily loop through and display the
@@ -200,6 +203,7 @@ class BillsController extends AppController
 	 */
 	public function add()
 	{
+		debug($this -> request -> data);
 		if ($this -> request -> is('post'))
 		{
 			$this -> Bill -> create();
@@ -220,6 +224,10 @@ class BillsController extends AppController
 				$this -> request -> data['Authors']['undr_auth_id'] = 1;
 			}
 			$this -> request -> data['Authors']['category'] = $this -> request -> data['Bill']['category'];
+//comment me
+			$lineItemData = $this -> request -> data;
+			unset($lineItemData['Bill']);
+			unset($lineItemData['Authors']);
 			if ($this -> Bill -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The bill has been saved.');
@@ -227,10 +235,11 @@ class BillsController extends AppController
 					'conditions' => array('submitter' => $this -> Session -> read('User.id')),
 					'order' => 'Bill.id DESC'
 				));
-				$this -> redirect(array(
-					'action' => 'view',
-					$bill['Bill']['id']
-				));
+				$this -> requestAction('/lineitems/index/' . $bill['Bill']['id'] . '/Submitted', array('data' => $lineItemData));
+				// $this -> redirect(array(
+				// 'action' => 'view',
+				// $bill['Bill']['id']
+				// ));
 			}
 			else
 			{
@@ -565,7 +574,7 @@ class BillsController extends AppController
 		$auth_id = $this -> Bill -> findById($bill_id);
 		$this -> BillAuthor -> id = $auth_id['Authors']['id'];
 		$this -> BillAuthor -> saveField($sig_field, $sig_value);
-		$this -> BillAuthor -> saveField(str_replace("id", "tmsp", $sig_field),date('Y-m-d h:i:s'));
+		$this -> BillAuthor -> saveField(str_replace("id", "tmsp", $sig_field), date('Y-m-d h:i:s'));
 		$this -> redirect(array(
 			'controller' => 'bills',
 			'action' => 'view',

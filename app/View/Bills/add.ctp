@@ -45,6 +45,8 @@ echo $this -> Form -> input('Authors.grad_auth_id', array(
 	'label' => 'Graduate Author',
 	'options' => $gradAuthors
 ));
+echo $this -> element('multi_enter_line_items');
 echo $this -> Form -> end('Submit');
 $this -> end();
+
 ?>
