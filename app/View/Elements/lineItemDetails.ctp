@@ -22,6 +22,10 @@ if ($lineitems != null)
 		'AR',
 		'Account'
 	);
+	if($showAll)
+	{
+		$tableHeaders[] ='State';
+	}
 	if ($showEditAndDeleteButtons)
 	{
 		$tableHeaders[] = '';
@@ -45,6 +49,10 @@ if ($lineitems != null)
 			$lineitem['LineItem']['line_number'],
 			$lineitem['LineItem']['account']
 		);
+		if($showAll)
+		{
+			$tableCells[] = $lineitem['LineItem']['state'];
+		}
 		if ($showEditAndDeleteButtons)
 		{
 			$tableCells[] = $this -> Html -> link("Edit", array(

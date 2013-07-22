@@ -57,21 +57,19 @@ CREATE TABLE IF NOT EXISTS BILL_AUTHORS(
     PRIMARY KEY (id),
     bill_id int(11),
     grad_auth_id int(11) DEFAULT 0 COMMENT 'The bill\'s Graduate author. (Foreign Key to Users Table)',
-    -- FOREIGN KEY (grad_auth_id) REFERENCES SGA_PEOPLE(id),
-    grad_auth_appr bit DEFAULT 0 COMMENT 'The bill\'s Graduate author\'s approval. (Yes[1] or No[0])',
+    grad_auth_appr int(1) DEFAULT 0 COMMENT 'The bill\'s Graduate author\'s approval. (Yes[1] or No[0])',
     undr_auth_id int(11) DEFAULT 0 COMMENT 'The bill\'s Undergraduate author. (Foreign Key to Users Table)',
-    -- FOREIGN KEY (undr_auth_id) REFERENCES SGA_PEOPLE(id),
-    undr_auth_appr bit DEFAULT 0 COMMENT 'The bill\'s Undergraduate author\'s approval. (Yes[1] or No[0])',
+    undr_auth_appr int(1) DEFAULT 0 COMMENT 'The bill\'s Undergraduate author\'s approval. (Yes[1] or No[0])',
     grad_pres_id int(11) DEFAULT 0 COMMENT 'The bill\'s Graduate President\'s Signature. (Foreign Key to Users Table)',
-    -- FOREIGN KEY (GRAD_PRES_ID) REFERENCES USERS(id),
+	grad_pres_tmsp TIMESTAMP,
     grad_secr_id int(11) DEFAULT 0 COMMENT 'The bill\'s Graduate Secretary\'s Signature. (Foreign Key to Users Table)',
-    -- FOREIGN KEY (GRAD_SECR_ID) REFERENCES USERS(id),
+    grad_secr_tmsp TIMESTAMP,
     undr_pres_id int(11) DEFAULT 0 COMMENT 'The bill\'s Undergraduate President\'s Signature. (Foreign Key to Users Table)',
-    -- FOREIGN KEY (UNDR_PRES_ID) REFERENCES USERS(id),
+    undr_pres_tmsp TIMESTAMP,
     undr_secr_id int(11) DEFAULT 0 COMMENT 'The bill\'s Undergaduate Secretary\'s Signature. (Foreign Key to Users Table)',
-    -- FOREIGN KEY (UNDR_SECR_ID) REFERENCES USERS(id),
-    vp_fina_id int(11) DEFAULT 0 COMMENT 'The bill\'s Vice President of Finance\'s Signature. (Foreign Key to Users Table)'
-    -- FOREIGN KEY (VP_FINA_ID) REFERENCES USERS(id)
+    undr_secr_tmsp TIMESTAMP,
+    vp_fina_id int(11) DEFAULT 0 COMMENT 'The bill\'s Vice President of Finance\'s Signature. (Foreign Key to Users Table)',
+    vp_fina_tmsp TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of a bill\'s authors.';
 -- DROP TABLE BILL_AUTHORS;
 
@@ -148,14 +146,10 @@ CREATE TABLE IF NOT EXISTS BILLS(
     auth_id int(11) NOT NULL DEFAULT 0 COMMENT 'The authors who approved or signed the bill. (Foreign Key to Bill_Authors Table)',
     FOREIGN KEY (auth_id) REFERENCES BILL_AUTHORS(id),
     gss_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Graduate Student Senate\'s votes on the bill. (Foreign Key to Bill_Votes Table)',
-    -- FOREIGN KEY (GSS_ID) REFERENCES BILL_VOTES(id),
     uhr_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Undergraduate House of Representative\'s votes on the bill. (Foreign Key to Bill_Votes Table)',
-    -- FOREIGN KEY (UHR_ID) REFERENCES BILL_VOTES(id),
     gcc_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Graduate Conference Committee\'s votes on the bill. (Foreign Key to Bill_Votes Table)',
-    -- FOREIGN KEY (GCC_ID) REFERENCES BILL_VOTES(id),
     ucc_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Undergraduate Conference Committee\'s votes on the bill. (Foreign Key to Bill_Votes Table)'
-    -- FOREIGN KEY (UCC_ID) REFERENCES BILL_VOTES(id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of bills submitted to SGA.'; -- Reset auto-increment when tables are transferred  
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of bills submitted to SGA.'; 
     
 /*CATEGORIES TABLE STRUCTURE*/
 CREATE TABLE IF NOT EXISTS CATEGORIES(
@@ -245,8 +239,8 @@ CREATE TABLE IF NOT EXISTS LINE_ITEM_REVISIONS(
     type varchar(50) NOT NULL DEFAULT '' COMMENT 'The type of line item.',
     comments text COMMENT 'Any comments that need to be considered with the line item.',
 	 revision int(2) NOT NULL DEFAULT 1 COMMENT 'The line item\'s revision number.',
-	 struck bit COMMENT 'The line item has been struck, has been deleted but deletion needs to be recorded on actual bill.',
-	 deleted bit DEFAULT 0 COMMENT 'The line item has been deleted permanently from the original bill.',
+	 struck int(1) COMMENT 'The line item has been struck, has been deleted but deletion needs to be recorded on actual bill.',
+	 deleted int(1) DEFAULT 0 COMMENT 'The line item has been deleted permanently from the original bill.',
 	 mod_by int(11) NOT NULL DEFAULT 0 COMMENT 'The user who modified the line item. (Foreign Key to Users Table)',
 	 mod_date timestamp NOT NULL DEFAULT '0000-00-00' COMMENT 'The date on which the line item was modified.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of the line item revisions for a specific bill.';
