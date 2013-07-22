@@ -20,7 +20,6 @@ class BillsController extends AppController
 		'Session'
 	);
 
-	
 	/**
 	 * A table listing of bills. If given a user's id then displays all the bills for
 	 * that user
@@ -29,6 +28,7 @@ class BillsController extends AppController
 	public function index($letter = null, $id = null, $onAgenda = null)
 	{
 		CakeLog::info("Entering BillsController::index.", $this -> BILLS);
+		debug($this -> referer());
 		// Set page view permissions
 		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'billExportPerm'));
 
@@ -42,66 +42,36 @@ class BillsController extends AppController
 		{
 			$this -> Session -> delete('Search');
 		}
-		/* START CHECKBOX FILTER LOGIC*/
-		// Check to see if the status Session variables are null
-		// If they are null set them to 1.
-		if ($this -> Session -> read($this -> name) == null || $this -> Session -> read($this -> name . '.On Agenda') == null || $this -> data == null)
+
+		if ($this -> data['Bill']['from'] != null && $this -> data['Bill']['to'])
 		{
-			$this -> Session -> write($this -> name . '.On Agenda', 1);
-			$this -> Session -> write($this -> name . '.Awaiting Author', 1);
-			$this -> Session -> write($this -> name . '.Authored', 1);
-			$this -> Session -> write($this -> name . '.Passed', 1);
-			$this -> Session -> write($this -> name . '.Failed', 1);
-			$this -> Session -> write($this -> name . '.Archived', 1);
-			$this -> Session -> write($this -> name . '.Joint', 1);
-			$this -> Session -> write($this -> name . '.Conference', 1);
-			$this -> Session -> write($this -> name . '.Undergraduate', 1);
-			$this -> Session -> write($this -> name . '.Graduate', 1);
+			$this -> Session -> write('Bill.from', $this -> data['Bill']['from']);
+			$this -> Session -> write('Bill.to', $this -> data['Bill']['to']);
+		}
+
+		if ($this -> data['Bill']['category'] != null)
+		{
+			$this -> Session -> write('Bill.category', $this -> data['Bill']['category']);
+		}
+		if (strcmp($this -> Session -> read('Bill.category'), 'All') == 0)
+		{
+			$categories = array(
+				'Joint',
+				'Undergraduate',
+				'Graduate',
+				'Conference'
+			);
 		}
 		else
 		{
-			$this -> Session -> write($this -> name . '.On Agenda', $this -> data['Bill']['On Agenda']);
-			$this -> Session -> write($this -> name . '.Authored', $this -> data['Bill']['Authored']);
-			$this -> Session -> write($this -> name . '.Awaiting Author', $this -> data['Bill']['Awaiting Author']);
-			$this -> Session -> write($this -> name . '.Passed', $this -> data['Bill']['Passed']);
-			$this -> Session -> write($this -> name . '.Failed', $this -> data['Bill']['Failed']);
-			$this -> Session -> write($this -> name . '.Archived', $this -> data['Bill']['Archived']);
-			$this -> Session -> write($this -> name . '.Joint', $this -> data['Bill']['Joint']);
-			$this -> Session -> write($this -> name . '.Conference', $this -> data['Bill']['Conference']);
-			$this -> Session -> write($this -> name . '.Undergraduate', $this -> data['Bill']['Undergraduate']);
-			$this -> Session -> write($this -> name . '.Graduate', $this -> data['Bill']['Graduate']);
+			$categories = array($this -> Session -> read('Bill.category'));
 		}
-
-		if ($this -> Session -> read($this -> name . '.On Agenda'))
-			$statuses[] = 3;
-		if ($this -> Session -> read($this -> name . '.Awaiting Author'))
-			$statuses[] = 1;
-		if ($this -> Session -> read($this -> name . '.Authored'))
-			$statuses[] = 2;
-		if ($this -> Session -> read($this -> name . '.Passed'))
-			$statuses[] = 4;
-		if ($this -> Session -> read($this -> name . '.Failed'))
-			$statuses[] = 5;
-		if ($this -> Session -> read($this -> name . '.Archived'))
-			$statuses[] = 6;
-
-		if ($this -> Session -> read($this -> name . '.Joint'))
-			$categories[] = 'Joint';
-		if ($this -> Session -> read($this -> name . '.Conference'))
-			$categories[] = 'Conference';
-		if ($this -> Session -> read($this -> name . '.Undergraduate'))
-			$categories[] = 'Undergraduate';
-		if ($this -> Session -> read($this -> name . '.Graduate'))
-			$categories[] = 'Graduate';
-
-		if ($onAgenda)
-			$statuses = 4;
-
-		/* END CHECKBOX FILTER LOGIC*/
-
 		$this -> paginate = array(
 			'conditions' => array(
-				'Bill.status' => $statuses,
+				'Bill.status BETWEEN ? AND ?' => array(
+					$this -> Session -> read('Bill.from'),
+					$this -> Session -> read('Bill.to')
+				),
 				'Bill.category' => $categories,
 				'OR' => array(
 					array('Bill.title LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
@@ -135,6 +105,7 @@ class BillsController extends AppController
 		$this -> Bill -> id = $id;
 		$bill = $this -> Bill -> read();
 		$this -> setAuthorNames($bill['Authors']['grad_auth_id'], $bill['Authors']['undr_auth_id']);
+		$this -> setSignatureNames($bill['Authors']);
 		$this -> set('bill', $bill);
 		// Set the lineitem arrays for the different states to
 		// pass to the view.
@@ -186,7 +157,7 @@ class BillsController extends AppController
 				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Conference',TOTAL_COST, 0)) AS CO_CONFERENCE",
 				"SUM(IF(STATE = 'Conference',TOTAL_COST, 0)) AS TOTAL_CONFERENCE"
 			),
-			'conditions' => array('bill_id' => $id)
+			'conditions' => array('bill_id' => $id, 'struck <>' => 1)
 		));
 		$this -> set('totals', $totals[0][0]);
 		/* Create an array of states to easily loop through and display the
@@ -403,7 +374,7 @@ class BillsController extends AppController
 			'fields' => array('name'),
 			'conditions' => array('User.sga_id' => $grad_id)
 		));
-		if($gradAuthor == null)
+		if ($gradAuthor == null)
 		{
 			$gradAuthor = array("User" => array("name" => "Awaiting Author Signature"));
 		}
@@ -411,7 +382,7 @@ class BillsController extends AppController
 			'fields' => array('name'),
 			'conditions' => array('User.sga_id' => $undr_id)
 		));
-		if($undrAuthor == null)
+		if ($undrAuthor == null)
 		{
 			$undrAuthor = array("User" => array("name" => "Awaiting Author Signature"));
 		}
@@ -423,11 +394,8 @@ class BillsController extends AppController
 
 	public function onAgenda($letter = null, $id = null)
 	{
-		$this -> Session -> write($this -> name . '.Awaiting Author', 0);
-		$this -> Session -> write($this -> name . '.Authored', 0);
-		$this -> Session -> write($this -> name . '.Passed', 0);
-		$this -> Session -> write($this -> name . '.Failed', 0);
-		$this -> Session -> write($this -> name . '.Archived', 0);
+		$this -> request -> data['Bill']['from'] = 4;
+		$this -> request -> data['Bill']['to'] = 4;
 		$this -> index($letter, $id, true);
 	}
 
@@ -530,7 +498,15 @@ class BillsController extends AppController
 	private function setBillStatus($id, $state, $redirect = false, $category = null)
 	{
 		//@formatter:off
-		if($id != null && in_array($state, array(1,2,3,4,5,6,7)))//@formatter:on
+		if ($id != null && in_array($state, array(
+			1,
+			2,
+			3,
+			4,
+			5,
+			6,
+			7
+		)))//@formatter:on
 		{
 			$this -> Bill -> id = $id;
 			$this -> Bill -> saveField('status', $state);
@@ -580,6 +556,53 @@ class BillsController extends AppController
 		{
 			$this -> Session -> flash('Messed up.');
 		}
+	}
+
+	public function sign($bill_id, $sig_field, $sig_value)
+	{
+		$this -> Bill -> id = $bill_id;
+		$this -> loadModel('BillAuthor');
+		$auth_id = $this -> Bill -> findById($bill_id);
+		$this -> BillAuthor -> id = $auth_id['Authors']['id'];
+		$this -> BillAuthor -> saveField($sig_field, $sig_value);
+		$this -> BillAuthor -> saveField(str_replace("id", "tmsp", $sig_field),date('Y-m-d h:i:s'));
+		$this -> redirect(array(
+			'controller' => 'bills',
+			'action' => 'view',
+			$bill_id
+		));
+	}
+
+	private function setSignatureNames($data)
+	{
+		$signee_names = array();
+		$this -> loadModel('User');
+		if ($data['grad_pres_id'] != 0)
+		{
+			$gpres = $this -> User -> findById($data['grad_pres_id']);
+			$signee_names['grad_pres'] = $gpres['User']['name'];
+		}
+		if ($data['grad_secr_id'] != 0)
+		{
+			$gpres = $this -> User -> findById($data['grad_secr_id']);
+			$signee_names['grad_secr'] = $gpres['User']['name'];
+		}
+		if ($data['undr_pres_id'] != 0)
+		{
+			$gpres = $this -> User -> findById($data['undr_pres_id']);
+			$signee_names['undr_pres'] = $gpres['User']['name'];
+		}
+		if ($data['undr_secr_id'] != 0)
+		{
+			$gpres = $this -> User -> findById($data['undr_secr_id']);
+			$signee_names['undr_secr'] = $gpres['User']['name'];
+		}
+		if ($data['vp_fina_id'] != 0)
+		{
+			$gpres = $this -> User -> findById($data['vp_fina_id']);
+			$signee_names['vp_fina'] = $gpres['User']['name'];
+		}
+		$this -> set('signee_names', $signee_names);
 	}
 
 }

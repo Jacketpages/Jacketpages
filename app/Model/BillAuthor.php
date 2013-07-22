@@ -6,6 +6,12 @@
 App::import('model', 'Bill');
 class BillAuthor extends AppModel
 {
+	public $belongsTo = array(
+		'SgaPerson' => array(
+			'className' => 'sga_people',
+			'foreignKey' => 'grad_pres_id'
+		));
+	
 	public $validate = array(
 		'undr_auth_id' => array(
 			'rule' => array('authors'),

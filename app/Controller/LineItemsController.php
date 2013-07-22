@@ -18,6 +18,7 @@ class LineItemsController extends AppController
 
 	public function index($bill_id = null, $state = null)
 	{
+		date_default_timezone_set('EST5EDT');
 		if ($this -> request -> is('get'))
 		{
 			$lineitems = $this -> LineItem -> find('all', array('conditions' => array(
@@ -26,8 +27,6 @@ class LineItemsController extends AppController
 				)));
 			$this -> set('lineitems', $lineitems);
 		}
-		debug($this -> request -> data);
-		$newLineItems = $this -> request -> data;
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
 			$conditions = array(
@@ -38,12 +37,9 @@ class LineItemsController extends AppController
 				'recursive' => -1
 			);
 			$existingLineItems = $this -> LineItem -> find('all', $conditions);
-			debug($existingLineItems);
 			$existingLineItemIds = Hash::extract($existingLineItems, '{n}.LineItem.id');
+			$newLineItems = $this -> request -> data;
 			$newLineItemIds = Hash::extract($newLineItems, '{n}.LineItem.id');
-			debug($newLineItemIds);
-			debug($existingLineItemIds);
-			debug(in_array(12326, $existingLineItemIds));
 			foreach ($existingLineItemIds as $id)
 			{
 				if (!in_array($id, $newLineItemIds))
@@ -58,79 +54,32 @@ class LineItemsController extends AppController
 
 			foreach ($newLineItems as $newLineItem)
 			{
+				$newLineItem['LineItem']['last_mod_by'] = $this -> Session -> read('User.id');
 				if ($newLineItem['LineItem']['id'] != null && $newLineItem['LineItem']['id'] != "")
 				{
 					$oldLineItem = $this -> LineItem -> findById($newLineItem['LineItem']['id']);
-					if ($this -> compare($newLineItem, $oldLineItem))
+					if (!$this -> compare($newLineItem, $oldLineItem))
 					{
+						$this -> LineItem -> id = $newLineItem['LineItem']['id'];
 						$this -> LineItem -> save($newLineItem);
 						$this -> saveLineItemRevision($newLineItem);
 					}
 				}
 				else
 				{
+					$newLineItem['LineItem']['state'] = $state;
+					$newLineItem['LineItem']['type'] = 'General';
+					$newLineItem['LineItem']['bill_id'] = $bill_id;
+					//set some extra stuff on line item
 					if ($this -> LineItem -> save($newLineItem))
 					{
-						$this -> saveLineItemRevision($newLineItem, $this -> LineItem -> getInsertId());
+						$this -> createLineItemRevision($newLineItem, $this -> LineItem -> getInsertId());
 					}
 				}
 			}
+			$this -> redirect(array('controller' => 'bills', 'action' => 'view', $bill_id));
 
 		}
-		// if ($this -> request -> is('post') || $this -> request -> is('put'))
-		// {
-		// $oldLineItems = $this -> LineItem -> find('all', array('conditions' => array(
-		// 'bill_id' => $id,
-		// 'state' => $state
-		// )));
-		// $newLineItems = $this -> request -> data['LineItem'];
-		// $this -> loadModel('LineItemRevisions');
-		// foreach ($newLineItems as $lineitem)
-		// {
-		// $lineitem['bill_id'] = $id;
-		// // If it's a new line item then save it.
-		// // Changelog insert is managed by a MySQL Trigger
-		// if ($lineitem['id'] == null)
-		// {
-		// $this -> LineItem -> create();
-		// if (!$this -> LineItem -> saveAll($lineitem))
-		// {
-		// //log error, set flash message, and get out of method
-		// }
-		// }
-		// else
-		// {
-		// foreach ($oldLineItems as $oldlineitem)
-		// {
-		// if ($lineitem['id'] == $oldlineitem['LineItem']['id'])
-		// {
-		// if (!$this -> compare($lineitem, $oldlineitem))
-		// {
-		// $this -> LineItem -> id = $lineitem['id'];
-		// $this -> LineItem -> save($lineitem);
-		// $this -> loadModel('LineItemRevision');
-		// $revision_number = $this -> LineItemRevision -> find('first', array(
-		// 'conditions' => array('LINE_ITEM_ID' => $lineitem['id']),
-		// 'fields' => array('IFNULL(MAX(REVISION),0) as revision')
-		// ));
-		// debug($this -> LineItemRevision -> query("SELECT MAX(REVISION) FROM
-		// LINE_ITEM_REVISIONS WHERE LINE_ITEM_ID = " . $lineitem['id'] . ";"));
-		// $this -> LineItemRevision -> create();
-		// $this -> LineItemRevision -> set('revision',
-		// max($revision_number[0]['revision'], 0));
-		// $this -> LineItemRevision -> set('deleted', 0);
-		// $this -> LineItemRevision -> set('line_item_id', $lineitem['id']);
-		// unset($lineitem['id']);
-		// if($this -> LineItemRevision -> save($lineitem))
-		// debug("Good");
-		// break;
-		// }
-		// }
-		// }
-		// }
-		// }
-		// //$this -> redirect(array('controller' => 'bills', 'action' => 'view', $id));
-		// }
 	}
 
 	private function updateFieldForLineItemRevisions($lineItemId, $field, $value)
@@ -150,29 +99,71 @@ class LineItemsController extends AppController
 		$this -> LineItemRevision -> save($data);
 	}
 
+	private function createLineItemRevision($data, $id)
+	{
+		$this -> loadModel('LineItemRevision');
+		$this -> LineItemRevision -> create();
+		$data['LineItemRevision'] = $data['LineItem'];
+		unset($data['LineItem']);
+		$data['LineItemRevision']['mod_by'] = $this -> Session -> read('User.id');
+		$data['LineItemRevision']['mod_date'] = date('Y-m-d h:i:s');
+		$data['LineItemRevision']['revision'] = 1;
+		$data['LineItemRevision']['line_item_id'] = $id;
+		$this -> LineItemRevision -> save($data);
+	}
+
 	private function saveLineItemRevision($data, $id = null)
 	{
 		$this -> loadModel('LineItemRevision');
 		$this -> LineItemRevision -> create();
-		if ($id != null)
-		{
-			$lineItemRevision = $this -> LineItemRevision -> find('first', array(
-				'fields' => array('id'),
-				'conditions' => array('line_item_id' => $id),
-				'order' => array('id DESC')
-			));
-		}
-		else
-		{
-			$lineItemRevision = $this -> LineItemRevision -> find('first', array(
+
+			$lirid = $this -> LineItemRevision -> find('first', array(
 				'fields' => array('id'),
 				'conditions' => array('line_item_id' => $data['LineItem']['id']),
 				'order' => array('id DESC')
 			));
-		}
-		//TODO implement
+			$lineItemRevision = $this -> LineItemRevision -> findById($lirid['LineItemRevision']['id']);
+			$this -> LineItemRevision -> save($this -> prepareRevision($lineItemRevision, $data));
 	}
-
+	
+	private function prepareRevision($one, $two)
+	{
+		unset($one['LineItemRevision']['id']);
+		$one['LineItemRevision']['name']=$two['LineItem']['name'];
+		$one['LineItemRevision']['cost_per_unit']=$two['LineItem']['cost_per_unit'];
+		$one['LineItemRevision']['total_cost']=$two['LineItem']['total_cost'];
+		$one['LineItemRevision']['amount']=$two['LineItem']['amount'];
+		$one['LineItemRevision']['account']=$two['LineItem']['account'];
+		$one['LineItemRevision']['type'] = 'General';
+		$one['LineItemRevision']['mod_by'] = $this -> Session -> read('User.id');
+		$one['LineItemRevision']['mod_date'] = date('Y-m-d h:i:s');
+		$one['LineItemRevision']['revision'] = max(1, $one['LineItemRevision']['revision'] + 1);
+		return $one;
+	}
+	
+	private function compare($new, $old)
+	{
+		$flag = true;
+		if (strcmp($new['LineItem']['line_number'], $old['LineItem']['line_number']))
+		{
+			$this -> updateFieldForLineItemRevisions($new['LineItem']['id'], 'line_number', $new['LineItem']['line_number']);
+			debug("updated");
+		}
+		if (strcmp($new['LineItem']['name'], $old['LineItem']['name']))
+			$flag = false;
+		else if (strcmp($new['LineItem']['cost_per_unit'], $old['LineItem']['cost_per_unit']))
+			$flag = false;
+		else if (strcmp($new['LineItem']['quantity'], $old['LineItem']['quantity']))
+			$flag = false;
+		else if (strcmp($new['LineItem']['total_cost'], $old['LineItem']['total_cost']))
+			$flag = false;
+		else if (strcmp($new['LineItem']['amount'], $old['LineItem']['amount']))
+			$flag = false;
+		else if (strcmp($new['LineItem']['account'], $old['LineItem']['account']))
+			$flag = false;
+		return $flag;
+	}
+	
 	public function view($id = null)
 	{
 		$this -> set('lineitem', $this -> LineItem -> findById($id));
@@ -274,30 +265,9 @@ class LineItemsController extends AppController
 
 	}
 
-	private function compare($new, $old)
-	{
-		$flag = true;
-		if (strcmp($new['LineItem']['line_number'], $old['LineItem']['line_number']))
-			$this -> updateFieldForLineItemRevisions($id, 'line_number', $one['LineItem']['line_number']);
-		if (strcmp($new['LineItem']['name'], $old['LineItem']['name']))
-			$flag = false;
-		else if (strcmp($new['LineItem']['cost_per_unit'], $old['LineItem']['cost_per_unit']))
-			$flag = false;
-		else if (strcmp($new['LineItem']['quantity'], $old['LineItem']['quantity']))
-			$flag = false;
-		else if (strcmp($new['LineItem']['total_cost'], $old['LineItem']['total_cost']))
-			$flag = false;
-		else if (strcmp($new['LineItem']['amount'], $old['LineItem']['amount']))
-			$flag = false;
-		else if (strcmp($new['account'], $old['LineItem']['account']))
-			$flag[] = false;
-		return $flag;
-	}
-
 	// Take out from state and pass it in through the form.
 	public function copy($bill_id, $to_state)
 	{
-		debug($this -> request -> data);
 		$lineitems = $this -> LineItem -> findAllByBillIdAndState($bill_id, $this -> request -> data['LineItem']['state']);
 		for ($i = 0; $i < count($lineitems); $i++)
 		{
@@ -333,6 +303,7 @@ class LineItemsController extends AppController
 		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
 		$this -> LineItem -> id = $id;
 		$this -> LineItem -> saveField('struck', 1);
+		$this -> updateFieldForLineItemRevisions($id, 'struck', 1);
 		$this -> redirect(array(
 			'controller' => 'bills',
 			'action' => 'view',
@@ -345,6 +316,7 @@ class LineItemsController extends AppController
 		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
 		$this -> LineItem -> id = $id;
 		$this -> LineItem -> saveField('struck', 0);
+		$this -> updateFieldForLineItemRevisions($id, 'struck', 0);
 		$this -> redirect(array(
 			'controller' => 'bills',
 			'action' => 'view',

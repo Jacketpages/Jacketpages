@@ -111,6 +111,8 @@ echo $this -> Html -> tableCells(array(
 ));
 echo $this -> Html -> tableEnd();
 
+echo $this -> element('bills/view/signatures');
+
 if ($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4)
 {
 	echo $this -> Html -> tableBegin(array(

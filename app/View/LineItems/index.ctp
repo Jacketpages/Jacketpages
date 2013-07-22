@@ -43,7 +43,7 @@ foreach ($lineitems as $key => $lineitem)
 			'value' => $key + 1,
 			'id' => 'LineItemLineNumber' . $key
 		)) . 
-		$this -> Form -> label($key . '.LineItem.line_number', $key + 1, array(
+		$this -> Form -> label($key . '.LineItem.number', $key + 1, array(
 			'label' => false,
 			'value' => $key + 1,
 			'id' => 'LineNumber' . $key
@@ -79,22 +79,22 @@ foreach ($lineitems as $key => $lineitem)
 			'options' => array(
 				'PY' => array(
 					'name' => 'Prior Year',
-					'value' => 'Prior Year',
+					'value' => 'PY',
 					'title' => 'Prior year description.'
 				),
 				'CO' => array(
 					'name' => 'Capital Outlay',
-					'value' => 'Capital Outlay',
+					'value' => 'CO',
 					'title' => 'Capital Outlay description.'
 				),
 				'ULR' => array(
 					'name' => 'Undergraduate Legislative Reserve',
-					'value' => 'Undergraduate Legislative Reserve',
+					'value' => 'ULR',
 					'title' => 'desc'
 				),
 				'GLR' => array(
 					'name' => 'Graduate Legislative Reserve',
-					'value' => 'Graduate Legislative Reserve',
+					'value' => 'GLR',
 					'title' => 'White on rice on a paper plate in a snowstorm'
 				)
 			)

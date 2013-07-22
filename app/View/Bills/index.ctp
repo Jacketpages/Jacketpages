@@ -58,7 +58,7 @@ $this -> start('search');
 <?php
 $this -> end();
 $this -> start('listing');
-echo $this -> element('billsTable', array('bills' => $bills));
+echo $this -> element('bills\index\billsTable', array('bills' => $bills));
 echo $this -> element('paging');
 $this -> end();
 ?>
