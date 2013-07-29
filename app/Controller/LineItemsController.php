@@ -39,9 +39,9 @@ class LineItemsController extends AppController
 			);
 			$existingLineItems = $this -> LineItem -> find('all', $conditions);
 			$existingLineItemIds = Hash::extract($existingLineItems, '{n}.LineItem.id');
+			$newLineItems = $this -> request -> data;
+			$this -> LineItem -> saveAll($newLineItems, array('validate' => 'only'));
 
-				$newLineItems = $this -> request -> data;
-			
 			$newLineItemIds = Hash::extract($newLineItems, '{n}.LineItem.id');
 			foreach ($existingLineItemIds as $id)
 			{

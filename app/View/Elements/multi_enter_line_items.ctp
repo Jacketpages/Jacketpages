@@ -4,9 +4,9 @@
  * @since 7/22/2013
  */
 $this -> start('script');
-echo $this -> Html -> script('lineitems');
+echo $this -> Html -> script('lineitems/lineitems');
 $this -> end();
-echo $this -> Form -> create('LineItem');
+echo $this -> Form -> create('LineItem', array('onsubmit' => 'return validateForm()'));
 echo $this -> Html -> tableBegin(array(
 	'class' => 'listing',
 	'id' => 'LineItemsTable'
@@ -24,9 +24,16 @@ echo $this -> Html -> tableHeaders(array(
 	'',
 	''
 ));
-if(count($lineitems) == 0)
+if (!isset($lineitems) || count($lineitems) == 0)
 {
-	$lineitems[] = array('LineItem' => array());
+	$lineitems[] = array('LineItem' => array(
+			'id' => '',
+			'name' => null,
+			'cost_per_unit' => '',
+			'quantity' => '',
+			'total_cost' => '',
+			'amount' => ''
+		));
 }
 foreach ($lineitems as $key => $lineitem)
 {
@@ -34,42 +41,40 @@ foreach ($lineitems as $key => $lineitem)
 		$this -> Form -> hidden($key . '.LineItem.id', array(
 			'value' => $lineitem['LineItem']['id'],
 			'id' => 'LineItemId' . $key
-		)) . 
-		$this -> Form -> hidden($key . '.LineItem.line_number', array(
+		)) . $this -> Form -> hidden($key . '.LineItem.line_number', array(
 			'value' => $key + 1,
 			'id' => 'LineItemLineNumber' . $key
-		)) . 
-		$this -> Form -> label($key . '.LineItem.number', $key + 1, array(
+		)) . $this -> Form -> label($key . '.LineItem.number', $key + 1, array(
 			'label' => false,
 			'value' => $key + 1,
 			'id' => 'LineNumber' . $key
 		)),
-		$this -> Form -> text($key .'.LineItem.name', array(
+		$this -> Form -> text($key . '.LineItem.name', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['name'],
 			'id' => 'LineItemName' . $key
 		)),
-		$this -> Form -> text($key .'.LineItem.cost_per_unit', array(
+		$this -> Form -> text($key . '.LineItem.cost_per_unit', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['cost_per_unit'],
 			'id' => 'LineItemCostPerUnit' . $key
 		)),
-		$this -> Form -> text($key .'.LineItem.quantity', array(
+		$this -> Form -> text($key . '.LineItem.quantity', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['quantity'],
 			'id' => 'LineItemQuantity' . $key
 		)),
-		$this -> Form -> text($key .'.LineItem.total_cost', array(
+		$this -> Form -> text($key . '.LineItem.total_cost', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['total_cost'],
 			'id' => 'LineItemTotalCost' . $key
 		)),
-		$this -> Form -> text($key .'.LineItem.amount', array(
+		$this -> Form -> text($key . '.LineItem.amount', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['amount'],
 			'id' => 'LineItemAmount' . $key
 		)),
-		$this -> Form -> input($key .'.LineItem.account', array(
+		$this -> Form -> input($key . '.LineItem.account', array(
 			'id' => 'LineItemAccount' . $key,
 			'label' => false,
 			'options' => array(

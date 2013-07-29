@@ -128,14 +128,14 @@ $this -> start('search');
 	echo $this -> Js -> writeBuffer();
 	?>
 </div>
-</div>
 <script type="text/javascript">
 	$(function() {
-var avaliableTags = <?php echo json_encode($names_to_autocomplete)?>
+var avaliableTags = <?php echo json_encode($names_to_autocomplete); ?>
 	;
-	$("#search").autocomplete({
+	$("#search").autocomplete(
+	{
 		source : avaliableTags
-	}, open: function( event, ui ) {$('#ui-id-1').style("width: 300")});
+	});
 	});
 </script>
 <?php

@@ -16,6 +16,12 @@ $sidebar = array();
 if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < 3) 
 		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
 {
+	$sidebar[] = $this -> Html -> link('Add Line Items', array(
+		'controller' => 'line_items',
+		'action' => 'index',
+		$bill['Bill']['id'],
+		'Submitted'
+	));
 	$sidebar[] = $this -> Html -> link('Add Line Item', array(
 		'controller' => 'line_items',
 		'action' => 'add',
@@ -70,48 +76,13 @@ echo $this -> Html -> tableCells(array(
 	$bill['Bill']['submit_date']
 ));
 echo $this -> Html -> tableEnd();
-// Bill status table
-echo $this -> Html -> tag('h1', 'Status');
-echo $this -> Html -> tableBegin(array('class' => 'list'));
-echo $this -> Html -> tableCells(array(
-	'Type',
-	$bill['Bill']['type']
-));
-echo $this -> Html -> tableCells(array(
-	'Category',
-	$bill['Bill']['category']
-));
-echo $this -> Html -> tableCells(array(
-	'Status',
-	$bill['Status']['name']
-));
-echo $this -> Html -> tableEnd();
-//Bill author table
-echo $this -> Html -> tag('h1', 'Authors');
-echo $this -> Html -> tableBegin(array('class' => 'list'));
-echo $this -> Html -> tableCells(array(
-	'Graduate Author',
-	$GradAuthor['User']['name']
-));
-echo $this -> Html -> tableCells(array(
-	'Undergraduate Author',
-	$UnderAuthor['User']['name']
-));
-echo $this -> Html -> tableCells(array(
-	'Submitter',
-	$bill['Submitter']['name']
-));
-echo $this -> Html -> tableCells(array(
-	'Organization',
-	$this -> Html -> link($bill['Organization']['name'], array(
-		'controller' => 'organizations',
-		'action' => 'view',
-		$bill['Organization']['id']
-	)),
-));
-echo $this -> Html -> tableEnd();
+echo $this -> element('bills/view/status');
+echo $this -> element('bills/view/authors');
 
-echo $this -> element('bills/view/signatures');
+if($bill['Bill']['status'] >= 4)
+	echo $this -> element('bills/view/signatures');
+
+
 
 if ($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4)
 {

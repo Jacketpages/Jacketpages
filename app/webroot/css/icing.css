@@ -7,19 +7,17 @@
  * Georgia Tech's general css layout.
  */
 
-  .ui-autocomplete {
-  	width: inherit;
-    max-height: 100px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
-  }
-  /* IE 6 doesn't support max-height
-   * we use height instead, but this forces the menu to always be this tall
-   */
-  * html .ui-autocomplete {
-    height: 100px;
-  }
+.ui-autocomplete {
+	width: inherit;
+	max-height: 100px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+}
+
+* html .ui-autocomplete {
+	height: 100px;
+}
 
 .error-message {
 	background: #FFEFEF none repeat scroll 0 0;
@@ -156,7 +154,6 @@ h3 {
  * 	Houses the sidebar and main content
  */
 #content {
-	/*	width: 100%;*/
 	z-index: 80;
 	width: 960px;
 	margin: 0px auto 0px auto;
@@ -195,7 +192,7 @@ h3 {
 	border-bottom: 1px solid #DDD;
 }
 /**
- * Differentiates the nested list elemenst by
+ * Differentiates the nested list elements by
  * editing their size and weight
  */
 #sidebar ul li ul li {
@@ -576,27 +573,47 @@ table.list tr:nth-child(2n) td {
 
 #logo {
 	text-align: right;
-	display:inline;
+	display: inline;
 }
 
 #orgInfoLeft {
-	display:inline;
+	display: inline;
 }
 
 #orgInfo {
-	display:inline-block;
+	display: inline-block;
 	position: relative;
 	width: 100%;
 	margin-bottom: 10px;
 }
 
-#inlineInput
-{
-	display:inline;
+#inlineInput {
+	display: inline;
 }
 
-#struck
-{
-	text-decoration:line-through;
+#struck {
+	text-decoration: line-through;
 }
 
+#overlay {
+	position: absolute;
+	background-color: white;
+	z-index: 100000;
+	padding: 5px;
+}
+
+/**
+ * 	Position the top level list.
+ */
+.utilityMenu ul li p {
+	/*	border-left: 1px solid #f9de95;*/
+	margin: 0;
+	display: block;
+	padding: 3px 10px;
+	color: #957B33;
+	text-decoration: none;
+}
+
+.error {
+	border-color: red;
+}

@@ -27,11 +27,17 @@ class BillsController extends AppController
 	 */
 	public function index($letter = null, $id = null, $onAgenda = null)
 	{
-		CakeLog::info("Entering BillsController::index.", $this -> BILLS);
-		debug($this -> referer());
 		// Set page view permissions
 		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'billExportPerm'));
 
+		if ($this -> Session -> read('Bill.from') == null)
+		{
+			$this -> request -> data = array('Bill' => array(
+					'from' => 1,
+					'to' => 7,
+					'category' => 'All'
+				));
+		}
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))
 		{
@@ -43,16 +49,19 @@ class BillsController extends AppController
 			$this -> Session -> delete('Search');
 		}
 
-		if ($this -> data['Bill']['from'] != null && $this -> data['Bill']['to'])
+		if (isset($this -> request -> data['Bill']))
 		{
-			$this -> Session -> write('Bill.from', $this -> data['Bill']['from']);
-			$this -> Session -> write('Bill.to', $this -> data['Bill']['to']);
+			if ($this -> request -> data['Bill']['from'] != null && $this -> request -> data['Bill']['to'])
+			{
+				$this -> Session -> write('Bill.from', $this -> data['Bill']['from']);
+				$this -> Session -> write('Bill.to', $this -> data['Bill']['to']);
+			}
+			if ($this -> data['Bill']['category'] != null)
+			{
+				$this -> Session -> write('Bill.category', $this -> data['Bill']['category']);
+			}
 		}
 
-		if ($this -> data['Bill']['category'] != null)
-		{
-			$this -> Session -> write('Bill.category', $this -> data['Bill']['category']);
-		}
 		if (strcmp($this -> Session -> read('Bill.category'), 'All') == 0)
 		{
 			$categories = array(
@@ -66,6 +75,9 @@ class BillsController extends AppController
 		{
 			$categories = array($this -> Session -> read('Bill.category'));
 		}
+		$keyword = $this -> Session -> read('Search.keyword');
+		$this -> loadModel('User');
+		$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.status BETWEEN ? AND ?' => array(
@@ -74,15 +86,17 @@ class BillsController extends AppController
 				),
 				'Bill.category' => $categories,
 				'OR' => array(
-					array('Bill.title LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-					array('Bill.description LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-					array('Bill.number LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+					array('Bill.title LIKE' => "%$keyword%"),
+					array('Bill.description LIKE' => "%$keyword%"),
+					array('Bill.number LIKE' => "%$keyword%"),
+					array('(CONCAT(first_name, " ", last_name)) LIKE' => "%$keyword%"),
+					array('Authors.grad_auth_id' => $authorId),
+					array('Authors.undr_auth_id' => $authorId)
 				),
 				array('Bill.title LIKE' => $letter . '%')
 			),
 			'limit' => 20
 		);
-
 		// If given a user's id then filter to show only that user's bills
 		if ($id != null)
 		{
@@ -92,7 +106,6 @@ class BillsController extends AppController
 		{
 			$this -> set('bills', $this -> paginate('Bill'));
 		}
-		CakeLog::info("Exiting BillsController::index.", $this -> BILLS);
 	}
 
 	/**
@@ -203,7 +216,6 @@ class BillsController extends AppController
 	 */
 	public function add()
 	{
-		debug($this -> request -> data);
 		if ($this -> request -> is('post'))
 		{
 			$this -> Bill -> create();
@@ -224,22 +236,22 @@ class BillsController extends AppController
 				$this -> request -> data['Authors']['undr_auth_id'] = 1;
 			}
 			$this -> request -> data['Authors']['category'] = $this -> request -> data['Bill']['category'];
-//comment me
-			$lineItemData = $this -> request -> data;
-			unset($lineItemData['Bill']);
-			unset($lineItemData['Authors']);
-			if ($this -> Bill -> saveAssociated($this -> request -> data))
+
+			if ($this -> Bill -> saveAll($this -> request -> data, array('validate' => 'only')))
 			{
+				$this -> Bill -> saveAssociated($this -> request -> data, array('validate' => 'false'));
 				$this -> Session -> setFlash('The bill has been saved.');
 				$bill = $this -> Bill -> find('first', array(
 					'conditions' => array('submitter' => $this -> Session -> read('User.id')),
 					'order' => 'Bill.id DESC'
 				));
-				$this -> requestAction('/lineitems/index/' . $bill['Bill']['id'] . '/Submitted', array('data' => $lineItemData));
-				// $this -> redirect(array(
-				// 'action' => 'view',
-				// $bill['Bill']['id']
-				// ));
+				CakeLog::debug(debug($this -> request -> data));
+				if($this -> request -> data[0]['LineItem']['name'] != "")
+					$this -> requestAction('/lineitems/index/' . $bill['Bill']['id'] . '/Submitted', array('data' => $this -> removeBillInformation($this -> request -> data)));
+				$this -> redirect(array(
+				'action' => 'view',
+				$bill['Bill']['id']
+				));
 			}
 			else
 			{
@@ -273,6 +285,13 @@ class BillsController extends AppController
 		$underAuthors[''] = "Unknown";
 		$underAuthors['SGA'] = $sga_undergraduate;
 		$this -> set('underAuthors', $underAuthors);
+	}
+
+	private function removeBillInformation($data)
+	{
+		unset($data['Bill']);
+		unset($data['Authors']);
+		return $data;
 	}
 
 	/**
@@ -567,12 +586,16 @@ class BillsController extends AppController
 		}
 	}
 
+	public function authorSign($bill_id,$field, $value)
+	{
+		$this -> BillAuthor -> id = $this ->getAuthorIdFromBillId($bill_id);
+		$this -> BillAuthor -> saveField($field, $value);
+		$this -> redirect($this -> referer());
+	}
+
 	public function sign($bill_id, $sig_field, $sig_value)
 	{
-		$this -> Bill -> id = $bill_id;
-		$this -> loadModel('BillAuthor');
-		$auth_id = $this -> Bill -> findById($bill_id);
-		$this -> BillAuthor -> id = $auth_id['Authors']['id'];
+		$this -> BillAuthor -> id = $this ->getAuthorIdFromBillId($bill_id);
 		$this -> BillAuthor -> saveField($sig_field, $sig_value);
 		$this -> BillAuthor -> saveField(str_replace("id", "tmsp", $sig_field), date('Y-m-d h:i:s'));
 		$this -> redirect(array(
@@ -580,6 +603,14 @@ class BillsController extends AppController
 			'action' => 'view',
 			$bill_id
 		));
+	}
+
+	private function getAuthorIdFromBillId($bill_id)
+	{
+		$this -> Bill -> id = $bill_id;
+		$this -> loadModel('BillAuthor');
+		$auth_id = $this -> Bill -> findById($bill_id);
+		return $auth_id['Authors']['id'];
 	}
 
 	private function setSignatureNames($data)

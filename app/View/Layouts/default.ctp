@@ -9,38 +9,23 @@
 <html>
     <head>
         <?php echo $this -> Html -> charset(); ?>
-        <title><?php echo 'JacketPages'; ?>|<?php echo $title_for_layout; ?></title>
+        <title><?php echo 'JacketPages'; ?> | <?php echo $title_for_layout; ?></title>
         <?php
-		// Include any meta, css, and script links here.
-		// echo $this -> Html -> meta('icon');
-		echo $this -> Html -> css('icing');
-		echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
-		echo $this -> Html -> css('jquery-ui-1.10.3.custom');
-		// Include Jquery
-		echo $this -> Html -> script('jquery.min.js');
-		echo $this -> Html -> script('jquery-ui.js');
 
-		// Fetch any other meta, css, or script libraries included in views
 		echo $this -> fetch('meta');
-		echo $this -> fetch('css');
+		echo $this -> Html -> script('//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js');
+		echo $this -> Html -> script('http://code.jquery.com/jquery-1.9.1.js');
+		echo $this -> Html -> script('http://code.jquery.com/ui/1.10.3/jquery-ui.js');
 		echo $this -> fetch('script');
-
-		// echo $this -> Html -> scriptStart();
-		// debug($this -> Html -> scriptBlock());
-		// echo $this -> Js -> get('#utilityBar');
-		// echo $this -> Js -> event('mouseover', $this -> Js -> get('ul') ->
-		// effect('show'));
-		// echo $this -> Js -> event('mouseout', $this -> Js ->
-		// each("$(this).find('ul').css('visibility', 'hidden');"));
-		// echo $this -> Html -> scriptEnd();
-		// $stuff = $this -> Js -> value('$(this).find("ul").css("visibility",
-		// "visible");', array('escape' => 'false'));
-		// echo $stuff;
-		// debug($stuff);
+		echo $this -> Html -> css('icing');
+		//echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
+		echo $this -> Html -> css('jquery-ui-1.10.3.custom');
+		echo $this -> fetch('css');
         ?>
         <script type="text/javascript">
 			// @TODO Generate this script using the HTML and Js helpers
-			$(document).ready(function() {
+			$(document).ready(function()
+			{
 				/**
 				 * Bind the top unorder lists to the open and close functions
 				 */
@@ -50,15 +35,27 @@
 				 * Find the nested unordered lists and make them visible or hidden depending
 				 * on the event.
 				 */
-				function openSubMenu() {
+				function openSubMenu()
+				{
 					$(this).find('ul').css('visibility', 'visible');
 				};
 
-				function closeSubMenu() {
+				function closeSubMenu()
+				{
 					$(this).find('ul').css('visibility', 'hidden');
 				};
 
 			});
+
+			function openHelp()
+			{
+				$("#help").attr("style", "");
+			}
+			
+			function closeHelp()
+			{
+				$("#help").attr("style", "display:none;");
+			}
 
         </script>
 
@@ -78,7 +75,7 @@
 			// Determine the message to display on the right side of the Breadcrumbs bar
 			$message = $this -> Session -> flash();
 			if (strlen($message))
-			{ 
+			{
 				$message = $this -> Html -> tag('div', $message, array('id' => 'right'));
 			}
 			else if ($this -> Session -> read('User.name') != null)
@@ -89,23 +86,27 @@
 			{
 				$message = $this -> Html -> tag('div', "Welcome, Guest.", array('id' => 'right'));
 			}
-			
+
 			// Output the Breadcrumbs bar
 			echo $this -> Html -> tag('div', $this -> Html -> tag('div', $breadcrumbTrail . $message, array(
 				'id' => 'breadCrumbs',
 				'escape' => false
 			)), array('id' => 'breadCrumbWrapper'));
             ?>
-        </div>
+        				</div>
         <div id="content">
-            <?php echo $this -> Session -> flash('auth'); ?>
-            <?php echo $this -> fetch('content'); ?>
-            <div id="footer">
+			<div class="ui-overlay" id="help" style="display:none;">
+				<div class="ui-widget-overlay"></div>
+				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 100%; position: absolute;"><?php echo $this -> fetch('helppage'); echo $this -> Form -> button("close",array('onclick' => 'closeHelp()'));?></div>
+			</div>
+
+            <?php echo $this -> Session -> flash('auth'); ?><?php echo $this -> fetch('content'); ?>
+            				<div id="footer">
                 <?php
 				echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association');
                 ?>
-            </div>
-        </div>
+					</div>
+					</div>
         <?php echo $this -> element('sql_dump'); ?>
-    </body>
-</html>
+			</body>
+			</html>

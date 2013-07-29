@@ -21,29 +21,37 @@ $sign_labels = array(
 
 echo $this -> Html -> tag('h1', 'Signatures');
 echo $this -> Html -> tableBegin(array('class' => 'list'));
-for($i = 0; $i < count($signatures); $i++)
+for ($i = 0; $i < count($signatures); $i++)
 {
 	$tableCells = array();
 	$tableCells[] = $sign_labels[$i];
-	if($bill['Authors'][$signatures[$i]] == 0)
+	if ($bill['Bill']['status'] == 4)
 	{
-		$tableCells[] = $this -> Html -> link("Sign", array(
-		'controller' => 'bills',
-		'action' => 'sign',
-		$bill['Bill']['id'],
-		$signatures[$i],
-		$this -> Session -> read('Sga.id')
-	));
+		if ($bill['Authors'][$signatures[$i]] == 0)
+		{
+			$tableCells[] = $this -> Html -> link("Sign", array(
+				'controller' => 'bills',
+				'action' => 'sign',
+				$bill['Bill']['id'],
+				$signatures[$i],
+				$this -> Session -> read('Sga.id')
+			));
+		}
+		else
+		{
+			$tableCells[] = $signee_names[str_replace("_id", "", $signatures[$i])];
+			$tableCells[] = $this -> Html -> link("Remove Signature", array(
+				'controller' => 'bills',
+				'action' => 'sign',
+				$bill['Bill']['id'],
+				$signatures[$i],
+				0
+			));
+		}
 	}
-	else {
+	else
+	{
 		$tableCells[] = $signee_names[str_replace("_id", "", $signatures[$i])];
-		$tableCells[] = $this -> Html -> link("Remove Signature", array(
-		'controller' => 'bills',
-		'action' => 'sign',
-		$bill['Bill']['id'],
-		$signatures[$i],
-		0
-	));
 	}
 	echo $this -> Html -> tableCells($tableCells);
 }

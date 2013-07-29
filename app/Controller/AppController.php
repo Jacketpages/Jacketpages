@@ -43,8 +43,14 @@ class AppController extends Controller
 	 */
 	public function beforeFilter()
 	{
+		CakeLog::info("Entering " . $this -> name . "Controller::" . $this -> view);
 		// display is the home/base page
 		$this -> Auth -> allow('display', 'index', 'view');
+	}
+
+	public function afterFilter()
+	{
+		CakeLog::info("Exiting " . $this -> name . "Controller::" . $this -> view);
 	}
 
 	public function beforeRender()

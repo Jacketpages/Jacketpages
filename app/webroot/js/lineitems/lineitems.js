@@ -7,7 +7,8 @@
  * Calls document.getElementById on the id given
  * @param String id
  */
-function get(id) {
+function get(id)
+{
 	return document.getElementById(id);
 }
 
@@ -15,7 +16,8 @@ function get(id) {
  * Moves a specific line item down one
  * @param int pos - row position
  */
-function moveDown(pos) {
+function moveDown(pos)
+{
 	move(pos, pos + 1);
 }
 
@@ -23,7 +25,8 @@ function moveDown(pos) {
  * Moves a specific line item up one
  * @param int pos - row position
  */
-function moveUp(pos) {
+function moveUp(pos)
+{
 	move(pos, pos - 1);
 }
 
@@ -33,11 +36,12 @@ function moveUp(pos) {
  * @param int pos - row position
  * @param int moveTo - row position to move to
  */
-function move(pos, moveTo) {
+function move(pos, moveTo)
+{
 	var rows = get("LineItemsTable").rows;
 	// If the position to move to is not first row (table headers) and it is defined
 	// then swap the two rows
-	if (moveTo >= 0 && !(rows[moveTo] == undefined)) 
+	if (moveTo >= 0 && !(rows[moveTo] == undefined))
 	{
 		// Save the values from the current row
 		var id = get("LineItemId" + pos).value;
@@ -47,7 +51,7 @@ function move(pos, moveTo) {
 		var tc = get("LineItemTotalCost" + pos).value;
 		var amt = get("LineItemAmount" + pos).value;
 		var account = get("LineItemAccount" + pos).value;
-		
+
 		// Set the values of the current row to the row that of the row being moved to
 		get("LineItemId" + pos).value = get("LineItemId" + moveTo).value;
 		get("LineItemName" + pos).value = get("LineItemName" + moveTo).value;
@@ -56,7 +60,7 @@ function move(pos, moveTo) {
 		get("LineItemTotalCost" + pos).value = get("LineItemTotalCost" + moveTo).value;
 		get("LineItemAmount" + pos).value = get("LineItemAmount" + moveTo).value;
 		get("LineItemAccount" + pos).value = get("LineItemAccount" + moveTo).value;
-		
+
 		// Set the row being moved to, to the values of the current row
 		get("LineItemId" + moveTo).value = id;
 		get("LineItemName" + moveTo).value = name;
@@ -72,7 +76,8 @@ function move(pos, moveTo) {
  * Adds a blank row to the table of lineitems.
  * @param int pos - row position
  */
-function addRow(pos) {
+function addRow(pos)
+{
 	pos = pos + 1;
 	var moveTo = pos + 1;
 	var table = get("LineItemsTable");
@@ -82,7 +87,8 @@ function addRow(pos) {
 	var cells = rows[moveTo].cells;
 	// Since all of the elements that were added have previous values, the old values
 	// need to be removed.
-	for (var i = 0; i < cells.length; i++) {
+	for (var i = 0; i < cells.length; i++)
+	{
 		if (!(cells[i].getElementsByTagName("input")[0] == undefined))
 			cells[i].getElementsByTagName("input")[0].setAttribute("value", "");
 	}
@@ -93,7 +99,8 @@ function addRow(pos) {
  * Deletes a row from the table of lineitems.
  * @param int pos - row position
  */
-function deleteRow(pos) {
+function deleteRow(pos)
+{
 	pos = pos + 1;
 	var table = get("LineItemsTable");
 	table.deleteRow(pos);
@@ -104,12 +111,14 @@ function deleteRow(pos) {
  * A helper method for deleteRow and addRow that corrects the line numbers of the
  * line items as well as making sure the buttons refer to the correct line item.
  */
-function correctNumbers() {
+function correctNumbers()
+{
 	var rows = get("LineItemsTable").rows;
 	// Go through the rows and make sure their ids and js methods refer to the
 	// correct row number.
 
-	for (var i = 1; i < rows.length - 1; i++) {
+	for (var i = 1; i < rows.length - 1; i++)
+	{
 		var cells = rows[i + 1].cells;
 		cells[0].getElementsByTagName("input")[0].setAttribute("id", "LineItemId" + i);
 		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][id]");

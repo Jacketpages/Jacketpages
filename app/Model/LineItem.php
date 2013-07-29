@@ -10,34 +10,43 @@ class LineItem extends AppModel
 			'foreignKey' => 'bill_id'
 		));
 
-	public $validate = array(
-		'cost_per_unit' => array(
-			'rule' => array(
-				'money',
-				'left'
-			),
-			'message' => 'That is not a valid monetary amount'
-		),
-		'quantity' => array(
-			'rule' => array(
-				'money',
-				'left'
-			),
-			'message' => 'That is not a valid monetary amount'
-		),
-		'total_cost' => array(
-			'rule' => array(
-				'money',
-				'left'
-			),
-			'message' => 'That is not a valid monetary amount'
-		),
-		'Amount Requested' => array(
-			'rule' => array(
-				'money',
-				'left'
-			),
-			'message' => 'That is not a valid monetary amount'
-		),	);
+	// public $validate = array(
+		// 'name' => array(
+			// 'rule' => array(
+				// 'minLength',
+				// '8'
+			// ),
+			// 'message' => 'Cannot be empty.',
+			// 'required' => true
+		// ),
+		// 'cost_per_unit' => array(
+			// 'rule' => array(
+				// 'money',
+				// 'left'
+			// ),
+			// 'message' => 'That is not a valid monetary amount'
+		// ),
+		// 'quantity' => array(
+			// 'rule' => array(
+				// 'money',
+				// 'left'
+			// ),
+			// 'message' => 'That is not a valid monetary amount'
+		// ),
+		// 'total_cost' => array(
+			// 'rule' => array(
+				// 'money',
+				// 'left'
+			// ),
+			// 'message' => 'That is not a valid monetary amount'
+		// ),
+		// 'Amount Requested' => array(
+			// 'rule' => array(
+				// 'money',
+				// 'left'
+			// ),
+			// 'message' => 'That is not a valid monetary amount'
+		// ),
+	// );
 }
 ?>
