@@ -120,19 +120,20 @@ $this -> start('search');
 	<?php
 	echo $this -> element('organizationTable', array(
 		'organizations' => $organizations,
-		'admin' => $permitted
+		'admin' => $orgAdminView,
+		'orgEditDeletePerm' => $orgEditDeletePerm
 	));
 	echo $this -> element('paging');
 	// Implement Ajax for this page.
 	echo $this -> Js -> writeBuffer();
 	?>
 </div>
-</div>
 <script type="text/javascript">
 	$(function() {
-var avaliableTags = <?php echo json_encode($names_to_autocomplete)?>
+var avaliableTags = <?php echo json_encode($names_to_autocomplete); ?>
 	;
-	$("#search").autocomplete({
+	$("#search").autocomplete(
+	{
 		source : avaliableTags
 	});
 	});

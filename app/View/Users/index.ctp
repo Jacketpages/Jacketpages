@@ -27,7 +27,7 @@ echo $this -> Html -> nestedList(array(
 $this -> end();
 $this -> start('search');
 
-echo $this -> element('search');
+echo $this -> element('search', array('action' =>  'index', 'endForm' => 1));
 ?>
 
 
@@ -39,34 +39,34 @@ echo $this -> element('search');
     <?php
     // Print out all of the table headers
    echo $this -> Html -> tableHeaders(array(
-      $this -> Paginator -> sort('NAME', 'Name'),
-      $this -> Paginator -> sort('EMAIL', 'Email'),
-      $this -> Paginator -> sort('GT_USER_NAME', 'GT Username'),
-      $this -> Paginator -> sort('LEVEL', 'Level'),
-      $this -> Paginator -> sort('PHONE', 'Phone'), "",""
+      $this -> Paginator -> sort('name', 'Name'),
+      $this -> Paginator -> sort('email', 'Email'),
+      $this -> Paginator -> sort('gt_user_name', 'GT Username'),
+      $this -> Paginator -> sort('level', 'Level'),
+      $this -> Paginator -> sort('phone', 'Phone'), "",""
    ), array('class' => 'links'));
    // Loop through all of the users and display their information
    foreach ($users as $user)
    {
       echo $this -> Html -> tableCells(array(
-         $this -> Html -> link($user['User']['NAME'], array(
+         $this -> Html -> link($user['User']['name'], array(
             'controller' => 'users',
             'action' => 'view',
-            $user['User']['ID']
+            $user['User']['id']
          )),
-         $user['User']['EMAIL'],
-         $user['User']['GT_USER_NAME'],
-         $user['User']['LEVEL'],
-         $user['User']['PHONE'],
+         $user['User']['email'],
+         $user['User']['gt_user_name'],
+         $user['User']['level'],
+         $user['User']['phone'],
          $this -> Html -> link('Edit', array(
             'action' => 'edit',
-            $user['User']['ID']
+            $user['User']['id']
          )),
          // @TODO Figure out what the sprintf thing is for. Display error message. Is it the cakephp standard?
          $this -> Html -> link(__('Delete', true), array(
             'action' => 'delete',
-            $user['User']['ID']
-         ), null, sprintf(__('Are you sure you want to delete %s?', true), $user['User']['NAME']))
+            $user['User']['id']
+         ), null, sprintf(__('Are you sure you want to delete %s?', true), $user['User']['name']))
       ));
    }
     ?>

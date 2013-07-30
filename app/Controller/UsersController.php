@@ -49,12 +49,20 @@ class UsersController extends AppController
 		$this -> paginate = array(
 			'conditions' => array('AND' => array(
 					'OR' => array(
-						array('User.NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
-						array('User.GT_USER_NAME LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
+						array('User.name LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%'),
+						array('User.gt_user_name LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
 					),
-					array('User.NAME LIKE' => $letter . '%')
+					array('User.name LIKE' => $letter . '%')
 				)),
-			'limit' => 20
+			'limit' => 20,
+			'fields' => array(
+				'User.id',
+				'User.name',
+				'User.gt_user_name',
+				'User.email',
+				'User.level',
+				'User.phone'
+			)
 		);
 		// If the request is ajax then change the layout to return just the updated user
 		// list
@@ -72,6 +80,15 @@ class UsersController extends AppController
 	 */
 	public function view($id = null)
 	{
+		$this -> set('userDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userDelete'));
+		
+		$userEditPerm = $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userEditPerm');
+		if(!$userEditPerm && $id == $this -> Session -> read('User.id'))
+		{
+			$userEditPerm = true;
+		}
+		$this -> set('userEditPerm', $userEditPerm );
+		
 		// Set which user to retrieve from the database.
 		$this -> User -> id = $id;
 		$this -> set('user', $this -> User -> read());
@@ -80,15 +97,15 @@ class UsersController extends AppController
 		$this -> loadModel('Membership');
 		$memberships = $this -> Membership -> find('all', array(
 			'conditions' => array('AND' => array(
-					'Membership.USER_ID' => $id,
-					'Membership.END_DATE =' => '0000-00-00'
+					'Membership.user_id' => $id,
+					'Membership.end_date =' => '0000-00-00'
 				)),
 			'fields' => array(
-				'Organization.NAME',
-				'Organization.ID',
-				'Membership.ROLE',
-				'Membership.TITLE',
-				'Membership.START_DATE'
+				'Organization.name',
+				'Organization.id',
+				'Membership.role',
+				'Membership.title',
+				'Membership.start_date'
 			)
 		));
 		$this -> set('memberships', $memberships);
@@ -112,10 +129,27 @@ class UsersController extends AppController
 			}
 			else
 			{
-				$this -> log('Unable to add the user.', 'DEBUG');
 				$this -> Session -> setFlash('Unable to add the user.');
 			}
 		}
+	}
+
+	public function delete($id = null)
+	{
+		$this -> User -> id = $id;
+		if ($this -> User -> saveField('status', 'Inactive'))
+		{
+			$this -> Session -> setFlash(__('User deleted.', true));
+			$this -> redirect(array(
+				'controller' => 'users',
+				'action' => 'index'
+			));
+		}
+		$this -> Session -> setFlash(__('User was not able to be deleted.', true));
+		$this -> redirect(array(
+			'controller' => 'users',
+			'action' => 'index'
+		));
 	}
 
 	/**
@@ -176,11 +210,12 @@ class UsersController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			$gtUsername = $this -> request -> data['User']['username'];
-			$user = $this -> User -> find('first', array('conditions' => array('User.GT_USER_NAME' => $gtUsername)));
-			$this -> Session -> write('Auth.User', $user['User']['LEVEL']);
-			$this -> Session -> write('USER.NAME', $user['User']['NAME']);
-			$this -> Session -> write('USER.LEVEL', $user['User']['LEVEL']);
-			$this -> Session -> write('USER.ID', $user['User']['ID']);
+			$user = $this -> User -> find('first', array('conditions' => array('User.gt_user_name' => $gtUsername)));
+			$this -> Session -> write('Auth.User', $user['User']['level']);
+			$this -> Session -> write('User.name', $user['User']['name']);
+			$this -> Session -> write('User.level', $user['User']['level']);
+			$this -> Session -> write('User.id', $user['User']['id']);
+			$this -> Session -> write('Sga.id', $user['User']['sga_id']);
 			if ($this -> Auth -> login())
 			{
 				$this -> redirect($this -> Auth -> redirect());
@@ -198,49 +233,9 @@ class UsersController extends AppController
 	 */
 	public function logout()
 	{
-		$this -> Session -> delete('USER');
+		$this -> Session -> destroy();
 		$this -> redirect($this -> Auth -> logout());
 	}
-
-	// public function create()
-	// {
-	// // $this -> Acl -> Aco -> create(array(
-	// // 'parent_id' => null,
-	// // 'alias' => 'controllers'
-	// // ));
-	// // $this -> Acl -> Aco -> save();
-	// // $this->Acl->Aco->create(array('parent_id' => 1, 'alias' => 'User'));
-	// // $this->Acl->Aco->save();
-	// $this -> Acl -> Aco -> create(array(
-	// 'parent_id' => 4,
-	// 'alias' => 'view'
-	// ));
-	// $this -> Acl -> Aco -> save();
-	// }
-	//
-	// public function initDB()
-	// {
-	// $this -> loadModel('Group');
-	// $group = $this -> Group;
-	// debug($this -> User);
-	// //Allow admins to everything
-	// $group -> id = 1;
-	// $this -> Acl -> deny($group, 'controllers');
-	// $this -> Acl -> allow($group, 'controllers/Users');
-	//
-	// //allow managers to posts and widgets
-	// $group -> id = 2;
-	// $this -> Acl -> deny($group, 'controllers');
-	// $this -> Acl -> allow($group, 'controllers/Users');
-	// //allow users to only add and edit on posts and widgets
-	// $group -> id = 3;
-	// $this -> Acl -> deny($group, 'controllers');
-	// $this -> Acl -> allow($group, 'controllers/Users/add');
-	// $this -> Acl -> allow($group, 'controllers/Users/edit');
-	// //we add an exit to avoid an ugly "missing views" error message
-	// echo "all done";
-	// exit ;
-	// }
 
 }
 ?>

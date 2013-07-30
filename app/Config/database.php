@@ -74,9 +74,9 @@ class DATABASE_CONFIG {
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'user',
-		'password' => 'password',
-		'database' => 'test_database_name',
+		'login' => 'root',
+		'password' => '',
+		'database' => 'jacketpages_test',
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);

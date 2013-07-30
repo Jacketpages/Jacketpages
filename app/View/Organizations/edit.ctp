@@ -7,17 +7,16 @@
 $this -> extend('/Common/common');
 $this -> assign('title', 'Edit Organization');
 $this -> start('middle');
-debug($organization);
 echo $this -> Form -> create('Organization');
-echo $this -> Form -> hidden('ID');
-echo $this -> Form -> input('NAME', array('label' => 'Name'));
-echo $this -> Form -> input('STATUS',array('label' => 'Status', 'options' => array(
+echo $this -> Form -> hidden('id');
+echo $this -> Form -> input('name', array('label' => 'Name'));
+echo $this -> Form -> input('status',array('label' => 'Status', 'options' => array(
       'Active' => 'Active/Good Standing',
       'Inactive' => 'Inactive',
       'Under Review' => 'Under Review',
       'Pending' => 'Pending'
    )));
-echo $this -> Form -> input('Category.NAME', array('label' => 'Category','options' => array(
+echo $this -> Form -> input('Category.name', array('label' => 'Category','options' => array(
       'CPC Sorority' => 'CPC Sorority',
       'Cultural/Diversity' => 'Cultural/Diversity',
       'Departmental Sponsored' => 'Departmental Sponsored',
@@ -38,14 +37,14 @@ echo $this -> Form -> input('Category.NAME', array('label' => 'Category','option
       'Student Government' => 'Student Government',
       'Umbrella' => 'Umbrella'
    )));
-echo $this -> Form -> input('User.NAME', array('label' => 'Primary Contact','id' => 'primary_contact'));
-echo $this -> Form -> input('User.EMAIL', array('label' => 'Priamry Contact Email','id' => 'primary_email'));
-echo $this -> Form -> input('DESCRIPTION', array('label' => 'Description','type' => 'textarea'));
-echo $this -> Form -> input('WEBSITE', array('label' => 'Website'));
-echo $this -> Form -> input('METNG_INFO', array('label' => 'Meeting Information'));
-echo $this -> Form -> input('METNG_FREQU', array('label' => 'Meeting Frequency'));
-echo $this -> Form -> input('ANNUL_EVNTS', array('label' => 'Annual Events'));
-echo $this -> Form -> input('DUES', array('label' => 'Dues'));
+echo $this -> Form -> input('User.name', array('label' => 'Primary Contact','id' => 'primary_contact'));
+echo $this -> Form -> input('User.email', array('label' => 'Priamry Contact Email','id' => 'primary_email'));
+echo $this -> Form -> input('description', array('label' => 'Description','type' => 'textarea'));
+echo $this -> Form -> input('website', array('label' => 'Website'));
+echo $this -> Form -> input('meeting_info', array('label' => 'Meeting Information'));
+echo $this -> Form -> input('meeting_frequency', array('label' => 'Meeting Frequency'));
+echo $this -> Form -> input('annual_events', array('label' => 'Annual Events'));
+echo $this -> Form -> input('dues', array('label' => 'Dues'));
 ?>
 <div id='date'>
     <?php

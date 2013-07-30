@@ -15,7 +15,7 @@ echo $this -> Html -> nestedList(array(
 $this -> end();
 $this -> assign("title", "Bills");
 $this -> start('search');
-echo $this -> element('search');
+echo $this -> element('search', array('action' =>  'my_bills', 'endForm' => 0));
 $this -> end();
 $this -> start('listing');
 echo $this -> element('billsTable', array('bills' => $bills));

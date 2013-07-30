@@ -5,39 +5,27 @@
  * @since 4/17/2012
  */
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
-        <?php echo $this -> Html -> charset();?>
-        <title><?php echo 'JacketPages';?>|<?php echo $title_for_layout;?></title>
+        <?php echo $this -> Html -> charset(); ?>
+        <title><?php echo 'JacketPages'; ?> | <?php echo $title_for_layout; ?></title>
         <?php
-      // Include any meta, css, and script links here.
-      // echo $this -> Html -> meta('icon');
-      echo $this -> Html -> css('icing');
-      echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
-      echo $this -> Html -> css('ui-lightness');
-      // Include Jquery
-      echo $this -> Html -> script('jquery-1.7.2.js');
-      echo $this -> Html -> script('jquery-ui-1.8.21.min.js');
 
-      // Fetch any other meta, css, or script libraries included in views
-      echo $this -> fetch('meta');
-      echo $this -> fetch('css');
-      echo $this -> fetch('script');
-
-      // echo $this -> Html -> scriptStart();
-      // debug($this -> Html -> scriptBlock());
-      // echo $this -> Js -> get('#utilityBar');
-      // echo $this -> Js -> event('mouseover', $this -> Js -> get('ul') -> effect('show'));
-      // echo $this -> Js -> event('mouseout', $this -> Js -> each("$(this).find('ul').css('visibility', 'hidden');"));
-      // echo $this -> Html -> scriptEnd();
-      // $stuff = $this -> Js -> value('$(this).find("ul").css("visibility", "visible");', array('escape' => 'false'));
-      // echo $stuff;
-      // debug($stuff);
+		echo $this -> fetch('meta');
+		echo $this -> Html -> script('//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js');
+		echo $this -> Html -> script('http://code.jquery.com/jquery-1.9.1.js');
+		echo $this -> Html -> script('http://code.jquery.com/ui/1.10.3/jquery-ui.js');
+		echo $this -> fetch('script');
+		echo $this -> Html -> css('icing');
+		//echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
+		echo $this -> Html -> css('jquery-ui-1.10.3.custom');
+		echo $this -> fetch('css');
         ?>
         <script type="text/javascript">
 			// @TODO Generate this script using the HTML and Js helpers
-			$(document).ready(function() {
+			$(document).ready(function()
+			{
 				/**
 				 * Bind the top unorder lists to the open and close functions
 				 */
@@ -47,15 +35,27 @@
 				 * Find the nested unordered lists and make them visible or hidden depending
 				 * on the event.
 				 */
-				function openSubMenu() {
+				function openSubMenu()
+				{
 					$(this).find('ul').css('visibility', 'visible');
 				};
 
-				function closeSubMenu() {
+				function closeSubMenu()
+				{
 					$(this).find('ul').css('visibility', 'hidden');
 				};
 
 			});
+
+			function openHelp()
+			{
+				$("#help").attr("style", "");
+			}
+			
+			function closeHelp()
+			{
+				$("#help").attr("style", "display:none;");
+			}
 
         </script>
 
@@ -64,46 +64,49 @@
         <!--         <div id="container">  -->
         <div id="header">
             <?php
-            // Link the Jacketpages logo to the Jacketpages home page
-            echo $this -> Html -> link($this -> Html -> div("", "", array('id' => 'logoWrapper')), "/", array('escape' => false));
-            
-            // Output the utility bar element
-            echo $this -> element('utilityBar');
+			// Link the Jacketpages logo to the Jacketpages home page
+			echo $this -> Html -> link($this -> Html -> div("", "", array('id' => 'logoWrapper')), "/", array('escape' => false));
 
-            // Get the BreadCrumbs for the left side of the Breadcrumbs bar
-            $breadcrumbTrail = $this -> Html -> tag('div', $this -> Html -> getCrumbs(' > ', 'Home'), array('id' => 'left'));
-            // Determine the message to display on the right side of the Breadcrumbs bar
-            $message;
-            if (strlen($this -> Session -> flash()))
-            {
-               $message = $this -> Html -> tag('div', $this -> Session -> flash(), array('id' => 'right'));
-            }
-            else
-            if ($this -> Session -> read('USER.NAME') != null)
-            {
-               $message = $this -> Html -> tag('div', "Welcome, " . $this -> Session -> read('USER.NAME'), array('id' => 'right'));
-            }
-            else
-            {
-               $message = $this -> Html -> tag('div', "Welcome, Guest.", array('id' => 'right'));
-            }
-            
-            // Output the Breadcrumbs bar
-            echo $this -> Html -> tag('div', $this -> Html -> tag('div', $breadcrumbTrail . $message, array(
-               'id' => 'breadCrumbs',
-               'escape' => false
-            )), array('id' => 'breadCrumbWrapper'));
+			// Output the utility bar element
+			echo $this -> element('utilityBar');
+
+			// Get the BreadCrumbs for the left side of the Breadcrumbs bar
+			$breadcrumbTrail = $this -> Html -> tag('div', $this -> Html -> getCrumbs(' > ', 'Home'), array('id' => 'left'));
+			// Determine the message to display on the right side of the Breadcrumbs bar
+			$message = $this -> Session -> flash();
+			if (strlen($message))
+			{
+				$message = $this -> Html -> tag('div', $message, array('id' => 'right'));
+			}
+			else if ($this -> Session -> read('User.name') != null)
+			{
+				$message = $this -> Html -> tag('div', "Welcome, " . $this -> Session -> read('User.name'), array('id' => 'right'));
+			}
+			else
+			{
+				$message = $this -> Html -> tag('div', "Welcome, Guest.", array('id' => 'right'));
+			}
+
+			// Output the Breadcrumbs bar
+			echo $this -> Html -> tag('div', $this -> Html -> tag('div', $breadcrumbTrail . $message, array(
+				'id' => 'breadCrumbs',
+				'escape' => false
+			)), array('id' => 'breadCrumbWrapper'));
             ?>
-        </div>
+        				</div>
         <div id="content">
-            <?php echo $this -> Session -> flash('auth');?>
-            <?php echo $this -> fetch('content');?>
-            <div id="footer">
+			<div class="ui-overlay" id="help" style="display:none;">
+				<div class="ui-widget-overlay"></div>
+				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 100%; position: absolute;"><?php echo $this -> fetch('helppage'); echo $this -> Form -> button("close",array('onclick' => 'closeHelp()'));?></div>
+			</div>
+
+            <?php echo $this -> Session -> flash('auth'); ?><?php echo $this -> fetch('content'); ?>
+            				<div id="footer">
                 <?php
-               echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association');
+				echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association');
                 ?>
-            </div>
-        </div>
-        <?php echo $this -> element('sql_dump');?>
-    </body>
-</html>
+					</div>
+					</div>
+        <?php echo $this -> element('sql_dump'); ?>
+			</body>
+			</html>

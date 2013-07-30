@@ -24,8 +24,8 @@ class AppController extends Controller
 				'action' => 'display'
 			),
 			'logoutRedirect' => array(
-				'controller' => 'users',
-				'action' => 'index'
+				'controller' => 'pages',
+				'action' => 'display'
 			),
 			'authError' => "You cannot access that page",
 			'authorize' => array(
@@ -36,15 +36,23 @@ class AppController extends Controller
 		'Session'
 	);
 
+	public $BILLS = "bills";
+
 	/**
 	 * Users that aren't logged in have access to the following actions.
 	 */
 	public function beforeFilter()
 	{
-		// Display is the home/base page
+		CakeLog::info("Entering " . $this -> name . "Controller::" . $this -> view);
+		// display is the home/base page
 		$this -> Auth -> allow('display', 'index', 'view');
 	}
-	
+
+	public function afterFilter()
+	{
+		CakeLog::info("Exiting " . $this -> name . "Controller::" . $this -> view);
+	}
+
 	public function beforeRender()
 	{
 		$this -> set('permitted', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'controllers/' . $this -> viewPath . "/" . $this -> view));
@@ -54,4 +62,29 @@ class AppController extends Controller
 	{
 		return true;
 	}
+
+	function getFiscalYear()
+	{
+		return substr($this -> calculateFiscalYearForDate(date('n/d/y')), -2);
+	}
+
+	function calculateFiscalYearForDate($inputDate, $fyStart = "6/1/", $fyEnd = "5/31/")
+	{
+		$date = strtotime($inputDate);
+		$inputyear = strftime('%y', $date);
+
+		$startdate = strtotime($fyStart . $inputyear);
+		$enddate = strtotime($fyEnd . $inputyear);
+
+		if ($date > $startdate)
+		{
+			$fy = intval($inputyear);
+		}
+		else
+		{
+			$fy = intval(intval($inputyear) - 1);
+		}
+		return $fy;
+	}
+
 }

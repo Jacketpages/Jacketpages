@@ -14,7 +14,7 @@
    $jphome = $profile = $account = $submitBill = $viewMyBills = $viewBills = null;
    $bills = $viewMyOrgs = $agendaBills = $viewBudgets = $adminSga = $adminUsers = null;
    $logout = $adminOrgs = $loginOther = $submitBillOther = $postMsg = $admin = null;
-   $login = $loginTopLevel = null;
+   $login = $loginTopLevel = $inactiveOrgs = null;
 ?>
 
 <!-- Define all top level list items that appear on the utility Bar -->
@@ -23,7 +23,10 @@ $orgs = $this -> Html -> link('Organizations', '#');
 $sga = $this -> Html -> link('Student Government', '#');
 if (!$this -> Permission -> isLoggedIn())
 {
-   $loginTopLevel = $this -> Html -> link('Login', '#');
+   $loginTopLevel = $this -> Html -> link('Login', array(
+      'controller' => 'users',
+      'action' => 'login'
+   ));
 }
 else
 {
@@ -59,7 +62,7 @@ else
    $profile = $this -> Html -> link('Account Profile', array(
       'controller' => 'users',
       'action' => 'view',
-      $this -> Session -> read('USER.ID')
+      $this -> Session -> read('User.id')
    ));
    $logout = $this -> Html -> link('Logout', array(
       'controller' => 'users',
@@ -72,8 +75,7 @@ else
    ));
    $viewMyBills = $this -> Html -> link('View My Bills', array(
       'controller' => 'bills',
-      'action' => 'my_bills',
-      $this -> Session -> read('USER.ID')
+      'action' => 'my_bills'
    ));
    $viewBills = $this -> Html -> link('View All Bills', array(
       'controller' => 'bills',
@@ -82,7 +84,13 @@ else
 
    $viewMyOrgs = $this -> Html -> link('View My Organizations', array(
       'controller' => 'organizations',
-      'action' => 'my_orgs'
+      'action' => 'my_orgs',
+      $this -> Session -> read('User.id')
+   ));
+   
+   $inactiveOrgs = $this -> Html -> link('View Inactive Organizations', array(
+      'controller' => 'organizations',
+      'action' => 'inactive_orgs'
    ));
 }
 
@@ -95,8 +103,7 @@ if ($this -> Permission -> isSGA())
 
    $agendaBills = $this -> Html -> link('View Bills on Agenda', array(
       'controller' => 'bills',
-      'action' => 'index',
-      'Agenda',
+      'action' => 'onAgenda',
    ));
 }
 
@@ -154,7 +161,8 @@ $billList = array($bills => array(
 // Organizations
 $orgList = array($orgs => array(
       $viewOrgs,
-      $viewMyOrgs
+      $viewMyOrgs,
+      $inactiveOrgs
    ));
 
 // Student Government
@@ -191,6 +199,8 @@ if ($this -> Permission -> isAdmin())
 {
    echo $this -> Html -> nestedList($adminList);
 }
+
+echo $this -> Html -> nestedList(array($this -> Html -> tag('p','Help', array('onclick' => 'openHelp()'))));
 ?>
 </div>
 </div> 

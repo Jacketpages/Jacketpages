@@ -5,15 +5,16 @@
  */
 class Organization extends AppModel
 {
-	public $order = 'Organization.NAME';
+	public $order = 'Organization.name';
+	public $virtualFields = array('contact_name' => 'CONCAT(User.first_name, " ", User.last_name)');
 	public $belongsTo = array(
 		'User' => array(
 			'className' => 'User',
-			'foreignKey' => 'CONTACT_ID'
+			'foreignKey' => 'contact_id'
 		),
 		'Category' => array(
 			'className' => 'Category',
-			'foreignKey' => 'CATEGORY'
+			'foreignKey' => 'category'
 		)
 	);
 }
