@@ -81,14 +81,14 @@ class UsersController extends AppController
 	public function view($id = null)
 	{
 		$this -> set('userDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userDelete'));
-		
+
 		$userEditPerm = $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userEditPerm');
-		if(!$userEditPerm && $id == $this -> Session -> read('User.id'))
+		if (!$userEditPerm && $id == $this -> Session -> read('User.id'))
 		{
 			$userEditPerm = true;
 		}
-		$this -> set('userEditPerm', $userEditPerm );
-		
+		$this -> set('userEditPerm', $userEditPerm);
+
 		// Set which user to retrieve from the database.
 		$this -> User -> id = $id;
 		$this -> set('user', $this -> User -> read());
@@ -122,10 +122,10 @@ class UsersController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			$this -> User -> create();
-			if ($this -> User -> saveAssociated($this -> request -> data))
+			if ($this -> User -> saveAssociated($this -> request -> data, array('validate' => true)))
 			{
 				$this -> Session -> setFlash('The user has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				return $this -> redirect(array('action' => 'index'));
 			}
 			else
 			{
@@ -140,13 +140,13 @@ class UsersController extends AppController
 		if ($this -> User -> saveField('status', 'Inactive'))
 		{
 			$this -> Session -> setFlash(__('User deleted.', true));
-			$this -> redirect(array(
+			return $this -> redirect(array(
 				'controller' => 'users',
 				'action' => 'index'
 			));
 		}
 		$this -> Session -> setFlash(__('User was not able to be deleted.', true));
-		$this -> redirect(array(
+		return $this -> redirect(array(
 			'controller' => 'users',
 			'action' => 'index'
 		));
