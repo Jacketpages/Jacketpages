@@ -23,8 +23,18 @@ class UserFixture extends CakeTestFixture
 			'status' => 'Active',
 			'first_name' => 'Travis',
 			'last_name' => 'Wagner',
-			'email' => 'twagner@gmail.com',
+			'email' => 'twag@gmail.com',
 			'level' => 'admin',
+			'phone' => '770-316-9464'
+		),
+		array(
+			'id' => '3',
+			'gt_user_name' => 'mellis',
+			'status' => 'Active',
+			'first_name' => 'Michael',
+			'last_name' => 'Ellis',
+			'email' => 'melis@gmail.com',
+			'level' => 'user',
 			'phone' => '770-316-9464'
 		));
 }
