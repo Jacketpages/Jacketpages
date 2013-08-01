@@ -17,9 +17,5 @@ $this -> start('middle');
 echo $this -> element('multi_enter_line_items');
 
 echo $this -> Form -> submit('Submit', array('formnovalidate','onclick' => 'openToolTips()'));
-echo $this -> Form -> button('Copy to JFC', array(
-	'controller' => 'lineitems',
-	'action' => 'copy'
-));
 $this -> end();
 ?>

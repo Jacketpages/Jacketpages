@@ -18,7 +18,6 @@ class LineItemsController extends AppController
 
 	public function index($bill_id = null, $state = null)
 	{
-		debug($this -> request -> data);
 		date_default_timezone_set('EST5EDT');
 		if ($this -> request -> is('get'))
 		{
@@ -80,11 +79,11 @@ class LineItemsController extends AppController
 					}
 				}
 			}
-			// $this -> redirect(array(
-			// 'controller' => 'bills',
-			// 'action' => 'view',
-			// $bill_id
-			// ));
+			$this -> redirect(array(
+			'controller' => 'bills',
+			'action' => 'view',
+			$bill_id
+			));
 
 		}
 	}
@@ -234,35 +233,36 @@ class LineItemsController extends AppController
 	}
 
 	//TODO Doesn't work yet. Still putting it together.
-	public function edit($id)
+	public function edit($bill_id = null, $state = null)
 	{
-		$this -> loadModel('Bill');
-		$this -> set('bill', $this -> Bill -> find('first', array(
-			'conditions' => array('Bill.id' => $id),
-			'fields' => array(
-				'title',
-				'type',
-				'id'
-			)
-		)));
-		$this -> LineItem -> id = $id;
-		if ($this -> request -> is('get'))
-		{
-			$this -> request -> data = $this -> LineItem -> read();
-			$this -> set('membership', $this -> LineItem -> read(null, $id));
-		}
-		else
-		{
-			if ($this -> LineItem -> save($this -> request -> data))
-			{
-				$this -> Session -> setFlash('The membership has been saved.');
-				$this -> redirect(array('action' => 'index'));
-			}
-			else
-			{
-				$this -> Session -> setFlash('Unable to edit the membership.');
-			}
-		}
+		$this -> index($bill_id,$state);
+		// $this -> loadModel('Bill');
+		// $this -> set('bill', $this -> Bill -> find('first', array(
+			// 'conditions' => array('Bill.id' => $id),
+			// 'fields' => array(
+				// 'title',
+				// 'type',
+				// 'id'
+			// )
+		// )));
+		// $this -> LineItem -> id = $id;
+		// if ($this -> request -> is('get'))
+		// {
+			// $this -> request -> data = $this -> LineItem -> read();
+			// $this -> set('membership', $this -> LineItem -> read(null, $id));
+		// }
+		// else
+		// {
+			// if ($this -> LineItem -> save($this -> request -> data))
+			// {
+				// $this -> Session -> setFlash('The membership has been saved.');
+				// $this -> redirect(array('action' => 'index'));
+			// }
+			// else
+			// {
+				// $this -> Session -> setFlash('Unable to edit the membership.');
+			// }
+		// }
 	}
 
 	/**

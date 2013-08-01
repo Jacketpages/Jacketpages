@@ -95,6 +95,7 @@ class BillsController extends AppController
 				),
 				array('Bill.title LIKE' => $letter . '%')
 			),
+			'order' => 'submit_date desc',
 			'limit' => 20
 		);
 		// If given a user's id then filter to show only that user's bills
@@ -154,7 +155,7 @@ class BillsController extends AppController
 		// Set the amounts for prior year, capital outlay, and total
 		$totals = $this -> LineItem -> find('all', array(
 			'fields' => array(
-				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Submitted',TOTAL_COST, 0)) AS PY_SUBMITTED",
+				"SUM(IF(account = 'PY' AND state = 'Submitted',total_cost, 0)) AS PY_SUBMITTED",
 				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Submitted',TOTAL_COST, 0)) AS CO_SUBMITTED",
 				"SUM(IF(STATE = 'Submitted',TOTAL_COST, 0)) AS TOTAL_SUBMITTED",
 				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'JFC',TOTAL_COST, 0)) AS PY_JFC",
@@ -246,11 +247,11 @@ class BillsController extends AppController
 					'order' => 'Bill.id DESC'
 				));
 				CakeLog::debug(debug($this -> request -> data));
-				if($this -> request -> data[0]['LineItem']['name'] != "")
+				if ($this -> request -> data[0]['LineItem']['name'] != "")
 					$this -> requestAction('/lineitems/index/' . $bill['Bill']['id'] . '/Submitted', array('data' => $this -> removeBillInformation($this -> request -> data)));
 				$this -> redirect(array(
-				'action' => 'view',
-				$bill['Bill']['id']
+					'action' => 'view',
+					$bill['Bill']['id']
 				));
 			}
 			else
@@ -266,7 +267,7 @@ class BillsController extends AppController
 		$sga_graduate = $this -> SgaPerson -> find('list', array(
 			'fields' => array('name_department'),
 			'conditions' => array(
-				'status' => 'Active',
+				'SgaPerson.status' => 'Active',
 				'house' => 'Graduate'
 			),
 			'recursive' => 0
@@ -277,7 +278,7 @@ class BillsController extends AppController
 		$sga_undergraduate = $this -> SgaPerson -> find('list', array(
 			'fields' => array('name_department'),
 			'conditions' => array(
-				'status' => 'Active',
+				'SgaPerson.status' => 'Active',
 				'house' => 'Undergraduate'
 			),
 			'recursive' => 0
@@ -478,7 +479,7 @@ class BillsController extends AppController
 		$this -> set('authors', $bill_authors);
 	}
 
-	public function votes($bill_id, $votes_id = null)
+	public function votes($bill_id, $organization, $votes_id = null)
 	{
 		$this -> loadModel('BillVotes');
 		if ($this -> request -> is('get'))
@@ -496,7 +497,7 @@ class BillsController extends AppController
 				if ($this -> BillVotes -> save($this -> request -> data))
 				{
 					$this -> Bill -> id = $bill_id;
-					$this -> Bill -> saveField('gss_id', $this -> BillVotes -> getInsertID());
+					$this -> Bill -> saveField($organization, $this -> BillVotes -> getInsertID());
 					$this -> redirect(array(
 						'controller' => 'bills',
 						'action' => 'view',
@@ -526,15 +527,7 @@ class BillsController extends AppController
 	private function setBillStatus($id, $state, $redirect = false, $category = null)
 	{
 		//@formatter:off
-		if ($id != null && in_array($state, array(
-			1,
-			2,
-			3,
-			4,
-			5,
-			6,
-			7
-		)))//@formatter:on
+		if ($id != null && in_array($state, array(1,2,3,4,5,6,7)))//@formatter:on
 		{
 			$this -> Bill -> id = $id;
 			$this -> Bill -> saveField('status', $state);
@@ -586,16 +579,33 @@ class BillsController extends AppController
 		}
 	}
 
-	public function authorSign($bill_id,$field, $value)
+	public function authorSign($bill_id, $field, $value)
 	{
-		$this -> BillAuthor -> id = $this ->getAuthorIdFromBillId($bill_id);
+		$auth_id = $this -> getAuthorIdFromBillId($bill_id);
+		$this -> BillAuthor -> id = $auth_id;
 		$this -> BillAuthor -> saveField($field, $value);
+		$authors = $this -> BillAuthor -> findById($auth_id, array(
+			'undr_auth_appr',
+			'grad_auth_appr'
+		));
+		$this -> Bill -> id = $bill_id;
+		if ($authors['BillAuthor']['undr_auth_appr'] && $authors['BillAuthor']['grad_auth_appr'])
+		{
+			$bill = $this -> Bill -> read();
+			$this -> Bill -> saveField('status', 3);
+			$this -> Bill -> saveField('number', $this -> getValidNumber($bill['Bill']['category']));
+		}
+		else
+		{
+			$this -> Bill -> saveField('status', 2);
+			$this -> Bill -> saveField('number',null);
+		}
 		$this -> redirect($this -> referer());
 	}
 
 	public function sign($bill_id, $sig_field, $sig_value)
 	{
-		$this -> BillAuthor -> id = $this ->getAuthorIdFromBillId($bill_id);
+		$this -> BillAuthor -> id = $this -> getAuthorIdFromBillId($bill_id);
 		$this -> BillAuthor -> saveField($sig_field, $sig_value);
 		$this -> BillAuthor -> saveField(str_replace("id", "tmsp", $sig_field), date('Y-m-d h:i:s'));
 		$this -> redirect(array(

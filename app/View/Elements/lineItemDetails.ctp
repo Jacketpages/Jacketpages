@@ -22,13 +22,12 @@ if ($lineitems != null)
 		'AR',
 		'Account'
 	);
-	if($showAll)
+	if ($showAll)
 	{
-		$tableHeaders[] ='State';
+		$tableHeaders[] = 'State';
 	}
 	if ($showEditAndDeleteButtons)
 	{
-		$tableHeaders[] = '';
 		$tableHeaders[] = '';
 	}
 	if (!isset($first))
@@ -46,10 +45,10 @@ if ($lineitems != null)
 			$lineitem['LineItem']['cost_per_unit'],
 			$lineitem['LineItem']['quantity'],
 			$lineitem['LineItem']['total_cost'],
-			$lineitem['LineItem']['line_number'],
+			$lineitem['LineItem']['amount'],
 			$lineitem['LineItem']['account']
 		);
-		if($showAll)
+		if ($showAll)
 		{
 			$tableCells[] = $lineitem['LineItem']['state'];
 		}
@@ -58,12 +57,8 @@ if ($lineitems != null)
 			$tableCells[] = $this -> Html -> link("Edit", array(
 				'controller' => 'LineItems',
 				'action' => 'edit',
-				$lineitem['LineItem']['id']
-			));
-			$tableCells[] = $this -> Html -> link("Delete", array(
-				'controller' => 'LineItems',
-				'action' => 'delete',
-				$lineitem['LineItem']['id']
+				$bill['Bill']['id'],
+				$lineitem['LineItem']['state']
 			));
 		}
 		if (!$lineitem['LineItem']['struck'] && $lineitem['LineItem']['state'] != "Submitted")
@@ -82,7 +77,7 @@ if ($lineitems != null)
 				'action' => 'unstrikeLineItem',
 				$lineitem['LineItem']['id']
 			));
-			echo $this -> Html -> tableCells($tableCells, array('id' => 'struck'),array('id' => 'struck'));
+			echo $this -> Html -> tableCells($tableCells, array('id' => 'struck'), array('id' => 'struck'));
 		}
 		else
 		{
@@ -125,17 +120,20 @@ if ($lineitems != null)
 else
 {
 	echo "There are no line items for this state. ";
-	echo $this -> Form -> create('LineItem', array(
-		'action' => ('copy/' . $this -> params['pass'][0] . '/' . $form_state),
-		'style' => 'display: inline;'
-	));
-	$input = $this -> Form -> input('LineItem.state', array(
-		'options' => $eligibleStates,
-		'label' => false,
-		'style' => "width: 21%;",
-		'div' => array('id' => 'inlineInput')
-	));
-	echo "Copy line items from " . $input . " state.";
-	echo $this -> Form -> end('Copy');
+	if ($bill['Bill']['status'] > 1)
+	{
+		echo $this -> Form -> create('LineItem', array(
+			'action' => ('copy/' . $this -> params['pass'][0] . '/' . $form_state),
+			'style' => 'display: inline;'
+		));
+		$input = $this -> Form -> input('LineItem.state', array(
+			'options' => $eligibleStates,
+			'label' => false,
+			'style' => "width: 21%;",
+			'div' => array('id' => 'inlineInput')
+		));
+		echo "Copy line items from " . $input . " state.";
+		echo $this -> Form -> end('Copy');
+	}
 }
 ?>

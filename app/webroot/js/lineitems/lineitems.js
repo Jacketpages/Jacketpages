@@ -131,19 +131,38 @@ function correctNumbers()
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", "LineItemName" + i);
 		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][name]");
 		cells[2].getElementsByTagName("input")[0].setAttribute("id", "LineItemCostPerUnit" + i);
+		$("#LineItemCostPerUnit" + i).attr('onchange', "updateTCAndRqstd("+i+")");
 		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][cost_per_unit]");
 		cells[3].getElementsByTagName("input")[0].setAttribute("id", "LineItemQuantity" + i);
+		$("#LineItemQuantity" + i).attr('onchange', "updateTCAndRqstd("+i+")");
 		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][quantity]");
 		cells[4].getElementsByTagName("input")[0].setAttribute("id", "LineItemTotalCost" + i);
 		cells[4].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][total_cost]");
 		cells[5].getElementsByTagName("input")[0].setAttribute("id", "LineItemAmount" + i);
 		cells[5].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][amount]");
 		cells[6].firstChild.firstChild.setAttribute("id", "LineItemAccount" + i);
+		$("#LineItemAccount" + i).attr('onchange', "updateTCAndRqstd("+i+")");
 		cells[6].firstChild.firstChild.setAttribute("name", "data[" + i + "][LineItem][account]");
 		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp(" + i + ")");
 		cells[8].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown(" + i + ")");
 		cells[9].getElementsByTagName("button")[0].setAttribute("onclick", "addRow(" + i + ")");
 		cells[10].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow(" + i + ")");
 
+	}
+}
+
+function updateTCAndRqstd(row)
+{
+	if ($("#LineItemAccount" + row).val() == "CO")
+	{
+		alert("Here");
+		$("#LineItemAmount" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val() * .75).toFixed(2));
+		$("#LineItemTotalCost" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
+	}
+	else
+	{
+		alert("And here");
+		$("#LineItemAmount" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
+		$("#LineItemTotalCost" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
 	}
 }

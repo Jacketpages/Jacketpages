@@ -77,9 +77,7 @@ function removeErrors(event)
 
 function exactValueRule(id, value)
 {
-	alert(typeof value);
-	alert(typeof $(id).val());
-	if ($(id).val() === value)
+	if ($(id).val() != value)
 	{
 		addErrorClassAndInvalidateForm(id, "Value is not " + value);
 	}

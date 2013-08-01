@@ -19,7 +19,7 @@ class User extends AppModel
 		// )
 	);
 	public $validate = array(
-		'gt_user_name' => array('rule' => 'notEmpty'),
+		'gt_user_name' => array('rule' => 'notEmpty','required' => true),
 		'first_name' => array('rule' => 'notEmpty'),
 		'last_name' => array('rule' => 'notEmpty'),
 		'email' => array('rule' => 'email')

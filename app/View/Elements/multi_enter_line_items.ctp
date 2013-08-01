@@ -57,22 +57,26 @@ foreach ($lineitems as $key => $lineitem)
 		$this -> Form -> text($key . '.LineItem.cost_per_unit', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['cost_per_unit'],
-			'id' => 'LineItemCostPerUnit' . $key
+			'id' => 'LineItemCostPerUnit' . $key,
+			'onchange' => "updateTCAndRqstd($key)"
 		)),
 		$this -> Form -> text($key . '.LineItem.quantity', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['quantity'],
-			'id' => 'LineItemQuantity' . $key
+			'id' => 'LineItemQuantity' . $key,
+			'onchange' => "updateTCAndRqstd($key)"
 		)),
 		$this -> Form -> text($key . '.LineItem.total_cost', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['total_cost'],
-			'id' => 'LineItemTotalCost' . $key
+			'id' => 'LineItemTotalCost' . $key,
+			'readonly'
 		)),
 		$this -> Form -> text($key . '.LineItem.amount', array(
 			'label' => false,
 			'value' => $lineitem['LineItem']['amount'],
-			'id' => 'LineItemAmount' . $key
+			'id' => 'LineItemAmount' . $key,
+			'readonly'
 		)),
 		$this -> Form -> input($key . '.LineItem.account', array(
 			'id' => 'LineItemAccount' . $key,
@@ -98,7 +102,8 @@ foreach ($lineitems as $key => $lineitem)
 					'value' => 'GLR',
 					'title' => 'White on rice on a paper plate in a snowstorm'
 				)
-			)
+			),
+			'onchange' => "updateTCAndRqstd($key)"
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',

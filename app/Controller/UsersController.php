@@ -38,7 +38,7 @@ class UsersController extends AppController
 			$this -> Session -> write('Search.keyword', $this -> request -> data['User']['keyword']);
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
-		else if (!$this -> RequestHandler -> isAjax() && $letter == null)
+		else if (!$this -> request -> is('ajax') && $letter == null)
 		{
 			$this -> Session -> delete('Search.keyword');
 		}
@@ -66,7 +66,7 @@ class UsersController extends AppController
 		);
 		// If the request is ajax then change the layout to return just the updated user
 		// list
-		if ($this -> RequestHandler -> isAjax())
+		if ($this -> request -> is('ajax'))
 		{
 			$this -> layout = 'list';
 		}
@@ -81,14 +81,13 @@ class UsersController extends AppController
 	public function view($id = null)
 	{
 		$this -> set('userDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userDelete'));
-		
 		$userEditPerm = $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userEditPerm');
-		if(!$userEditPerm && $id == $this -> Session -> read('User.id'))
+		if (!$userEditPerm && $id == $this -> Session -> read('User.id'))
 		{
 			$userEditPerm = true;
 		}
-		$this -> set('userEditPerm', $userEditPerm );
-		
+		$this -> set('userEditPerm', $userEditPerm);
+
 		// Set which user to retrieve from the database.
 		$this -> User -> id = $id;
 		$this -> set('user', $this -> User -> read());
@@ -125,7 +124,7 @@ class UsersController extends AppController
 			if ($this -> User -> saveAssociated($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The user has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				return $this -> redirect(array('action' => 'index'));
 			}
 			else
 			{
@@ -137,16 +136,17 @@ class UsersController extends AppController
 	public function delete($id = null)
 	{
 		$this -> User -> id = $id;
-		if ($this -> User -> saveField('status', 'Inactive'))
+		if ($this -> User -> exists() && $this -> User -> saveField('status', 'Inactive'))
 		{
 			$this -> Session -> setFlash(__('User deleted.', true));
-			$this -> redirect(array(
+			return $this -> redirect(array(
 				'controller' => 'users',
 				'action' => 'index'
 			));
 		}
+
 		$this -> Session -> setFlash(__('User was not able to be deleted.', true));
-		$this -> redirect(array(
+		return $this -> redirect(array(
 			'controller' => 'users',
 			'action' => 'index'
 		));
@@ -166,14 +166,21 @@ class UsersController extends AppController
 		}
 		else
 		{
-			if ($this -> User -> save($this -> request -> data))
+			if ($this -> User -> exists($id))
 			{
-				$this -> Session -> setFlash('The user has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				if ($this -> User -> save($this -> request -> data))
+				{
+					$this -> Session -> setFlash('The user has been saved.');
+					$this -> redirect(array('action' => 'index'));
+				}
+				else
+				{
+					$this -> Session -> setFlash('Unable to edit the user.');
+				}
 			}
 			else
 			{
-				$this -> Session -> setFlash('Unable to edit the user.');
+				$this -> Session -> setFlash('This user does not exist.');
 			}
 		}
 	}
@@ -211,14 +218,17 @@ class UsersController extends AppController
 		{
 			$gtUsername = $this -> request -> data['User']['username'];
 			$user = $this -> User -> find('first', array('conditions' => array('User.gt_user_name' => $gtUsername)));
-			$this -> Session -> write('Auth.User', $user['User']['level']);
-			$this -> Session -> write('User.name', $user['User']['name']);
-			$this -> Session -> write('User.level', $user['User']['level']);
-			$this -> Session -> write('User.id', $user['User']['id']);
-			$this -> Session -> write('Sga.id', $user['User']['sga_id']);
+			if (!empty($user))
+			{
+				$this -> Session -> write('Auth.User', $user['User']['level']);
+				$this -> Session -> write('User.name', $user['User']['name']);
+				$this -> Session -> write('User.level', $user['User']['level']);
+				$this -> Session -> write('User.id', $user['User']['id']);
+				$this -> Session -> write('Sga.id', $user['User']['sga_id']);
+			}
 			if ($this -> Auth -> login())
 			{
-				$this -> redirect($this -> Auth -> redirect());
+				return $this -> redirect($this -> Auth -> redirect());
 			}
 			else
 			{

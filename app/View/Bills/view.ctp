@@ -3,7 +3,6 @@
  * @author Stephen Roca
  * @since 06/30/2012
  */
-
 $this -> extend("/Common/common");
 $this -> start('sidebar');
 $updateBillAction = 'general_info';
@@ -12,9 +11,7 @@ if ($this -> Session -> read('Sga.id') != null)
 	$updateBillAction = 'edit_index';
 }
 $sidebar = array();
-//@formatter:off
-if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < 3) 
-		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
+if($bill['Bill']['status'] == 1)
 {
 	$sidebar[] = $this -> Html -> link('Add Line Items', array(
 		'controller' => 'line_items',
@@ -22,11 +19,37 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		$bill['Bill']['id'],
 		'Submitted'
 	));
-	$sidebar[] = $this -> Html -> link('Add Line Item', array(
-		'controller' => 'line_items',
-		'action' => 'add',
+	$sidebar[] = $this -> Html -> link(__('Submit Bill', true), array(
+		'action' => 'submit',
 		$bill['Bill']['id']
 	));
+}
+else if ($bill['Bill']['status'] == 3)
+{
+	$sidebar[] = $this -> Html -> link(__('Place on Agenda', true), array(
+		'action' => 'putOnAgenda',
+		$bill['Bill']['id']
+	));
+}
+else if ($bill['Bill']['status'] == 4)
+{
+	$sidebar[] = $this -> Html -> link(__('Graduate Votes', true), array(
+		'action' => 'votes',
+		$bill['Bill']['id'],
+		'gss_id',
+		$bill['GSS']['id']
+	));
+	$sidebar[] = $this -> Html -> link(__('UnderGraduate Votes', true), array(
+		'action' => 'votes',
+		$bill['Bill']['id'],
+		'uhr_id',
+		$bill['UHR']['id']
+	));
+}
+//@formatter:off
+if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < 3) 
+		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
+{
 	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
 		'action' => $updateBillAction,
 		$bill['Bill']['id']
@@ -36,20 +59,7 @@ $sidebar[] = $this -> Html -> link('Delete Bill', array(
 	'action' => 'delete',
 	$bill['Bill']['id']
 ), array('style' => 'color:red'));
-if ($bill['Bill']['status'] == 1)
-{
-	$sidebar[] = $this -> Html -> link(__('Submit Bill', true), array(
-		'action' => 'submit',
-		$bill['Bill']['id']
-	));
-}
-if ($bill['Bill']['status'] == 3)
-{
-	$sidebar[] = $this -> Html -> link(__('Place on Agenda', true), array(
-		'action' => 'putOnAgenda',
-		$bill['Bill']['id']
-	));
-}
+
 if ($sidebar != null)
 {
 	echo $this -> Html -> nestedList($sidebar, array(), array('id' => 'underline'));
@@ -84,10 +94,11 @@ if($bill['Bill']['status'] >= 4)
 
 
 
-if ($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4)
+if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4)|| $this -> Session -> read('Sga.id') != null)
 {
 	echo $this -> Html -> tableBegin(array(
 		'class' => 'list',
+		'id' => 'outcomes',
 		'width' => '50%'
 	));
 	echo $this -> Html -> tag('h1', 'Outcomes:');

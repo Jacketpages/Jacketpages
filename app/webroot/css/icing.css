@@ -617,3 +617,7 @@ table.list tr:nth-child(2n) td {
 .error {
 	border-color: red;
 }
+
+#outcomes th{
+	text-align:left;
+}
