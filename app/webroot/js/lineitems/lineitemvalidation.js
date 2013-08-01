@@ -9,6 +9,14 @@ function assignAndRunValidationRules()
 		moneyRule("#LineItemTotalCost" + (i));
 		moneyRule("#LineItemAmount" + (i));
 		exactValueRule("#LineItemTotalCost" + (i), $("#LineItemQuantity" + (i)).val() * $("#LineItemCostPerUnit" + (i)).val());
+		if($("#LineItemAccount" + (i)).val() == "CO")
+		{
+			exactValueRule("#LineItemAmount" + (i), $("#LineItemQuantity" + (i)).val() * $("#LineItemCostPerUnit" + (i)).val() *.75);
+		}
+		else
+		{
+			exactValueRule("#LineItemAmount" + (i), $("#LineItemQuantity" + (i)).val() * $("#LineItemCostPerUnit" + (i)).val());
+		}
 	}
 	alreadyValidated = true;
 }
