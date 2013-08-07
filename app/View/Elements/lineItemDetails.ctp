@@ -51,37 +51,42 @@ if ($lineitems != null)
 		if ($showAll)
 		{
 			$tableCells[] = $lineitem['LineItem']['state'];
-		}
-		if ($showEditAndDeleteButtons)
-		{
-			$tableCells[] = $this -> Html -> link("Edit", array(
-				'controller' => 'LineItems',
-				'action' => 'edit',
-				$bill['Bill']['id'],
-				$lineitem['LineItem']['state']
-			));
-		}
-		if (!$lineitem['LineItem']['struck'] && $lineitem['LineItem']['state'] != "Submitted")
-		{
-			$tableCells[] = $this -> Html -> link("Strike", array(
-				'controller' => 'LineItems',
-				'action' => 'strikeLineItem',
-				$lineitem['LineItem']['id']
-			));
 			echo $this -> Html -> tableCells($tableCells);
-		}
-		else if ($lineitem['LineItem']['state'] != "Submitted")
-		{
-			$tableCells[] = $this -> Html -> link("Unstrike", array(
-				'controller' => 'LineItems',
-				'action' => 'unstrikeLineItem',
-				$lineitem['LineItem']['id']
-			));
-			echo $this -> Html -> tableCells($tableCells, array('id' => 'struck'), array('id' => 'struck'));
 		}
 		else
 		{
-			echo $this -> Html -> tableCells($tableCells);
+
+			if ($showEditAndDeleteButtons && $lineitem['LineItem']['state'] != 'Final')
+			{
+				$tableCells[] = $this -> Html -> link("Edit/Delete", array(
+					'controller' => 'LineItems',
+					'action' => 'edit',
+					$bill['Bill']['id'],
+					$lineitem['LineItem']['state']
+				));
+			}
+			if (!$lineitem['LineItem']['struck'] && !in_array($lineitem['LineItem']['state'], array('Submitted','Final')))
+			{
+				$tableCells[] = $this -> Html -> link("Strike", array(
+					'controller' => 'LineItems',
+					'action' => 'strikeLineItem',
+					$lineitem['LineItem']['id']
+				));
+				echo $this -> Html -> tableCells($tableCells);
+			}
+			else if (!in_array($lineitem['LineItem']['state'], array('Submitted','Final')))
+			{
+				$tableCells[] = $this -> Html -> link("Unstrike", array(
+					'controller' => 'LineItems',
+					'action' => 'unstrikeLineItem',
+					$lineitem['LineItem']['id']
+				));
+				echo $this -> Html -> tableCells($tableCells, array('id' => 'struck'), array('id' => 'struck'));
+			}
+			else
+			{
+				echo $this -> Html -> tableCells($tableCells);
+			}
 		}
 	}
 	echo $this -> Html -> tableEnd();
@@ -119,11 +124,11 @@ if ($lineitems != null)
 }
 else
 {
-	echo "There are no line items for this state. ";
+	echo "There are no line items for this state.<br/>";
 	if ($bill['Bill']['status'] > 1)
 	{
 		echo $this -> Form -> create('LineItem', array(
-			'action' => ('copy/' . $this -> params['pass'][0] . '/' . $form_state),
+			'action' => ('copy/' . $bill['Bill']['id'] . '/' . $form_state),
 			'style' => 'display: inline;'
 		));
 		$input = $this -> Form -> input('LineItem.state', array(
@@ -132,7 +137,12 @@ else
 			'style' => "width: 21%;",
 			'div' => array('id' => 'inlineInput')
 		));
-		echo "Copy line items from " . $input . " state.";
+		echo "Copy line items from $input state or " . $this -> Html -> link("add new lineitems.", array(
+			'controller' => 'LineItems',
+			'action' => 'edit',
+			$bill['Bill']['id'],
+			$form_state
+		));
 		echo $this -> Form -> end('Copy');
 	}
 }

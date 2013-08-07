@@ -24,6 +24,14 @@ echo $this -> Form -> input('org_id', array(
 	'options' => $organizations,
 	'default' => 'Select Organization'
 ));
+if($this -> Session -> read("Sga.id") != null && $bill['Bill']['status'] >= 4)
+{
+	echo $this -> Form -> input('status', array(
+	'label' => 'Status',
+	'options' => array(4 => 'Agenda', 5 => 'Passed', 6 => 'Failed',7 => 'Conference'),
+	'default' => 'Select Organization'
+));
+}
 echo $this -> Form -> end('Submit');
 $this -> end();
 ?>

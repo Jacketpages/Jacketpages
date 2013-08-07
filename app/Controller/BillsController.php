@@ -167,6 +167,9 @@ class BillsController extends AppController
 				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Undergraduate',TOTAL_COST, 0)) AS PY_UNDERGRADUATE",
 				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Undergraduate',TOTAL_COST, 0)) AS CO_UNDERGRADUATE",
 				"SUM(IF(STATE = 'Undergraduate',TOTAL_COST, 0)) AS TOTAL_UNDERGRADUATE",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final',TOTAL_COST, 0)) AS PY_FINAL",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final',TOTAL_COST, 0)) AS CO_FINAL",
+				"SUM(IF(STATE = 'Final',TOTAL_COST, 0)) AS TOTAL_FINAL",
 				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Conference',TOTAL_COST, 0)) AS PY_CONFERENCE",
 				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Conference',TOTAL_COST, 0)) AS CO_CONFERENCE",
 				"SUM(IF(STATE = 'Conference',TOTAL_COST, 0)) AS TOTAL_CONFERENCE"
@@ -308,33 +311,51 @@ class BillsController extends AppController
 		if ($this -> request -> is('get'))
 		{
 			$this -> Bill -> id = $id;
-			$this -> request -> data = $this -> Bill -> read();
-			$bill = $this -> Bill -> read();
+			$this -> request -> data = $bill = $this -> Bill -> read();
 			$this -> setAuthorNames($bill['Authors']['grad_auth_id'], $bill['Authors']['undr_auth_id']);
 			$this -> set('bill', $this -> Bill -> read());
 		}
 		else
 		{
-			$this -> loadModel('BillAuthor');
-			$this -> request -> data['Authors']['id'] = $this -> request -> data['Bill']['auth_id'];
-
-			if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
+			if ($this -> validateStatus($this -> request -> data, $id) && $this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 			{
-				$savedBill = $this -> Bill -> findById($id);
-				if ($savedBill['Authors']['grad_auth_appr'] && $savedBill['Authors']['undr_auth_appr'] && $savedBill['Bill']['status'] == 1)
-				{
-					$savedBill['Bill']['status'] = 2;
-				}
-				$this -> Bill -> save($savedBill);
 				$this -> Session -> setFlash('The Bill has been saved.');
-				$this -> redirect(array('action' => 'index'));
-
+				$this -> redirect(array('action' => 'view',$id));
 			}
 			else
 			{
 				$this -> Session -> setFlash('Unable to edit the Bill.');
 			}
 		}
+	}
+
+	private function validateStatus($data, $id)
+	{
+		$valid = true;
+		if ($data['Bill']['status'] != 4)
+		{
+			$this -> loadModel('LineItem');
+			$hasLineItemsInFinalState = $this -> LineItem -> find('count', array('conditions' => array(
+					'state' => 'Final',
+					'bill_id' => $id
+				)));
+			$hasLineItemsInGradOrUndrState = $this -> LineItem -> find('count', array('conditions' => array(
+					'state' => array(
+						'Undergraduate',
+						'Graduate'
+					),
+					'bill_id' => $id
+				)));
+			$hasLineItemsInJFCState = $this -> LineItem -> find('count', array('conditions' => array(
+					'state' => 'JFC',
+					'bill_id' => $id
+				)));
+			if (!$hasLineItemsInFinalState && !$hasLineItemsInJFCState && !$hasLineItemsInGradOrUndrState)
+			{
+				$valid = false;
+			}
+		}
+		return $valid;
 	}
 
 	public function delete($id = null)
@@ -434,9 +455,9 @@ class BillsController extends AppController
 		$this -> setBillStatus($id, 2, true);
 	}
 
-	public function general_info()
+	public function general_info($bill_id)
 	{
-		$this -> setOrganizationNames();
+		$this -> edit_index($bill_id);
 	}
 
 	public function authors_signatures($id)
@@ -598,7 +619,7 @@ class BillsController extends AppController
 		else
 		{
 			$this -> Bill -> saveField('status', 2);
-			$this -> Bill -> saveField('number',null);
+			$this -> Bill -> saveField('number', null);
 		}
 		$this -> redirect($this -> referer());
 	}

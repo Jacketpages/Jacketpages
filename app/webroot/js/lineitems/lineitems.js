@@ -155,13 +155,11 @@ function updateTCAndRqstd(row)
 {
 	if ($("#LineItemAccount" + row).val() == "CO")
 	{
-		alert("Here");
 		$("#LineItemAmount" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val() * .75).toFixed(2));
 		$("#LineItemTotalCost" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
 	}
 	else
 	{
-		alert("And here");
 		$("#LineItemAmount" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
 		$("#LineItemTotalCost" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
 	}

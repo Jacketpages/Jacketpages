@@ -11,7 +11,7 @@ if ($this -> Session -> read('Sga.id') != null)
 	$updateBillAction = 'edit_index';
 }
 $sidebar = array();
-if($bill['Bill']['status'] == 1)
+if ($bill['Bill']['status'] == 1)
 {
 	$sidebar[] = $this -> Html -> link('Add Line Items', array(
 		'controller' => 'line_items',
@@ -33,17 +33,32 @@ else if ($bill['Bill']['status'] == 3)
 }
 else if ($bill['Bill']['status'] == 4)
 {
-	$sidebar[] = $this -> Html -> link(__('Graduate Votes', true), array(
+	$sidebar[] = $this -> Html -> link(__('GSS Votes', true), array(
 		'action' => 'votes',
 		$bill['Bill']['id'],
 		'gss_id',
 		$bill['GSS']['id']
 	));
-	$sidebar[] = $this -> Html -> link(__('UnderGraduate Votes', true), array(
+	$sidebar[] = $this -> Html -> link(__('UHR Votes', true), array(
 		'action' => 'votes',
 		$bill['Bill']['id'],
 		'uhr_id',
 		$bill['UHR']['id']
+	));
+}
+if ($bill['Bill']['status'] == 7)
+{
+	$sidebar[] = $this -> Html -> link(__('Conference GSS Votes', true), array(
+		'action' => 'votes',
+		$bill['Bill']['id'],
+		'gcc_id',
+		$bill['GCC']['id']
+	));
+	$sidebar[] = $this -> Html -> link(__('Conference UHR Votes', true), array(
+		'action' => 'votes',
+		$bill['Bill']['id'],
+		'ucc_id',
+		$bill['UCC']['id']
 	));
 }
 //@formatter:off
@@ -51,7 +66,7 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
 {
 	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
-		'action' => $updateBillAction,
+		'action' => "general_info",
 		$bill['Bill']['id']
 	));
 }
@@ -88,89 +103,23 @@ echo $this -> Html -> tableCells(array(
 echo $this -> Html -> tableEnd();
 echo $this -> element('bills/view/status');
 echo $this -> element('bills/view/authors');
+echo $this -> element('bills/view/signatures');
+echo $this -> element('bills/view/outcomes');
 
-if($bill['Bill']['status'] >= 4)
-	echo $this -> element('bills/view/signatures');
-
-
-
-if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4)|| $this -> Session -> read('Sga.id') != null)
-{
-	echo $this -> Html -> tableBegin(array(
-		'class' => 'list',
-		'id' => 'outcomes',
-		'width' => '50%'
-	));
-	echo $this -> Html -> tag('h1', 'Outcomes:');
-	if ($bill['Bill']['category'] == 'Graduate' || $bill['Bill']['category'] == 'Joint')
-	{
-		$titles[] = 'GSS Outcome:';
-		$titles[] = '';
-		$dates[] = 'Date';
-		$dates[] = $bill['GSS']['date'];
-		$yeas[] = 'Yeas';
-		$yeas[] = $bill['GSS']['yeas'];
-		$nays[] = 'Nays';
-		$nays[] = $bill['GSS']['nays'];
-		$abstains[] = 'Abstains';
-		$abstains[] = $bill['GSS']['abstains'];
-	}
-
-	if ($bill['Bill']['category'] == 'Undergraduate' || $bill['Bill']['category'] == 'Joint')
-	{
-		$titles[] = 'UHR Outcome:';
-		$titles[] = '';
-		$dates[] = 'Date';
-		$dates[] = $bill['UHR']['date'];
-		$yeas[] = 'Yeas';
-		$yeas[] = $bill['UHR']['yeas'];
-		$nays[] = 'Nays';
-		$nays[] = $bill['UHR']['nays'];
-		$abstains[] = 'Abstains';
-		$abstains[] = $bill['UHR']['abstains'];
-	}
-
-	if ($bill['Bill']['category'] == 'Conference')
-	{
-		$ctitles[] = 'GSS Conference Outcome:';
-		$ctitles[] = '';
-		$ctitles[] = 'UHR Conference Outcome:';
-		$ctitles[] = '';
-		$cdates[] = 'Date';
-		$cdates[] = $bill['GCC']['date'];
-		$cdates[] = 'Date';
-		$cdates[] = $bill['UCC']['date'];
-		$cyeas[] = 'Yeas';
-		$cyeas[] = $bill['GCC']['yeas'];
-		$cyeas[] = 'Yeas';
-		$cyeas[] = $bill['UCC']['yeas'];
-		$cnays[] = 'Nays';
-		$cnays[] = $bill['GCC']['nays'];
-		$cnays[] = 'Nays';
-		$cnays[] = $bill['UCC']['nays'];
-		$cabstains[] = 'Abstains';
-		$cabstains[] = $bill['GCC']['abstains'];
-		$cabstains[] = 'Abstains';
-		$cabstains[] = $bill['UCC']['abstains'];
-	}
-	echo $this -> Html -> tableHeaders($titles);
-	echo $this -> Html -> tableCells($dates);
-	echo $this -> Html -> tableCells($yeas);
-	echo $this -> Html -> tableCells($nays);
-	echo $this -> Html -> tableCells($abstains);
-	echo $this -> Html -> tableEnd();
-}
 if ($submitted == null)
 {
 	$this -> end();
 }
 ?>
 <script>
-	$(function() {
+	$(function()
+	{
 		$("#tabs").tabs();
 		$("#tabs").tabs("option", "active", localStorage.selected);
-		$("#tabs").tabs({
-			activate : function(event, ui) {
+		$("#tabs").tabs(
+		{
+			activate : function(event, ui)
+			{
 				localStorage.selected = $("#tabs").tabs("option", "active");
 			}
 		});
@@ -251,11 +200,11 @@ if ($submitted == null)
 		'lineitems' => $final,
 		'showAll' => 0,
 		'eligibleStates' => array(
-			'Submitted',
-			'JFC',
-			'Graduate',
-			'Undergraduate',
-			'Conference'
+			'Submitted' => 'Submitted',
+			'JFC' => 'JFC',
+			'Graduate' => 'Graduate',
+			'Undergraduate' => 'Undergraduate',
+			'Conference' => 'Conference'
 		),
 		'form_state' => 'Final'
 	)), array('id' => 'tabs-7'));
