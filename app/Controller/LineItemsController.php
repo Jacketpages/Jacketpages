@@ -280,7 +280,10 @@ class LineItemsController extends AppController
 		// If $to_state is Final then don't copy stuck line items
 		if ($to_state == 'Final')
 		{
+			debug($bill_id);
+			debug($this -> request -> data['LineItem']['state']);
 			$lineitems = $this -> LineItem -> findAllByBillIdAndStateAndStruck($bill_id, $this -> request -> data['LineItem']['state'], 0);
+			debug($lineitems);
 		}
 		else
 		{
