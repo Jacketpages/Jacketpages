@@ -62,14 +62,11 @@ $sidebar[] = $this -> Html -> link(__('Budgets', true), array(
 if (!$orgJoinOrganizationPerm)
 {
 	$sidebar[] = $this -> Html -> link(__('Join Organization', true), array(
-		'action' => 'join',
-		$organization['Organization']['id'],
-		'admin' => false,
-		'owner' => false,
-		'officer' => false
-	), null, sprintf(__('Are you sure you want to join %s?', true), $organization['Organization']['name']));
+	'controller' => 'memberships',
+		'action' => 'joinOrganization',
+		$organization['Organization']['id']
+	), null, __('Are you sure you want to join '. $organization['Organization']['name'] . '?', true));
 }
-
 if ($orgAdminPerm)
 {
 	$this -> Html -> link(__('Delete Organization', true), array(
