@@ -74,6 +74,10 @@
 			$breadcrumbTrail = $this -> Html -> tag('div', $this -> Html -> getCrumbs(' > ', 'Home'), array('id' => 'left'));
 			// Determine the message to display on the right side of the Breadcrumbs bar
 			$message = $this -> Session -> flash();
+			if($message == null)
+			{
+				$message = $this -> Session -> flash('auth');
+			}
 			if (strlen($message))
 			{
 				$message = $this -> Html -> tag('div', $message, array('id' => 'right'));
@@ -103,7 +107,8 @@
             <?php echo $this -> Session -> flash('auth'); ?><?php echo $this -> fetch('content'); ?>
             				<div id="footer">
                 <?php
-				echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association');
+				echo $this -> Html -> link("Privacy Policy", array('controller' => 'pages', 'action' => 'privacy_policy'), array('style' => 'display:inline;float:left;text-decoration:none;color:#666;'));
+				echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association', array('style' => 'display:inline;'));
                 ?>
 					</div>
 					</div>

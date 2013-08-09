@@ -305,7 +305,7 @@ class OrganizationsController extends AppController
 				))));
 		$this -> set('members', $members);
 		$pending_members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
-					'Membership.role' => 'Pending',
+					'Membership.status' => 'Pending',
 					'Membership.org_id' => $id
 				))));
 		$this -> set('pending_members', $pending_members);
