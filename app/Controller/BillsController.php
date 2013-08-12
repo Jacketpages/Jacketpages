@@ -249,7 +249,6 @@ class BillsController extends AppController
 					'conditions' => array('submitter' => $this -> Session -> read('User.id')),
 					'order' => 'Bill.id DESC'
 				));
-				CakeLog::debug(debug($this -> request -> data));
 				if ($this -> request -> data[0]['LineItem']['name'] != "")
 					$this -> requestAction('/lineitems/index/' . $bill['Bill']['id'] . '/Submitted', array('data' => $this -> removeBillInformation($this -> request -> data)));
 				$this -> redirect(array(

@@ -32,20 +32,14 @@ class UsersController extends AppController
 	 */
 	public function index($letter = null)
 	{
-		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))
 		{
 			$this -> Session -> write('Search.keyword', $this -> request -> data['User']['keyword']);
 		}
-		// Deletes the search keyword if the letter is null and the request is not ajax
 		else if (!$this -> request -> is('ajax') && $letter == null)
 		{
 			$this -> Session -> delete('Search.keyword');
 		}
-		// Performs a SELECT on the User table with the following conditions:
-		// WHERE (NAME LIKE '%<KEYWORD>%' OR GT_USER_NAME LIKE '%<KEYWORD>%') AND NAME
-		// LIKE
-		// '<LETTER>%'
 		$this -> paginate = array(
 			'conditions' => array('AND' => array(
 					'OR' => array(
@@ -64,13 +58,9 @@ class UsersController extends AppController
 				'User.phone'
 			)
 		);
-		// If the request is ajax then change the layout to return just the updated user
-		// list
+
 		if ($this -> request -> is('ajax'))
-		{
 			$this -> layout = 'list';
-		}
-		// Sets the users variable for the view
 		$this -> set('users', $this -> paginate('User'));
 	}
 
@@ -115,9 +105,6 @@ class UsersController extends AppController
 	 */
 	public function add()
 	{
-		// If the request is a post attempt to save the user and his
-		// associated location information. If this fails then log
-		// the failure and set a flash message.
 		if ($this -> request -> is('post'))
 		{
 			$this -> User -> create();
@@ -158,15 +145,15 @@ class UsersController extends AppController
 	 */
 	public function edit($id = null)
 	{
-		$this -> User -> id = $id;
-		if ($this -> request -> is('get'))
+		if ($this -> User -> exists($id))
 		{
-			$this -> request -> data = $this -> User -> read();
-			$this -> set('user', $this -> User -> read());
-		}
-		else
-		{
-			if ($this -> User -> exists($id))
+			$this -> User -> id = $id;
+			if ($this -> request -> is('get'))
+			{
+				$this -> request -> data = $this -> User -> read();
+				$this -> set('user', $this -> User -> read());
+			}
+			else
 			{
 				if ($this -> User -> save($this -> request -> data))
 				{
@@ -175,13 +162,16 @@ class UsersController extends AppController
 				}
 				else
 				{
+					CakeLog::error("Unable to edit user: $id.");
 					$this -> Session -> setFlash('Unable to edit the user.');
 				}
 			}
-			else
-			{
-				$this -> Session -> setFlash('This user does not exist.');
-			}
+		}
+		else
+		{
+			CakeLog::warning("User doesn't exist for user id: $id.");
+			$this -> Session -> setFlash("Unable to edit user. User does not exist.");
+			$this -> redirect($this -> referer());
 		}
 	}
 
@@ -220,6 +210,7 @@ class UsersController extends AppController
 			$user = $this -> User -> find('first', array('conditions' => array('User.gt_user_name' => $gtUsername)));
 			if (!empty($user))
 			{
+				$this -> Session -> write('User.gt_user_name', $gtUsername);
 				$this -> Session -> write('Auth.User', $user['User']['level']);
 				$this -> Session -> write('User.name', $user['User']['name']);
 				$this -> Session -> write('User.level', $user['User']['level']);
@@ -228,10 +219,12 @@ class UsersController extends AppController
 			}
 			if ($this -> Auth -> login())
 			{
+				CakeLog::info("Login successful for user: $gtUsername.");
 				return $this -> redirect($this -> Auth -> redirect());
 			}
 			else
 			{
+				CakeLog::warning("Login failed for user: $gtUsername.");
 				$this -> Session -> setFlash('Your username/password was incorrect.');
 			}
 		}
@@ -243,6 +236,7 @@ class UsersController extends AppController
 	 */
 	public function logout()
 	{
+		CakeLog::info("Logging out user: " . $this -> Session -> read('User.gt_user_name'));
 		$this -> Session -> destroy();
 		$this -> redirect($this -> Auth -> logout());
 	}
