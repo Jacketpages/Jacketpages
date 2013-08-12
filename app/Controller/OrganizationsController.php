@@ -27,18 +27,25 @@ class OrganizationsController extends AppController
 
 	public function beforeFilter()
 	{
+		$level = $this -> Session -> read('User.level');
 		switch ($this -> params['action'])
 		{
 			case 'view' :
-				$this -> set('orgEditPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgEditPerm'));
-				$this -> set('orgViewDocumentsPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgViewDocumentsPerm'));
-				$this -> set('orgAdminPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgAdminPerm'));
+				$this -> set('orgEditPerm', $this -> Acl -> check('Role/' . $level, 'orgEditPerm'));
+				$this -> set('orgViewDocumentsPerm', $this -> Acl -> check('Role/' . $level, 'orgViewDocumentsPerm'));
+				$this -> set('orgAdminPerm', $this -> Acl -> check('Role/' . $level, 'orgAdminPerm'));
+				break;
+			case 'index' :
+				$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $level, 'orgCreatePerm'));
+				$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $level, 'orgExportPerm'));
+				$this -> set('orgAdminView', $this -> Acl -> check('Role/' . $level, 'orgAdminView'));
+				$this -> set('orgEditDeletePerm', $this -> Acl -> check('Role/' . $level, 'orgEditDeletePerm'));
 				break;
 			default :
 				break;
 		}
 	}
-	
+
 	/**
 	 * @deprecated
 	 */
@@ -147,16 +154,12 @@ class OrganizationsController extends AppController
 	 */
 	public function index($letter = null, $category = null, $inactive_page = null)
 	{
-		// Set page view permissions
-		$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgCreatePerm'));
-		$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgExportPerm'));
-		$this -> set('orgAdminView', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgAdminView'));
-		$this -> set('orgEditDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'orgEditDeletePerm'));
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))
 		{
-			$this -> Session -> write('Search.keyword', $this -> request -> data['Organization']['keyword']);
+			$this -> Session -> write('Search.keyword', trim($this -> request -> data['Organization']['keyword']));
 			$this -> Session -> write('Search.category', $this -> request -> data['Organization']['category']);
+			CakeLog::info($this -> request -> data['Organization']['keyword'],'db');
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
 		else if (!$this -> RequestHandler -> isAjax() && $letter == null)
@@ -522,6 +525,21 @@ class OrganizationsController extends AppController
 			$this -> render('download', 'image');
 			return true;
 		}
+	}
+
+	function emailList($org_id)
+	{
+		$this -> loadModel('Membership');
+		$members = $this -> Membership -> find('list', array(
+			'conditions' => array('Membership.org_id' => $org_id),
+			'fields' => array(
+				'User.email',
+				'User.first_name'
+			),
+			'recursive' => 1
+		));
+		debug($members);
+		//debug(array_keys(array_flip($members)));
 	}
 
 }

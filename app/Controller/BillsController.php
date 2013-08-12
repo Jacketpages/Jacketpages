@@ -573,12 +573,17 @@ class BillsController extends AppController
 	{
 		$email = new CakeEmail();
 		$email -> config('gmail');
-		$email -> from(array('from@gmail.com' => 'JacketPages'));
-		$email -> to('to@gatech.edu');
+		$email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
+		$email -> template('removedFromOrg');
+		$email -> emailFormat('html');
+		$email -> to('gimpyroca@gmail.com');
 		$email -> subject('Subject');
-		$email -> send('Message');
+		$email -> send();
+		debug("Email has been sent.");
 	}
 
+
+	// TODO decide whether this method is unnecessary and if so delete it.
 	public function process($id = null)
 	{
 		//Decide status based on number of votes

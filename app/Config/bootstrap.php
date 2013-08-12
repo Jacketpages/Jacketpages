@@ -139,9 +139,11 @@ CakeLog::levels(array(
 	'info',
 	'debug',
 	'error',
-	'warning'
+	'warning',
+	'notice'
 ));
-CakeLog::config('info', array(
+
+CakeLog::config('jacketpages', array(
 	'engine' => 'FileLog',
 	'types' => array(
 		'info',
@@ -149,8 +151,16 @@ CakeLog::config('info', array(
 		'error',
 		'warning'
 	),
-	'file' => 'jacketpages',
+	'file' => 'jacketpages'
 ));
+
+CakeLog::config('other', array(
+	'engine' => 'DatabaseLog',
+	'types' => array('info'),
+	'model' => 'Search',
+	'scopes' => array('db')
+));
+
 
 /**
  * Bill categories

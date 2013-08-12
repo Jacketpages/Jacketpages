@@ -450,13 +450,13 @@ class CakeLog {
 				// exact scope + level
 				($correctLevel && $inScope)
 			) {
-				$logger->write($type, $message);
+				$logger->write($type, $message, $scope);
 				$logged = true;
 			}
 		}
 		if (!$logged) {
 			self::_autoConfig();
-			self::stream('default')->write($type, $message);
+			self::stream('default')->write($type, $message, $scope);
 		}
 		return true;
 	}
