@@ -11,9 +11,18 @@ if ($this -> Session -> read('Sga.id') != null)
 	$updateBillAction = 'edit_index';
 }
 $sidebar = array();
+//@formatter:off
+if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < 3) 
+		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
+{
+	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
+		'action' => "general_info",
+		$bill['Bill']['id']
+	));
+}
 if ($bill['Bill']['status'] == 1)
 {
-	$sidebar[] = $this -> Html -> link('Add Line Items', array(
+	$sidebar[] = $this -> Html -> link('Update Line Items', array(
 		'controller' => 'line_items',
 		'action' => 'index',
 		$bill['Bill']['id'],
@@ -59,15 +68,6 @@ if ($bill['Bill']['status'] == 7)
 		$bill['Bill']['id'],
 		'ucc_id',
 		$bill['UCC']['id']
-	));
-}
-//@formatter:off
-if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < 3) 
-		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
-{
-	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
-		'action' => "general_info",
-		$bill['Bill']['id']
 	));
 }
 $sidebar[] = $this -> Html -> link('Delete Bill', array(
@@ -137,7 +137,7 @@ if ($submitted == null)
 			<a href="#tabs-3">Graduate</a>
 		</li>
 		<li>
-			<a href="#tabs-4">UnderGraduate</a>
+			<a href="#tabs-4">Undergraduate</a>
 		</li>
 		<li>
 			<a href="#tabs-5">Conference</a>

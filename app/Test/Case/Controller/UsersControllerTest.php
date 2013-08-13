@@ -18,7 +18,7 @@ class UsersControllerTest extends ControllerTestCase
 
 	public $kevenUser = array('User' => array(
 			'id' => 600000,
-			'first_name' => 'Keven',
+			'first_name' => 'Kevin',
 			'last_name' => 'Guebert',
 			'gt_user_name' => 'kguebert'
 		));

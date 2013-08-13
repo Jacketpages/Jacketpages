@@ -33,7 +33,7 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4) 
 		$abstains[] = 'Abstains';
 		$abstains[] = $bill['UHR']['abstains'];
 	}
-	
+
 	echo $this -> Html -> tag('h1', 'Outcomes:');
 	echo $this -> Html -> tableBegin(array(
 		'class' => 'list',
@@ -46,7 +46,6 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4) 
 	echo $this -> Html -> tableCells($nays);
 	echo $this -> Html -> tableCells($abstains);
 	echo $this -> Html -> tableEnd();
-	echo $this -> Html -> tag('h1', 'Conference Outcomes:');
 
 	if ($bill['Bill']['status'] == 7 || $bill['GCC']['id'] != null)
 	{
@@ -70,6 +69,7 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4) 
 		$cabstains[] = $bill['GCC']['abstains'];
 		$cabstains[] = 'Abstains';
 		$cabstains[] = $bill['UCC']['abstains'];
+		echo $this -> Html -> tag('h1', 'Conference Outcomes:');
 		echo $this -> Html -> tableBegin(array(
 			'class' => 'list',
 			'id' => 'outcomes',

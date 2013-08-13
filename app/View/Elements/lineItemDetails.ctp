@@ -125,7 +125,7 @@ if ($lineitems != null)
 else
 {
 	echo "There are no line items for this state.<br/>";
-	if ($bill['Bill']['status'] > 1)
+	if ($bill['Bill']['status'] > 2)
 	{
 		echo $this -> Form -> create('LineItem', array(
 			'action' => ('copy/' . $bill['Bill']['id'] . '/' . $form_state),
@@ -137,7 +137,7 @@ else
 			'style' => "width: 21%;",
 			'div' => array('id' => 'inlineInput')
 		));
-		echo "Copy line items from $input state or " . $this -> Html -> link("add new lineitems.", array(
+		echo "Copy line items from $input state or " . $this -> Html -> link("add new line items.", array(
 			'controller' => 'LineItems',
 			'action' => 'edit',
 			$bill['Bill']['id'],

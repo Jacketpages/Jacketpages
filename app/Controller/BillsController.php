@@ -349,8 +349,12 @@ class BillsController extends AppController
 					'state' => 'JFC',
 					'bill_id' => $id
 				)));
-			if (!$hasLineItemsInFinalState && !$hasLineItemsInJFCState && !$hasLineItemsInGradOrUndrState)
+				debug($hasLineItemsInFinalState);
+				debug($hasLineItemsInJFCState);
+				debug($hasLineItemsInGradOrUndrState);
+			if (!$hasLineItemsInFinalState || !$hasLineItemsInJFCState || !$hasLineItemsInGradOrUndrState)
 			{
+				debug("here");
 				$valid = false;
 			}
 		}
