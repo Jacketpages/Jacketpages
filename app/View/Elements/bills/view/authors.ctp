@@ -3,15 +3,29 @@
  * @author Stephen Roca
  * @since 7/29/2013
  */
+
+$grad = array('Graduate Author');
+$undr = array('Undergraduate Author');
+
+if (!$bill['Authors']['grad_auth_appr'])
+{
+	$grad[] = $GradAuthor['User']['name'] . " - Not Signed";
+}
+else
+{
+	$grad[] = $GradAuthor['User']['name'] . " - Signed";
+}
+if (!$bill['Authors']['undr_auth_appr'])
+{
+	$undr[] = $UnderAuthor['User']['name'] . " - Not Signed";
+}
+else
+{
+	$undr[] = $UnderAuthor['User']['name'] . " - Signed";
+}
 $rows = array(
-	array(
-		'Graduate Author',
-		$GradAuthor['User']['name']
-	),
-	array(
-		'Undergraduate Author',
-		$UnderAuthor['User']['name']
-	),
+	$grad,
+	$undr,
 	array(
 		'Submitter',
 		$bill['Submitter']['name'],
