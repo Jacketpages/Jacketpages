@@ -3,7 +3,7 @@
  * @author Stephen Roca
  * @since 7/22/2013
  */
-if ($bill['Bill']['status'] >= 4)
+if ($bill['Bill']['status'] >= $AGENDA)
 {
 	$signatures = array(
 		'grad_pres_id',
@@ -26,10 +26,11 @@ if ($bill['Bill']['status'] >= 4)
 	{
 		$tableCells = array();
 		$tableCells[] = $sign_labels[$i];
-		if ($bill['Bill']['status'] == 4)
+		if ($bill['Bill']['status'] == $AGENDA && $sga_exec)
 		{
 			if ($bill['Authors'][$signatures[$i]] == 0)
 			{
+				
 				$tableCells[] = $this -> Html -> link("Sign", array(
 					'controller' => 'bills',
 					'action' => 'sign',
@@ -40,8 +41,7 @@ if ($bill['Bill']['status'] >= 4)
 			}
 			else
 			{
-				$tableCells[] = $signee_names[str_replace("_id", "", $signatures[$i])];
-				$tableCells[] = $this -> Html -> link("Remove Signature", array(
+				$tableCells[] = $signee_names[str_replace("_id", "", $signatures[$i])] . " - " . $this -> Html -> link("Remove Signature", array(
 					'controller' => 'bills',
 					'action' => 'sign',
 					$bill['Bill']['id'],

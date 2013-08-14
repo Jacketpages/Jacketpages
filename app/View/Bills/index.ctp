@@ -3,6 +3,13 @@
  * @author Stephen Roca
  * @since 06/26/2012
  */
+ $this -> Paginator -> options(array(
+	'update' => '#forupdate',
+	'indicator' => '#indicator',
+	'evalScripts' => true,
+	'before' => $this -> Js -> get('#listing') -> effect('fadeOut', array('buffer' => false)),
+	'complete' => $this -> Js -> get('#listing') -> effect('fadeIn', array('buffer' => false)),
+));
  echo $this -> Html -> addCrumb('All Bills', '/bills');
 $this -> extend("/Common/list");
 $this -> start('sidebar');
@@ -62,7 +69,12 @@ $this -> start('search');
 <?php
 $this -> end();
 $this -> start('listing');
+?>
+<div id='forupdate'>
+	<?php
 echo $this -> element('bills\index\billsTable', array('bills' => $bills));
 echo $this -> element('paging');
+?></div>
+<?php
 $this -> end();
 ?>

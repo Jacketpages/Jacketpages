@@ -26,7 +26,7 @@ if ($lineitems != null)
 	{
 		$tableHeaders[] = 'State';
 	}
-	if ($showEditAndDeleteButtons)
+	if ($showEditAndDeleteButtons && !isset($first) && $form_state != 'Final' && $bill['Bill']['status'] < 6)
 	{
 		$tableHeaders[] = '';
 	}
@@ -56,7 +56,7 @@ if ($lineitems != null)
 		else
 		{
 
-			if ($showEditAndDeleteButtons && $lineitem['LineItem']['state'] != 'Final')
+			if ($showEditAndDeleteButtons && $lineitem['LineItem']['state'] != 'Final' && $bill['Bill']['status'] < 6)
 			{
 				$tableCells[] = $this -> Html -> link("Edit/Delete", array(
 					'controller' => 'LineItems',
@@ -65,7 +65,10 @@ if ($lineitems != null)
 					$lineitem['LineItem']['state']
 				));
 			}
-			if (!$lineitem['LineItem']['struck'] && !in_array($lineitem['LineItem']['state'], array('Submitted','Final')))
+			if (!$lineitem['LineItem']['struck'] && !in_array($lineitem['LineItem']['state'], array(
+				'Submitted',
+				'Final'
+			)))
 			{
 				$tableCells[] = $this -> Html -> link("Strike", array(
 					'controller' => 'LineItems',
@@ -74,7 +77,10 @@ if ($lineitems != null)
 				));
 				echo $this -> Html -> tableCells($tableCells);
 			}
-			else if (!in_array($lineitem['LineItem']['state'], array('Submitted','Final')))
+			else if (!in_array($lineitem['LineItem']['state'], array(
+				'Submitted',
+				'Final'
+			)))
 			{
 				$tableCells[] = $this -> Html -> link("Unstrike", array(
 					'controller' => 'LineItems',
@@ -125,7 +131,7 @@ if ($lineitems != null)
 else
 {
 	echo "There are no line items for this state.<br/>";
-	if ($bill['Bill']['status'] > 2)
+	if ($bill['Bill']['status'] > 2 && $sga_exec && $bill['Bill']['status'] < 6)
 	{
 		echo $this -> Form -> create('LineItem', array(
 			'action' => ('copy/' . $bill['Bill']['id'] . '/' . $form_state),
@@ -137,12 +143,20 @@ else
 			'style' => "width: 21%;",
 			'div' => array('id' => 'inlineInput')
 		));
-		echo "Copy line items from $input state or " . $this -> Html -> link("add new line items.", array(
-			'controller' => 'LineItems',
-			'action' => 'edit',
-			$bill['Bill']['id'],
-			$form_state
-		));
+		if (strcmp($form_state, "Final"))
+		{
+			echo "Copy line items from $input state or " . $this -> Html -> link("add new line items.", array(
+				'controller' => 'LineItems',
+				'action' => 'edit',
+				$bill['Bill']['id'],
+				$form_state
+			));
+
+		}
+		else
+		{
+			echo "Copy line items from $input state.";
+		}
 		echo $this -> Form -> end('Copy');
 	}
 }

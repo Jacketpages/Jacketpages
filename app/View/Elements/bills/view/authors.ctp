@@ -41,51 +41,53 @@ $rows = array(
 		""
 	)
 );
-
-if ($this -> Session -> read('Sga.id') == $bill['Authors']['grad_auth_id'])
+if ($bill['Bill']['status'] < $AGENDA)
 {
-	if (!$bill['Authors']['grad_auth_appr'])
+	if ($this -> Session -> read('Sga.id') == $bill['Authors']['grad_auth_id'])
 	{
-		$rows[0][] = $this -> Html -> link("Sign", array(
-			'controller' => 'bills',
-			'action' => 'authorSign',
-			$bill['Bill']['id'],
-			'grad_auth_appr',
-			1
-		));
+		if (!$bill['Authors']['grad_auth_appr'])
+		{
+			$rows[0][1] = $rows[0][1] . " - " . $this -> Html -> link("Sign", array(
+				'controller' => 'bills',
+				'action' => 'authorSign',
+				$bill['Bill']['id'],
+				'grad_auth_appr',
+				1
+			));
+		}
+		else
+		{
+			$rows[0][1] = $rows[0][1] . " - " . $this -> Html -> link("Remove Signature", array(
+				'controller' => 'bills',
+				'action' => 'authorSign',
+				$bill['Bill']['id'],
+				'grad_auth_appr',
+				0
+			));
+		}
 	}
-	else
+	if ($this -> Session -> read('Sga.id') == $bill['Authors']['undr_auth_id'])
 	{
-		$rows[0][] = $this -> Html -> link("Remove Signature", array(
-			'controller' => 'bills',
-			'action' => 'authorSign',
-			$bill['Bill']['id'],
-			'grad_auth_appr',
-			0
-		));
-	}
-}
-if ($this -> Session -> read('Sga.id') == $bill['Authors']['undr_auth_id'])
-{
-	if (!$bill['Authors']['undr_auth_appr'])
-	{
-		$rows[1][] = $this -> Html -> link("Sign", array(
-			'controller' => 'bills',
-			'action' => 'authorSign',
-			$bill['Bill']['id'],
-			'undr_auth_appr',
-			1
-		));
-	}
-	else
-	{
-		$rows[1][] = $this -> Html -> link("Remove Signature", array(
-			'controller' => 'bills',
-			'action' => 'authorSign',
-			$bill['Bill']['id'],
-			'undr_auth_appr',
-			0
-		));
+		if (!$bill['Authors']['undr_auth_appr'])
+		{
+			$rows[1][1] = $rows[1][1] . " - " . $this -> Html -> link("Sign", array(
+				'controller' => 'bills',
+				'action' => 'authorSign',
+				$bill['Bill']['id'],
+				'undr_auth_appr',
+				1
+			));
+		}
+		else
+		{
+			$rows[1][1] = $rows[1][1] . " - " . $this -> Html -> link("Remove Signature", array(
+				'controller' => 'bills',
+				'action' => 'authorSign',
+				$bill['Bill']['id'],
+				'undr_auth_appr',
+				0
+			));
+		}
 	}
 }
 echo $this -> Html -> tag('h1', 'Authors');
