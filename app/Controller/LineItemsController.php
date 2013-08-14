@@ -152,8 +152,9 @@ class LineItemsController extends AppController
 		$flag = true;
 		if (strcmp($new['LineItem']['line_number'], $old['LineItem']['line_number']))
 		{
+			$this -> LineItem -> id = $new['LineItem']['id'];
+			$this -> LineItem -> saveField('line_number', $new['LineItem']['line_number']);
 			$this -> updateFieldForLineItemRevisions($new['LineItem']['id'], 'line_number', $new['LineItem']['line_number']);
-			debug("updated");
 		}
 		if (strcmp($new['LineItem']['name'], $old['LineItem']['name']))
 			$flag = false;
@@ -280,16 +281,12 @@ class LineItemsController extends AppController
 		// If $to_state is Final then don't copy stuck line items
 		if ($to_state == 'Final')
 		{
-			debug($bill_id);
-			debug($this -> request -> data['LineItem']['state']);
 			$lineitems = $this -> LineItem -> findAllByBillIdAndStateAndStruck($bill_id, $this -> request -> data['LineItem']['state'], 0);
-			debug($lineitems);
 		}
 		else
 		{
 			$lineitems = $this -> LineItem -> findAllByBillIdAndState($bill_id, $this -> request -> data['LineItem']['state']);
 		}
-		debug($lineitems);
 		for ($i = 0; $i < count($lineitems); $i++)
 		{
 			$lineitems[$i]['LineItem']['parent_id'] = $lineitems[$i]['LineItem']['id'];
