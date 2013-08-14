@@ -560,7 +560,7 @@ class BillsController extends AppController
 	private function setBillStatus($id, $state, $redirect = false, $category = null)
 	{
 		//@formatter:off
-		if ($id != null && in_array($state, array(1,2,3,4,5,6,7)))//@formatter:on
+		if ($id != null && in_array($state, array(1,2,3,4,5,6,7,8)))//@formatter:on
 		{
 			$this -> Bill -> id = $id;
 			$this -> Bill -> saveField('status', $state);

@@ -25,27 +25,6 @@ class OrganizationsController extends AppController
 		'Csv'
 	);
 
-	public function beforeFilter()
-	{
-		$level = $this -> Session -> read('User.level');
-		switch ($this -> params['action'])
-		{
-			case 'view' :
-				$this -> set('orgEditPerm', $this -> Acl -> check('Role/' . $level, 'orgEditPerm'));
-				$this -> set('orgViewDocumentsPerm', $this -> Acl -> check('Role/' . $level, 'orgViewDocumentsPerm'));
-				$this -> set('orgAdminPerm', $this -> Acl -> check('Role/' . $level, 'orgAdminPerm'));
-				break;
-			case 'index' :
-				$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $level, 'orgCreatePerm'));
-				$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $level, 'orgExportPerm'));
-				$this -> set('orgAdminView', $this -> Acl -> check('Role/' . $level, 'orgAdminView'));
-				$this -> set('orgEditDeletePerm', $this -> Acl -> check('Role/' . $level, 'orgEditDeletePerm'));
-				break;
-			default :
-				break;
-		}
-	}
-
 	/**
 	 * @deprecated
 	 */

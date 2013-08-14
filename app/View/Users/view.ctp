@@ -11,7 +11,7 @@
 //TODO Add in more information about the user. Location etc.
 
 // Add the appropriate breadcrumbs
-$this -> Html -> addCrumb('Users', '/users');
+$this -> Html -> addCrumb('Users', '/users/index');
 $this -> Html -> addCrumb($user['User']['name'], '/users/view/' . $user['User']['id']);
 $this -> extend('/Common/common');
 $links = array();
@@ -19,7 +19,7 @@ if ($userEditPerm)
 {
 	$links[] = $this -> Html -> link(__('Edit User', true), array(
 		'action' => 'edit',
-		$user['User']['ID']
+		$user['User']['id']
 	));
 }
 if ($userDeletePerm)

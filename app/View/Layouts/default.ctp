@@ -104,7 +104,7 @@
 				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 100%; position: absolute;">
 					<?php
 					if (!strcmp($this -> fetch('helppage'), ""))
-						echo "This page is currently empty. Please tell us what would be most needed/helpful to put here.";
+						echo "This page is currently empty. Please let us know what would be most needed/helpful to put here.";
 					echo $this -> fetch('helppage');
 					echo $this -> Form -> button("X", array('onclick' => 'closeHelp()', 'style' => 'float:right;'));
 				?></div>
