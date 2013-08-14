@@ -51,7 +51,7 @@
 			{
 				$("#help").attr("style", "");
 			}
-			
+
 			function closeHelp()
 			{
 				$("#help").attr("style", "display:none;");
@@ -74,6 +74,10 @@
 			$breadcrumbTrail = $this -> Html -> tag('div', $this -> Html -> getCrumbs(' > ', 'Home'), array('id' => 'left'));
 			// Determine the message to display on the right side of the Breadcrumbs bar
 			$message = $this -> Session -> flash();
+			if ($message == null)
+			{
+				$message = $this -> Session -> flash('auth');
+			}
 			if (strlen($message))
 			{
 				$message = $this -> Html -> tag('div', $message, array('id' => 'right'));
@@ -97,13 +101,23 @@
         <div id="content">
 			<div class="ui-overlay" id="help" style="display:none;">
 				<div class="ui-widget-overlay"></div>
-				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 100%; position: absolute;"><?php echo $this -> fetch('helppage'); echo $this -> Form -> button("close",array('onclick' => 'closeHelp()'));?></div>
+				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 100%; position: absolute;">
+					<?php
+					if (!strcmp($this -> fetch('helppage'), ""))
+						echo "This page is currently empty. Please tell us what would be most needed/helpful to put here.";
+					echo $this -> fetch('helppage');
+					echo $this -> Form -> button("X", array('onclick' => 'closeHelp()', 'style' => 'float:right;'));
+				?></div>
 			</div>
 
             <?php echo $this -> Session -> flash('auth'); ?><?php echo $this -> fetch('content'); ?>
             				<div id="footer">
                 <?php
-				echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association');
+				echo $this -> Html -> link("Privacy Policy", array(
+					'controller' => 'pages',
+					'action' => 'privacy_policy'
+				), array('style' => 'display:inline;float:left;text-decoration:none;color:#666;'));
+				echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association', array('style' => 'display:inline;'));
                 ?>
 					</div>
 					</div>

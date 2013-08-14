@@ -7,9 +7,10 @@ INSERT INTO BILL_STATUSES VALUES
 (2, 'Awaiting Author', 'The bill is waiting for Graduate and Undergraduate author approval.'), 
 (3, 'Authored', 'The bill has received Graduate and Undergraduate author approval.'), 
 (4, 'Agenda', 'The bill has been placed on the Agenda to be reviewed and voted on.'), 
-(5,'Passed', 'The bill has passed.'), 
-(6,'Failed', 'The bill has failed.'), 
-(7,'Tabled', 'The bill has been tabled or frozen for an undefined time period.');
+(5, 'Conference', 'The bill has gone to conference committee and will be voted on again.'),
+(6,'Passed', 'The bill has passed.'), 
+(7,'Failed', 'The bill has failed.'), 
+(8,'Tabled', 'The bill has been tabled or frozen for an undefined time period.');
 
 -- Import all of the User's information excluding location
 INSERT INTO JACKETPAGES.USERS

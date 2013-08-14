@@ -249,7 +249,6 @@ class BillsController extends AppController
 					'conditions' => array('submitter' => $this -> Session -> read('User.id')),
 					'order' => 'Bill.id DESC'
 				));
-				CakeLog::debug(debug($this -> request -> data));
 				if ($this -> request -> data[0]['LineItem']['name'] != "")
 					$this -> requestAction('/lineitems/index/' . $bill['Bill']['id'] . '/Submitted', array('data' => $this -> removeBillInformation($this -> request -> data)));
 				$this -> redirect(array(
@@ -317,19 +316,26 @@ class BillsController extends AppController
 		}
 		else
 		{
-			if ($this -> validateStatus($this -> request -> data, $id) && $this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
+			if ($this -> validateStatusAndSignatures($this -> request -> data, $id))
 			{
-				$this -> Session -> setFlash('The Bill has been saved.');
-				$this -> redirect(array('action' => 'view',$id));
-			}
-			else
-			{
-				$this -> Session -> setFlash('Unable to edit the Bill.');
+				if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
+				{
+					$this -> Session -> setFlash('The Bill has been saved.');
+					$this -> redirect(array(
+						'action' => 'view',
+						$id
+					));
+				}
+				else
+				{
+					$this -> Session -> setFlash('Unable to save the Bill.');
+				}
 			}
 		}
 	}
 
-	private function validateStatus($data, $id)
+	//TODO Add Signature check
+	private function validateStatusAndSignatures($data, $id)
 	{
 		$valid = true;
 		if ($data['Bill']['status'] != 4)
@@ -350,10 +356,16 @@ class BillsController extends AppController
 					'state' => 'JFC',
 					'bill_id' => $id
 				)));
-			if (!$hasLineItemsInFinalState && !$hasLineItemsInJFCState && !$hasLineItemsInGradOrUndrState)
+			if (!$hasLineItemsInFinalState || !$hasLineItemsInJFCState || !$hasLineItemsInGradOrUndrState)
 			{
 				$valid = false;
 			}
+			if (!$hasLineItemsInFinalState)
+				$this -> Session -> setFlash('There are no line items in the Final tab.');
+			else if (!$hasLineItemsInJFCState)
+				$this -> Session -> setFlash('There are no line items in the JFC tab.');
+			else if (!$hasLineItemsInGradOrUndrState)
+				$this -> Session -> setFlash('There are no line items in the Undergraduate or Graduate tabs.');
 		}
 		return $valid;
 	}
@@ -574,12 +586,16 @@ class BillsController extends AppController
 	{
 		$email = new CakeEmail();
 		$email -> config('gmail');
-		$email -> from(array('from@gmail.com' => 'JacketPages'));
-		$email -> to('to@gatech.edu');
+		$email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
+		$email -> template('removedFromOrg');
+		$email -> emailFormat('html');
+		$email -> to('gimpyroca@gmail.com');
 		$email -> subject('Subject');
-		$email -> send('Message');
+		$email -> send();
+		debug("Email has been sent.");
 	}
 
+	// TODO decide whether this method is unnecessary and if so delete it.
 	public function process($id = null)
 	{
 		//Decide status based on number of votes
@@ -650,27 +666,27 @@ class BillsController extends AppController
 		$this -> loadModel('User');
 		if ($data['grad_pres_id'] != 0)
 		{
-			$gpres = $this -> User -> findById($data['grad_pres_id']);
+			$gpres = $this -> User -> findBySgaId($data['grad_pres_id']);
 			$signee_names['grad_pres'] = $gpres['User']['name'];
 		}
 		if ($data['grad_secr_id'] != 0)
 		{
-			$gpres = $this -> User -> findById($data['grad_secr_id']);
+			$gpres = $this -> User -> findBySgaId($data['grad_secr_id']);
 			$signee_names['grad_secr'] = $gpres['User']['name'];
 		}
 		if ($data['undr_pres_id'] != 0)
 		{
-			$gpres = $this -> User -> findById($data['undr_pres_id']);
+			$gpres = $this -> User -> findBySgaId($data['undr_pres_id']);
 			$signee_names['undr_pres'] = $gpres['User']['name'];
 		}
 		if ($data['undr_secr_id'] != 0)
 		{
-			$gpres = $this -> User -> findById($data['undr_secr_id']);
+			$gpres = $this -> User -> findBySgaId($data['undr_secr_id']);
 			$signee_names['undr_secr'] = $gpres['User']['name'];
 		}
 		if ($data['vp_fina_id'] != 0)
 		{
-			$gpres = $this -> User -> findById($data['vp_fina_id']);
+			$gpres = $this -> User -> findBySgaId($data['vp_fina_id']);
 			$signee_names['vp_fina'] = $gpres['User']['name'];
 		}
 		$this -> set('signee_names', $signee_names);

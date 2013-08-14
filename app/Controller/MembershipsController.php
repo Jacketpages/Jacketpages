@@ -129,7 +129,9 @@ class MembershipsController extends AppController
 			));
 		}
 		$this -> Membership -> id = $id;
-		if ($this -> Membership -> saveField('status', 'Active'))
+		$this -> Membership -> set('status', 'Active');
+		$this -> Membership -> set('start_date',date("Y-m-d"));
+		if ($this -> Membership -> save())
 		{
 			$this -> Session -> setFlash('The member has been accepted.');
 			$this -> redirect(array(
@@ -143,6 +145,19 @@ class MembershipsController extends AppController
 			$this -> Session -> setFlash('Unable to accept the member.');
 		}
 
+	}
+
+	public function joinOrganization($org_id)
+	{
+		$this -> Membership -> set('org_id', $org_id);
+		$this -> Membership -> set('user_id', $this -> Session -> read('User.id'));
+		$this -> Membership -> set('role', 'Member');
+		$this -> Membership -> set('title', 'Member');
+		$this -> Membership -> set('status', 'Pending');
+		$this -> Membership -> set('room_reserver', 'No');
+
+		if ($this -> Membership -> save())
+			$this -> redirect($this -> referer());
 	}
 
 }

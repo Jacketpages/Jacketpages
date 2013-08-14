@@ -33,6 +33,6 @@ interface CakeLogInterface {
  * @param string $message
  * @return void
  */
-	public function write($type, $message);
+	public function write($type, $message, $scope);
 
 }
