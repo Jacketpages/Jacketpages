@@ -52,7 +52,7 @@ echo $this -> Form -> input('Authors.grad_auth_id', array(
 ));
 echo $this -> Html -> tag('h1', 'Add Line Items');
 echo $this -> element('multi_enter_line_items');
-echo $this -> Form -> submit('Submit', array('formnovalidate','onclick' => 'openToolTips()'));
+echo $this -> Form -> submit('Save and Continue', array('formnovalidate','onclick' => 'openToolTips()'));
 $this -> end();
 
 ?>

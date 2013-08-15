@@ -371,6 +371,24 @@ class BillsController extends AppController
 				$this -> Session -> setFlash('There are no line items in the JFC tab.');
 			else if (!$hasLineItemsInGradOrUndrState)
 				$this -> Session -> setFlash('There are no line items in the Undergraduate or Graduate tabs.');
+
+			$signatures = array(
+				'grad_pres_id',
+				'grad_secr_id',
+				'undr_pres_id',
+				'undr_secr_id',
+				'vp_fina_id'
+			);
+			if ($valid)
+			{
+				foreach ($signatures as $signature)
+				{
+					if (!$data['Authors'][$signature])
+						$valid = false;
+				}
+				if (!$valid)
+					$this -> Session -> setFlash("The bill is lacking one or more signatures.");
+			}
 		}
 		return $valid;
 	}
