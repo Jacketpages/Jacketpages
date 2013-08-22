@@ -36,6 +36,10 @@ class LineItemsController extends AppController
 		{
 			$valid = true;
 		}
+		if(!strcmp($state, 'Final'))
+		{
+			$valid = false;
+		}
 		return $valid;
 	}
 
@@ -43,7 +47,7 @@ class LineItemsController extends AppController
 	{
 		$this -> loadModel('Bill');
 		$bill = $this -> Bill -> findById($bill_id);
-		debug($bill);
+		$this -> set('titleState', $state);
 		if ($this -> canEditLineItems($bill, $state))
 		{
 			date_default_timezone_set('EST5EDT');

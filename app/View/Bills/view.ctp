@@ -12,7 +12,7 @@ if ($this -> Session -> read('Sga.id') != null)
 }
 $sidebar = array();
 //@formatter:off
-if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < 3) 
+if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < $AUTHORED) 
 		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
 {
 	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
@@ -41,7 +41,7 @@ else if ($bill['Bill']['status'] == $AUTHORED && $sga_exec)
 		$bill['Bill']['id']
 	));
 }
-else if ($bill['Bill']['status'] == $AGENDA)
+else if ($bill['Bill']['status'] == $AGENDA && $sga_exec)
 {
 	$sidebar[] = $this -> Html -> link(__('GSS Votes', true), array(
 		'action' => 'votes',
@@ -56,7 +56,7 @@ else if ($bill['Bill']['status'] == $AGENDA)
 		$bill['UHR']['id']
 	));
 }
-if ($bill['Bill']['status'] == $CONFERENCE)
+if ($bill['Bill']['status'] == $CONFERENCE && $sga_exec)
 {
 	$sidebar[] = $this -> Html -> link(__('Conference GSS Votes', true), array(
 		'action' => 'votes',

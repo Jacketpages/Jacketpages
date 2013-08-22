@@ -729,5 +729,15 @@ class BillsController extends AppController
 		$this -> set('signee_names', $signee_names);
 	}
 
+	public function allocations($user_id)
+	{
+		$bills = $this -> Bill -> find('all' ,array('conditions' => array('submitter' => $user_id)));
+		debug(count($bills));
+		// Hash::extract all of the bill ids
+		// find all of the line items
+		// sum the totals for each account
+		// set view variables for the totals
+	}
+
 }
 ?>

@@ -80,9 +80,6 @@ class AppController extends Controller
 		$this -> set('lace', $this -> Acl -> check("Role/$level", 'lace'));
 		$this -> set('admin', $this -> Acl -> check("Role/$level", 'admin'));
 
-		debug("controllers/" . $this -> name . "/" . $this -> params['action']);
-		debug($level);
-		debug($this -> Acl -> check("Role/$level", "controllers/" . $this -> name . "/" . $this -> params['action']));
 		if (!$this -> Acl -> check("Role/$level", "controllers/" . $this -> name . "/" . $this -> params['action']))
 		{
 			$this -> Session -> setFlash("You do not have permission to access that page.");

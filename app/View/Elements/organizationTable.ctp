@@ -1,5 +1,5 @@
 <?php
-if ($admin)
+if ($admin || $lace)
 {
 	echo $this -> Html -> tableBegin(array('class' => 'listing'));
 	echo $this -> Html -> tableHeaders(array(

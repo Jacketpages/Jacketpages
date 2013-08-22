@@ -3,8 +3,9 @@
  * @author Stephen Roca
  * @since 08/02/2012
  */
- 
+
 $this -> start('script');
+echo $this -> Html -> script('bills/submitBill');
 echo $this -> Html -> script('validation/validation');
 echo $this -> Html -> script('bills/billvalidation');
 $this -> end();
@@ -24,7 +25,8 @@ echo $this -> Form -> input('type', array(
 	'options' => array(
 		'Finance Request' => 'Finance Request',
 		'Resolution' => 'Resolution'
-	)
+	),
+	'onChange' => 'hideLineItems()'
 ));
 echo $this -> Form -> input('category', array(
 	'label' => 'Category',
@@ -50,9 +52,10 @@ echo $this -> Form -> input('Authors.grad_auth_id', array(
 	'label' => 'Graduate Author',
 	'options' => $gradAuthors
 ));
-echo $this -> Html -> tag('h1', 'Add Line Items');
-echo $this -> element('multi_enter_line_items');
-echo $this -> Form -> submit('Save and Continue', array('formnovalidate','onclick' => 'openToolTips()'));
+echo $this -> Html -> div('multi_enter_line_items', $this -> Html -> tag('h1', 'Add Line Items') . $this -> element('multi_enter_line_items'));
+echo $this -> Form -> submit('Save and Continue', array(
+	'formnovalidate',
+	'onclick' => 'openToolTips()'
+));
 $this -> end();
-
 ?>

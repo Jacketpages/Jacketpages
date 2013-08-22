@@ -162,6 +162,7 @@ $config['rules'] = array(
 		'users/*' => 'Role/sga_admin',
 		'orgCreatePerm' => 'Role/sga_admin',
 		'sgaExec' => 'Role/sga_exec',
+		'controllers/bills/votes' => 'Role/sga_exec',
 		'controllers/bills/*' => 'Role/gt_member',
 		'controllers/lineitems/*' => 'Role/gt_member',
 		'controllers/organizations/(my_orgs|inactive_orgs)' => 'Role/gt_member',
@@ -180,5 +181,6 @@ $config['rules'] = array(
 		'gt_member' => 'Role/gt_member',
 		'general' => 'Role/general',
 	),
-	'deny' => array(),
+	'deny' => array(
+	'controllers/bills/votes' => 'Role/gt_member'),
 );
