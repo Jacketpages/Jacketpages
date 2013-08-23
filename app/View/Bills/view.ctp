@@ -12,7 +12,7 @@ if ($this -> Session -> read('Sga.id') != null)
 }
 $sidebar = array();
 //@formatter:off
-if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < 3) 
+if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < $AUTHORED) 
 		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
 {
 	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
@@ -20,7 +20,8 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		$bill['Bill']['id']
 	));
 }
-if ($bill['Bill']['status'] == 1)
+
+if ($bill['Bill']['status'] == $CREATED)
 {
 	$sidebar[] = $this -> Html -> link('Update Line Items', array(
 		'controller' => 'line_items',
@@ -33,14 +34,14 @@ if ($bill['Bill']['status'] == 1)
 		$bill['Bill']['id']
 	));
 }
-else if ($bill['Bill']['status'] == 3)
+else if ($bill['Bill']['status'] == $AUTHORED && $sga_exec)
 {
 	$sidebar[] = $this -> Html -> link(__('Place on Agenda', true), array(
 		'action' => 'putOnAgenda',
 		$bill['Bill']['id']
 	));
 }
-else if ($bill['Bill']['status'] == 4)
+else if ($bill['Bill']['status'] == $AGENDA && $sga_exec)
 {
 	$sidebar[] = $this -> Html -> link(__('GSS Votes', true), array(
 		'action' => 'votes',
@@ -55,7 +56,7 @@ else if ($bill['Bill']['status'] == 4)
 		$bill['UHR']['id']
 	));
 }
-if ($bill['Bill']['status'] == 7)
+if ($bill['Bill']['status'] == $CONFERENCE && $sga_exec)
 {
 	$sidebar[] = $this -> Html -> link(__('Conference GSS Votes', true), array(
 		'action' => 'votes',
@@ -70,11 +71,13 @@ if ($bill['Bill']['status'] == 7)
 		$bill['UCC']['id']
 	));
 }
-$sidebar[] = $this -> Html -> link('Delete Bill', array(
-	'action' => 'delete',
-	$bill['Bill']['id']
-), array('style' => 'color:red'));
-
+if ($bill['Bill']['status'] < $AGENDA && ($sga_exec || $this -> Session -> read('User.id') == $bill['Submitter']['id']))
+{
+	$sidebar[] = $this -> Html -> link('Delete Bill', array(
+		'action' => 'delete',
+		$bill['Bill']['id']
+	), array('style' => 'color:red'));
+}
 if ($sidebar != null)
 {
 	echo $this -> Html -> nestedList($sidebar, array(), array('id' => 'underline'));
@@ -208,7 +211,7 @@ if ($submitted == null)
 		),
 		'form_state' => 'Final'
 	)), array('id' => 'tabs-7'));
-	?>
+?>
 </div>
 <?php
 $this -> end();

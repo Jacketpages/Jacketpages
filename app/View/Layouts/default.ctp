@@ -24,8 +24,7 @@
         ?>
         <script type="text/javascript">
 			// @TODO Generate this script using the HTML and Js helpers
-			$(document).ready(function()
-			{
+			$(document).ready(function() {
 				/**
 				 * Bind the top unorder lists to the open and close functions
 				 */
@@ -35,30 +34,42 @@
 				 * Find the nested unordered lists and make them visible or hidden depending
 				 * on the event.
 				 */
-				function openSubMenu()
-				{
+				function openSubMenu() {
 					$(this).find('ul').css('visibility', 'visible');
 				};
 
-				function closeSubMenu()
-				{
+				function closeSubMenu() {
 					$(this).find('ul').css('visibility', 'hidden');
 				};
 
 			});
 
-			function openHelp()
-			{
+			function openHelp() {
 				$("#help").attr("style", "");
 			}
 
-			function closeHelp()
-			{
+			function closeHelp() {
 				$("#help").attr("style", "display:none;");
 			}
 
         </script>
+		<script>
+			(function(i, s, o, g, r, a, m) {
+				i['GoogleAnalyticsObject'] = r;
+				i[r] = i[r] ||
+				function() {
+					(i[r].q = i[r].q || []).push(arguments)
+				}, i[r].l = 1 * new Date();
+				a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+				a.async = 1;
+				a.src = g;
+				m.parentNode.insertBefore(a, m)
+			})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
+			ga('create', 'UA-43065423-1', 'gatech.edu');
+			ga('send', 'pageview');
+
+</script>
     </head>
     <body>
         <!--         <div id="container">  -->
@@ -104,9 +115,12 @@
 				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 100%; position: absolute;">
 					<?php
 					if (!strcmp($this -> fetch('helppage'), ""))
-						echo "This page is currently empty. Please tell us what would be most needed/helpful to put here.";
+						echo "This page is currently empty. Please let us know what would be most needed/helpful to put here.";
 					echo $this -> fetch('helppage');
-					echo $this -> Form -> button("X", array('onclick' => 'closeHelp()', 'style' => 'float:right;'));
+					echo $this -> Form -> button("X", array(
+						'onclick' => 'closeHelp()',
+						'style' => 'float:right;'
+					));
 				?></div>
 			</div>
 

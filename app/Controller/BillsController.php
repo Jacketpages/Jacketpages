@@ -39,14 +39,19 @@ class BillsController extends AppController
 				));
 		}
 		// Writes the search keyword to the Session if the request is a POST
-		if ($this -> request -> is('post'))
+		if ($this -> request -> is('post') && !$this -> request -> is('ajax'))
 		{
+			debug($this -> request -> data['Bill']['keyword']);
 			$this -> Session -> write('Search.keyword', $this -> request -> data['Bill']['keyword']);
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
-		else if (!$this -> RequestHandler -> isAjax())
+		else if (!$this -> request -> is('ajax') && $letter == null)
 		{
 			$this -> Session -> delete('Search');
+		}
+		if ($this -> request -> is('ajax'))
+		{
+			$this -> layout = 'list';
 		}
 
 		if (isset($this -> request -> data['Bill']))
@@ -366,32 +371,65 @@ class BillsController extends AppController
 				$this -> Session -> setFlash('There are no line items in the JFC tab.');
 			else if (!$hasLineItemsInGradOrUndrState)
 				$this -> Session -> setFlash('There are no line items in the Undergraduate or Graduate tabs.');
+
+			$signatures = array(
+				'grad_pres_id',
+				'grad_secr_id',
+				'undr_pres_id',
+				'undr_secr_id',
+				'vp_fina_id'
+			);
+			if ($valid)
+			{
+				foreach ($signatures as $signature)
+				{
+					if (!$data['Authors'][$signature])
+						$valid = false;
+				}
+				if (!$valid)
+					$this -> Session -> setFlash("The bill is lacking one or more signatures.");
+			}
 		}
 		return $valid;
 	}
 
 	public function delete($id = null)
 	{
-		if (!$id)
+		if ($this -> Bill -> exists($id))
 		{
-			$this -> Session -> setFlash(__('Invalid ID for Bill', true));
+			$this -> Bill -> id = $id;
+			$bill = $this -> Bill -> read();
+			if ($bill['Bill']['status'] < $this -> AGENDA)
+			{
+				if ($this -> Bill -> delete($id, true))
+				{
+					$this -> Session -> setFlash(__('Bill deleted.', true));
+					$this -> redirect(array(
+						'controller' => 'bills',
+						'action' => 'index',
+						$org_id
+					));
+				}
+				else
+				{
+					$this -> Session -> setFlash(__('Unable to delete bill.', true));
+					$this -> redirect(array(
+						'controller' => 'bills',
+						'action' => 'index'
+					));
+				}
+			}
+			else
+			{
+				$this -> Bill -> saveField('status', $this -> TABLED);
+			}
+		}
+		else
+		{
+			$this -> Session -> setFlash(__('This bill does not exist.', true));
 			$this -> redirect(array('action' => 'index'));
 		}
 
-		if ($this -> Bill -> delete($id, true))
-		{
-			$this -> Session -> setFlash(__('Bill deleted.', true));
-			$this -> redirect(array(
-				'controller' => 'bills',
-				'action' => 'index',
-				$org_id
-			));
-		}
-		$this -> Session -> setFlash(__('Bill was not deleted.', true));
-		$this -> redirect(array(
-			'controller' => 'bills',
-			'action' => 'index'
-		));
 	}
 
 	/**
@@ -553,18 +591,19 @@ class BillsController extends AppController
 
 	public function putOnAgenda($id)
 	{
-		$this -> setBillStatus($id, 4, true);
+		$bill = $this -> Bill -> findById($id, array('fields' => 'category'));
+		$this -> setBillStatus($id, $this -> AGENDA, true, $bill['Bill']['category']);
 
 	}
 
 	private function setBillStatus($id, $state, $redirect = false, $category = null)
 	{
 		//@formatter:off
-		if ($id != null && in_array($state, array(1,2,3,4,5,6,7)))//@formatter:on
+		if ($id != null && in_array($state, array(1,2,3,4,5,6,7,8)))//@formatter:on
 		{
 			$this -> Bill -> id = $id;
 			$this -> Bill -> saveField('status', $state);
-			if ($state == 3 && $category != null)
+			if ($state == $this -> AGENDA && $category != null)
 			{
 				$this -> Bill -> saveField('number', $this -> getValidNumber($category));
 			}
@@ -629,13 +668,11 @@ class BillsController extends AppController
 		if ($authors['BillAuthor']['undr_auth_appr'] && $authors['BillAuthor']['grad_auth_appr'])
 		{
 			$bill = $this -> Bill -> read();
-			$this -> Bill -> saveField('status', 3);
-			$this -> Bill -> saveField('number', $this -> getValidNumber($bill['Bill']['category']));
+			$this -> Bill -> saveField('status', $this -> AUTHORED);
 		}
 		else
 		{
-			$this -> Bill -> saveField('status', 2);
-			$this -> Bill -> saveField('number', null);
+			$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);
 		}
 		$this -> redirect($this -> referer());
 	}
@@ -690,6 +727,16 @@ class BillsController extends AppController
 			$signee_names['vp_fina'] = $gpres['User']['name'];
 		}
 		$this -> set('signee_names', $signee_names);
+	}
+
+	public function allocations($user_id)
+	{
+		$bills = $this -> Bill -> find('all' ,array('conditions' => array('submitter' => $user_id)));
+		debug(count($bills));
+		// Hash::extract all of the bill ids
+		// find all of the line items
+		// sum the totals for each account
+		// set view variables for the totals
 	}
 
 }

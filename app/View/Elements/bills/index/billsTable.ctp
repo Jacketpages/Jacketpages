@@ -11,9 +11,10 @@
 						2 => 'Awaiting Author',
 						3 => 'Authored',
 						4 => 'Agenda',
-						5 => 'Passed',
-						6 => 'Failed',
-						7 => 'Tabled'
+						5 => 'Conference',
+						6 => 'Passed',
+						7 => 'Failed',
+						8 => 'Tabled'
 					),
 					'selected' => $this -> Session -> read('Bill.from')
 				));
@@ -24,9 +25,10 @@
 						2 => 'Awaiting Author',
 						3 => 'Authored',
 						4 => 'Agenda',
-						5 => 'Passed',
-						6 => 'Failed',
-						7 => 'Tabled'
+						5 => 'Conference',
+						6 => 'Passed',
+						7 => 'Failed',
+						8 => 'Tabled'
 					),
 					'selected' => ($this -> Session -> read('Bill.to') == null ? 7 : $this -> Session -> read('Bill.to'))
 				));

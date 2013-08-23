@@ -4,7 +4,7 @@
  * @since 8/7/2013
  */
 
-if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4) || $this -> Session -> read('Sga.id') != null)
+if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $AGENDA) || ($bill['Bill']['status'] == $AGENDA && $sga_user))
 {
 	if ($bill['Bill']['category'] == 'Graduate' || $bill['Bill']['category'] == 'Joint')
 	{
@@ -47,7 +47,8 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > 4) 
 	echo $this -> Html -> tableCells($abstains);
 	echo $this -> Html -> tableEnd();
 
-	if ($bill['Bill']['status'] == 7 || $bill['GCC']['id'] != null)
+	if (($bill['Bill']['status'] == $CONFERENCE && $sga_user) || 
+	($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $CONFERENCE && $bill['GCC']['id'] != null))
 	{
 		$ctitles[] = 'GSS Conference Outcome:';
 		$ctitles[] = '';

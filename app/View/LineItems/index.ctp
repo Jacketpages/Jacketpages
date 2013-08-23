@@ -11,7 +11,7 @@ echo $this -> Html -> script('lineitems/lineitemvalidation');
 echo $this -> Html -> script('validation/validation');
 $this -> end();
 $this -> extend('/Common/common');
-$this -> assign('title', 'LineItems');
+$this -> assign('title', 'Line Items - ' . $titleState);
 $this -> start('middle');
 
 echo $this -> element('multi_enter_line_items');

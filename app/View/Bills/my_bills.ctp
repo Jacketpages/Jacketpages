@@ -18,7 +18,7 @@ $this -> start('search');
 echo $this -> element('search', array('action' =>  'my_bills', 'endForm' => 0));
 $this -> end();
 $this -> start('listing');
-echo $this -> element('billsTable', array('bills' => $bills));
+echo $this -> element('bills/index/billsTable', array('bills' => $bills));
 echo $this -> element('paging');
 $this -> end();
 ?>

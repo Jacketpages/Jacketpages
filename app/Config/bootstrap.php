@@ -162,25 +162,4 @@ CakeLog::config('other', array(
 ));
 
 
-/**
- * Bill categories
- */
-$JOINT1 = 'Joint';
-$UNDERGRADUATE = 'Undergraduate';
-$GRADUATE = 'Graduate';
-$CONFERENCE = 'Conference';
 
-/**
- * Bill Statuses
- */
-$AWAITING_AUTHOR = '1';
-$AUTHORED = '2';
-$AGENDA = '3';
-$PASSED = '4';
-$FAILED = '5';
-$TABLED = '6';
-
-/**
- * Logging scopes
- */
-$BILLS = 'bills';

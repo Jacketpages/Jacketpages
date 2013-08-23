@@ -11,81 +11,118 @@ class LineItemsController extends AppController
 
 	public function beforeFilter()
 	{
-		//$this -> Security -> unlockedActions = array('index');
-		//$this->Security->csrfCheck = false;
-		//$this->Security->validatePost = false;
+		parent::beforeFilter();
+		$level = $this -> Session -> read('User.level');
+		switch ($this -> params['action'])
+		{
+			case 'view' :
+				$this -> set('sgaExec', $this -> Acl -> check('Role/' . $level, 'sgaExec'));
+				break;
+		}
+	}
+
+	private function canEditLineItems($bill, $state)
+	{
+		$valid = false;
+		if ($this -> Session -> read('User.level') == "admin")
+		{
+			$valid = true;
+		}
+		if ($bill['Bill']['status'] == $this -> CREATED && !strcmp(strtolower($state), 'submitted') && $bill['Submitter']['id'] == $this -> Session -> read('User.id'))
+		{
+			$valid = true;
+		}
+		if ($bill['Bill']['status'] > $this -> CREATED && $bill['Bill']['status'] <= $this -> CONFERENCE && $this -> Session -> read('User.level') != "sga_exec")
+		{
+			$valid = true;
+		}
+		if(!strcmp($state, 'Final'))
+		{
+			$valid = false;
+		}
+		return $valid;
 	}
 
 	public function index($bill_id = null, $state = null)
 	{
-		date_default_timezone_set('EST5EDT');
-		if ($this -> request -> is('get'))
+		$this -> loadModel('Bill');
+		$bill = $this -> Bill -> findById($bill_id);
+		$this -> set('titleState', $state);
+		if ($this -> canEditLineItems($bill, $state))
 		{
-			$lineitems = $this -> LineItem -> find('all', array('conditions' => array(
-					'bill_id' => $bill_id,
-					'state' => $state
-				)));
-			$this -> set('lineitems', $lineitems);
-		}
-		if ($this -> request -> is('post') || $this -> request -> is('put'))
-		{
-			$conditions = array(
-				'conditions' => array(
-					'bill_id' => $bill_id,
-					'state' => $state
-				),
-				'recursive' => -1
-			);
-			$existingLineItems = $this -> LineItem -> find('all', $conditions);
-			$existingLineItemIds = Hash::extract($existingLineItems, '{n}.LineItem.id');
-			$newLineItems = $this -> request -> data;
-			$this -> LineItem -> saveAll($newLineItems, array('validate' => 'only'));
-
-			$newLineItemIds = Hash::extract($newLineItems, '{n}.LineItem.id');
-			foreach ($existingLineItemIds as $id)
+			date_default_timezone_set('EST5EDT');
+			if ($this -> request -> is('get'))
 			{
-				if (!in_array($id, $newLineItemIds))
+				$lineitems = $this -> LineItem -> find('all', array('conditions' => array(
+						'bill_id' => $bill_id,
+						'state' => $state
+					)));
+				$this -> set('lineitems', $lineitems);
+			}
+			if ($this -> request -> is('post') || $this -> request -> is('put'))
+			{
+				$conditions = array(
+					'conditions' => array(
+						'bill_id' => $bill_id,
+						'state' => $state
+					),
+					'recursive' => -1
+				);
+				$existingLineItems = $this -> LineItem -> find('all', $conditions);
+				$existingLineItemIds = Hash::extract($existingLineItems, '{n}.LineItem.id');
+				$newLineItems = $this -> request -> data;
+				$this -> LineItem -> saveAll($newLineItems, array('validate' => 'only'));
+
+				$newLineItemIds = Hash::extract($newLineItems, '{n}.LineItem.id');
+				foreach ($existingLineItemIds as $id)
 				{
-					if ($this -> LineItem -> delete($id))
+					if (!in_array($id, $newLineItemIds))
 					{
-						$this -> updateFieldForLineItemRevisions($id, 'deleted', 1);
-						CakeLog::info("Line Item deleted for id: " . $id);
+						if ($this -> LineItem -> delete($id))
+						{
+							$this -> updateFieldForLineItemRevisions($id, 'deleted', 1);
+							CakeLog::info("Line Item deleted for id: " . $id);
+						}
+					}
+				}
+
+				foreach ($newLineItems as $newLineItem)
+				{
+					$newLineItem['LineItem']['last_mod_by'] = $this -> Session -> read('User.id');
+					if ($newLineItem['LineItem']['id'] != null && $newLineItem['LineItem']['id'] != "")
+					{
+						$oldLineItem = $this -> LineItem -> findById($newLineItem['LineItem']['id']);
+						if (!$this -> compare($newLineItem, $oldLineItem))
+						{
+							$this -> LineItem -> id = $newLineItem['LineItem']['id'];
+							$this -> LineItem -> save($newLineItem);
+							$this -> saveLineItemRevision($newLineItem);
+						}
+					}
+					else
+					{
+						$newLineItem['LineItem']['state'] = $state;
+						$newLineItem['LineItem']['type'] = 'General';
+						$newLineItem['LineItem']['bill_id'] = $bill_id;
+						//set some extra stuff on line item
+						if ($this -> LineItem -> save($newLineItem))
+						{
+							$this -> createLineItemRevision($newLineItem, $this -> LineItem -> getInsertId());
+						}
 					}
 				}
 			}
-
-			foreach ($newLineItems as $newLineItem)
-			{
-				$newLineItem['LineItem']['last_mod_by'] = $this -> Session -> read('User.id');
-				if ($newLineItem['LineItem']['id'] != null && $newLineItem['LineItem']['id'] != "")
-				{
-					$oldLineItem = $this -> LineItem -> findById($newLineItem['LineItem']['id']);
-					if (!$this -> compare($newLineItem, $oldLineItem))
-					{
-						$this -> LineItem -> id = $newLineItem['LineItem']['id'];
-						$this -> LineItem -> save($newLineItem);
-						$this -> saveLineItemRevision($newLineItem);
-					}
-				}
-				else
-				{
-					$newLineItem['LineItem']['state'] = $state;
-					$newLineItem['LineItem']['type'] = 'General';
-					$newLineItem['LineItem']['bill_id'] = $bill_id;
-					//set some extra stuff on line item
-					if ($this -> LineItem -> save($newLineItem))
-					{
-						$this -> createLineItemRevision($newLineItem, $this -> LineItem -> getInsertId());
-					}
-				}
-			}
-			$this -> redirect(array(
-			'controller' => 'bills',
-			'action' => 'view',
-			$bill_id
-			));
-
 		}
+		else
+		{
+			$this -> Session -> setFlash("The bill is in an invalid status to edit line items in state: $state");
+		}
+		// $this -> redirect(array(
+			// 'controller' => 'bills',
+			// 'action' => 'view',
+			// $bill_id
+		// ));
+
 	}
 
 	private function updateFieldForLineItemRevisions($lineItemId, $field, $value)
@@ -236,33 +273,33 @@ class LineItemsController extends AppController
 	//TODO Doesn't work yet. Still putting it together.
 	public function edit($bill_id = null, $state = null)
 	{
-		$this -> index($bill_id,$state);
+		$this -> index($bill_id, $state);
 		// $this -> loadModel('Bill');
 		// $this -> set('bill', $this -> Bill -> find('first', array(
-			// 'conditions' => array('Bill.id' => $id),
-			// 'fields' => array(
-				// 'title',
-				// 'type',
-				// 'id'
-			// )
+		// 'conditions' => array('Bill.id' => $id),
+		// 'fields' => array(
+		// 'title',
+		// 'type',
+		// 'id'
+		// )
 		// )));
 		// $this -> LineItem -> id = $id;
 		// if ($this -> request -> is('get'))
 		// {
-			// $this -> request -> data = $this -> LineItem -> read();
-			// $this -> set('membership', $this -> LineItem -> read(null, $id));
+		// $this -> request -> data = $this -> LineItem -> read();
+		// $this -> set('membership', $this -> LineItem -> read(null, $id));
 		// }
 		// else
 		// {
-			// if ($this -> LineItem -> save($this -> request -> data))
-			// {
-				// $this -> Session -> setFlash('The membership has been saved.');
-				// $this -> redirect(array('action' => 'index'));
-			// }
-			// else
-			// {
-				// $this -> Session -> setFlash('Unable to edit the membership.');
-			// }
+		// if ($this -> LineItem -> save($this -> request -> data))
+		// {
+		// $this -> Session -> setFlash('The membership has been saved.');
+		// $this -> redirect(array('action' => 'index'));
+		// }
+		// else
+		// {
+		// $this -> Session -> setFlash('Unable to edit the membership.');
+		// }
 		// }
 	}
 

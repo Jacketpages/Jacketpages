@@ -25,27 +25,6 @@ class OrganizationsController extends AppController
 		'Csv'
 	);
 
-	public function beforeFilter()
-	{
-		$level = $this -> Session -> read('User.level');
-		switch ($this -> params['action'])
-		{
-			case 'view' :
-				$this -> set('orgEditPerm', $this -> Acl -> check('Role/' . $level, 'orgEditPerm'));
-				$this -> set('orgViewDocumentsPerm', $this -> Acl -> check('Role/' . $level, 'orgViewDocumentsPerm'));
-				$this -> set('orgAdminPerm', $this -> Acl -> check('Role/' . $level, 'orgAdminPerm'));
-				break;
-			case 'index' :
-				$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $level, 'orgCreatePerm'));
-				$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $level, 'orgExportPerm'));
-				$this -> set('orgAdminView', $this -> Acl -> check('Role/' . $level, 'orgAdminView'));
-				$this -> set('orgEditDeletePerm', $this -> Acl -> check('Role/' . $level, 'orgEditDeletePerm'));
-				break;
-			default :
-				break;
-		}
-	}
-
 	/**
 	 * @deprecated
 	 */
@@ -159,7 +138,7 @@ class OrganizationsController extends AppController
 		{
 			$this -> Session -> write('Search.keyword', trim($this -> request -> data['Organization']['keyword']));
 			$this -> Session -> write('Search.category', $this -> request -> data['Organization']['category']);
-			CakeLog::info($this -> request -> data['Organization']['keyword'],'db');
+			CakeLog::info($this -> request -> data['Organization']['keyword'], 'db');
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
 		else if (!$this -> RequestHandler -> isAjax() && $letter == null)
@@ -323,6 +302,26 @@ class OrganizationsController extends AppController
 	public function add()
 	{
 		//TODO Implement
+		if ($this -> request -> is('post'))
+		{
+			$this -> Organization -> create();
+			if ($this -> Organization -> save($this -> request -> data))
+			{
+				$this -> setFlash('This organization has been created successfully.');
+				$this -> redirect(array(
+					'action' => 'index',
+					$org_id
+				));
+			}
+			else
+			{
+				$this -> setFlash('This organization was not able to be created.');
+				$this -> redirect(array(
+					'action' => 'index',
+					$org_id
+				));
+			}
+		}
 	}
 
 	/**
