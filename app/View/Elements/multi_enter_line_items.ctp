@@ -76,7 +76,6 @@ foreach ($lineitems as $key => $lineitem)
 			'label' => false,
 			'value' => $lineitem['LineItem']['amount'],
 			'id' => 'LineItemAmount' . $key,
-			'readonly'
 		)),
 		$this -> Form -> input($key . '.LineItem.account', array(
 			'id' => 'LineItemAccount' . $key,

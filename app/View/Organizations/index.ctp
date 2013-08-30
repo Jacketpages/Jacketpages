@@ -26,41 +26,9 @@ if ($orgExportPerm)
 		'action' => 'export'
 	));
 }
-$sidebar[] = 'Organization Category';
 echo $this -> Html -> nestedList($sidebar);
 ?>
-<div id='category'>
-	<?php
-	echo $this -> Form -> create();
-	echo $this -> Form -> input('category', array(
-		'label' => false,
-		'default' => $this -> Session -> read('Search.category'),
-		'options' => array(
-			'' => 'All',
-			'CPC Sorority' => 'CPC Sorority',
-			'Cultural/Diversity' => 'Cultural/Diversity',
-			'Departmental Sponsored' => 'Departmental Sponsored',
-			'Departments' => 'Departments',
-			'Governing Boards' => 'Governing Boards',
-			'Honor Society' => 'Honor Society',
-			'IFC Fraternity' => 'IFC Fraternity',
-			'Institute Recognized' => 'Institute Recognized',
-			'MGC Chapter' => 'MGC Chapter',
-			'None' => 'None',
-			'NPHC Chapter' => 'NPHC Chapter',
-			'Production/Performance/Publication' => 'Production/Performance/Publication',
-			'Professional/Departmental' => 'Professional/Departmental',
-			'Recreational/Sports/Leisure' => 'Recreational/Sports/Leisure',
-			'Religious/Spiritual' => 'Religious/Spiritual',
-			'Residence Hall Association' => 'Residence Hall Association',
-			'Service/Political/Educational' => 'Service/Political/Educational',
-			'Student Government' => 'Student Government',
-			'Umbrella' => 'Umbrella',
-			'Other' => 'Other'
-		)
-	));
-	?>
-</div>
+
 <!--    TODO edit this to where this is not done with a random div -->
 <div style="border-bottom: 1px solid #DDD;"></div>
 <?php
@@ -82,7 +50,6 @@ $this -> start('search');
 			'default' => $this -> Session -> read('Search.keyword'),
 			'style' => 'display:inline'
 		));
-		echo $this -> Form -> end();
 		?>
 		<div id="div_choices" class="autocomplete"></div>
 	</div>
@@ -113,6 +80,42 @@ $this -> start('search');
 		</ul>
 	</div>
 </div>
+<div id="accordion">
+	<a href="#">Filters</a>
+<div id='category'>
+	<?php
+	echo "Organization Category";
+	echo $this -> Form -> input('category', array(
+		'label' => false,
+		'default' => $this -> Session -> read('Search.category'),
+		'options' => array(
+			'' => 'All',
+			'CPC Sorority' => 'CPC Sorority',
+			'Cultural/Diversity' => 'Cultural/Diversity',
+			'Departmental Sponsored' => 'Departmental Sponsored',
+			'Departments' => 'Departments',
+			'Governing Boards' => 'Governing Boards',
+			'Honor Society' => 'Honor Society',
+			'IFC Fraternity' => 'IFC Fraternity',
+			'Institute Recognized' => 'Institute Recognized',
+			'MGC Chapter' => 'MGC Chapter',
+			'None' => 'None',
+			'NPHC Chapter' => 'NPHC Chapter',
+			'Production/Performance/Publication' => 'Production/Performance/Publication',
+			'Professional/Departmental' => 'Professional/Departmental',
+			'Recreational/Sports/Leisure' => 'Recreational/Sports/Leisure',
+			'Religious/Spiritual' => 'Religious/Spiritual',
+			'Residence Hall Association' => 'Residence Hall Association',
+			'Service/Political/Educational' => 'Service/Political/Educational',
+			'Student Government' => 'Student Government',
+			'Umbrella' => 'Umbrella',
+			'Other' => 'Other'
+		)
+	));
+	echo $this -> Form -> end('Search');
+	?>
+</div>
+</div>
 <?php $this -> end();
 	$this -> start('listing');
 ?>
@@ -137,6 +140,15 @@ var avaliableTags = <?php echo json_encode($names_to_autocomplete); ?>
 		source : avaliableTags
 	});
 	});
+</script>
+<script>
+	$(function() {
+		$("#accordion").accordion({
+			collapsible : true,
+			active : false
+		});
+
+	}); 
 </script>
 <?php
 $this -> end();

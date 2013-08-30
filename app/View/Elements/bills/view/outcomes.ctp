@@ -8,7 +8,7 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $AG
 {
 	if ($bill['Bill']['category'] == 'Graduate' || $bill['Bill']['category'] == 'Joint')
 	{
-		$titles[] = 'GSS Outcome:';
+		$titles[] = $this -> Html -> link('GSS Outcome:',array(), array('title'=>$bill['GSS']['comments']));
 		$titles[] = '';
 		$dates[] = 'Date';
 		$dates[] = $bill['GSS']['date'];
@@ -22,7 +22,7 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $AG
 
 	if ($bill['Bill']['category'] == 'Undergraduate' || $bill['Bill']['category'] == 'Joint')
 	{
-		$titles[] = 'UHR Outcome:';
+		$titles[] = $this -> Html -> link('UHR Outcome:',array(), array('title'=>$bill['UHR']['comments']));
 		$titles[] = '';
 		$dates[] = 'Date';
 		$dates[] = $bill['UHR']['date'];
@@ -50,9 +50,9 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $AG
 	if (($bill['Bill']['status'] == $CONFERENCE && $sga_user) || 
 	($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $CONFERENCE && $bill['GCC']['id'] != null))
 	{
-		$ctitles[] = 'GSS Conference Outcome:';
+		$ctitles[] = $this -> Html -> link('GSS Conference Outcome:',array(), array('title'=>$bill['GCC']['comments']));
 		$ctitles[] = '';
-		$ctitles[] = 'UHR Conference Outcome:';
+		$ctitles[] = $this -> Html -> link('UHR Conference Outcome:', array(), array('title'=>$bill['UCC']['comments']));
 		$ctitles[] = '';
 		$cdates[] = 'Date';
 		$cdates[] = $bill['GCC']['date'];

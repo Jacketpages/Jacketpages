@@ -33,10 +33,6 @@ if ($orgEditPerm)
 		'action' => 'edit',
 		$organization['Organization']['id']
 	));
-	$sidebar[] = $this -> Html -> link(__('Edit Logo', true), array(
-		'action' => 'addlogo',
-		$organization['Organization']['id']
-	));
 	$sidebar[] = $this -> Html -> link(__('Edit Roster', true), array(
 		'controller' => 'memberships',
 		'action' => 'index',
@@ -62,10 +58,10 @@ $sidebar[] = $this -> Html -> link(__('Budgets', true), array(
 if (!$orgJoinOrganizationPerm)
 {
 	$sidebar[] = $this -> Html -> link(__('Join Organization', true), array(
-	'controller' => 'memberships',
+		'controller' => 'memberships',
 		'action' => 'joinOrganization',
 		$organization['Organization']['id']
-	), null, __('Are you sure you want to join '. $organization['Organization']['name'] . '?', true));
+	), null, __('Are you sure you want to join ' . $organization['Organization']['name'] . '?', true));
 }
 if ($orgAdminPerm)
 {
@@ -177,7 +173,11 @@ $this -> start('middle');
 			'Member',
 			'Email',
 			'Phone',
-			""
+			$this -> Html -> link('Accept All', array(
+				'controller' => 'memberships',
+				'action' => 'acceptAll',
+				$organization['Organization']['id']
+			))
 		));
 		foreach ($pending_members as $pending_member)
 		{
