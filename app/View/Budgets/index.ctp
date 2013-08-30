@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Stephen Roca
- * @since 06/26/2012
+ * @since 8/26/2013
  */
 $this -> Paginator -> options(array(
 	'update' => '#forupdate',
@@ -10,18 +10,16 @@ $this -> Paginator -> options(array(
 	'before' => $this -> Js -> get('#listing') -> effect('fadeOut', array('buffer' => false)),
 	'complete' => $this -> Js -> get('#listing') -> effect('fadeIn', array('buffer' => false)),
 ));
-echo $this -> Html -> addCrumb('All Bills', '/bills');
-$this -> extend("/Common/list");
+$this -> extend('/Common/list');
+$this -> assign('title', 'Budgets');
 $this -> start('sidebar');
-echo $this -> Html -> nestedList(array(
-	$this -> Html -> link('Create New Bill', array('action' => 'add')),
-	$this -> Html -> link('Export FY Data', array(
-		'admin' => false,
-		'action' => 'export'
-	))
-), array(), array('id' => 'underline'));
+echo $this -> Html -> nestedList(array($this -> Html -> link(__('Create Budget', true), array(
+		'controller' => 'budgets',
+		'action' => 'submit',
+		$orgId
+	))), array(), array('id'=>'underline'));
+
 $this -> end();
-$this -> assign("title", "Bills");
 $this -> start('search');
 ?>
 <div id="alphabet">
@@ -72,9 +70,10 @@ $this -> start('listing');
 ?>
 <div id='forupdate'>
 	<?php
-	echo $this -> element('bills\index\billsTable', array('bills' => $bills));
+	echo $this -> element('budgets\budgetstable', array('budgets' => $budgets));
 	echo $this -> element('paging');
 ?></div>
 <?php
 $this -> end();
+?>
 ?>
