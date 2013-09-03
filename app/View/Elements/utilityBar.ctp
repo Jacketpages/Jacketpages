@@ -3,6 +3,8 @@
  * @author Stephen Roca
  * @since 03/22/2012
  * This file defines the utility bar's menu options/links.
+ *
+ *	The utility bar is being replaced with the mainMenuBar.ctp
  */
 
 echo $this -> Html -> div(null, null, array('id' => 'utilityBarWrapper'));

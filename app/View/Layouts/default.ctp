@@ -17,7 +17,20 @@
 		echo $this -> Html -> script('http://code.jquery.com/jquery-1.9.1.js');
 		echo $this -> Html -> script('http://code.jquery.com/ui/1.10.3/jquery-ui.js');
 		echo $this -> fetch('script');
+		
+		// new gt theme css files
+		echo $this -> Html -> css('gtv2/reset.css');
+		echo $this -> Html -> css('gtv2/default.css');
+		echo $this -> Html -> css('gtv2/fonts.css');
+		echo $this -> Html -> css('gtv2/typography.css');
+		echo $this -> Html -> css('gtv2/layout.css');
+		echo $this -> Html -> css('gtv2/blocks.css');
+		echo $this -> Html -> css('gtv2/content.css');
+		echo $this -> Html -> css('gtv2/static.css');
+		
 		echo $this -> Html -> css('icing');
+		
+		
 		//echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
 		echo $this -> Html -> css('jquery-ui-1.10.3.custom');
 		echo $this -> fetch('css');
@@ -73,6 +86,100 @@
     </head>
     <body>
         <!--         <div id="container">  -->
+        
+        
+        
+        
+		<div id="masthead">
+		  
+		  <div id="identity" class="clearfix">
+		    <div id="identity-wrapper">
+		      <h1 id="gt-logo">
+		        <a href="/" rel="home" title="Georgia Tech" ><img alt="Georgia Tech" src="http://comm-whdev1.gatech.edu/sites/all/themes/gt/images/logos/logo-gt.png" /></a>
+		      </h1>
+		    </div>
+		  </div><!-- /#identity -->
+		
+		  <div id="primary-menus">
+		    <div id="primary-menus-wrapper" class="clearfix">
+		      <a id="primary-menus-toggle" class="hide-for-desktop"><span>Menu</span></a>
+		      <div id="primary-menus-off-canvas" class="off-canvas">
+		        <a id="primary-menus-close" class="hide-for-desktop"><span>Close</span></a>
+		        
+		        <div id="nav">
+		          <?php
+		          
+		          // main menu bar links
+				  echo $this -> element('mainMenuBar');
+		          
+		          // action bar links
+				  echo $this -> element('actionBar');
+				  
+		          ?>
+		        </div>
+		        
+		        <div id="utility">
+		          <div class="row clearfix">
+		          
+		            <div id="utility-links">
+		              <!-- utility-links -->
+		              <ul class="menu">
+		                <li class="mothership ulink"><a href="http://www.gatech.edu">Georgia Tech Home</a></li>
+		                <li class="campus-map ulink"><a href="http://www.map.gatech.edu">Map</a></li>
+		                <li class="directories ulink"><a href="http://www.gatech.edu/directory">Directory</a></li>
+		                <li class="offices ulink"><a href="http://www.gatech.edu/departments">Offices</a></li>
+		              </ul>
+		            </div>
+		            
+		            <!--
+		            <div id="social-media-links-wrapper">
+		              <ul id="social-media-links">
+		                <li class="first"><a href="https://www.facebook.com/georgiatech" title="Facebook" class="facebook">Facebook</a></li>
+		                <li><a href="http://www.flickr.com/photos/georgiatech" title="Flickr" class="flickr">Flickr</a></li>
+		                <li><a href="https://plus.google.com/+georgiatech/posts" title="Google Plus" class="googleplus">Google Plus</a></li>
+		                <li><a href="http://www.linkedin.com/company/3558" title="LinkedIn" class="linkedin">LinkedIn</a></li>
+		                <li><a href="http://pinterest.com/georgiatech/" title="Pinterest" class="pinterest">Pinterest</a></li>
+		                <li><a href="http://gatech.edu/rss" title="RSS" class="rss">RSS</a></li>
+		                <li><a href="https://twitter.com/georgiatech" title="Twitter" class="twitter">Twitter</a></li>
+		                <li class="last"><a href="http://www.youtube.com/georgiatech" title="YouTube" class="youtube">YouTube</a></li>
+		              </ul>
+		            </div>
+		            
+		            /#social-media -->
+		            
+		          </div>
+		        </div><!-- /#utility -->
+		      </div>
+		      
+		      <div id="site-search">
+		        <a id="site-search-container-switch">Search</a>
+		        <div id="site-search-container">
+		          <div id="search-gt">
+		            <form action="http://search.gatech.edu/search" method="get">
+		            <input  value="" name="q" id="q" class="form-text" type="text" />
+		            <input name="site" value="default_collection" type="hidden" />
+		            <input name="client" value="default_frontend" type="hidden" />
+		            <input name="output" value="xml_no_dtd" type="hidden" />
+		            <input name="proxystylesheet" value="default_frontend" type="hidden" />
+		            <input name="proxyreload" value="1" type="hidden" /></form>
+		          </div>
+		        </div>
+		      </div>
+		      
+		    </div><!-- /#primary-menus-wrapper -->
+		    
+		    <?=$this->element('breadcrumb')?>
+		    
+		  </div><!-- /#primary-menus -->
+		    
+		</div><!-- /#masthead -->
+        
+        </div>
+        
+        
+        
+        
+        <!--
         <div id="header">
             <?php
 			// Link the Jacketpages logo to the Jacketpages home page
@@ -108,7 +215,9 @@
 				'escape' => false
 			)), array('id' => 'breadCrumbWrapper'));
             ?>
-        				</div>
+        </div>
+        -->
+        
         <div id="content">
 			<div class="ui-overlay" id="help" style="display:none;">
 				<div class="ui-widget-overlay"></div>
