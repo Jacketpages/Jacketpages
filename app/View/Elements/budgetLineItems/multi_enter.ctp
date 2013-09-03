@@ -3,13 +3,16 @@
  * @author Stephen Roca
  * @since 8/30/2013
  */
-echo $this -> Html -> div();
 
+ 
+echo $this -> Html -> div();
+debug('BudgetLineItemsTable' . $num);
 echo $this -> Form -> create('BudgetBudgetLineItem');
 //, array('onsubmit' => 'return validateForm()'));
+$tableId = 'BudgetLineItemsTable' . $num;
 echo $this -> Html -> tableBegin(array(
 	'class' => 'listing',
-	'id' => 'BudgetBudgetLineItemsTable'
+	'id' => $tableId
 ));
 
 echo $this -> Html -> tableHeaders(array(
@@ -35,38 +38,38 @@ foreach ($budgetLineItems as $key => $budgetLineItems)
 	echo $this -> Html -> tableCells(array(
 		$this -> Form -> hidden($key . '.BudgetLineItem.id', array(
 			'value' => $budgetLineItems['BudgetLineItem']['id'],
-			'id' => 'BudgetLineItemId' . $key
+			'id' => $num . 'BudgetLineItemId' . $key
 		)).
 		$this -> Form -> text($key . '.BudgetLineItem.name', array(
 			'label' => false,
 			'value' => $budgetLineItems['BudgetLineItem']['name'],
-			'id' => 'BudgetLineItemName' . $key
+			'id' => $num . 'BudgetLineItemName' . $key
 		)),
 		'',
 		$this -> Form -> text($key . '.BudgetLineItem.amount', array(
 			'label' => false,
 			'value' => $budgetLineItems['BudgetLineItem']['amount'],
-			'id' => 'BudgetLineItemAmount' . $key,
+			'id' => $num . 'BudgetLineItemAmount' . $key,
 		)),
 		'',
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',
-			'onclick' => "moveUp(" . $key . ")",
+			'onclick' => "moveUp('$tableId' , $key)",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('down.gif'), array(
 			'type' => 'button',
-			'onclick' => "moveDown(" . $key . ")",
+			'onclick' => "moveDown('$tableId' , $key)",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 			'type' => 'button',
-			'onclick' => "addRow(" . $key . ")",
+			'onclick' => "addRow('$tableId' , $key)",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 			'type' => 'button',
-			'onclick' => "deleteRow(" . $key . ")",
+			'onclick' => "deleteRow('$tableId' , $key)",
 			'escape' => false
 		)),
 	), array('id' => 'BudgetLineItem'));
