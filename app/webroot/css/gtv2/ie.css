@@ -1,0 +1,10 @@
+/**
+ * @file
+ * IE specific styles 
+ *
+ * Style hacks targeting IE 8 and earlier
+ *
+ */
+ 
+ /* clearfix fix */
+ .clearfix { zoom: 1; }

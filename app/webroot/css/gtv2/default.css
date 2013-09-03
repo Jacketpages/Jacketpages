@@ -1,0 +1,305 @@
+/**
+ * @file
+ * CSS default styles
+ *
+ * Includes default styling for content elements and overrides to Drupal defaults
+ *
+ */
+
+
+/* Base element styling */
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body { font-size: 100%; }
+body {
+  color: #454545;
+  padding: 0;
+  margin: 0;
+  font: 400 87.5%/1.25 "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+}
+
+img,
+object,
+embed {
+  max-width: 100%;
+  height: auto;
+}
+
+img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+a:link, a:visited { color: #164679; text-decoration: underline; }
+a:hover, a:active { color: #2c6096; text-decoration: none; }
+
+/* D7 Overlay */
+#overlay-content #utility,
+#overlay-content #masthead,
+#overlay-content #content-lead,
+#overlay-content #left-nav,
+#overlay-content #sidebar-left,
+#overlay-content #sidebar-right,
+#overlay-content #superfooter,
+#overlay-content #footer { display: none; }
+#overlay-content #breadcrumb .row { max-width: 100%; }
+#overlay-content #main .row { max-width: 100%; } 
+#overlay-titlebar div.add-or-remove-shortcuts { display: none; }
+
+/* D7 draggable table row handles */
+a.tabledrag-handle .handle { 
+  height: 25px;
+  width: 25px;
+}
+
+/* table elements */
+div.table-container { 
+  max-width: 100%;
+  overflow: auto;
+}
+table {
+  border: 1px solid #bbb;
+  border-collapse: collapse;
+  margin: 0 0 1.29em 0;
+  width: 100%;
+}
+tr.even { background-color: #fff; } 
+tr.odd { background-color: #f5f5f5; } 
+th {
+  background-color: #023D7B;
+  border: 1px solid #bbb;
+  color: #FFFFFF;
+  padding: .428em;
+  text-align: left;
+}
+th a:link, th a:visited, 
+th a:hover, th a:active { color: #fff; }
+td { 
+  border: 1px solid #bbb;
+  border-collapse: collapse;
+  padding: .428em;
+  vertical-align: top;
+}
+
+/* Menus, Tabs & Links */
+.toolbar-menu li, .toolbar-shortcuts li, .operations li {
+  background-image: none;
+  padding: 0;
+}
+
+/* Form elements */
+form fieldset { border: 1px solid #144579; margin: 0 0 12px; padding: 12px; }
+
+/* Help text */
+div.help {
+  border-bottom: 1px dotted #B0B0B0;
+  border-top: 1px dotted #B0B0B0;
+  margin: 12px 0;
+  padding: 12px 6px;
+}
+
+/* Standard action links */
+.action-links {
+  margin: 12px 0;
+  padding: 0;
+}
+.action-links li { 
+  display: inline;
+  line-height: 1.714em;
+  margin: 0 10px;
+  padding: 0;
+}
+.action-links li a {
+  background-color: #888888;
+  border-radius: 20px;
+  color: #e1e1e1;
+  padding: 3px 12px;
+}
+.action-links li a:link,
+.action-links li a:visited { text-decoration: none; }
+.action-links li a:hover,
+.action-links li a:active {
+  background-color: #d0d0d0;
+  color: #5d5d5d;
+}
+
+/* Shortcut Icon */
+div.add-or-remove-shortcuts {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+/* Tab styling from Zen 7.x-5.1 */
+ul.primary,
+ul.secondary {
+  overflow: hidden;
+  border-bottom: 1px solid #bbbbbb;
+  list-style: none;
+  margin: 0 0 1.5em;
+  padding: 0 2px;
+  white-space: nowrap;
+}
+
+ul.primary li,
+ul.secondary li {
+  float: left; /* LTR */
+  margin: 0.2em 3px 0;
+}
+
+ul.primary a,
+ul.secondary a {
+  border: 1px solid #e9e9e9;
+  border-right: 0;
+  border-bottom: 0;
+  display: block;
+  line-height: 1.5em;
+  text-decoration: none;
+}
+
+/* Primary tabs */
+ul.primary li {
+  text-shadow: white 1px 1px 0;
+}
+
+ul.primary li.active {
+  border-bottom: 1px solid white;
+  margin-bottom: -1px; /* Overlap the ul's border. */
+}
+
+ul.primary a:link,
+ul.primary a:visited {
+  border-radius: 4px 4px 0 0;
+  transition: background-color 0.3s;
+  color: #333;
+  background-color: #dedede;
+  letter-spacing: 1px;
+  padding: 0 1em;
+  text-align: center;
+}
+
+ul.primary a:hover,
+ul.primary a:focus {
+  background-color: #e9e9e9;
+  border-color: #f2f2f2;
+}
+
+ul.primary a.active {
+  background-color: transparent;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e9e9e9), color-stop(100%, rgba(233, 233, 233, 0)));
+  background-image: -webkit-linear-gradient(#e9e9e9, rgba(233, 233, 233, 0));
+  background-image: -moz-linear-gradient(#e9e9e9, rgba(233, 233, 233, 0));
+  background-image: -o-linear-gradient(#e9e9e9, rgba(233, 233, 233, 0));
+  background-image: -ms-linear-gradient(#e9e9e9, rgba(233, 233, 233, 0));
+  background-image: linear-gradient(#e9e9e9, rgba(233, 233, 233, 0));
+  border-color: #fff;
+}
+
+/* Secondary tabs */
+ul.secondary {
+  font-size: .9em;
+  margin-top: -1.5em; /* Collapse bottom margin of ul.primary. */
+  padding-bottom: .5em;
+}
+
+ul.secondary a:link,
+ul.secondary a:visited {
+  -webkit-border-radius: 0.75em;
+  -moz-border-radius: 0.75em;
+  -ms-border-radius: 0.75em;
+  -o-border-radius: 0.75em;
+  border-radius: 0.75em;
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -ms-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+  text-shadow: white 1px 1px 0;
+  background-color: #f2f2f2;
+  color: #666;
+  padding: 0 .5em;
+}
+
+ul.secondary a:hover,
+ul.secondary a:focus {
+  background-color: #dedede;
+  border-color: #999;
+  color: #333;
+}
+
+ul.secondary a.active,
+ul.secondary a:active {
+  text-shadow: #333333 1px 1px 0;
+  background-color: #666;
+  border-color: #000;
+  color: #fff;
+}
+
+/**
+ * WYSIWYG Editor Styling
+ */
+ /* keep items no bigger than half the width of the block */
+.wysiwyg-float-left { float: left; margin: 5px 10px 5px 0; max-width: 50%; }
+.wysiwyg-float-right { float: right; margin: 5px 0x 5px 10px; max-width: 50%; }
+
+/* go full width for blocks in the sidebars */
+#sidebar-left.with-sidebar-right .wysiwyg-float-left,
+#sidebar-left.with-sidebar-right .wysiwyg-float-right,
+#sidebar-right.with-sidebar-left .wysiwyg-float-left,
+#sidebar-right.with-sidebar-left .wysiwyg-float-right { max-width: 100%; }
+
+/**
+ * Media Query Breakpoints
+ *
+ * Breakpoints are calculated based on a browser default font-size of 16px and NOT what the base
+ * font-size is set to be (which is ~14px in this case of this page.) Plus, if the user decides to
+ * increase their default font size for their browser the layout will drop down to a lower
+ * breakpoint (provided font size is increased enough), thus making for a more usable page!
+ */
+
+/* ~496px and less */
+@media only screen and (max-width: 31em) {
+  
+  /* Utilities */
+  .hide-for-mobile { display: none !important; }
+    
+}
+
+/* ~496px to ~816px */
+@media only screen and (min-width: 31em) and (max-width: 51em) {
+  
+  /* Utilities */
+  .hide-for-mobile { display: none !important; }
+  
+  /* sidebars wrap under main content at this point, which means they'll go full width,
+   * so reset max width to match other regions
+   */
+  #sidebar-left.with-sidebar-right .wysiwyg-float-left,
+  #sidebar-left.with-sidebar-right .wysiwyg-float-right,
+  #sidebar-right.with-sidebar-left .wysiwyg-float-left,
+  #sidebar-right.with-sidebar-left .wysiwyg-float-right { max-width: 50%; }
+  
+}
+
+/* ~816px or more */
+@media only screen and (min-width: 51em) {
+  
+  /* Utilities */
+  .hide-for-desktop { display: none !important; }
+
+}
+
+/* ~1024px or more */
+@media only screen and (min-width: 64em) {
+  
+  /* Utilities */
+  .hide-for-desktop { display: none !important; }
+
+}
+
