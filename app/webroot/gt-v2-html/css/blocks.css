@@ -22,9 +22,7 @@
  * Block stacking by region
  */
 
-/**
- * Content Lead/Close Regions 
- */
+/* Content Lead/Close Regions */
 .region-content-lead .block,
 .region-content-close .block {
   float: left;
@@ -37,32 +35,29 @@
 .region-content-lead.block-count-4 .block,
 .region-content-close.block-count-4 .block { width: 25%; }
 
-/*
- * Main Bottom/Top Regions
- */
-/* Defaults */
+/* Main Top/Bottom Regions Defaults */
 .region-main-top .block,
 .region-main-bottom .block {
   float: left;
   width: 100%;
 }
-/* No sidebars, block count = 2 */
+/* Main Top/Bottom Regions no sidebars, block count = 2 */
 #content.no-sidebars .region-main-top.block-count-2 .block,
 #content.no-sidebars .region-main-bottom.block-count-2 .block { width: 50%; }
 
-/* No sidebars, block count = 3 */
+/* Main Top/Bottom Regions no sidebars, block count = 3 */
 #content.no-sidebars .region-main-top.block-count-3 .block,
-#content.no-sidebars .region-main-bottom.block-count-3 .block { width: 33%; }
+#content.no-sidebars .region-main-bottom.block-count-3 .block { width: 33.3%; }
 
-/* No sidebars, block count = 4+ */
+/* Main Top/Bottom Regions no sidebars, block count = 4+ */
 #content.no-sidebars .region-main-top.block-count-4 .block,
 #content.no-sidebars .region-main-bottom.block-count-4 .block { width: 25%; }
 
-/* One sidebar, block count = 2 */
+/* Main Top/Bottom Regions one sidebar, block count = 2 */
 #content.one-sidebar .region-main-top.block-count-2 .block,
 #content.one-sidebar .region-main-bottom.block-count-2 .block { width: 50%; }
 
-/* One sidebar, block count = 3+ */
+/* Main Top/Bottom Regions one sidebar, block count = 3+ */
 #content.one-sidebar .region-main-top.block-count-3 .block,
 #content.one-sidebar .region-main-top.block-count-4 .block,
 #content.one-sidebar .region-main-bottom.block-count-3 .block,
@@ -70,7 +65,7 @@
   width: 33%;
 }
 
-/* Both sidebars, block count = 2+ */
+/* Main Top/Bottom Regions both sidebars, block count = 2+ */
 #content.both-sidebars .region-main-top.block-count-2 .block,
 #content.both-sidebars .region-main-top.block-count-3 .block,
 #content.both-sidebars .region-main-top.block-count-4 .block,
@@ -81,12 +76,44 @@
 }
 
 /**
- * Row break clear fixes
+ * Block layout classes, which can be added by users via block class module
+ * (https://drupal.org/project/block_class) for now - will be ported to GT Tools module
  */
-#content.both-sidebars .region-main-bottom.block-count-3 .block:nth-child(3n+3),
-#content.both-sidebars .region-main-bottom.block-count-4 .block:nth-child(3n+3) { clear: left; }
+.block.full-width { width: 100% !important; }
+.block.three-quarter-width { width: 75% !important; }
+.block.two-thirds-width { width: 66.6% !important; }
+.block.half-width { width: 50% !important; }
+.block.third-width { width: 33.3% !important; }
+.block.quarter-width { width: 25% !important; }
+.block.row-break { clear: left; }
 
+/* don't allow width alterations for sidebar regions */
+#sidebar-left .block.three-quarter-width,
+#sidebar-right .block.three-quarter-width,
+#sidebar-left .block.two-thirds-width,
+#sidebar-right .block.two-thirds-width,
+#sidebar-left .block.half-width,
+#sidebar-right .block.half-width,
+#sidebar-left .block.third-width,
+#sidebar-right .block.third-width,
+#sidebar-left .block.quarter-width,
+#sidebar-right .block.quarter-width { width: 100% !important; }
 
+/**
+ * Block style classes, which can be added by users via block class module
+ * (https://drupal.org/project/block_class) for now - will be ported to GT Tools module
+ */
+.promo-block .block-title-wrapper { padding: 5px; }
+.promo-block .block-title-wrapper h4 {
+  border: none;
+  margin: 0;
+}
+.promo-block .content {
+  background-color: #f1f1f1;
+  border-bottom: 4px solid #EEB211;
+  border-top: 4px solid #EEB211;
+  padding: 10px 10px 5px;
+}
 
 /**
  * Media Query Breakpoints
@@ -134,6 +161,16 @@
   #content.both-sidebars .region-main-bottom.block-count-3 .block,
   #content.both-sidebars .region-main-bottom.block-count-4 .block { width: 100%; }
   
+  /**
+   * Block layout classes
+   * All convert to full width
+   */
+  .block.three-quarter-width { width: 100% !important; }
+  .block.two-thirds-width { width: 100% !important; }
+  .block.half-width { width: 100% !important; }
+  .block.third-width { width: 100% !important; }
+  .block.quarter-width { width: 100% !important; }
+  
 }
 
 /* ~496px to ~816px */
@@ -146,9 +183,9 @@
   .region-content-lead.block-count-2 .block,
   .region-content-close.block-count-2 .block { width: 50%; }
   .region-content-lead.block-count-3 .block,
-  .region-content-close.block-count-3 .block { width: 33%; }
+  .region-content-close.block-count-3 .block { width: 33.3%; }
   .region-content-lead.block-count-4 .block,
-  .region-content-close.block-count-4 .block { width: 33%; }
+  .region-content-close.block-count-4 .block { width: 33.3%; }
   
   /**
    * Main Bottom/Top Regions
@@ -172,6 +209,13 @@
   #content.both-sidebars .region-main-bottom.block-count-2 .block,
   #content.both-sidebars .region-main-bottom.block-count-3 .block,
   #content.both-sidebars .region-main-bottom.block-count-4 .block { width: 50%; }
+  
+  /**
+   * Block layout classes
+   * Convert 1/4 + 3/4 layouts to 1/3 + 2/3
+   */
+  .block.three-quarter-width { width: 66.6% !important; }
+  .block.quarter-width { width: 33.3% !important; }
   
 }
 

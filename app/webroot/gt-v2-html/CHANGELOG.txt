@@ -1,3 +1,0 @@
-GT Theme static HTML/CSS, 2013-07-15
-------------------------------------
-- added static.css file for keeping styling that is provided by Drupal core (clearfix, etc.)
