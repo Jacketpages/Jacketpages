@@ -25,7 +25,7 @@ if (strlen($message)){
 	<div class="row clearfix">
 		<ul style="float: right">
 			<li class="last">
-				<a><?=$message?></a>
+				<a><?php echo $message?></a>
 			</li>
 		</ul>
 	<?php
