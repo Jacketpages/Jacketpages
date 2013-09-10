@@ -168,7 +168,7 @@
 		      
 		    </div><!-- /#primary-menus-wrapper -->
 		    
-		    <?=$this->element('breadcrumb')?>
+		    <?php echo $this->element('breadcrumb'); ?>
 		    
 		  </div><!-- /#primary-menus -->
 		    
