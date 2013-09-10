@@ -70,5 +70,6 @@ echo $this -> Html -> tableCells(array(
 echo $this -> Html -> tableEnd();
 
 echo $this -> Html -> tag('h1', "FY " . ($fiscalYear - 1) . " Budget Summary");
+echo $this -> element('budgetLineItems/multi_enter');
 $this -> end();
 ?>
