@@ -55,6 +55,11 @@ class BudgetsController extends AppController
 		$this -> set('president', $president);
 		$this -> set('treasurer', $treasurer);
 		$this -> set('advisor', $advisor);
+		$this -> loadModel('LineItemCategory');
+		$categories = $this -> LineItemCategory -> find('all');
+		$this -> set('category_names', Hash::extract($categories,'{n}.LineItemCategory.name'));
+		$this -> set('category_descriptions', Hash::extract($categories,'{n}.LineItemCategory.description'));
+		$this -> set('budgetLineItems', array());
 		//$this ->getStudentType('sroca3');
 	}
 
@@ -67,7 +72,7 @@ class BudgetsController extends AppController
 
 	public function fundraising()
 	{
-
+		
 	}
 
 	public function expenses()
