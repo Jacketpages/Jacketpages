@@ -1,1 +1,1 @@
-<?php echo $this->Html->link('Help', '#', array('onclick' => 'openHelp()')); ?>
+<?=$this->Html->link('Help', '#', array('onclick' => 'openHelp()'))?>
