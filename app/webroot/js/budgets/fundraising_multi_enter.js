@@ -45,19 +45,22 @@ function move(tableId, pos, moveTo)
 	if (moveTo >= 0 && !(rows[moveTo + 1] == undefined))
 	{
 		// Save the values from the current row
-		var id = get(unique + "BudgetLineItemId" + pos).value;
-		var name = get(unique + "BudgetLineItemName" + pos).value;
-		var amt = get(unique + "BudgetLineItemAmount" + pos).value;
+		var id = get(unique + "FundraisingId" + pos).value;
+		var activity = get(unique + "Activity" + pos).value;
+		var date = get(unique + "Date" + pos).value;
+		var revenue = get(unique + "Revenue" + pos).value;
 
 		// Set the values of the current row to the row that of the row being moved to
-		get(unique + "BudgetLineItemId" + pos).value = get(unique + "BudgetLineItemId" + moveTo).value;
-		get(unique + "BudgetLineItemName" + pos).value = get(unique + "BudgetLineItemName" + moveTo).value;
-		get(unique + "BudgetLineItemAmount" + pos).value = get(unique + "BudgetLineItemAmount" + moveTo).value;
+		get(unique + "FundraisingId" + pos).value = get(unique + "FundraisingId" + moveTo).value;
+		get(unique + "Activity" + pos).value = get(unique + "Activity" + moveTo).value;
+		get(unique + "Date" + pos).value = get(unique + "Date" + moveTo).value;
+		get(unique + "Revenue" + pos).value = get(unique + "Revenue" + moveTo).value;
 
 		// Set the row being moved to, to the values of the current row
-		get(unique + "BudgetLineItemId" + moveTo).value = id;
-		get(unique + "BudgetLineItemName" + moveTo).value = name;
-		get(unique + "BudgetLineItemAmount" + moveTo).value = amt;
+		get(unique + "FundraisingId" + moveTo).value = id;
+		get(unique + "Activity" + moveTo).value = activity;
+		get(unique + "Date" + moveTo).value = date;
+		get(unique + "Revenue" + moveTo).value = revenue;
 	}
 }
 
@@ -112,15 +115,17 @@ function correctNumbers(tableId, num)
 	for (var i = 0; i < rows.length - 1; i++)
 	{
 		var cells = rows[i + 1].cells;
-		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemId" + i);
-		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][id]");
-		cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "BudgetLineItemName" + i);
-		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + i + "][LineItem][name]");
-		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
-		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][amount]");
-		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");
-		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown('" + tableId + "'," + i + ")");
-		cells[6].getElementsByTagName("button")[0].setAttribute("onclick", "addRow('" + tableId + "'," + i + "," + num + ")");
-		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow('" + tableId + "'," + i + "," + num + ")");
+		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "FundraisingId" + i);
+		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraising][id]");
+		cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "Activity" + i);
+		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + i + "][Fundraising][activity]");
+		cells[1].getElementsByTagName("input")[0].setAttribute("id", num + "Date" + i);
+		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraising][date]");
+		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "Revenue" + i);
+		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraising][revenue]");
+		cells[3].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");
+		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown('" + tableId + "'," + i + ")");
+		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "addRow('" + tableId + "'," + i + "," + num + ")");
+		cells[6].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow('" + tableId + "'," + i + "," + num + ")");
 	}
 }

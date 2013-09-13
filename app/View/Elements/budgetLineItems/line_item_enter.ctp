@@ -4,7 +4,6 @@
  * @since 8/30/2013
  */
 
- 
 echo $this -> Html -> div();
 echo $this -> Form -> create('BudgetBudgetLineItem');
 //, array('onsubmit' => 'return validateForm()'));
@@ -16,6 +15,7 @@ echo $this -> Html -> tableBegin(array(
 
 echo $this -> Html -> tableHeaders(array(
 	'Name',
+	'FY ' . ($fiscalYear - 1) . ' Requested',
 	'FY ' . ($fiscalYear - 1) . ' Allocated',
 	"FY $fiscalYear Requested",
 	'Difference',
@@ -38,11 +38,15 @@ foreach ($budgetLineItems as $key => $budgetLineItems)
 		$this -> Form -> hidden($key . '.BudgetLineItem.id', array(
 			'value' => $budgetLineItems['BudgetLineItem']['id'],
 			'id' => $num . 'BudgetLineItemId' . $key
-		)).
-		$this -> Form -> text($key . '.BudgetLineItem.name', array(
+		)) . $this -> Form -> text($key . '.BudgetLineItem.name', array(
 			'label' => false,
 			'value' => $budgetLineItems['BudgetLineItem']['name'],
 			'id' => $num . 'BudgetLineItemName' . $key
+		)),
+		$this -> Form -> text($key . '.BudgetLineItem.amount', array(
+			'label' => false,
+			'value' => $budgetLineItems['BudgetLineItem']['amount'],
+			'id' => $num . 'BudgetLineItemAmount' . $key,
 		)),
 		'',
 		$this -> Form -> text($key . '.BudgetLineItem.amount', array(
@@ -63,12 +67,12 @@ foreach ($budgetLineItems as $key => $budgetLineItems)
 		)),
 		$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 			'type' => 'button',
-			'onclick' => "addRow('$tableId' ,  $key,$num)",
+			'onclick' => "addRow('$tableId' ,  $key, $num)",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 			'type' => 'button',
-			'onclick' => "deleteRow('$tableId' , $key,$num)",
+			'onclick' => "deleteRow('$tableId' , $key, $num)",
 			'escape' => false
 		)),
 	), array('id' => 'BudgetLineItem'));
