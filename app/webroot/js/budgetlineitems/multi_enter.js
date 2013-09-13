@@ -39,7 +39,7 @@ function moveUp(tableId, pos)
 function move(tableId, pos, moveTo)
 {
 	var rows = get(tableId).rows;
-	var unique = tableId.substring(tableId.length-1, tableId.length);
+	var unique = tableId.substring(tableId.length - 1, tableId.length);
 	// If the position to move to is not first row (table headers) and it is defined
 	// then swap the two rows
 	if (moveTo >= 0 && !(rows[moveTo] == undefined))
@@ -88,12 +88,16 @@ function addRow(tableId, pos, num)
  * Deletes a row from the table of lineitems.
  * @param int pos - row position
  */
-function deleteRow(tableId, num, pos)
+function deleteRow(tableId, pos, num)
 {
-	pos = pos + 1;
-	var table = get(tableId);
-	table.deleteRow(pos);
-	correctNumbers(tableId, num);
+	alert("Pos: " + pos + " Num: " + num);
+	if (pos > 1)
+	{
+		pos = pos + 1;
+		var table = get(tableId);
+		table.deleteRow(pos);
+		correctNumbers(tableId, num);
+	}
 }
 
 /**

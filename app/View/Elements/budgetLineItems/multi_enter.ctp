@@ -15,8 +15,9 @@ echo $this -> Html -> script('budgetlineitems/multi_enter');
 ?>
 </div>
 <script>
-	$(function()
-	{
-		$("#accordion").accordion();
-	}); 
+	$(function() {
+    $( "#accordion" ).accordion({
+      heightStyle: "content"
+    });
+  });
 </script>

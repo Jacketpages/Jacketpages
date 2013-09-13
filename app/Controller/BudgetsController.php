@@ -80,6 +80,16 @@ class BudgetsController extends AppController
 
 	}
 
+	public function assets()
+	{
+		
+	}
+	
+	public function member_contributions()
+	{
+		
+	}
+
 	public function summary()
 	{
 

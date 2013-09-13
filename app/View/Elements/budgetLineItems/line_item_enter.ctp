@@ -63,12 +63,12 @@ foreach ($budgetLineItems as $key => $budgetLineItems)
 		)),
 		$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 			'type' => 'button',
-			'onclick' => "addRow('$tableId' , $num,  $key)",
+			'onclick' => "addRow('$tableId' ,  $key,$num)",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 			'type' => 'button',
-			'onclick' => "deleteRow('$tableId' ,$num, $key)",
+			'onclick' => "deleteRow('$tableId' , $key,$num)",
 			'escape' => false
 		)),
 	), array('id' => 'BudgetLineItem'));
