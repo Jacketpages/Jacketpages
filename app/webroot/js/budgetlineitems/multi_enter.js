@@ -112,15 +112,29 @@ function correctNumbers(tableId, num)
 	for (var i = 0; i < rows.length - 1; i++)
 	{
 		var cells = rows[i + 1].cells;
+		var stuff = cells[0].getElementsByTagName("input")[0].getAttribute("name");
+		var startIndex = stuff.indexOf("[") + 1;
+		var endIndex = stuff.indexOf("]");
+		var category = stuff.substring(startIndex,endIndex);
 		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemId" + i);
-		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][id]");
+		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][id]");
 		cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "BudgetLineItemName" + i);
-		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + i + "][LineItem][name]");
-		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
-		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][amount]");
-		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");
-		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown('" + tableId + "'," + i + ")");
-		cells[6].getElementsByTagName("button")[0].setAttribute("onclick", "addRow('" + tableId + "'," + i + "," + num + ")");
-		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow('" + tableId + "'," + i + "," + num + ")");
+		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][name]");
+		cells[1].getElementsByTagName("input")[0].setAttribute("id", num + "OldRequested" + i);
+		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][OldRequested][id]");
+		cells[1].getElementsByTagName("input")[1].setAttribute("id", num + "BudgetLineItemAmount" + i);
+		cells[1].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][amount]");
+		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "OldAllocation" + i);
+		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][OldAllocation][id]");
+		cells[2].getElementsByTagName("input")[1].setAttribute("id", num + "OldAllocationAmount" + i);
+		cells[2].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][OldAllocation][amount]");
+		cells[3].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
+		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][amount]");
+		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");
+		cells[3].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
+		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][amount]");
+		cells[6].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown('" + tableId + "'," + i + ")");
+		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "addRow('" + tableId + "'," + i + "," + num + ")");
+		cells[8].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow('" + tableId + "'," + i + "," + num + ")");
 	}
 }

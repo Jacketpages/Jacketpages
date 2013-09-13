@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS budget_line_items
 	id int(11) not null auto_increment,
 	primary key (id),
 	budget_id int(11),
+	line_number int(11),
 	category int(2),
 	name varchar(200),
 	state varchar(10),

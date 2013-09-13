@@ -6,6 +6,9 @@
  
 class BudgetLineItem extends AppModel
 {
-	
+	public $belongsTo = array('LineItemCategory' => array(
+			'className' => 'LineItemCategory',
+			'foreignKey' => 'category'
+		));
 }
 ?>

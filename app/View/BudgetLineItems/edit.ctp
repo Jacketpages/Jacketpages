@@ -19,5 +19,7 @@ echo $this -> element('budgetLineItems/multi_enter');
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableCells(array('Total Expenditures','stuff','stuff'));
 echo $this -> Html -> tableEnd();
+echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
+echo $this -> Form -> submit('Save and Continue');
 $this -> end();
 ?>

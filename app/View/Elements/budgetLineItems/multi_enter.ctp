@@ -5,19 +5,20 @@
  */
 echo $this -> Html -> script('budgetlineitems/multi_enter');
 ?>
-<div id="accordion">
 	<?php
 	for ($i = 0; $i < count($category_names); $i++)
 	{
+		echo $this -> Html -> div(false,null,array('id' => 'accordion'. $i));
 		echo $this -> Html -> link($category_names[$i] . " " . $category_descriptions[$i], '#');
-		echo $this -> element('budgetLineItems/line_item_enter', array('num' => $i));
+		echo $this -> element('budgetLineItems/line_item_enter', array('num' => $i, 'category' => $category_names[$i], 'budgetLineItems' => $budgetLineItems[$category_names[$i]]));
+		echo $this -> Html -> useTag('tagend','div');
 	}
 ?>
-</div>
 <script>
 	$(function() {
-    $( "#accordion" ).accordion({
-      heightStyle: "content"
+		for(i = 0; i < <?php echo count($category_names) ?> ; i++)
+    $( "#accordion" + i ).accordion({
+      heightStyle: "content",collapsible: true
     });
   });
 </script>
