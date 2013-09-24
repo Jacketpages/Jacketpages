@@ -11,7 +11,8 @@ $names = array('Executed in FY ' . ($fiscalYear - 1), "Expected in FY $fiscalYea
 	foreach($names as $key => $name)
 	{
 		echo $this -> Html -> link($name, '#');
-		echo $this -> element('budgets/fundraising_multi', array('num' => $key));
+		$arr = explode(' ',trim($name));
+		echo $this -> element('budgets/fundraising_multi', array('num' => $arr[0],'othernum' => $key, 'fundraisings' => $fundraisers[$arr[0]]));
 	}
 ?>
 </div>

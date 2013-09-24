@@ -45,19 +45,19 @@ function move(tableId, pos, moveTo)
 	if (moveTo >= 0 && !(rows[moveTo + 1] == undefined))
 	{
 		// Save the values from the current row
-		var id = get(unique + "FundraisingId" + pos).value;
+		var id = get(unique + "FundraiserId" + pos).value;
 		var activity = get(unique + "Activity" + pos).value;
 		var date = get(unique + "Date" + pos).value;
 		var revenue = get(unique + "Revenue" + pos).value;
 
 		// Set the values of the current row to the row that of the row being moved to
-		get(unique + "FundraisingId" + pos).value = get(unique + "FundraisingId" + moveTo).value;
+		get(unique + "FundraiserId" + pos).value = get(unique + "FundraiserId" + moveTo).value;
 		get(unique + "Activity" + pos).value = get(unique + "Activity" + moveTo).value;
 		get(unique + "Date" + pos).value = get(unique + "Date" + moveTo).value;
 		get(unique + "Revenue" + pos).value = get(unique + "Revenue" + moveTo).value;
 
 		// Set the row being moved to, to the values of the current row
-		get(unique + "FundraisingId" + moveTo).value = id;
+		get(unique + "FundraiserId" + moveTo).value = id;
 		get(unique + "Activity" + moveTo).value = activity;
 		get(unique + "Date" + moveTo).value = date;
 		get(unique + "Revenue" + moveTo).value = revenue;
@@ -81,9 +81,15 @@ function addRow(tableId, pos, num)
 	// need to be removed.
 	for (var i = 0; i < cells.length; i++)
 	{
-		if (!(cells[i].getElementsByTagName("input")[0] == undefined))
-			cells[i].getElementsByTagName("input")[0].setAttribute("value", "");
+		for (var j = 0; j < cells[i].getElementsByTagName("input").length; j++)
+		{
+			if (!(cells[i].getElementsByTagName("input")[j] == undefined))
+			{
+				cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
+			}
+		}
 	}
+	cells[0].getElementsByTagName("textarea")[0].innerHTML = "";
 	correctNumbers(tableId, num);
 }
 
@@ -115,14 +121,14 @@ function correctNumbers(tableId, num)
 	for (var i = 0; i < rows.length - 1; i++)
 	{
 		var cells = rows[i + 1].cells;
-		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "FundraisingId" + i);
-		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraising][id]");
-		cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "Activity" + i);
-		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + i + "][Fundraising][activity]");
+		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "FundraiserId" + i);
+		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraiser][id]");
+		cells[0].getElementsByTagName("textarea")[0].setAttribute("id", num + "Activity" + i);
+		cells[0].getElementsByTagName("textarea")[0].setAttribute("name", "data[" + i + "][Fundraiser][activity]");
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", num + "Date" + i);
-		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraising][date]");
+		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraiser][date]");
 		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "Revenue" + i);
-		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraising][revenue]");
+		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraiser][revenue]");
 		cells[3].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");
 		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown('" + tableId + "'," + i + ")");
 		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "addRow('" + tableId + "'," + i + "," + num + ")");

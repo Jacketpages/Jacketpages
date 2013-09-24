@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS budget_line_items
 	last_mod_by int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
-CREATE TABLE IF NOT EXISTS fundraising
+CREATE TABLE IF NOT EXISTS fundraisers
 (
 	id int(11) not null auto_increment,
 	primary key(id),

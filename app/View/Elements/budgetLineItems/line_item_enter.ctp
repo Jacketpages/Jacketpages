@@ -45,29 +45,29 @@ if (!isset($budgetLineItems) || count($budgetLineItems) == 0)
 foreach ($budgetLineItems as $key => $budgetLineItem)
 {
 	echo $this -> Html -> tableCells(array(
-		$this -> Form -> hidden("'$category'" . '.' . $key . '.BudgetLineItem.id', array(
+		$this -> Form -> hidden($category . '.' . $key . '.BudgetLineItem.id', array(
 			'value' => $budgetLineItems[$key]['BudgetLineItem']['id'],
 			'id' => $num . 'BudgetLineItemId' . $key
 		)) . $this -> Form -> text($category . '.' . $key . '.BudgetLineItem.name', array(
 			'label' => false,
 			'value' => $budgetLineItems[$key]['BudgetLineItem']['name'],
 			'id' => $num . 'BudgetLineItemName' . $key
-		)),$this -> Form -> hidden("'$category'" . '.' . $key . '.OldRequested.id', array(
+		)),$this -> Form -> hidden($category . '.' . $key . '.OldRequested.id', array(
 			'value' => $budgetLineItems[$key]['OldRequested']['id'],
-			'id' => $num . 'BudgetLineItemId' . $key
+			'id' => $num . 'OldRequestedId' . $key
 		)) .
 		$this -> Form -> text($category . '.' . $key . '.OldRequested.amount', array(
 			'label' => false,
 			'value' => $budgetLineItems[$key]['OldRequested']['amount'],
-			'id' => $num . 'BudgetLineItemAmount' . $key,
-		)),$this -> Form -> hidden("'$category'" . '.' . $key . '.OldAllocation.id', array(
+			'id' => $num . 'OldRequestedAmount' . $key,
+		)),$this -> Form -> hidden($category . '.' . $key . '.OldAllocation.id', array(
 			'value' => $budgetLineItems[$key]['OldAllocation']['id'],
-			'id' => $num . 'BudgetLineItemId' . $key
+			'id' => $num . 'OldAllocationId' . $key
 		)) .
 		$this -> Form -> text($category . '.' . $key . '.OldAllocation.amount', array(
 			'label' => false,
 			'value' => $budgetLineItems[$key]['BudgetLineItem']['amount'],
-			'id' => $num . 'BudgetLineItemAmount' . $key,
+			'id' => $num . 'OldAllocationAmount' . $key,
 		)),
 		$this -> Form -> text($category . '.' . $key . '.BudgetLineItem.amount', array(
 			'label' => false,
