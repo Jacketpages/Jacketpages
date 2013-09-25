@@ -85,6 +85,7 @@
 </script>
     </head>
     <body>
+    <div id="page">
         <!--         <div id="container">  -->
         
         
@@ -219,6 +220,7 @@
         -->
         
         <div id="content">
+        <div class="clearfix">
 			<div class="ui-overlay" id="help" style="display:none;">
 				<div class="ui-widget-overlay"></div>
 				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 100%; position: absolute;">
@@ -233,17 +235,47 @@
 				?></div>
 			</div>
 
-            <?php echo $this -> Session -> flash('auth'); ?><?php echo $this -> fetch('content'); ?>
-            				<div id="footer">
-                <?php
+			<?php echo $this -> Session -> flash('auth'); ?><?php echo $this -> fetch('content'); ?>
+            <!-- 
+            <div id="footer_old">
+                <?php /*
 				echo $this -> Html -> link("Privacy Policy", array(
 					'controller' => 'pages',
 					'action' => 'privacy_policy'
 				), array('style' => 'display:inline;float:left;text-decoration:none;color:#666;'));
 				echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association', array('style' => 'display:inline;'));
-                ?>
-					</div>
-					</div>
+                */?>
+			</div>
+			-->
+			 </div>
+		</div><!-- content -->
+			
+			<div id="footer">
+		    <div class="row clearfix">
+		      <div id="footer-utility-links">
+
+		        <ul class="menu">
+		          <li class="last"><?php echo $this -> Html -> link("Privacy Policy", array(
+					'controller' => 'pages',
+					'action' => 'privacy_policy'
+					)); ?>
+				  </li>
+		        </ul> 
+		      </div>
+
+		      <div id="footer-logo">
+		        <a href="http://www.gatech.edu/"><img alt="Georgia Tech" src="http://comm-whdev1.gatech.edu/sites/all/themes/gt/images/logos/gt-logo-footer.png" ></a>
+		        <p>&copy; <?php  print $year = date("Y"); ?> Georgia Tech Student Government Association</p>
+
+		      </div>
+		    </div>
+		  </div><!-- /footer --> 
+			
+			
+			
+			
+			
+			</div>
         <?php echo $this -> element('sql_dump'); ?>
 			</body>
 			</html>

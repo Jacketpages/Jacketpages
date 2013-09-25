@@ -317,7 +317,7 @@ h3 {
 /**
  * 	Define the image, position, and font formatting of the footer
  */
-#footer {
+#footer_old {
 	background: url(../img/bgFooter2.png) no-repeat center;
 	clear: both;
 	color: #666;
