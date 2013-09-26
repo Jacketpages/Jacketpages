@@ -10,12 +10,12 @@ echo $this -> Html -> tableBegin(array(
 	'class' => 'listing',
 	'id' => 'halftable'
 ));
-echo $this -> Html -> tableCells(array('User', $membership['User']['name']));
-echo $this -> Html -> tableCells(array('Organization',$membership['Organization']['name']));
+echo $this -> Html -> tableCells(array('User'));
+echo $this -> Html -> tableCells(array('Organization'));
 echo $this -> Html -> tableEnd();
 echo $this -> Form -> create('Membership');
-echo $this -> Form -> hidden('id');
-echo $this -> Form -> input('role', array(
+echo $this -> Form -> hidden('ID');
+echo $this -> Form -> input('ROLE', array(
 	'label' => 'Role',
 	'options' => array(
 		'Officer' => 'Officer',
@@ -25,8 +25,8 @@ echo $this -> Form -> input('role', array(
 		'Advisor' => 'Advisor'
 	)
 ));
-echo $this -> Form -> input('title', array('label' => 'Title (default to Role name)'));
-echo $this -> Form -> input('status', array(
+echo $this -> Form -> input('TITLE', array('label' => 'Title (default to Role name)'));
+echo $this -> Form -> input('STATUS', array(
 	'label' => 'Status',
 	'options' => array(
 		'Active',
@@ -34,19 +34,19 @@ echo $this -> Form -> input('status', array(
 		'Pending'
 	)
 ));
-echo $this -> Form -> input('room_reserver', array(
+echo $this -> Form -> input('ROOM_RESERVER', array(
 	'label' => 'Room Reserver',
 	'options' => array(
 		'No' => 'No',
 		'Yes' => 'Yes'
 	)
 ));
-echo $this -> Form -> input('start_date', array(
+echo $this -> Form -> input('START_DATE', array(
 	'label' => 'Start Date',
 	'type' => 'text',
 	'id' => 'start_date'
 ));
-echo $this -> Form -> input('dues_paid', array(
+echo $this -> Form -> input('DUES_PAID', array(
 	'label' => 'Dues Paid',
 	'type' => 'text',
 	'id' => 'dues_paid'

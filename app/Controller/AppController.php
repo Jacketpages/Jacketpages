@@ -65,7 +65,6 @@ class AppController extends Controller
 
 		$this -> Auth -> allow('display', 'index', 'view');
 		$this -> setPermissions();
-		$this -> set('fiscalYear', $this -> calculateFiscalYearForDate(date('n/d/y')) + 2);
 	}
 
 	private function setPermissions()
@@ -162,7 +161,7 @@ class AppController extends Controller
 	function calculateFiscalYearForDate($inputDate, $fyStart = "6/1/", $fyEnd = "5/31/")
 	{
 		$date = strtotime($inputDate);
-		$inputyear = strftime('%Y', $date);
+		$inputyear = strftime('%y', $date);
 
 		$startdate = strtotime($fyStart . $inputyear);
 		$enddate = strtotime($fyEnd . $inputyear);
@@ -176,18 +175,6 @@ class AppController extends Controller
 			$fy = intval(intval($inputyear) - 1);
 		}
 		return $fy;
-	}
-
-	function roman_numerals($number)
-	{
-		$retval = null;
-		if ($number == 1)
-			$retval = 'I';
-		else if ($number == 2)
-			$retval = 'II';
-		else
-			$retval = 'III';
-		return $retval;
 	}
 
 }

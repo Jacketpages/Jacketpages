@@ -6,7 +6,7 @@
 $this -> extend('/Common/common');
 $this -> assign('title', 'Update General Bill Information');
 $this -> start('sidebar');
-echo $this -> element('bills/sidebar_links');
+echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array(), array('id' => 'underline'));
 $this -> end();
 $this -> start('middle');
 echo $this -> Form -> create();

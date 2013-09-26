@@ -1,8 +1,4 @@
 <?php
-/**
- * @author Stephen Roca
- * @since 8/30/2013
- */
 $this -> extend('/Common/common');
 $this -> assign('title', 'Roster');
 $this -> start('middle');
@@ -12,20 +8,13 @@ echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableHeaders(array(
 	'Officer (Edit)',
 	'Role',
-	'Title',
 	''
 ));
 foreach ($officers as $officer)
 {
 	echo $this -> Html -> tableCells(array(
-		$this -> Html -> link($officer['Membership']['name'], array(
-			'controller' => 'memberships',
-			'action' => 'edit',
-			$officer['Membership']['id'],
-			$orgId
-		)),
+		$officer['Membership']['name'],
 		$officer['Membership']['role'],
-		$officer['Membership']['title'],
 		$this -> Html -> link('Remove', array(
 			'controller' => 'memberships',
 			'action' => 'delete',
