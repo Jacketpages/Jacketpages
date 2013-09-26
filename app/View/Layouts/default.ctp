@@ -97,11 +97,7 @@
 		    <div id="identity-wrapper">
 		      <h1 id="gt-logo">
 		        <a href="/" rel="home" title="Georgia Tech" ><img alt="Georgia Tech" src="http://comm-whdev1.gatech.edu/sites/all/themes/gt/images/logos/logo-gt.png" /></a>
-		      	<a href="/" rel="home" title="Georgia Tech" ><img style="float:right;" alt="Georgia Tech" src="/Jacketpages/img/jacketpages.png" /></a>
-		      
-		      </h1>
-		      <h1 id="jp-logo">
-		      	
+		      	<a href="/" rel="home" title="Georgia Tech" ><img style="float:right;" alt="Georgia Tech" src="/Jacketpages/img/jacketpages.png" /></a>     
 		      </h1>
 		    </div>
 		  </div><!-- /#identity -->
