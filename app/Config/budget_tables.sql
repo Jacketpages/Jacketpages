@@ -3,6 +3,10 @@ CREATE TABLE IF NOT EXISTS budgets
 	id INT(11) NOT NULL AUTO_INCREMENT,
 	PRIMARY KEY (id),
 	org_id INT(11),
+	average_attendance int(10),
+	summer_meetings int(1),
+	faculty_member_count int(10),
+	non_gt_member_count int(10),
 	fiscal_year int(4),
 	state varchar(10),
 	last_mod_date timestamp,
@@ -17,8 +21,7 @@ CREATE TABLE IF NOT EXISTS budget_line_items
 	category int(2),
 	name varchar(200),
 	state varchar(10),
-	requested decimal(10,2),
-	allocated decimal(10,2),
+	amount decimal(10,2),
 	comments text,
 	viewable int(1),
 	last_mod_date timestamp,
@@ -72,4 +75,22 @@ CREATE TABLE IF NOT EXISTS dues
 	member_category varchar(20),
 	amount decimal(10,2),
 	members int(11)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS assets
+(
+	id int(11) not null auto_increment,
+	primary key (id),
+	budget_id int(11),
+	item varchar(200),
+	amount decimal(10,2)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS liabilities
+(
+	id int(11) not null auto_increment,
+	primary key (id),
+	budget_id int(11),
+	item varchar(200),
+	amount decimal(10,2)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
