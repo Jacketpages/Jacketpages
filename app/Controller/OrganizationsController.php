@@ -243,7 +243,7 @@ class OrganizationsController extends AppController
 			'conditions' => array('AND' => array(
 					'Membership.ORG_ID' => $id,
 					'Membership.ROLE' => 'Treasurer',
-					'Membership.START_DATE LIKE' => '2013%'
+					'Membership.START_DATE LIKE' => '2011%'
 				)),
 			'fields' => array(
 				'Membership.role',
@@ -257,7 +257,7 @@ class OrganizationsController extends AppController
 			'conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
 					'Membership.role' => 'Advisor',
-					'Membership.start_date LIKE' => '2013%'
+					'Membership.start_date LIKE' => '2011%'
 				)),
 			'fields' => array(
 				'Membership.role',
@@ -271,7 +271,7 @@ class OrganizationsController extends AppController
 			'conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
 					'Membership.role' => 'Officer',
-					'Membership.start_date LIKE' => '2013%'
+					'Membership.start_date LIKE' => '2011%'
 				)),
 			'fields' => array(
 				'Membership.role',

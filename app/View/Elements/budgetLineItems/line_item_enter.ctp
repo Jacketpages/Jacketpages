@@ -4,8 +4,9 @@
  * @since 8/30/2013
  */
 
+ 
 echo $this -> Html -> div();
-echo $this -> Form -> create();
+echo $this -> Form -> create('BudgetBudgetLineItem');
 //, array('onsubmit' => 'return validateForm()'));
 $tableId = 'BudgetLineItemsTable' . $num;
 echo $this -> Html -> tableBegin(array(
@@ -15,7 +16,6 @@ echo $this -> Html -> tableBegin(array(
 
 echo $this -> Html -> tableHeaders(array(
 	'Name',
-	'FY ' . ($fiscalYear - 1) . ' Requested',
 	'FY ' . ($fiscalYear - 1) . ' Allocated',
 	"FY $fiscalYear Requested",
 	'Difference',
@@ -27,51 +27,27 @@ echo $this -> Html -> tableHeaders(array(
 if (!isset($budgetLineItems) || count($budgetLineItems) == 0)
 {
 	$budgetLineItems[] = array('BudgetLineItem' => array(
-			'id' => null,
-			'name' => null,
-			'amount' => ''
-		),
-		'OldRequested' => array(
-			'id' => null,
-			'name' => null,
-			'amount' => ''
-		),
-		'OldAllocation' => array(
-			'id' => null,
+			'id' => '',
 			'name' => null,
 			'amount' => ''
 		));
 }
-foreach ($budgetLineItems as $key => $budgetLineItem)
+foreach ($budgetLineItems as $key => $budgetLineItems)
 {
 	echo $this -> Html -> tableCells(array(
-		$this -> Form -> hidden($category . '.' . $key . '.BudgetLineItem.id', array(
-			'value' => $budgetLineItems[$key]['BudgetLineItem']['id'],
+		$this -> Form -> hidden($key . '.BudgetLineItem.id', array(
+			'value' => $budgetLineItems['BudgetLineItem']['id'],
 			'id' => $num . 'BudgetLineItemId' . $key
-		)) . $this -> Form -> text($category . '.' . $key . '.BudgetLineItem.name', array(
+		)).
+		$this -> Form -> text($key . '.BudgetLineItem.name', array(
 			'label' => false,
-			'value' => $budgetLineItems[$key]['BudgetLineItem']['name'],
+			'value' => $budgetLineItems['BudgetLineItem']['name'],
 			'id' => $num . 'BudgetLineItemName' . $key
-		)),$this -> Form -> hidden($category . '.' . $key . '.OldRequested.id', array(
-			'value' => $budgetLineItems[$key]['OldRequested']['id'],
-			'id' => $num . 'OldRequestedId' . $key
-		)) .
-		$this -> Form -> text($category . '.' . $key . '.OldRequested.amount', array(
-			'label' => false,
-			'value' => $budgetLineItems[$key]['OldRequested']['amount'],
-			'id' => $num . 'OldRequestedAmount' . $key,
-		)),$this -> Form -> hidden($category . '.' . $key . '.OldAllocation.id', array(
-			'value' => $budgetLineItems[$key]['OldAllocation']['id'],
-			'id' => $num . 'OldAllocationId' . $key
-		)) .
-		$this -> Form -> text($category . '.' . $key . '.OldAllocation.amount', array(
-			'label' => false,
-			'value' => $budgetLineItems[$key]['BudgetLineItem']['amount'],
-			'id' => $num . 'OldAllocationAmount' . $key,
 		)),
-		$this -> Form -> text($category . '.' . $key . '.BudgetLineItem.amount', array(
+		'',
+		$this -> Form -> text($key . '.BudgetLineItem.amount', array(
 			'label' => false,
-			'value' => $budgetLineItems[$key]['BudgetLineItem']['amount'],
+			'value' => $budgetLineItems['BudgetLineItem']['amount'],
 			'id' => $num . 'BudgetLineItemAmount' . $key,
 		)),
 		'',
@@ -87,12 +63,12 @@ foreach ($budgetLineItems as $key => $budgetLineItem)
 		)),
 		$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 			'type' => 'button',
-			'onclick' => "addRow('$tableId' ,  $key, $num)",
+			'onclick' => "addRow('$tableId' , $num,  $key)",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 			'type' => 'button',
-			'onclick' => "deleteRow('$tableId' , $key, $num)",
+			'onclick' => "deleteRow('$tableId' ,$num, $key)",
 			'escape' => false
 		)),
 	), array('id' => 'BudgetLineItem'));

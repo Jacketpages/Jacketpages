@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS budget_line_items
 	id int(11) not null auto_increment,
 	primary key (id),
 	budget_id int(11),
-	line_number int(11),
 	category int(2),
 	name varchar(200),
 	state varchar(10),
@@ -29,7 +28,7 @@ CREATE TABLE IF NOT EXISTS budget_line_items
 	last_mod_by int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
-CREATE TABLE IF NOT EXISTS fundraisers
+CREATE TABLE IF NOT EXISTS fundraising
 (
 	id int(11) not null auto_increment,
 	primary key(id),
