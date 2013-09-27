@@ -31,24 +31,24 @@ foreach ($fundraisings as $key => $fundraising)
 	echo $this -> Html -> tableCells(array(
 		$this -> Form -> hidden($num . '.'. $key . '.Fundraiser.id', array(
 			'value' => $fundraising['Fundraiser']['id'],
-			'id' => $num . 'FundraiserId' . $key
+			'id' => $othernum . 'FundraiserId' . $key
 		)) . $this -> Form -> hidden($num . '.'. $key . '.Fundraiser.type', array(
 			'value' => $num,
-			'id' => $num . 'FundraiserType' . $key
+			'id' => $othernum . 'FundraiserType' . $key
 		)).$this -> Form -> textarea($num . '.'. $key . '.Fundraiser.activity', array(
 			'label' => false,
 			'value' => $fundraising['Fundraiser']['activity'],
-			'id' => $num . 'Activity' . $key
+			'id' => $othernum . 'Activity' . $key
 		)),
 		$this -> Form -> text($num . '.'. $key . '.Fundraiser.date', array(
 			'label' => false,
 			'value' => $fundraising['Fundraiser']['date'],
-			'id' => $num . 'Amount' . $key,
+			'id' => $othernum . 'Amount' . $key,
 		)),
 		$this -> Form -> text($num . '.'. $key . '.Fundraiser.revenue', array(
 			'label' => false,
 			'value' => $fundraising['Fundraiser']['revenue'],
-			'id' => $num . 'Revenue' . $key,
+			'id' => $othernum . 'Revenue' . $key,
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',

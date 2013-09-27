@@ -8,7 +8,7 @@ echo $this -> Html -> script('budgetlineitems/multi_enter');
 <?php
 for ($i = 0; $i < count($category_names); $i++)
 {
-	echo $this -> Html -> div(false, null, array('id' => 'accordion' . $i));
+	echo $this -> Html -> div(null, null, array('id' => 'accordion' . $i));
 	echo $this -> Html -> link($category_names[$i] . " " . $category_descriptions[$i], '#');
 	if (isset($budgetLineItems[$category_names[$i]]))
 		echo $this -> element('budgetLineItems/line_item_enter', array(

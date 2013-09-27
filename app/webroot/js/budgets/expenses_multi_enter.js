@@ -77,8 +77,11 @@ function addRow(pos)
 	// need to be removed.
 	for (var i = 0; i < cells.length; i++)
 	{
-		if (!(cells[i].getElementsByTagName("input")[0] == undefined))
-			cells[i].getElementsByTagName("input")[0].setAttribute("value", "");
+		for (var j = 0; j < cells[i].getElementsByTagName("input").length; j++)
+		{
+			if (!(cells[i].getElementsByTagName("input")[j] == undefined))
+				cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
+		}
 	}
 	correctNumbers();
 }

@@ -117,18 +117,21 @@ function correctNumbers(tableId, num)
 	var rows = get(tableId).rows;
 	// Go through the rows and make sure their ids and js methods refer to the
 	// correct row number.
-
+	var oldElement = rows[1].cells[0].getElementsByTagName("input")[0].getAttribute("name");
+	var startIndex = oldElement.indexOf("[") + 1;
+	var endIndex = oldElement.indexOf("]");
+	var category = oldElement.substring(startIndex, endIndex);
 	for (var i = 0; i < rows.length - 1; i++)
 	{
 		var cells = rows[i + 1].cells;
 		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "FundraiserId" + i);
-		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraiser][id]");
+		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][id]");
 		cells[0].getElementsByTagName("textarea")[0].setAttribute("id", num + "Activity" + i);
-		cells[0].getElementsByTagName("textarea")[0].setAttribute("name", "data[" + i + "][Fundraiser][activity]");
+		cells[0].getElementsByTagName("textarea")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][activity]");
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", num + "Date" + i);
-		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraiser][date]");
+		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][date]");
 		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "Revenue" + i);
-		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Fundraiser][revenue]");
+		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][revenue]");
 		cells[3].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");
 		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown('" + tableId + "'," + i + ")");
 		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "addRow('" + tableId + "'," + i + "," + num + ")");

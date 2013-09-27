@@ -15,6 +15,7 @@ Do not include items purchased by individual members that will remain with them 
 organization, i.e., swimsuits, etc. This section allows JFC to see how much the individual organization 
 is willing to commit to its goals and will greatly facilitate the budget process.
 ');
+echo $this -> Form -> create('Expense');
 echo $this -> Html -> tableBegin(array(
 	'class' => 'listing',
 	'id' => 'ExpensesTable'
@@ -37,13 +38,19 @@ if (!isset($expenses))
 foreach ($expenses as $key => $expense)
 {
 	echo $this -> Html -> tableCells(array(
-		$this -> Form -> input('id', array('id' => 'ExpenseId' . $key,'type' => 'hidden')) . $this -> Form -> input('item', array(
+		$this -> Form -> input("$key.Expense.id", array(
+			'id' => 'ExpenseId' . $key,
+			'type' => 'hidden',
+			'value' => $expense['Expense']['id']
+		))  . $this -> Form -> input("$key.Expense.item", array(
 			'label' => false,
-			'id' => 'Item' . $key
+			'id' => 'Item' . $key,
+			'value' => $expense['Expense']['item']
 		)),
-		$this -> Form -> input('expense', array(
+		$this -> Form -> input("$key.Expense.amount", array(
 			'label' => false,
-			'id' => 'Amount' . $key
+			'id' => 'Amount' . $key,
+			'value' => $expense['Expense']['amount']
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',
@@ -69,12 +76,14 @@ foreach ($expenses as $key => $expense)
 }
 echo $this -> Html -> tableCells(array(
 	'Total',
-	$this -> Form -> input('total', array('label' => false)),
+	'$0.00',
 	'',
 	'',
 	'',
 	''
-),array(),array('id' => 'TotalRow'));
+), array(), array('id' => 'TotalRow'));
 echo $this -> Html -> tableEnd();
+echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
+echo $this -> Form -> submit('Save and Continue');
 $this -> end();
 ?>

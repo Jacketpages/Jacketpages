@@ -105,7 +105,7 @@ class BudgetsController extends AppController
 	public function fundraising($org_id)
 	{
 		debug($this -> request -> data);
-				$this -> loadModel('Fundraiser');
+		$this -> loadModel('Fundraiser');
 		$this -> loadModel('Dues');
 		$budgetId = $this -> Budget -> field('id', array(
 			'org_id' => $org_id,
@@ -140,27 +140,68 @@ class BudgetsController extends AppController
 
 			}
 		}
-		$executed = $this -> Fundraiser -> findAllByBudgetIdAndType($budgetId,'Executed');
-		$expected = $this -> Fundraiser -> findAllByBudgetIdAndType($budgetId,'Expected');
-		$planned = $this -> Fundraiser -> findAllByBudgetIdAndType($budgetId,'Planned');
-		$this -> set('fundraisers', array('Executed' => $executed,'Expected' => $expected,'Planned' => $planned));
+		$executed = $this -> Fundraiser -> findAllByBudgetIdAndType($budgetId, 'Executed');
+		$expected = $this -> Fundraiser -> findAllByBudgetIdAndType($budgetId, 'Expected');
+		$planned = $this -> Fundraiser -> findAllByBudgetIdAndType($budgetId, 'Planned');
+		$this -> set('fundraisers', array(
+			'Executed' => $executed,
+			'Expected' => $expected,
+			'Planned' => $planned
+		));
 		$dues = $this -> Dues -> findAllByBudgetId($budgetId);
 		$this -> set('dues', $dues);
 	}
 
-	public function expenses()
+	private function getBudgetId($org_id)
 	{
-
+		return $budgetId = $this -> Budget -> field('id', array(
+			'org_id' => $org_id,
+			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
+		));
+		;
 	}
 
-	public function assets()
+	public function expenses($org_id)
 	{
+		$this -> loadModel('Expense');
+		$budgetId = $this -> getBudgetId($org_id);
 
+		if ($this -> request -> is('post'))
+		{
+			$expenseIds = Hash::extract($this -> Expense -> findAllByBudgetId($budgetId), '{n}.Expense.id');
+			$newExpenseIds = Hash::extract($this -> request -> data, '{n}.Expense.id');
+			foreach($expenseIds as $id)
+			{
+				if(!in_array($id, $newExpenseIds))
+				{
+					$this -> Expense -> delete($id);
+				}
+			}
+			for ($i = 0; $i < count($this -> request -> data); $i++)
+			{
+				$this -> request -> data[$i]['Expense']['budget_id'] = $budgetId;
+				if (strcmp($this -> request -> data[$i]['Expense']['item'], '') == 0)
+				{
+					unset($this -> request -> data[$i]);
+				}
+			}
+			if ($this -> Expense -> saveMany($this -> request -> data))
+			{
+
+			}
+		}
+		$expenses = $this -> Expense -> findAllByBudgetId($budgetId);
+		$this -> set('expenses', $expenses);
+	}
+
+	public function assets_and_liabilities()
+	{
+		
 	}
 
 	public function member_contributions()
 	{
-
+		
 	}
 
 	public function summary()

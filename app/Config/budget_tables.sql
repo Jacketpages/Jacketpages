@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS expenses
 	primary key (id),
 	budget_id int(11),
 	item varchar(200),
-	expense decimal(10,2)
+	amount decimal(10,2)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS line_item_categories
