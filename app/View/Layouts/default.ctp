@@ -266,6 +266,8 @@
 
 		      <div id="footer-logo">
 		        <a href="http://www.gatech.edu/"><img alt="Georgia Tech" src="http://comm-whdev1.gatech.edu/sites/all/themes/gt/images/logos/gt-logo-footer.png" ></a>
+		        <a href="/" rel="home" title="Georgia Tech" ><img style="width:70px;" alt="Georgia Tech" src="/Jacketpages/img/sgalogogrey.png" /></a>     
+		    
 		        <p>&copy; <?php  print $year = date("Y"); ?> Georgia Tech Student Government Association</p>
 
 		      </div>
