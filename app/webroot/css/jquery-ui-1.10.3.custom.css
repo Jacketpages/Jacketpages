@@ -731,7 +731,7 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-tabs {
 	position: relative;/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
-	padding: .2em;
+	/*padding: .2em;*/
 }
 .ui-tabs .ui-tabs-nav {
 	margin: 0;
@@ -770,6 +770,7 @@ button.ui-button::-moz-focus-inner {
 	border-width: 0;
 	padding: 1em 1.4em;
 	background: none;
+	border: 1px solid #bbb;
 }
 .ui-tooltip {
 	padding: 8px;
@@ -800,7 +801,7 @@ body .ui-tooltip {
 	font-size: 1em;
 }
 .ui-widget-content {
-	border: 1px solid #bbb;
+	/*border: 1px solid #bbb;
 	/*background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x;
 	color: #333333;*/
 }
