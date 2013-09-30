@@ -10,7 +10,8 @@ class BudgetLineItemsController extends AppController
 	{
 		$this -> loadModel('Budget');
 		$this -> loadModel('LineItemCategory');
-		if ($this -> request -> is('post'))
+		debug($this -> request -> data);
+		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
 			$data = $this -> request -> data;
 			$categories = $this -> LineItemCategory -> find('all');
@@ -30,14 +31,24 @@ class BudgetLineItemsController extends AppController
 			$budget_id = $budget['Budget']['id'];
 			// Start saving line items
 			$j = 1;
+
 			foreach ($category_names as $category_name)
 			{
+				$deletion_cat_id = $this -> LineItemCategory -> field('id', array('name' => $category_name));
+				$newBliIds = Hash::extract($data, "$category_name.{n}.BudgetLineItem.id");
+				$newOldrIds = Hash::extract($data, "$category_name.{n}.OldRequested.id");
+				$newOldaIds = Hash::extract($data, "$category_name.{n}.OldAllocation.id");
+
+				$oldBliIds = Hash::extract($this -> BudgetLineItem -> findAllByBudgetIdAndCategory($budget_id, $deletion_cat_id), '{n}.BudgetLineItem.id');
+				$oldOldrIds = Hash::extract($this -> BudgetLineItem -> findAllByBudgetIdAndCategoryAndState($old_budget_id, $deletion_cat_id, 'Submitted'), '{n}.BudgetLineItem.id');
+				$oldOldaIds = Hash::extract($this -> BudgetLineItem -> findAllByBudgetIdAndCategoryAndState($old_budget_id, $deletion_cat_id, 'Final'), '{n}.BudgetLineItem.id');
+				$deletion_ids = array_merge(array_diff($oldBliIds, $newBliIds), array_diff($oldOldrIds, $newOldrIds), array_diff($oldOldaIds, $newOldaIds));
+				foreach ($deletion_ids as $id)
+					$this -> BudgetLineItem -> delete($id);
 				for ($i = 0; $i < count($data[$category_name]); $i++)
 				{
 					$data[$category_name][$i]['OldAllocation']['name'] = $data[$category_name][$i]['BudgetLineItem']['name'];
 					$data[$category_name][$i]['OldRequested']['name'] = $data[$category_name][$i]['BudgetLineItem']['name'];
-					$data[$category_name][$i]['OldAllocation']['amount'] = $data[$category_name][$i]['BudgetLineItem']['amount'];
-					$data[$category_name][$i]['OldRequested']['amount'] = $data[$category_name][$i]['BudgetLineItem']['amount'];
 					$data[$category_name][$i]['OldRequested']['state'] = 'Submitted';
 					$data[$category_name][$i]['OldAllocation']['state'] = 'Final';
 					$data[$category_name][$i]['BudgetLineItem']['state'] = 'Submitted';
@@ -52,28 +63,37 @@ class BudgetLineItemsController extends AppController
 					$data[$category_name][$i]['BudgetLineItem']['category'] = $category_id;
 					$data[$category_name][$i]['OldAllocation']['category'] = $category_id;
 					$data[$category_name][$i]['OldRequested']['category'] = $category_id;
-					$this -> BudgetLineItem -> create();
 					if (strcmp($data[$category_name][$i]['OldAllocation']['name'], ''))
 					{
 						$j++;
+						$this -> BudgetLineItem -> create();
 						if ($this -> BudgetLineItem -> save($data[$category_name][$i]['OldAllocation']))
 						{
 						}
 					}
 					if (strcmp($data[$category_name][$i]['OldRequested']['name'], ''))
 					{
+						$this -> BudgetLineItem -> create();
 						if ($this -> BudgetLineItem -> save($data[$category_name][$i]['OldRequested']))
 						{
 						}
 					}
 					if (strcmp($data[$category_name][$i]['BudgetLineItem']['name'], ''))
 					{
+						$this -> BudgetLineItem -> create();
 						if ($this -> BudgetLineItem -> save($data[$category_name][$i]['BudgetLineItem']))
 						{
 						}
 					}
 				}
 			}
+			debug($this -> request -> data['redirect']);
+			if (strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
+				$this -> redirect(array(
+					'controller' => 'budgets',
+					'action' => 'fundraising',
+					$org_id
+				));
 		}
 		$categories = $this -> LineItemCategory -> find('all');
 		$category_names = Hash::extract($categories, '{n}.LineItemCategory.name');
@@ -108,14 +128,13 @@ class BudgetLineItemsController extends AppController
 			}
 			$this -> set('budgetLineItems', $budgetLineItems);
 		}
-
+		$this -> set('cat_count', count($category_names));
 	}
 
-
-private function oldBudgetExists($org_id)
-{
-return count($this -> Budget -> findByOrgIdAndFiscalYear($org_id, '20' . $this -> getFiscalYear() + 1));
-}
+	private function oldBudgetExists($org_id)
+	{
+		return count($this -> Budget -> findByOrgIdAndFiscalYear($org_id, '20' . $this -> getFiscalYear() + 1));
+	}
 
 }
 ?>

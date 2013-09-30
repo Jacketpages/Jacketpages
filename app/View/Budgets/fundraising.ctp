@@ -4,7 +4,7 @@
  * @since 8/26/2013
  */
 
-$this -> extend('/Common/common');
+$this -> extend('/Common/budgets');
 $this -> assign('title', 'Revenue Generated From Fundraising');
 $this -> start('middle');
 echo $this -> Html -> script('budgets/fundraising');
@@ -67,6 +67,17 @@ echo $this -> Html -> tableEnd();
 
 echo $this -> element('budgets/fundraising_multi_enter');
 echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
-echo $this -> Form -> submit('Save and Continue');
+echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));
+?>
+<script>
+	correctNumbers("FundraiserTable0", 0);
+	correctNumbers("FundraiserTable1", 1);
+	correctNumbers("FundraiserTable2", 2); 
+	updateIncome(0);
+	updateIncome(1);
+	updateIncome(2);
+	updateIncome(3);
+</script>
+<?php
 $this -> end();
 ?>

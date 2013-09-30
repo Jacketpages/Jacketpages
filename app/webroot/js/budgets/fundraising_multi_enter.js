@@ -106,6 +106,25 @@ function deleteRow(tableId, pos, num)
 		table.deleteRow(pos);
 		correctNumbers(tableId, num);
 	}
+	else
+	{
+		for (var i = 0; i < table.rows[1].cells.length; i++)
+		{
+			for (var j = 0; j < table.rows[1].cells[i].getElementsByTagName("input").length; j++)
+			{
+				if (!(table.rows[1].cells[i].getElementsByTagName("input")[j] == undefined))
+				{
+					table.rows[1].cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
+					table.rows[1].cells[i].getElementsByTagName("input")[j].value = '';
+				}
+				if (!(table.rows[1].cells[i].getElementsByTagName("textarea")[j] == undefined))
+				{
+					table.rows[1].cells[i].getElementsByTagName("textarea")[j].setAttribute("value", "");
+					table.rows[1].cells[i].getElementsByTagName("textarea")[j].value = '';
+				}
+			}
+		}
+	}
 }
 
 /**
@@ -129,6 +148,7 @@ function correctNumbers(tableId, num)
 		cells[0].getElementsByTagName("textarea")[0].setAttribute("id", num + "Activity" + i);
 		cells[0].getElementsByTagName("textarea")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][activity]");
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", num + "Date" + i);
+		$('#' + num + "Date" + i).datepicker({dateFormat:'yy-mm-dd'});
 		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][date]");
 		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "Revenue" + i);
 		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][revenue]");
@@ -138,3 +158,4 @@ function correctNumbers(tableId, num)
 		cells[6].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow('" + tableId + "'," + i + "," + num + ")");
 	}
 }
+

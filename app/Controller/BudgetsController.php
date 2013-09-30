@@ -28,54 +28,24 @@ class BudgetsController extends AppController
 		$this -> set('budgets', $this -> paginate('Budget'));
 	}
 
-	public function submit($org_id = null, $redirect = true)
+	public function submit($org_id = null, $redirect = false)
 	{
-		if ($this -> request -> is('get'))
+		debug($this -> request -> data);
+		if ($this -> request -> is('put'))
 		{
-			$this -> loadModel('Membership');
-			$this -> loadModel('Organization');
-			$this -> Organization -> id = $org_id;
-			$organization = $this -> Organization -> read();
-
-			$this -> set('organization', $organization);
-			$charter_date = DateTime::createFromFormat("Y-m-d", $organization['Organization']['charter_date']);
-			$this -> set('yearsActive', date('Y') - $charter_date -> format("Y"));
-			$this -> set('orgName', $organization['Organization']['name']);
-			$this -> set('tier', $this -> roman_numerals($organization['Organization']['tier']));
-
-			//$members = $this -> Membership -> find('all', array('conditions' =>
-			// array('Organization.id' => $org_id,'Membership.role !=' => 'Member','end_date'
-			// => '0000-00-00')));
-			$this -> set('member_count', $this -> Membership -> find('count', array('conditions' => array(
-					'Organization.id' => $org_id,
-					'Membership.end_date' => null
-				))));
-			$president = $this -> Membership -> findByOrgIdAndRoleAndEndDate($org_id, 'President', null);
-			$treasurer = $this -> Membership -> findByOrgIdAndRoleAndEndDate($org_id, 'Treasurer', null);
-			$advisor = $this -> Membership -> findByOrgIdAndRoleAndEndDate($org_id, 'Advisor', null);
-
-			$this -> set('president', $president);
-			$this -> set('treasurer', $treasurer);
-			$this -> set('advisor', $advisor);
-			$this -> loadModel('LineItemCategory');
-			$categories = $this -> LineItemCategory -> find('all');
-			$this -> set('category_names', Hash::extract($categories, '{n}.LineItemCategory.name'));
-			$this -> set('category_descriptions', Hash::extract($categories, '{n}.LineItemCategory.description'));
-			$this -> set('budgetLineItems', array());
-			debug($this -> getFiscalYear());
-			$this -> request -> data = $this -> Budget -> findByOrgIdAndFiscalYear($org_id, '20' . ($this -> getFiscalYear() + 2));
-			//$this ->getStudentType('sroca3');
-		}
-		else
-		{
-			debug($this -> request -> data);
+			debug($this -> request -> data['redirect']);
 			$this -> Budget -> data = $this -> request -> data;
 			$this -> Budget -> set('status', 'Submitted');
 			$this -> Budget -> set('last_mod_by', $this -> Session -> read('User.id'));
 			debug($this -> Budget -> data);
 			if ($this -> Budget -> save($this -> request -> data))
 			{
-				if ($redirect)
+				$this -> loadModel('BudgetSubmitState');
+				$this -> BudgetSubmitState -> save(array('BudgetSubmitState' => array(
+						'id' => $this -> getBudgetId($org_id),
+						'state_1' => 1
+					)));
+				if (strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 					$this -> redirect(array(
 						'controller' => 'budgetlineitems',
 						'action' => 'edit',
@@ -87,6 +57,38 @@ class BudgetsController extends AppController
 				$this -> Session -> setFlash('Unable to save budget.');
 			}
 		}
+		$this -> loadModel('Membership');
+		$this -> loadModel('Organization');
+		$this -> Organization -> id = $org_id;
+		$organization = $this -> Organization -> read();
+
+		$this -> set('organization', $organization);
+		$charter_date = DateTime::createFromFormat("Y-m-d", $organization['Organization']['charter_date']);
+		$this -> set('yearsActive', date('Y') - $charter_date -> format("Y"));
+		$this -> set('orgName', $organization['Organization']['name']);
+		$this -> set('tier', $this -> roman_numerals($organization['Organization']['tier']));
+
+		$this -> set('member_count', $this -> Membership -> find('count', array('conditions' => array(
+				'Organization.id' => $org_id,
+				'Membership.end_date' => null
+			))));
+		$president = $this -> Membership -> findByOrgIdAndRoleAndEndDate($org_id, 'President', null);
+		$treasurer = $this -> Membership -> findByOrgIdAndRoleAndEndDate($org_id, 'Treasurer', null);
+		$advisor = $this -> Membership -> findByOrgIdAndRoleAndEndDate($org_id, 'Advisor', null);
+
+		$this -> set('president', $president);
+		$this -> set('treasurer', $treasurer);
+		$this -> set('advisor', $advisor);
+		$this -> loadModel('LineItemCategory');
+		$categories = $this -> LineItemCategory -> find('all');
+		$this -> set('category_names', Hash::extract($categories, '{n}.LineItemCategory.name'));
+		$this -> set('category_descriptions', Hash::extract($categories, '{n}.LineItemCategory.description'));
+		$this -> set('budgetLineItems', array());
+		debug($this -> getFiscalYear());
+		$this -> request -> data = $this -> Budget -> findByOrgIdAndFiscalYear($org_id, '20' . ($this -> getFiscalYear() + 2));
+		debug($this -> request -> data);
+		//$this ->getStudentType('sroca3');
+
 	}
 
 	private function getStudentType($gtid)
@@ -104,6 +106,7 @@ class BudgetsController extends AppController
 
 	public function fundraising($org_id)
 	{
+		$this ->set('budgetSubmitted',$this -> Budget -> find('count',array('conditions'=>array('id' => $this -> getBudgetId($org_id)))));
 		debug($this -> request -> data);
 		$this -> loadModel('Fundraiser');
 		$this -> loadModel('Dues');
@@ -112,8 +115,13 @@ class BudgetsController extends AppController
 			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
 		));
 		$this -> set('budget_id', $budgetId);
-		if ($this -> request -> is('post'))
+		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
+			$newIds = Hash::extract($this -> request -> data, '{s}.{n}.Fundraiser.id');
+			$oldIds = Hash::extract($this -> Fundraiser -> findAllByBudgetId($budgetId), '{n}.Fundraiser.id');
+			foreach (Hash::diff($oldIds, $newIds) as $id)
+				$this -> Fundraiser -> delete($id);
+			debug(Hash::diff($oldIds, $newIds));
 			$types = array(
 				'Executed',
 				'Expected',
@@ -158,7 +166,6 @@ class BudgetsController extends AppController
 			'org_id' => $org_id,
 			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
 		));
-		;
 	}
 
 	public function expenses($org_id)
@@ -170,9 +177,9 @@ class BudgetsController extends AppController
 		{
 			$expenseIds = Hash::extract($this -> Expense -> findAllByBudgetId($budgetId), '{n}.Expense.id');
 			$newExpenseIds = Hash::extract($this -> request -> data, '{n}.Expense.id');
-			foreach($expenseIds as $id)
+			foreach ($expenseIds as $id)
 			{
-				if(!in_array($id, $newExpenseIds))
+				if (!in_array($id, $newExpenseIds))
 				{
 					$this -> Expense -> delete($id);
 				}
@@ -194,14 +201,105 @@ class BudgetsController extends AppController
 		$this -> set('expenses', $expenses);
 	}
 
-	public function assets_and_liabilities()
+	public function assets_and_liabilities($org_id)
 	{
-		
+		$this -> loadModel('Asset');
+		$this -> loadModel('Liability');
+		$this -> request -> data = Hash::extract($this -> request -> data, 'Budget');
+		$assets = Hash::remove($this -> request -> data, '{n}.Liability');
+		$liabilities = Hash::remove($this -> request -> data, '{n}.Asset');
+		$budgetId = $this -> getBudgetId($org_id);
+		if ($this -> request -> is('post'))
+		{
+			$this -> assets($assets, $budgetId);
+			$this -> liabilities($liabilities, $budgetId);
+		}
+		$this -> set('assets', $this -> Asset -> findAllByBudgetId($budgetId));
+		$this -> set('liabilities', $this -> Liability -> findAllByBudgetId($budgetId));
+		debug($assets);
+		debug($liabilities);
 	}
 
-	public function member_contributions()
+	private function assets($assets, $budgetId)
 	{
-		
+		$assetIds = Hash::extract($this -> Asset -> findAllByBudgetId($budgetId), '{n}.Asset.id');
+		$newAssetIds = Hash::extract($assets, '{n}.Asset.id');
+		foreach ($assetIds as $id)
+		{
+			if (!in_array($id, $newAssetIds))
+			{
+				$this -> Asset -> delete($id);
+			}
+		}
+		for ($i = 0; $i < count($assets); $i++)
+		{
+			$assets[$i]['Asset']['budget_id'] = $budgetId;
+			if (strcmp($assets[$i]['Asset']['item'], '') == 0)
+			{
+				unset($assets[$i]);
+			}
+		}
+		if ($this -> Asset -> saveMany($assets))
+		{
+
+		}
+	}
+
+	private function liabilities($liabilities, $budgetId)
+	{
+		$liabilityIds = Hash::extract($this -> Liability -> findAllByBudgetId($budgetId), '{n}.Liability.id');
+		$newLiabilityIds = Hash::extract($liabilities, '{n}.Liability.id');
+		foreach ($liabilityIds as $id)
+		{
+			if (!in_array($id, $newLiabilityIds))
+			{
+				$this -> Liability -> delete($id);
+			}
+		}
+		for ($i = 0; $i < count($liabilities); $i++)
+		{
+			$liabilities[$i]['Liability']['budget_id'] = $budgetId;
+			if (strcmp($liabilities[$i]['Liability']['item'], '') == 0)
+			{
+				unset($liabilities[$i]);
+			}
+		}
+		if ($this -> Liability -> saveMany($liabilities))
+		{
+
+		}
+	}
+
+	public function member_contributions($org_id)
+	{
+		$this -> loadModel('MemberContribution');
+		$budgetId = $this -> getBudgetId($org_id);
+
+		if ($this -> request -> is('post'))
+		{
+			$memberContributionIds = Hash::extract($this -> MemberContribution -> findAllByBudgetId($budgetId), '{n}.MemberContribution.id');
+			$newMemberContributionIds = Hash::extract($this -> request -> data, '{n}.MemberContribution.id');
+			foreach ($memberContributionIds as $id)
+			{
+				if (!in_array($id, $newMemberContributionIds))
+				{
+					$this -> MemberContribution -> delete($id);
+				}
+			}
+			for ($i = 0; $i < count($this -> request -> data); $i++)
+			{
+				$this -> request -> data[$i]['MemberContribution']['budget_id'] = $budgetId;
+				if (strcmp($this -> request -> data[$i]['MemberContribution']['item'], '') == 0)
+				{
+					unset($this -> request -> data[$i]);
+				}
+			}
+			if ($this -> MemberContribution -> saveMany($this -> request -> data))
+			{
+
+			}
+		}
+		$this -> set('memberContributions', $this -> MemberContribution -> findAllByBudgetId($budgetId));
 	}
 
 	public function summary()

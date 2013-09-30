@@ -3,11 +3,13 @@
  * @author Stephen Roca
  * @since 9/27/2013
  */
- 
+  $this -> start('script');
+echo $this -> Html -> script('budgets/liabilities');
+$this -> end();
 echo $this -> Html -> div(null, null, array('id' => "liabilities_accordion"));
 echo $this -> Html -> link('Liabilities', array());
 echo $this -> Html -> div();
-echo $this -> Html -> tableBegin(array('class' => 'listing'));
+echo $this -> Html -> tableBegin(array('class' => 'listing', 'id' => 'LiabilitiesTable'));
 echo $this -> Html -> tableHeaders(array(
 	'Liability',
 	'Amount',
@@ -16,7 +18,7 @@ echo $this -> Html -> tableHeaders(array(
 	'',
 	''
 ));
-if(!isset($liabilities))
+if(!isset($liabilities) || count($liabilities) == 0)
 {
 	$liabilities = array(array('Liability' => array('id'=> '','item'=> '','amount'=> '')));
 }
@@ -39,22 +41,22 @@ foreach ($liabilities as $key => $liability)
 			)),
 			$this -> Form -> button($this -> Html -> image('up.gif'), array(
 				'type' => 'button',
-				'onclick' => "moveUp(" . $key . ")",
+				'onclick' => "lmoveUp(" . $key . ")",
 				'escape' => false
 			)),
 			$this -> Form -> button($this -> Html -> image('down.gif'), array(
 				'type' => 'button',
-				'onclick' => "moveDown(" . $key . ")",
+				'onclick' => "lmoveDown(" . $key . ")",
 				'escape' => false
 			)),
 			$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 				'type' => 'button',
-				'onclick' => "addRow(" . $key . ")",
+				'onclick' => "laddRow(" . $key . ")",
 				'escape' => false
 			)),
 			$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 				'type' => 'button',
-				'onclick' => "deleteRow(" . $key . ")",
+				'onclick' => "ldeleteRow(" . $key . ")",
 				'escape' => false
 			)),
 		)));

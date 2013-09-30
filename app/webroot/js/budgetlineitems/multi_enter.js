@@ -112,6 +112,20 @@ function deleteRow(tableId, pos, num)
 		table.deleteRow(pos);
 		correctNumbers(tableId, num);
 	}
+	else
+	{
+		for (var i = 0; i < table.rows[1].cells.length; i++)
+		{
+			for (var j = 0; j < table.rows[1].cells[i].getElementsByTagName("input").length; j++)
+			{
+				if (!(table.rows[1].cells[i].getElementsByTagName("input")[j] == undefined))
+				{
+					table.rows[1].cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
+					table.rows[1].cells[i].getElementsByTagName("input")[j].value = '';
+				}
+			}
+		}
+	}
 }
 
 /**
@@ -145,9 +159,10 @@ function correctNumbers(tableId, num)
 		cells[2].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][OldAllocation][amount]");
 		cells[3].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
 		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][amount]");
-		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");
 		cells[3].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
 		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][amount]");
+		cells[4].setAttribute("id", num + "difference" + i);
+		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");
 		cells[6].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown('" + tableId + "'," + i + ")");
 		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "addRow('" + tableId + "'," + i + "," + num + ")");
 		cells[8].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow('" + tableId + "'," + i + "," + num + ")");

@@ -4,8 +4,6 @@
  * @since 9/4/2013
  */
 echo $this -> Html -> script('budgetlineitems/multi_enter');
-?>
-<?php
 for ($i = 0; $i < count($category_names); $i++)
 {
 	echo $this -> Html -> div(null, null, array('id' => 'accordion' . $i));
@@ -25,9 +23,8 @@ for ($i = 0; $i < count($category_names); $i++)
 }
 ?>
 <script>
-		$(function() {
-	for(i = 0; i < <?php echo count($category_names) ?>
-		; i++)
+	$(function() {
+	for(i = 0; i < <?php echo count($category_names);?>; i++)
 		$("#accordion" + i).accordion(
 		{
 			heightStyle : "content",

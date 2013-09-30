@@ -38,25 +38,25 @@ function moveUp(pos)
  */
 function move(pos, moveTo)
 {
-	var rows = get("ExpensesTable").rows;
+	var rows = get("MemberContributionsTable").rows;
 	// If the position to move to is not first row (table headers) and it is defined
 	// then swap the two rows
 	if (moveTo >= 0 && rows.length >= moveTo + 3)
 	{
 		// Save the values from the current row
-		var id = get("ExpenseId" + pos).value;
+		var id = get("MemberContributionId" + pos).value;
 		var item = get("Item" + pos).value;
-		var expense = get("Amount" + pos).value;
+		var amount = get("Amount" + pos).value;
 
 		// Set the values of the current row to the row that of the row being moved to
-		get("ExpenseId" + pos).value = get("ExpenseId" + moveTo).value;
+		get("MemberContributionId" + pos).value = get("MemberContributionId" + moveTo).value;
 		get("Item" + pos).value = get("Item" + moveTo).value;
 		get("Amount" + pos).value = get("Amount" + moveTo).value;
 
 		// Set the row being moved to, to the values of the current row
-		get("ExpenseId" + moveTo).value = id;
+		get("MemberContributionId" + moveTo).value = id;
 		get("Item" + moveTo).value = item;
-		get("Amount" + moveTo).value = expense;
+		get("Amount" + moveTo).value = amount;
 	}
 }
 
@@ -68,10 +68,10 @@ function addRow(pos)
 {
 	pos = pos + 1;
 	var moveTo = pos + 1;
-	var table = get("ExpensesTable");
+	var table = get("MemberContributionsTable");
 	table.insertRow(moveTo);
 	table.rows[moveTo].innerHTML = table.rows[pos].innerHTML;
-	var rows = get("ExpensesTable").rows;
+	var rows = get("MemberContributionsTable").rows;
 	var cells = rows[moveTo].cells;
 	// Since all of the elements that were added have previous values, the old values
 	// need to be removed.
@@ -93,7 +93,7 @@ function addRow(pos)
 function deleteRow(pos)
 {
 	pos = pos + 1;
-	var table = get("ExpensesTable");
+	var table = get("MemberContributionsTable");
 	if (table.rows.length != 3)
 	{
 		table.deleteRow(pos);
@@ -121,7 +121,7 @@ function deleteRow(pos)
  */
 function correctNumbers()
 {
-	var rows = get("ExpensesTable").rows;
+	var rows = get("MemberContributionsTable").rows;
 	// Go through the rows and make sure their ids and js methods refer to the
 	// correct row number.
 
@@ -129,25 +129,12 @@ function correctNumbers()
 	{
 		var cells = rows[i + 1].cells;
 
-		cells[0].getElementsByTagName("input")[0].setAttribute("id", "ExpenseId" + i);
-		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Expense][id]");
+		cells[0].getElementsByTagName("input")[0].setAttribute("id", "MemberContributionId" + i);
+		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][MemberContribution][id]");
 		cells[0].getElementsByTagName("input")[1].setAttribute("id", "Item" + i);
-		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + i + "][Expense][item]");
+		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + i + "][MemberContribution][item]");
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", "Amount" + i);
-		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][Expense][amount]");
-		// cells[2].getElementsByTagName("input")[0].setAttribute("id", "LineItemCostPerUnit" + i);
-		// $("#LineItemCostPerUnit" + i).attr('onchange', "updateTCAndRqstd("+i+")");
-		// cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][cost_per_unit]");
-		// cells[3].getElementsByTagName("input")[0].setAttribute("id", "LineItemQuantity" + i);
-		// $("#LineItemQuantity" + i).attr('onchange', "updateTCAndRqstd("+i+")");
-		// cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][quantity]");
-		// cells[4].getElementsByTagName("input")[0].setAttribute("id", "LineItemTotalCost" + i);
-		// cells[4].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][total_cost]");
-		// cells[5].getElementsByTagName("input")[0].setAttribute("id", "LineItemAmount" + i);
-		// cells[5].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][amount]");
-		// cells[6].firstChild.firstChild.setAttribute("id", "LineItemAccount" + i);
-		// $("#LineItemAccount" + i).attr('onchange', "updateTCAndRqstd("+i+")");
-		// cells[6].firstChild.firstChild.setAttribute("name", "data[" + i + "][LineItem][account]");
+		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][MemberContribution][amount]");
 		cells[2].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp(" + i + ")");
 		cells[3].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown(" + i + ")");
 		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "addRow(" + i + ")");
@@ -158,7 +145,7 @@ function correctNumbers()
 
 function updateTotal()
 {
-	var rows = document.getElementById("ExpensesTable").rows;
+	var rows = document.getElementById("MemberContributionsTable").rows;
 	var total = 0;
 	for(var i = 0; i < rows.length - 2; i++)
 	{

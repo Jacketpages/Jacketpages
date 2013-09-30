@@ -28,11 +28,12 @@ echo $this -> Html -> tableHeaders(array(
 	'',
 	''
 ));
-if (!isset($expenses))
+if (count($expenses) == 0)
 {
 	$expenses = array( array('Expense' => array(
-				'item',
-				'expense'
+				'id' => '',
+				'item' => '',
+				'amount' => ''
 			)));
 }
 foreach ($expenses as $key => $expense)
@@ -50,7 +51,8 @@ foreach ($expenses as $key => $expense)
 		$this -> Form -> input("$key.Expense.amount", array(
 			'label' => false,
 			'id' => 'Amount' . $key,
-			'value' => $expense['Expense']['amount']
+			'value' => $expense['Expense']['amount'],
+			'onchange' => 'updateTotal()'
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',
@@ -76,7 +78,7 @@ foreach ($expenses as $key => $expense)
 }
 echo $this -> Html -> tableCells(array(
 	'Total',
-	'$0.00',
+	array('$0.00',array('id' => 'total')),
 	'',
 	'',
 	'',
@@ -85,5 +87,6 @@ echo $this -> Html -> tableCells(array(
 echo $this -> Html -> tableEnd();
 echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
 echo $this -> Form -> submit('Save and Continue');
+echo "<script>updateTotal();</script>";
 $this -> end();
 ?>

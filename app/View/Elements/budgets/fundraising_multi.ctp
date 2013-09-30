@@ -25,7 +25,6 @@ if (!isset($fundraisings) || count($fundraisings) == 0)
 			'revenue' => ''
 		)));
 }
-debug($fundraisings);
 foreach ($fundraisings as $key => $fundraising)
 {
 	echo $this -> Html -> tableCells(array(
@@ -43,7 +42,7 @@ foreach ($fundraisings as $key => $fundraising)
 		$this -> Form -> text($num . '.'. $key . '.Fundraiser.date', array(
 			'label' => false,
 			'value' => $fundraising['Fundraiser']['date'],
-			'id' => $othernum . 'Amount' . $key,
+			'id' => $othernum . 'Date' . $key,
 		)),
 		$this -> Form -> text($num . '.'. $key . '.Fundraiser.revenue', array(
 			'label' => false,

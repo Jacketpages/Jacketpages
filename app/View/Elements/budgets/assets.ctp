@@ -3,21 +3,25 @@
  * @author Stephen Roca
  * @since 9/27/2013
  */
+ $this -> start('script');
+echo $this -> Html -> script('budgets/assets');
+$this -> end();
 echo $this -> Html -> div(null, null, array('id' => "assets_accordion"));
-echo $this -> Html -> tag('h1', 'Assets');
+echo $this -> Html -> link('Assets', array());
 echo $this -> Html -> div();
-echo $this -> Html -> tableBegin(array('class' => 'listing'));
+echo $this -> Html -> tableBegin(array('class' => 'listing','id' => 'AssetsTable'));
 echo $this -> Html -> tableHeaders(array(
 	'Asset',
 	'Amount',
+	array('Tag'=>  array('title' => 'has gt tag')),
 	'',
 	'',
 	'',
 	''
 ));
-if(!isset($assets))
+if(!isset($assets) || count($assets) == 0)
 {
-	$assets = array(array('Asset' => array('id'=> '','item'=> '','amount'=> '')));
+	$assets = array(array('Asset' => array('id'=> '','item'=> '','amount'=> '', 'tagged' => '')));
 }
 foreach ($assets as $key => $asset)
 {
@@ -36,24 +40,30 @@ foreach ($assets as $key => $asset)
 				'id' => 'Amount' . $key,
 				'value' => $asset['Asset']['amount']
 			)),
+			$this -> Form -> input("$key.Asset.tagged", array(
+				'label' => false,
+				'id' => 'Tagged' . $key,
+				'checked' => $asset['Asset']['tagged'],
+				'type' => 'checkbox'
+			)),
 			$this -> Form -> button($this -> Html -> image('up.gif'), array(
 				'type' => 'button',
-				'onclick' => "moveUp(" . $key . ")",
+				'onclick' => "amoveUp(" . $key . ")",
 				'escape' => false
 			)),
 			$this -> Form -> button($this -> Html -> image('down.gif'), array(
 				'type' => 'button',
-				'onclick' => "moveDown(" . $key . ")",
+				'onclick' => "amoveDown(" . $key . ")",
 				'escape' => false
 			)),
 			$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 				'type' => 'button',
-				'onclick' => "addRow(" . $key . ")",
+				'onclick' => "aaddRow(" . $key . ")",
 				'escape' => false
 			)),
 			$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 				'type' => 'button',
-				'onclick' => "deleteRow(" . $key . ")",
+				'onclick' => "adeleteRow(" . $key . ")",
 				'escape' => false
 			)),
 		)));
