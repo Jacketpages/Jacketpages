@@ -17,7 +17,7 @@
 </div>
 <?php } ?>
 
-<div id="<?php echo ($sidebarExists)?'middle':'full_middle'; ?>">
+<div id="<?php echo ($sidebarExists)?'middle':'middle_full'; ?>">
     <div id="page_title"><?php echo $this -> fetch('title');?></div>
     <?php 
     echo $this -> fetch('search');

@@ -218,12 +218,12 @@ h3 {
 	min-height: 400px;
 	margin-top: 10px;
 }
-
 /*
 	If the sidebar is empty, use this id instead of #middle
 */
 #middle_full {
 	min-height: 400px;
+	margin-top: 10px;
 	margin-top: 10px;
 }
 
