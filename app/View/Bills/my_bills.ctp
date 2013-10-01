@@ -13,7 +13,7 @@ echo $this -> Html -> nestedList(array(
 	))
 ), array());
 $this -> end();
-$this -> assign("title", "Bills");
+$this -> assign("title", "My Bills");
 $this -> start('search');
 echo $this -> element('search', array('action' =>  'my_bills', 'endForm' => 0));
 $this -> end();

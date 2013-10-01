@@ -46,8 +46,8 @@
 				),
 				'selected' => $this -> Session -> read('Category')
 			));
-
-			echo $this -> Form -> end();
+			echo "<br/>";
+			echo $this -> Form -> submit();		
 			?>
 		</div>
 	</div>
