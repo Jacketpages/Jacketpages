@@ -49,7 +49,7 @@ else
 	), array('class' => 'links'));
 	foreach ($organizations as $organization)
 	{
-		$logo = $this -> Html -> image($organization['Organization']['logo_path'], array('width' => '60'));
+		$logo = $this -> Html -> image($organization['Organization']['logo_path'], array('style' => 'width:60px;max-width:none;'));
 		$summary = $organization['Organization']['description'];
 		//$summary = Sanitize::html($summary, array('remove' => TRUE));
 		if (strlen($summary) > 200)

@@ -20,18 +20,17 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		'action' => "general_info",
 		$bill['Bill']['id']
 	));
-	
+
 	$sidebar[] = $this -> Html -> link('Update Line Items', array(
 		'controller' => 'line_items',
 		'action' => 'index',
 		$bill['Bill']['id'],
 		'Submitted'
 	));
-	
+
 }
 
-if ($bill['Bill']['status'] == $CREATED && $bill['Submitter']['id'] == $this -> Session -> read('User.id')
-		|| ($bill['Bill']['status'] == $CREATED && $admin))
+if ($bill['Bill']['status'] == $CREATED && $bill['Submitter']['id'] == $this -> Session -> read('User.id') || ($bill['Bill']['status'] == $CREATED && $admin))
 {
 	$sidebar[] = $this -> Html -> link(__('Submit Bill', true), array(
 		'action' => 'submit',
@@ -47,36 +46,39 @@ else if ($bill['Bill']['status'] == $AUTHORED && $sga_exec)
 }
 else if ($bill['Bill']['status'] == $AGENDA && $sga_exec)
 {
-	$sidebar[] = $this -> Html -> link(__('GSS Votes', true), array(
-		'action' => 'votes',
-		$bill['Bill']['id'],
-		'gss_id',
-		$bill['GSS']['id']
-	));
-	$sidebar[] = $this -> Html -> link(__('UHR Votes', true), array(
-		'action' => 'votes',
-		$bill['Bill']['id'],
-		'uhr_id',
-		$bill['UHR']['id']
-	));
+	if (strcmp($bill['Bill']['category'], 'Graduate') == 0 || strcmp($bill['Bill']['category'], 'Joint') == 0)
+		$sidebar[] = $this -> Html -> link(__('GSS Votes', true), array(
+			'action' => 'votes',
+			$bill['Bill']['id'],
+			'gss_id',
+			$bill['GSS']['id']
+		));
+	if (strcmp($bill['Bill']['category'], 'Joint') == 0 || strcmp($bill['Bill']['category'], 'Undergraduate') == 0)
+		$sidebar[] = $this -> Html -> link(__('UHR Votes', true), array(
+			'action' => 'votes',
+			$bill['Bill']['id'],
+			'uhr_id',
+			$bill['UHR']['id']
+		));
 }
 if ($bill['Bill']['status'] == $CONFERENCE && $sga_exec)
 {
-	$sidebar[] = $this -> Html -> link(__('Conference GSS Votes', true), array(
-		'action' => 'votes',
-		$bill['Bill']['id'],
-		'gcc_id',
-		$bill['GCC']['id']
-	));
-	$sidebar[] = $this -> Html -> link(__('Conference UHR Votes', true), array(
-		'action' => 'votes',
-		$bill['Bill']['id'],
-		'ucc_id',
-		$bill['UCC']['id']
-	));
+	if (strcmp($bill['Bill']['category'], 'Joint') == 0 || strcmp($bill['Bill']['category'], 'Graduate') == 0)
+		$sidebar[] = $this -> Html -> link(__('Conference GSS Votes', true), array(
+			'action' => 'votes',
+			$bill['Bill']['id'],
+			'gcc_id',
+			$bill['GCC']['id']
+		));
+	if (strcmp($bill['Bill']['category'], 'Joint') == 0 || strcmp($bill['Bill']['category'], 'Undergraduate') == 0)
+		$sidebar[] = $this -> Html -> link(__('Conference UHR Votes', true), array(
+			'action' => 'votes',
+			$bill['Bill']['id'],
+			'ucc_id',
+			$bill['UCC']['id']
+		));
 }
-if ($bill['Bill']['status'] < $AGENDA && ($sga_exec || $this -> Session -> read('User.id') == $bill['Submitter']['id'])
-		|| $admin)
+if ($bill['Bill']['status'] < $AGENDA && ($sga_exec || $this -> Session -> read('User.id') == $bill['Submitter']['id']) || $admin)
 {
 	$sidebar[] = $this -> Html -> link('Delete Bill', array(
 		'action' => 'delete',

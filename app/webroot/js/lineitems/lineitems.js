@@ -45,7 +45,6 @@ function move(pos, moveTo)
 	{
 		// Save the values from the current row
 		var id = get("LineItemId" + pos).value;
-		var lnum = get("LineItemLineNumber" + pos).value;
 		var name = get("LineItemName" + pos).value;
 		var cost = get("LineItemCostPerUnit" + pos).value;
 		var qty = get("LineItemQuantity" + pos).value;
@@ -55,7 +54,6 @@ function move(pos, moveTo)
 
 		// Set the values of the current row to the row that of the row being moved to
 		get("LineItemId" + pos).value = get("LineItemId" + moveTo).value;
-		get("LineItemLineNumber" + pos).value = get("LineItemLineNumber" + moveTo).value;
 		get("LineItemName" + pos).value = get("LineItemName" + moveTo).value;
 		get("LineItemCostPerUnit" + pos).value = get("LineItemCostPerUnit" + moveTo).value;
 		get("LineItemQuantity" + pos).value = get("LineItemQuantity" + moveTo).value;
@@ -65,7 +63,6 @@ function move(pos, moveTo)
 
 		// Set the row being moved to, to the values of the current row
 		get("LineItemId" + moveTo).value = id;
-		get("LineItemLineNumber" + moveTo).value = lnum;
 		get("LineItemName" + moveTo).value = name;
 		get("LineItemCostPerUnit" + moveTo).value = cost;
 		get("LineItemQuantity" + moveTo).value = qty;
@@ -106,7 +103,7 @@ function addRow(pos)
 function deleteRow(pos)
 {
 	pos = pos + 1;
-	var table = get("LineItemsTable");	
+	var table = get("LineItemsTable");
 	if (table.rows.length != 2)
 	{
 		table.deleteRow(pos);
@@ -120,8 +117,11 @@ function deleteRow(pos)
 			{
 				if (!(table.rows[1].cells[i].getElementsByTagName("input")[j] == undefined))
 				{
-					table.rows[1].cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
-					table.rows[1].cells[i].getElementsByTagName("input")[j].value = '';
+					if (table.rows[1].cells[i].getElementsByTagName("input")[j].className != 'LineItemNumber')
+					{
+						table.rows[1].cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
+						table.rows[1].cells[i].getElementsByTagName("input")[j].value = '';
+					}
 				}
 			}
 		}
@@ -152,17 +152,17 @@ function correctNumbers()
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", "LineItemName" + i);
 		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][name]");
 		cells[2].getElementsByTagName("input")[0].setAttribute("id", "LineItemCostPerUnit" + i);
-		$("#LineItemCostPerUnit" + i).attr('onchange', "updateTCAndRqstd("+i+")");
+		$("#LineItemCostPerUnit" + i).attr('onchange', "updateTCAndRqstd(" + i + ")");
 		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][cost_per_unit]");
 		cells[3].getElementsByTagName("input")[0].setAttribute("id", "LineItemQuantity" + i);
-		$("#LineItemQuantity" + i).attr('onchange', "updateTCAndRqstd("+i+")");
+		$("#LineItemQuantity" + i).attr('onchange', "updateTCAndRqstd(" + i + ")");
 		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][quantity]");
 		cells[4].getElementsByTagName("input")[0].setAttribute("id", "LineItemTotalCost" + i);
 		cells[4].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][total_cost]");
 		cells[5].getElementsByTagName("input")[0].setAttribute("id", "LineItemAmount" + i);
 		cells[5].getElementsByTagName("input")[0].setAttribute("name", "data[" + i + "][LineItem][amount]");
 		cells[6].firstChild.firstChild.setAttribute("id", "LineItemAccount" + i);
-		$("#LineItemAccount" + i).attr('onchange', "updateTCAndRqstd("+i+")");
+		$("#LineItemAccount" + i).attr('onchange', "updateTCAndRqstd(" + i + ")");
 		cells[6].firstChild.firstChild.setAttribute("name", "data[" + i + "][LineItem][account]");
 		cells[7].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp(" + i + ")");
 		cells[8].getElementsByTagName("button")[0].setAttribute("onclick", "moveDown(" + i + ")");

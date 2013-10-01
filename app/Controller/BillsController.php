@@ -133,23 +133,23 @@ class BillsController extends AppController
 		$this -> set('submitted', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Submitted'
-			))));
+			),'order' => 'line_number asc')));
 		$this -> set('jfc', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
 				'state' => 'JFC'
-			))));
+			),'order' => 'line_number asc')));
 		$this -> set('graduate', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Graduate'
-			))));
+			),'order' => 'line_number asc')));
 		$this -> set('undergraduate', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Undergraduate'
-			))));
+			),'order' => 'line_number asc')));
 		$this -> set('conference', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Conference'
-			))));
+			),'order' => 'line_number asc')));
 		$this -> set('all', $this -> LineItem -> find('all', array(
 			'conditions' => array('bill_id' => $id),
 			'order' => array("FIELD(STATE, 'Submitted','JFC', 'Graduate', 'Undergraduate', 'Conference', 'Final')")
@@ -157,7 +157,7 @@ class BillsController extends AppController
 		$this -> set('final', $this -> LineItem -> find('all', array('conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Final'
-			))));
+			),'order' => 'line_number asc')));
 		// Set the amounts for prior year, capital outlay, and total
 		$totals = $this -> LineItem -> find('all', array(
 			'fields' => array(
@@ -554,6 +554,7 @@ class BillsController extends AppController
 
 	public function votes($bill_id, $organization, $votes_id = null)
 	{
+		debug('inside');
 		$this -> loadModel('BillVotes');
 		if ($this -> request -> is('get'))
 		{
@@ -571,22 +572,22 @@ class BillsController extends AppController
 				{
 					$this -> Bill -> id = $bill_id;
 					$this -> Bill -> saveField($organization, $this -> BillVotes -> getInsertID());
-					$this -> redirect(array(
-						'controller' => 'bills',
-						'action' => 'view',
-						$bill_id
-					));
+					// $this -> redirect(array(
+						// 'controller' => 'bills',
+						// 'action' => 'view',
+						// $bill_id
+					// ));
 				}
 			}
 			else
 			{
 				$this -> BillVotes -> id = $votes_id;
 				$this -> BillVotes -> save($this -> request -> data);
-				$this -> redirect(array(
-					'controller' => 'bills',
-					'action' => 'view',
-					$bill_id
-				));
+				// $this -> redirect(array(
+					// 'controller' => 'bills',
+					// 'action' => 'view',
+					// $bill_id
+				// ));
 			}
 		}
 	}

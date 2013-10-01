@@ -468,7 +468,7 @@ class OrganizationsController extends AppController
 			$this -> Organization -> set('logo_type', $this -> data['File']['image']['type']);
 			$this -> Organization -> set('logo_size', $this -> data['File']['image']['size']);
 			$this -> Organization -> set('logo', $fileData);
-			if ($this -> data['File']['image']['size'] > 20000)
+			if ($this -> data['File']['image']['size'] > 200000)
 			{
 				$this -> Session -> setFlash(__('Image is too large.', true));
 				$this -> redirect('/organizations/addlogo/' . $id);

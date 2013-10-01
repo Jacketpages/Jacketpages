@@ -62,10 +62,10 @@ $sidebar[] = $this -> Html -> link(__('Budgets', true), array(
 if (!$orgJoinOrganizationPerm)
 {
 	$sidebar[] = $this -> Html -> link(__('Join Organization', true), array(
-	'controller' => 'memberships',
+		'controller' => 'memberships',
 		'action' => 'joinOrganization',
 		$organization['Organization']['id']
-	), null, __('Are you sure you want to join '. $organization['Organization']['name'] . '?', true));
+	), null, __('Are you sure you want to join ' . $organization['Organization']['name'] . '?', true));
 }
 if ($orgAdminPerm)
 {
@@ -81,13 +81,13 @@ $this -> end();
 $this -> assign('title', $organization['Organization']['name']);
 $this -> start('middle');
 ?>
-<div id="orgInfo">
-<div id="orgInfoLeft">
+<div style="display:inline-block;position:relative;width:100%">
+<div style="float:left;width:50%;">
 	<?php
-	echo $this -> Html -> tag('h3', 'Officers:');
+	echo $this -> Html -> tag('h1', 'Officers:');
+	echo $this -> Html -> tableBegin(array('class' => 'listing'));
 	if (isset($president['Membership']))
 	{
-		echo $this -> Html -> tableBegin(array('class' => 'listing'));
 		echo $this -> Html -> tableCells(array(
 			$president['Membership']['name'],
 			$president['Membership']['title']
@@ -118,6 +118,14 @@ $this -> start('middle');
 		}
 	}
 	echo $this -> Html -> tableEnd();
+	echo "</div>";
+	echo $this -> Html -> div();
+	echo $this -> Html -> image($organization['Organization']['logo_path'], array(
+		'id' => 'logo',
+		'style' => 'float:right;height:160px;'
+	));
+	echo "</div>";
+	echo "</div>";
 
 	// Print out the Organization's description and other
 	// general information.
@@ -129,13 +137,6 @@ $this -> start('middle');
 		'External Website: ' . $this -> Html -> link($organization['Organization']['website']),
 		'Meetings: ' . $organization['Organization']['meeting_information']
 	), array('id' => 'description'));
-	echo "</div>";
-	echo $this -> Html -> image($organization['Organization']['logo_path'], array(
-		'id' => 'logo',
-		'width' => '215',
-		'height' => '300'
-	));
-	echo "</div>";
 	echo $this -> Html -> tag('h1', 'Budgets');
 	echo $this -> Html -> tag('h1', 'Bills');
 

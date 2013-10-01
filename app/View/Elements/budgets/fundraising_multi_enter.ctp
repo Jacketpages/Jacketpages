@@ -6,9 +6,9 @@
 echo $this -> Html -> script('budgets/fundraising_multi_enter');
 
 $names = array(
-	'Executed in FY ' . ($fiscalYear - 1),
-	"Expected in FY $fiscalYear",
-	'Planned for FY ' . ($fiscalYear + 1)
+	'Executed in FY 20' . ($fiscalYear - 2),
+	"Expected in FY 20". ($fiscalYear - 1),
+	"Planned for FY 20$fiscalYear"
 );
 foreach ($names as $key => $name)
 {

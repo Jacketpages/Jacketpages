@@ -120,11 +120,11 @@ class LineItemsController extends AppController
 						}
 					}
 				}
-				/*$this -> redirect(array(
-					'action' => 'index',
-					$bill_id,
-					$state
-				));*/
+				$this -> redirect(array(
+					'controller' => 'bills',
+					'action' => 'view',
+					$bill_id
+				));
 			}
 		}
 		else

@@ -21,11 +21,8 @@ if ($admin)
 	<li class="leaf">
 		<?php echo $this->Html->link('Login as Other User', array('controller' => 'users', 'action' => 'login'))?>
 	</li>
-	<li class="leaf">
-		<?php echo $this->Html->link('Submit Bill as Other User', array('controller' => 'bills', 'action' => 'add'))?>
-	</li>
 	<li class="leaf last">
-		<?php echo $this->Html->link('Post Message', '/Messages/message')?>
+		<?php echo $this->Html->link('Submit Bill as Other User', array('controller' => 'bills', 'action' => 'add'))?>
 	</li>
 </ul>	
 	
