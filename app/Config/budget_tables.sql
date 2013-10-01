@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS budget_submit_states
 	state_2 int(1) default 0,
 	state_3 int(1) default 0,
 	state_4 int(1) default 0,
-	state_5 int(1) default 0
+	state_5 int(1) default 0,
+	state_6 int(1) default 0
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS dues

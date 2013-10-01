@@ -4,7 +4,7 @@
  * @since 8/26/2013
  */
 
-$this -> extend('/Common/common');
+$this -> extend('/Common/budgets');
 $this -> assign('title', "FY $fiscalYear Budget Line Items");
 $this -> start('middle');
 echo $this -> Html -> para('', 'Itemize all costs, except equipment purchases that will last 

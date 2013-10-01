@@ -4,7 +4,7 @@
  * @since 8/26/2013
  */
 
-$this -> extend('/Common/common');
+$this -> extend('/Common/budgets');
 $this -> assign('title', "FY $fiscalYear Budget Application for $orgName (Tier $tier)");
 $this -> start('middle');
 

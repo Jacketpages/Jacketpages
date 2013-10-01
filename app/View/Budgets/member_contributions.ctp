@@ -4,7 +4,7 @@
  * @since 9/10/2013
  */
 
-$this -> extend('/Common/common');
+$this -> extend('/Common/budgets');
 $this -> assign('title', 'Member Contributions');
 $this -> start('script');
 echo $this -> Html -> script('budgets/member_contributions');

@@ -3,7 +3,7 @@
  * @author Stephen Roca
  * @since 8/26/2013
  */
-$this -> extend('/Common/common');
+$this -> extend('/Common/budgets');
 $this -> start('script');
 echo $this -> Html -> script('budgets/expenses_multi_enter');
 $this -> end();
