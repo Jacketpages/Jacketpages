@@ -329,3 +329,29 @@ ul.secondary a:active {
 
 }
 
+.LineItemQuantity
+{
+  width:35px;
+}
+
+.LineItemButton
+{
+  width:30px;
+}
+
+.LineItemTotalCost
+{
+  width:65px;
+}
+
+.LineItemCostPerUnit
+{
+  width:65px;
+}
+
+.LineItemAmount
+{
+  width:65px;
+}
+  
+

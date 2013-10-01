@@ -6,7 +6,7 @@
  *
  */
 
-#page { overflow: hidden; }
+#page { /*overflow: hidden; */}
 
 /* Standard section wrapper */
 .row {
