@@ -82,7 +82,7 @@ class AppController extends Controller
 
 		if (!$this -> Acl -> check("Role/$level", "controllers/" . $this -> name . "/" . $this -> params['action']))
 		{			
-			$this -> Session -> setFlash("You do not have permission to access that page. " + "Role/$level" + " vs. " + "controllers/" . $this -> name . "/" . $this -> params['action']);
+			$this -> Session -> setFlash("You do not have permission to access that page.");
 			if (strcmp($this -> referer(), "/") == 0)
 				$this -> redirect(array(
 					'controller' => 'pages',
