@@ -94,7 +94,7 @@ div.table-container {
   overflow: auto;
 }
 table {
-  border: 1px solid #bbb;
+  /*border: 1px solid #bbb;*/
   border-collapse: collapse;
   margin: 0 0 1.29em 0;
   width: 100%;
@@ -109,9 +109,9 @@ th {
   text-align: left;
 }
 th a:link, th a:visited, 
-th a:hover, th a:active { color: #fff; }
+th a:hover, th a:active { color: #fff !important; }
 td { 
-  border: 1px solid #bbb;
+  /*border: 1px solid #bbb;*/
   border-collapse: collapse;
   padding: .428em;
   vertical-align: top;
@@ -328,4 +328,29 @@ ul.secondary a:active {
 @media only screen and (min-width: 64em) {
 
 }
+
+.LineItemQuantity
+{
+  width:35px;
+}
+
+.LineItemButton
+{
+  width:30px;
+}
+
+.LineItemCostPerUnit, .LineItemAmount, .LineItemTotalCost
+{
+  width:65px;
+}
+
+.membership div
+{
+  padding-bottom:10px;
+}
+.membership select
+{
+  width:50% !important;
+}
+  
 

@@ -13,7 +13,7 @@ echo $this -> Html -> tableBegin(array(
 echo $this -> Html -> tableCells(array('User'));
 echo $this -> Html -> tableCells(array('Organization'));
 echo $this -> Html -> tableEnd();
-echo $this -> Form -> create('Membership');
+echo $this -> Form -> create('Membership', array( 'class' => 'membership'));
 echo $this -> Form -> hidden('ID');
 echo $this -> Form -> input('ROLE', array(
 	'label' => 'Role',
