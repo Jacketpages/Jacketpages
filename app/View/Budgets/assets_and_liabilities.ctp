@@ -4,7 +4,7 @@
  * @since 9/10/2013
  */
 
-$this -> extend('/Common/common');
+$this -> extend('/Common/budgets');
 $this -> assign('title', 'Current Assets and Liabilities');
 $this -> start('middle');
 echo $this -> Html -> para('', 'Any bank account balances should be included here and be specific. Please indicate if asset has been tagged by GT Inventory.');
