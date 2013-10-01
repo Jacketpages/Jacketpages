@@ -184,10 +184,4 @@ function updateTCAndRqstd(row)
 		$("#LineItemAmount" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
 		$("#LineItemTotalCost" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
 	}
-	var id = "#LineItemAmount" + row;
-	$(id).removeClass("error");
-	$(id).tooltip("close");
-	var id = "#LineItemTotalCost" + row;
-	$(id).removeClass("error");
-	$(id).tooltip("close");
 }

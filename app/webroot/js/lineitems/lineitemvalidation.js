@@ -9,7 +9,6 @@ function assignAndRunValidationRules()
 		moneyRule("#LineItemTotalCost" + (i));
 		moneyRule("#LineItemAmount" + (i));
 		exactValueRule("#LineItemTotalCost" + (i), $("#LineItemQuantity" + (i)).val() * $("#LineItemCostPerUnit" + (i)).val());
-		moneyRule("#LineItemTotalCost" + (i));
 	}
 	alreadyValidated = true;
 }

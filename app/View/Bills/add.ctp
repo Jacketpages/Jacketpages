@@ -12,14 +12,16 @@ $this -> end();
 $this -> extend('/Common/common');
 echo $this -> Html -> addCrumb('All Bills', '/bills');
 $this -> start('sidebar');
-echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array(), array('id' => 'underline'));
+echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array());
 $this -> end();
 $this -> assign('title', 'Create New Bill');
 $this -> start('middle');
+
 echo $this -> Form -> create('Bill', array('onsubmit' => 'return validateForm()'));
 echo $this -> Form -> input('title', array('label' => 'Title'));
 echo $this -> Form -> input('description', array('label' => 'Description'));
 echo $this -> Form -> input('fundraising', array('label' => 'Fundraising - Please describe related fundraising efforts'));
+echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Form -> input('type', array(
 	'label' => 'Type',
 	'options' => array(

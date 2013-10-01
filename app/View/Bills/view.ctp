@@ -132,7 +132,7 @@ echo $this -> element('bills/view/outcomes');
 		),
 		'form_state' => 'Final'
 	)), array('id' => 'tabs-7'));
-	?>
+?>
 </div>
 <div class="ui-overlay" id="comments" style="display:none;">
 	<div class="ui-widget-overlay"></div>

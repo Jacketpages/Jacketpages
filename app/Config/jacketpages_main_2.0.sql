@@ -91,7 +91,6 @@ CREATE TABLE IF NOT EXISTS ORGANIZATIONS(
     PRIMARY KEY(id),
     name varchar(200) NOT NULL DEFAULT 'NAME ME!' COMMENT 'The name of the organization.',
     description text COMMENT 'A description of the organization and it\'s purpose.',
-	tier int(1) not null default 3,
     category int(2) NOT NULL DEFAULT 1 COMMENT 'The organization\'s category. (Foreign Key to Categories Table. Default = General)',
     status varchar(50) NOT NULL DEFAULT '' COMMENT 'An organization\'s current status. (Active, Inactive, Frozen)',
     dues varchar(100) NOT NULL DEFAULT '' COMMENT 'The dues that member\'s of the organization pay.',

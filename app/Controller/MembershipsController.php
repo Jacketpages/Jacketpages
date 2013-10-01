@@ -23,7 +23,7 @@ class MembershipsController extends AppController
 					'Membership.role <>' => 'Member',
 					'OR' => array(
 						$db -> expression('Membership.end_date >= NOW()'),
-						'Membership.end_date' => null
+						'Membership.end_date' => '0000-00-00'
 					)
 				)),
 			'fields' => array(
@@ -42,7 +42,7 @@ class MembershipsController extends AppController
 					'Membership.role' => 'Member',
 					'OR' => array(
 						$db -> expression('Membership.end_date >= NOW()'),
-						'Membership.end_date' => null
+						'Membership.end_date' => '0000-00-00'
 					)
 				)),
 			'fields' => array(
@@ -67,20 +67,20 @@ class MembershipsController extends AppController
 	 * Edits an individual Membership
 	 * @param id - a membership's id
 	 */
-	public function edit($mem_id = null, $org_id =null)
+	public function edit($id = null)
 	{
-		$this -> Membership -> id = $mem_id;
+		$this -> Membership -> id = $id;
 		if ($this -> request -> is('get'))
 		{
 			$this -> request -> data = $this -> Membership -> read();
-			$this -> set('membership', $this -> Membership -> read(null, $mem_id));
+			$this -> set('membership', $this -> Membership -> read(null, $id));
 		}
 		else
 		{
 			if ($this -> Membership -> save($this -> request -> data))
 			{
 				$this -> Session -> setFlash('The membership has been saved.');
-				$this -> redirect(array('action' => 'index', $org_id));
+				$this -> redirect(array('action' => 'index'));
 			}
 			else
 			{
@@ -158,18 +158,6 @@ class MembershipsController extends AppController
 
 		if ($this -> Membership -> save())
 			$this -> redirect($this -> referer());
-	}
-
-	public function acceptAll($org_id)
-	{
-		$pendingMemberships = $this -> Membership -> findAllByOrgIdAndStatus($org_id,'Pending');
-		for($i = 0; $i < count($pendingMemberships); $i++)
-		{
-			$pendingMemberships[$i]['Membership']['status'] = 'Active';
-			$pendingMemberships[$i]['Membership']['start_date'] = date("Y-m-d");
-		}
-		$this -> Membership -> saveAll($pendingMemberships);
-		$this -> redirect(array('controller' => 'organizations', 'action'=> 'view',$org_id));
 	}
 
 }

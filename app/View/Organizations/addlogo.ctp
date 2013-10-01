@@ -6,7 +6,7 @@ $this -> start('sidebar');
  echo $this -> Html -> nestedList(array($this -> Html -> link(__('Remove Logo', true), array(
 					'action' => 'deletelogo',
 					$organization['Organization']['id']
-			), null, sprintf(__('Are you sure you want to delete the logo?', true)))), array(), array('id' => 'underline'));
+			), null, sprintf(__('Are you sure you want to delete the logo?', true)))), array());
 
 $this -> end();
 

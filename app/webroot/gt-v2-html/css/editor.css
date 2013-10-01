@@ -1,0 +1,113 @@
+/**
+ * @file
+ * CSS for WYSIWYG editor (CKEditor, specifically)
+ *
+ * Includes styling for options available in the "styles" drop-down within CKEditor
+ *
+ */
+
+/* Adjusting <body> of CKEditor iframe */
+body.cke_editable { padding: 5px; }
+ 
+/* float left/right styling for inline images */
+.editor-float-left, .editor-float-left-simple, .editor-float-left-70, .editor-float-left-50, .editor-float-left-30 {
+  float: left;
+  padding: 5px 14px 10px 0;
+}
+.editor-float-right, .editor-float-right-simple, .editor-float-right-70, .editor-float-right-50, .editor-float-right-30 {
+  float: right;
+  padding: 5px 0px 10px 15px;
+}
+.editor-float-left, .editor-float-right {
+  max-width: 100%;
+  min-width: 1%;
+}
+.editor-float-left-70, .editor-float-right-70 { width: 70%; }
+.editor-float-left-50, .editor-float-right-50 { width: 50%; }
+.editor-float-left-30, .editor-float-right-30 { width: 30%; }
+.editor-float-left, .editor-float-right,
+.editor-float-left-70, .editor-float-right-70,
+.editor-float-left-50, .editor-float-right-50,
+.editor-float-left-30, .editor-float-right-30 {
+  color: #666;
+  font-size: .875em;
+}
+.editor-float-left img, .editor-float-right img,
+.editor-float-left-70 img, .editor-float-right-70 img,
+.editor-float-left-50 img, .editor-float-right-50 img,
+.editor-float-left-30 img, .editor-float-right-30 img {
+  background-color: #fff;
+  border: 1px solid #b0b0b0;
+  box-shadow: 0px 1px 2px #999;
+  margin-bottom: 5px;
+  padding: 1px;
+}
+.editor-clear-float-left { clear: left; }
+.editor-clear-float-right { clear: right; }
+.editor-clear-floats { clear: both; }
+
+/* Force full width and kill floats for float styles in the sidebars when both sidebars are shown */
+#sidebar-left.with-sidebar-right .editor-float-left-70,
+#sidebar-left.with-sidebar-right .editor-float-left-50,
+#sidebar-left.with-sidebar-right .editor-float-left-30,
+#sidebar-left.with-sidebar-right .editor-float-right-70,
+#sidebar-left.with-sidebar-right .editor-float-right-50,
+#sidebar-left.with-sidebar-right .editor-float-right-30,
+#sidebar-right.with-sidebar-left .editor-float-left-70,
+#sidebar-right.with-sidebar-left .editor-float-left-50,
+#sidebar-right.with-sidebar-left .editor-float-left-30,
+#sidebar-right.with-sidebar-left .editor-float-right-70,
+#sidebar-right.with-sidebar-left .editor-float-right-50,
+#sidebar-right.with-sidebar-left .editor-float-right-30 {
+  float: none;
+  width: 100%;
+  padding: 5px 0 10px;
+}
+
+/* File icon options */
+.editor-icon-pdf {
+  background: transparent url('../images/icons/icon-pdf.png') no-repeat left center;
+  padding: 1px 0 1px 20px;
+}
+.editor-icon-xls {
+  background: transparent url('../images/icons/icon-xls.png') no-repeat left center;
+  padding: 1px 0 1px 20px;
+}
+.editor-icon-ppt {
+  background: transparent url('../images/icons/icon-ppt.png') no-repeat left center;
+  padding: 1px 0 1px 20px;
+}
+.editor-icon-doc {
+  background: transparent url('../images/icons/icon-doc.png') no-repeat left center;
+  padding: 1px 0 1px 20px;
+}
+.editor-icon-file {
+  background: transparent url('../images/icons/icon-file.png') no-repeat left center;
+  padding: 1px 0 1px 20px;
+}
+
+/**
+ * Media Queries
+ *
+ */
+
+/* ~496px and less */
+@media only screen and (max-width: 31em) {
+  
+  .editor-float-left,
+  .editor-float-left-simple,
+  .editor-float-left-70,
+  .editor-float-left-50,
+  .editor-float-left-30,
+  .editor-float-right,
+  .editor-float-right-simple,
+  .editor-float-right-70,
+  .editor-float-right-50,
+  .editor-float-right-30 {
+    float: none;
+    width: 100%;
+    padding: 5px 0 10px;
+  }
+    
+}
+

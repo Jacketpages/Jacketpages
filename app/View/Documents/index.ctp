@@ -5,8 +5,7 @@ $this -> assign('title', 'Documents');
 $this -> start('sidebar');
 echo $this -> Html -> nestedList(array(
 	$this -> Html -> link("Add File", array('action' => 'add', $id))),
-	array(),
-	array('id' => 'underline')
+	array()
 );
 $this -> end();
 $this -> start('middle');

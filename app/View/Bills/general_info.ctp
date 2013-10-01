@@ -6,11 +6,12 @@
 $this -> extend('/Common/common');
 $this -> assign('title', 'Update General Bill Information');
 $this -> start('sidebar');
-echo $this -> element('bills/sidebar_links');
+echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array());
 $this -> end();
 $this -> start('middle');
+echo $this -> HTML -> div("", "Note: details cannot be edited if an author has signed the bill.", array('style'=>'margin-bottom:10px;'));
 echo $this -> Form -> create();
-debug($bill);
+
 if ($bill['Bill']['status'] < $AGENDA && !$admin)
 {
 	echo $this -> Form -> input('id', array('type' => 'hidden'));

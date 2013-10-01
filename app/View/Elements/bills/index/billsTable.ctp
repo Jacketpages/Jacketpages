@@ -47,7 +47,7 @@
 				'selected' => $this -> Session -> read('Category')
 			));
 
-			echo $this -> Form -> end('Search');
+			echo $this -> Form -> end();
 			?>
 		</div>
 	</div>

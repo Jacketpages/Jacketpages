@@ -1,0 +1,296 @@
+/**
+ * @file
+ * CSS block element styles
+ *
+ * Includes styling for block elements
+ *
+ */
+
+/**
+ * Block Defaults
+ */
+.block { padding: 0 10px 10px; }
+.block .block-title-wrapper h4 { 
+  border-bottom: 2px solid #AAAAAA;
+  font-size: 1.286em;
+  line-height: 1.2;
+  margin: 0 0 10px;
+  padding: 5px 3px 6px;
+}
+
+/**
+ * Block stacking by region
+ */
+
+/* Content Lead/Close Regions */
+.region-content-lead .block,
+.region-content-close .block {
+  float: left;
+  width: 100%;
+}
+.region-content-lead.block-count-2 .block,
+.region-content-close.block-count-2 .block { width: 50%; }
+.region-content-lead.block-count-3 .block,
+.region-content-close.block-count-3 .block { width: 33%; }
+.region-content-lead.block-count-4 .block,
+.region-content-close.block-count-4 .block { width: 25%; }
+
+/* Main Top/Bottom Regions Defaults */
+.region-main-top .block,
+.region-main-bottom .block {
+  float: left;
+  width: 100%;
+}
+/* Main Top/Bottom Regions no sidebars, block count = 2 */
+#content.no-sidebars .region-main-top.block-count-2 .block,
+#content.no-sidebars .region-main-bottom.block-count-2 .block { width: 50%; }
+
+/* Main Top/Bottom Regions no sidebars, block count = 3 */
+#content.no-sidebars .region-main-top.block-count-3 .block,
+#content.no-sidebars .region-main-bottom.block-count-3 .block { width: 33.3%; }
+
+/* Main Top/Bottom Regions no sidebars, block count = 4+ */
+#content.no-sidebars .region-main-top.block-count-4 .block,
+#content.no-sidebars .region-main-bottom.block-count-4 .block { width: 25%; }
+
+/* Main Top/Bottom Regions one sidebar, block count = 2 */
+#content.one-sidebar .region-main-top.block-count-2 .block,
+#content.one-sidebar .region-main-bottom.block-count-2 .block { width: 50%; }
+
+/* Main Top/Bottom Regions one sidebar, block count = 3+ */
+#content.one-sidebar .region-main-top.block-count-3 .block,
+#content.one-sidebar .region-main-top.block-count-4 .block,
+#content.one-sidebar .region-main-bottom.block-count-3 .block,
+#content.one-sidebar .region-main-bottom.block-count-4 .block {
+  width: 33%;
+}
+
+/* Main Top/Bottom Regions both sidebars, block count = 2+ */
+#content.both-sidebars .region-main-top.block-count-2 .block,
+#content.both-sidebars .region-main-top.block-count-3 .block,
+#content.both-sidebars .region-main-top.block-count-4 .block,
+#content.both-sidebars .region-main-bottom.block-count-2 .block,
+#content.both-sidebars .region-main-bottom.block-count-3 .block,
+#content.both-sidebars .region-main-bottom.block-count-4 .block {
+  width: 50%;
+}
+
+/**
+ * Block layout classes, which can be added by users via block class module
+ * (https://drupal.org/project/block_class) for now - will be ported to GT Tools module
+ */
+.block.full-width { width: 100% !important; }
+.block.three-quarter-width { width: 75% !important; }
+.block.two-thirds-width { width: 66.6% !important; }
+.block.half-width { width: 50% !important; }
+.block.third-width { width: 33.3% !important; }
+.block.quarter-width { width: 25% !important; }
+.block.row-break { clear: left; }
+
+/* don't allow width alterations for sidebar regions */
+#sidebar-left .block.three-quarter-width,
+#sidebar-right .block.three-quarter-width,
+#sidebar-left .block.two-thirds-width,
+#sidebar-right .block.two-thirds-width,
+#sidebar-left .block.half-width,
+#sidebar-right .block.half-width,
+#sidebar-left .block.third-width,
+#sidebar-right .block.third-width,
+#sidebar-left .block.quarter-width,
+#sidebar-right .block.quarter-width { width: 100% !important; }
+
+/**
+ * Block style classes, which can be added by users via GT Tools module
+ * (go to Configuration -> System -> GT Tools)
+ */
+ 
+ /* Gold stroke top/bottom w/ gray body bg */
+.promo-block .block-title-wrapper { padding: 5px; }
+.promo-block .block-title-wrapper h4 {
+  border: none;
+  margin: 0;
+}
+.promo-block .block-body {
+  background-color: #f1f1f1;
+  border-bottom: 4px solid #EEB211;
+  border-top: 4px solid #EEB211;
+  padding: 10px 10px 5px;
+}
+
+/* GT gold bg on title w/ gray body bg */
+.block.related-info-block .block-title-wrapper {
+    background: none repeat scroll 0 0 #EEB211;
+    color: inherit;
+    display: block;
+    margin: 0 0 3px;
+    padding: 10px;
+}
+.block.related-info-block .block-title-wrapper h4 {
+    border: none;
+    font-size: 1.286em;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+}
+.block.related-info-block .block-body {
+  background: none repeat scroll 0 0 #E6E6E6;
+  padding: 10px;
+}
+
+/* Block title icons */
+.block.icon-alert-title .block-title-wrapper h4,
+.block.icon-download-title .block-title-wrapper h4,
+.block.icon-info-title .block-title-wrapper h4,
+.block.icon-link-title .block-title-wrapper h4 { padding: 8px 3px; }
+.block.icon-alert-title .block-title-wrapper h4:before,
+.block.icon-download-title .block-title-wrapper h4:before,
+.block.icon-info-title .block-title-wrapper h4:before,
+.block.icon-link-title .block-title-wrapper h4:before {
+  color: #616161; 
+  display: inline-block;
+  float: left;
+  font-family: FontAwesome;
+  font-size: 30px;
+  margin: -6px 6px 0 0;
+}
+.block.icon-alert-title .block-title-wrapper h4:before { content: "\f06a"; }
+.block.icon-download-title .block-title-wrapper h4:before { content: "\f01a"; }
+.block.icon-info-title .block-title-wrapper h4:before { content: "\f05a"; }
+.block.icon-link-title .block-title-wrapper h4:before { content: "\f14c"; }
+
+/**
+ * Nodeblock tweaks
+ */
+/* Hide extra contextual links */
+.block-nodeblock .node .contextual-links-wrapper { display: none; }
+
+/**
+ * Media Query Breakpoints
+ *
+ * Breakpoints are calculated based on a browser default font-size of 16px and NOT what the base
+ * font-size is set to be (which is ~14px in this case of this page.) Plus, if the user decides to
+ * increase their default font size for their browser the layout will drop down to a lower
+ * breakpoint (provided font size is increased enough), thus making for a more usable page!
+ */
+
+/* ~496px and less */
+@media only screen and (max-width: 31em) {
+  
+  /**
+   * Content Lead/Close Regions 
+   * All go to 100%
+   */
+  .region-content-lead.block-count-2 .block,
+  .region-content-lead.block-count-3 .block,
+  .region-content-lead.block-count-4 .block,
+  .region-content-close.block-count-2 .block,
+  .region-content-close.block-count-3 .block,
+  .region-content-close.block-count-4 .block { width: 100%; }
+    
+  /*
+   * Main Bottom/Top Regions
+   * All go to 100%
+   */
+  #content.no-sidebars .region-main-top.block-count-2 .block,
+  #content.no-sidebars .region-main-top.block-count-3 .block,
+  #content.no-sidebars .region-main-top.block-count-4 .block,
+  #content.no-sidebars .region-main-bottom.block-count-2 .block,
+  #content.no-sidebars .region-main-bottom.block-count-3 .block,
+  #content.no-sidebars .region-main-bottom.block-count-4 .block,
+  #content.one-sidebar .region-main-top.block-count-2 .block,
+  #content.one-sidebar .region-main-top.block-count-3 .block,
+  #content.one-sidebar .region-main-top.block-count-4 .block,
+  #content.one-sidebar .region-main-bottom.block-count-2 .block,
+  #content.one-sidebar .region-main-bottom.block-count-3 .block,
+  #content.one-sidebar .region-main-bottom.block-count-4 .block,
+  #content.both-sidebars .region-main-top.block-count-2 .block,
+  #content.both-sidebars .region-main-top.block-count-3 .block,
+  #content.both-sidebars .region-main-top.block-count-4 .block,
+  #content.both-sidebars .region-main-bottom.block-count-2 .block,
+  #content.both-sidebars .region-main-bottom.block-count-3 .block,
+  #content.both-sidebars .region-main-bottom.block-count-4 .block { width: 100%; }
+  
+  /**
+   * Block layout classes
+   * All convert to full width
+   */
+  .block.three-quarter-width { width: 100% !important; }
+  .block.two-thirds-width { width: 100% !important; }
+  .block.half-width { width: 100% !important; }
+  .block.third-width { width: 100% !important; }
+  .block.quarter-width { width: 100% !important; }
+  
+}
+
+/* ~496px to ~816px */
+@media only screen and (min-width: 31em) and (max-width: 51em) {
+  
+  /**
+   * Content Lead/Close Regions 
+   * Keep 'em at 3 across max
+   */
+  .region-content-lead.block-count-2 .block,
+  .region-content-close.block-count-2 .block { width: 50%; }
+  .region-content-lead.block-count-3 .block,
+  .region-content-close.block-count-3 .block { width: 33.3%; }
+  .region-content-lead.block-count-4 .block,
+  .region-content-close.block-count-4 .block { width: 33.3%; }
+  
+  /**
+   * Main Bottom/Top Regions
+   * Keep 'em at 2 across max
+   */
+  #content.no-sidebars .region-main-top.block-count-2 .block,
+  #content.no-sidebars .region-main-top.block-count-3 .block,
+  #content.no-sidebars .region-main-top.block-count-4 .block,
+  #content.no-sidebars .region-main-bottom.block-count-2 .block,
+  #content.no-sidebars .region-main-bottom.block-count-3 .block,
+  #content.no-sidebars .region-main-bottom.block-count-4 .block,
+  #content.one-sidebar .region-main-top.block-count-2 .block,
+  #content.one-sidebar .region-main-top.block-count-3 .block,
+  #content.one-sidebar .region-main-top.block-count-4 .block,
+  #content.one-sidebar .region-main-bottom.block-count-2 .block,
+  #content.one-sidebar .region-main-bottom.block-count-3 .block,
+  #content.one-sidebar .region-main-bottom.block-count-4 .block,
+  #content.both-sidebars .region-main-top.block-count-2 .block,
+  #content.both-sidebars .region-main-top.block-count-3 .block,
+  #content.both-sidebars .region-main-top.block-count-4 .block,
+  #content.both-sidebars .region-main-bottom.block-count-2 .block,
+  #content.both-sidebars .region-main-bottom.block-count-3 .block,
+  #content.both-sidebars .region-main-bottom.block-count-4 .block { width: 50%; }
+  
+  /**
+   * Sidebars
+   * In "tablet" views, force blocks to 50% max-width if more than on in region
+   * (does not apply to menu sidebar)
+   */
+  .region-right.block-count-2 .block,
+  .region-right.block-count-3 .block,
+  .region-right.block-count-4 .block,
+  .region-right.block-count-2 .block,
+  .region-right.block-count-3 .block,
+  .region-right.block-count-4 .block {  
+    float: left;
+    width: 50%;
+  }
+  
+  /**
+   * Block layout classes
+   * Convert 1/4 + 3/4 layouts to 1/3 + 2/3
+   */
+  .block.three-quarter-width { width: 66.6% !important; }
+  .block.quarter-width { width: 33.3% !important; }
+  
+}
+
+/* ~816px or more */
+@media only screen and (min-width: 51em) {
+  
+  
+}
+
+/* ~1024px or more */
+@media only screen and (min-width: 64em) {
+  
+  
+}

@@ -1,0 +1,11 @@
+modules required for gt_theme
+
+- jquery update
+- menu
+- ctools
+- block reference
+- nodeblock
+
+theme issues in admin (without admin theme)
+
+- draggable table icons inscrutable

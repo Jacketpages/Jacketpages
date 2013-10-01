@@ -7,7 +7,7 @@ $this -> extend('/Common/common');
 $this -> assign('title', 'Update Voting Information');
 $this -> start('sidebar');
 echo $this -> Html -> nestedList(
-array($this -> Html -> link('View All Bills', array('action' => 'index'))), array(), array('id' => 'underline')
+array($this -> Html -> link('View All Bills', array('action' => 'index'))), array()
 );
 $this -> end();
 $this -> start('middle');

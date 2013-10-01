@@ -6,7 +6,7 @@ if ($admin || $lace)
 		$this -> Paginator -> sort('NAME', 'Name'),
 		'Description',
 		'Status',
-		'AAIDPF Date',
+		'Forms Date',
 		'',
 		''
 	), array('class' => 'links'));

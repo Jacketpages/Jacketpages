@@ -1,0 +1,42 @@
+screenshot  = screenshot.png
+name = Georgia Tech - Drupal 7 Theme V 2.0
+description =  Official Georgia Tech D7 theme
+
+core = 7.x
+
+stylesheets[screen][] = css/reset.css
+stylesheets[screen][] = css/default.css
+stylesheets[screen][] = css/fonts.css
+stylesheets[screen][] = css/typography.css
+stylesheets[screen][] = css/layout.css
+stylesheets[screen][] = css/blocks.css
+stylesheets[screen][] = css/content.css
+stylesheets[screen][] = css/editor.css
+stylesheets[print][] = css/print.css
+
+scripts[] = js/html5shiv.js
+scripts[] = js/gt.js
+
+regions[spotlight] = Spotlight area in header typically used for home page carousels
+regions[content_lead] = Area ABOVE Main Content (IGNORES sidebar regions)
+regions[left_nav] = Left Side Menu (displays above all other content in Left Sidebar)
+regions[left] = Left Sidebar
+regions[help] = Site help content
+regions[main_top] = Area ABOVE Main Content (RESPECTS sidebar regions)
+regions[content] = Main Content
+regions[main_bottom] = Area BELOW Main Content (RESPECTS sidebar regions)
+regions[right] = Right Sidebar 
+regions[content_close] = Area BELOW Main Content (IGNORES sidebar regions)
+
+settings[gt_logo_default] = 1
+settings[gt_logo_type] = 0
+settings[search_option] = 1
+settings[map_default] = 1
+settings[map_image_link] = http://map.gtalumni.org
+settings[login_link_option] = 0
+
+version = "7.x-2.0"
+
+project = "gt"
+datestamp = "1380313885"
+project status url = http://drupal.gatech.edu/release_history/gt_theme/7.x
