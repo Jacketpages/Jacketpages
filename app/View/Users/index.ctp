@@ -23,7 +23,7 @@ $this -> start('sidebar');
 echo $this -> Html -> nestedList(array(
    $this -> Html -> link('Add User', array('action' => 'add')),
    $this -> Html -> link('Add SGA Member', array('action' => 'add'))
-), array(), array('id' => 'underline'));
+), array());
 $this -> end();
 $this -> start('search');
 

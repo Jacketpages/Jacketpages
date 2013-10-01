@@ -31,7 +31,7 @@ if ($userDeletePerm)
 }
 
 $this -> start('sidebar');
-echo $this -> Html -> nestedList($links, array(), array('id' => 'underline'));
+echo $this -> Html -> nestedList($links, array());
 $this -> end();
 
 $this -> assign('title', $user['User']['name']);

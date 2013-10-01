@@ -4,7 +4,7 @@
  * @since 03/22/2012
  */
  ?>
- <div class="links" id="sidebar">
+ <div class="links left-nav" id="sidebar">
         <?php
       echo $this -> fetch('sidebar');
       echo $this -> element('sidebar');

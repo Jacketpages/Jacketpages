@@ -1,9 +1,6 @@
 <!-- Print out the sidebar -->
-<div id="sidebar">
-    <?php echo $this -> element('sidebar');?>
-</div>
 <!-- Fill out the home page information -->
-<div id="middle">
+<div id="home_middle">
     <?php
    echo $this -> Html -> tag('h1', 'Welcome to Jacketpages');
    echo $this -> Html -> para(null, 'JacketPages serves the student body at Georgia Tech by connecting students with student organizations and student organizations with your Student Government Association (SGA). This allows you to browse student organizations, to get involved, and, if you\'re already involved, to communicate your needs to SGA.');

@@ -155,7 +155,7 @@ h3 {
  */
 #content {
 	z-index: 80;
-	width: 960px;
+	width: 1000px;
 	margin: 0px auto 0px auto;
 	position: relative;
 	float: none;
@@ -207,7 +207,7 @@ h3 {
  */
 #middle {
 	float: right;
-	width: 780px;
+	width: 805px;
 	min-height: 400px;
 }
 

@@ -74,7 +74,7 @@ if ($orgAdminPerm)
 		$organization['Organization']['id']
 	), null, sprintf(__('Are you sure you want to delete %s?', true), $organization['Organization']['name']));
 }
-echo $this -> Html -> nestedList($sidebar, array(), array('id' => 'underline'));
+echo $this -> Html -> nestedList($sidebar, array());
 $this -> end();
 
 // Define the main information for this view.

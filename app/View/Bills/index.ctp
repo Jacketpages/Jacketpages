@@ -19,7 +19,7 @@ echo $this -> Html -> nestedList(array(
 		'admin' => false,
 		'action' => 'export'
 	))
-), array(), array('id' => 'underline'));
+), array());
 $this -> end();
 $this -> assign("title", "Bills");
 $this -> start('search');

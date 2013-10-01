@@ -12,7 +12,7 @@ $this -> end();
 $this -> extend('/Common/common');
 echo $this -> Html -> addCrumb('All Bills', '/bills');
 $this -> start('sidebar');
-echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array(), array('id' => 'underline'));
+echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array());
 $this -> end();
 $this -> assign('title', 'Create New Bill');
 $this -> start('middle');

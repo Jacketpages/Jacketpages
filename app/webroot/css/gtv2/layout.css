@@ -103,7 +103,6 @@
 
 /* Masthead */
 #masthead {
-  margin-bottom: -7px; /* negative bottom margin to fix lower spacing issue */
   min-height: 198px;
   position: relative;
 }
@@ -654,25 +653,25 @@
 }
 .block-menu .menu li li li { font-size: 1em; }
 
-#left-nav .menu li li:before,
-#left-nav .menu li li a:before {
+.left-nav ul li li:before,
+.left-nav ul li li a:before {
   content: "";
 }
 
 /* Menus in Left Nav region */
-#left-nav .block-title-wrapper { display: none; }
-#left-nav .menu {
+.left-nav .block-title-wrapper { display: none; }
+.left-nav ul {
   border-top: 4px solid #EEB211;
   margin: 0 0 20px;
   padding: 0;
 }
-#left-nav .menu li {
+.left-nav ul li {
   border: none;
   list-style: none;
   margin: 0;
   padding: 0;
 }
-#left-nav .menu li a {
+.left-nav ul li a {
   border-bottom: 1px solid #c7c7c7;
   display: block;
   color: #023d7b;
@@ -681,25 +680,25 @@
   position: relative;
   text-decoration: none;
 }
-#left-nav .menu li a:hover { color: #105aa8; }
-#left-nav .menu li.expanded a {
+.left-nav ul li a:hover { color: #105aa8; }
+.left-nav ul li.expanded a {
   border-bottom: none;
   padding-bottom: 0px;
 }
-#left-nav .menu li.expanded li.last a { padding-bottom: 8px; }
-#left-nav .menu li .menu {
+.left-nav ul li.expanded li.last a { padding-bottom: 8px; }
+.left-nav ul li ul {
   border-bottom: 1px solid #c7c7c7;
   border-top: none;
   margin: 0;
   padding: 0 0 5px 12px;
 }
-#left-nav .menu li .menu li .menu { border: none; padding-bottom: 0; }
-#left-nav .menu li li a {
+.left-nav ul li ul li ul { border: none; padding-bottom: 0; }
+.left-nav ul li li a {
   border: none;
   font-size: 1em;
   font-weight: 400;
 }
-#left-nav .menu li a:before {
+.left-nav ul li a:before {
   color: #eee;
   content: '\f054';
   display: inline-block;
@@ -712,8 +711,8 @@
   text-decoration: none;
   top: 6px;
 }
-#left-nav .menu li li:before,
-#left-nav .menu li li a:before {
+.left-nav ul li li:before,
+.left-nav ul li li a:before {
   content: "";
 }
 
@@ -837,6 +836,7 @@
   margin: 0 0 2px;
 }
 #footer-utility-links li.last { border: none; }
+#footer-utility-links li:last-child { border: none; }
 #footer-utility-links li.first.last { border: none; }
 #footer-utility-links a {
   color: #6c5003;

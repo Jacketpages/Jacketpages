@@ -12,7 +12,7 @@ echo $this -> Html -> script('validation/validation');
 $this -> end();
 $this -> extend('/Common/common');
 $this -> start('sidebar');
-echo $this -> Html -> nestedList(array($this -> Html -> link('Travel Calculator', array('action' => 'travel_calculator'))), array(), array('id' => 'underline'));
+echo $this -> Html -> nestedList(array($this -> Html -> link('Travel Calculator', array('action' => 'travel_calculator'))), array());
 $this -> end();
 
 $this -> assign('title', 'Line Items - ' . $titleState);

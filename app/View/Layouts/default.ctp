@@ -188,21 +188,15 @@
 				?></div>
 			</div>
 
-			<?php echo $this -> Session -> flash('auth'); ?><?php echo $this -> fetch('content'); ?>
+			<?php echo $this -> Session -> flash('auth'); ?>
+			<?php echo $this -> fetch('content'); ?>
 			 </div>
 		</div><!-- content -->
 			
 			<div id="footer">
 		    <div class="row clearfix">
 		      <div id="footer-utility-links">
-
-		        <ul class="menu">
-		          <li class="last"><?php echo $this -> Html -> link("Privacy Policy", array(
-					'controller' => 'pages',
-					'action' => 'privacy_policy'
-					)); ?>
-				  </li>
-		        </ul> 
+				<?php echo $this->element('footer_menu') ?>
 		      </div>
 
 		      <div id="footer-logo">

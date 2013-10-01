@@ -80,7 +80,7 @@ if ($bill['Bill']['status'] < $AGENDA && ($sga_exec || $this -> Session -> read(
 }
 if ($sidebar != null)
 {
-	echo $this -> Html -> nestedList($sidebar, array(), array('id' => 'underline'));
+	echo $this -> Html -> nestedList($sidebar, array());
 }
 $this -> end();
 $this -> assign("title", "Bill");

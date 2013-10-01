@@ -61,8 +61,6 @@ echo $this -> Html -> nestedList($sidebar);
 	));
 	?>
 </div>
-<!--    TODO edit this to where this is not done with a random div -->
-<div style="border-bottom: 1px solid #DDD;"></div>
 <?php
 $this -> end();
 

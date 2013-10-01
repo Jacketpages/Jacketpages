@@ -73,7 +73,7 @@ a:hover, a:active { color: #2c6096; text-decoration: none; }
 #overlay-content #utility,
 #overlay-content #masthead,
 #overlay-content #content-lead,
-#overlay-content #left-nav,
+#overlay-content .left-nav,
 #overlay-content #sidebar-left,
 #overlay-content #sidebar-right,
 #overlay-content #superfooter,
