@@ -267,7 +267,7 @@
 
 		      <div id="footer-logo">
 		        <a href="/" rel="home" title="Georgia Tech" style="margin-right:4px">
-		        	<?php echo $this->Html->image('sgalogogrey.png', array('alt' => 'Georgia Tech', 'style' => 'width: 70px')); ?>
+		        	<?php echo $this->Html->image('sgalogogrey.png', array('alt' => 'Georgia Tech')); ?>
 		        </a>     
 		    
 		        <p>&copy; <?php  print $year = date("Y"); ?> Georgia Tech Student Government Association</p>
