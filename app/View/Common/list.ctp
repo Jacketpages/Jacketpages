@@ -3,14 +3,21 @@
  * @author Stephen Roca
  * @since 03/22/2012
  */
- ?>
- <div class="links left-nav" id="sidebar">
+
+/* How the sidebarExists is in Common/common */
+?>
+
+
+<?php if($sidebarExists = ($this->fetch('sidebar') != '')){ ?>
+<div class="links left-nav" id="sidebar">
         <?php
       echo $this -> fetch('sidebar');
       echo $this -> element('sidebar');
         ?>
 </div>
-<div id="middle">
+<?php } ?>
+
+<div id="<?php echo ($sidebarExists)?'middle':'full_middle'; ?>">
     <h1><?php echo $this -> fetch('title');?></h1>
     <?php 
     echo $this -> fetch('search');
