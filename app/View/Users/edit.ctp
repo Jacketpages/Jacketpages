@@ -11,7 +11,7 @@ echo $this -> Html -> addCrumb($user['User']['name'], '/users/view/' . $user['Us
 echo $this -> Html -> addCrumb('Edit Profile', '/users/edit/' . $user['User']['id']);
 
 $this -> extend('/Common/common');
-$this -> assign('title', 'Edit User');
+$this -> assign('title', 'Edit Profile');
 
 $this -> start('middle');
 

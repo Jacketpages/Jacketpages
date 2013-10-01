@@ -17,14 +17,14 @@ $this -> extend('/Common/common');
 $links = array();
 if ($userEditPerm)
 {
-	$links[] = $this -> Html -> link(__('Edit User', true), array(
+	$links[] = $this -> Html -> link(__('Edit Profile', true), array(
 		'action' => 'edit',
 		$user['User']['id']
 	));
 }
 if ($userDeletePerm)
 {
-	$links[] = $this -> Html -> link(__('Delete User', true), array(
+	$links[] = $this -> Html -> link(__('Delete Profile', true), array(
 		'action' => 'delete',
 		$user['User']['id']
 	), null, sprintf(__('Are you sure you want to delete %s?', true), $user['User']['name']));
