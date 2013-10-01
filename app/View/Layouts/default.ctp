@@ -172,48 +172,6 @@
         
         </div>
         
-        
-        
-        
-        <!--
-        <div id="header">
-            <?php
-			// Link the Jacketpages logo to the Jacketpages home page
-			echo $this -> Html -> link($this -> Html -> div("", "", array('id' => 'logoWrapper')), "/", array('escape' => false));
-
-			// Output the utility bar element
-			echo $this -> element('utilityBar');
-
-			// Get the BreadCrumbs for the left side of the Breadcrumbs bar
-			$breadcrumbTrail = $this -> Html -> tag('div', $this -> Html -> getCrumbs(' > ', 'Home'), array('id' => 'left'));
-			// Determine the message to display on the right side of the Breadcrumbs bar
-			$message = $this -> Session -> flash();
-			if ($message == null)
-			{
-				$message = $this -> Session -> flash('auth');
-			}
-			if (strlen($message))
-			{
-				$message = $this -> Html -> tag('div', $message, array('id' => 'right'));
-			}
-			else if ($this -> Session -> read('User.name') != null)
-			{
-				$message = $this -> Html -> tag('div', "Welcome, " . $this -> Session -> read('User.name'), array('id' => 'right'));
-			}
-			else
-			{
-				$message = $this -> Html -> tag('div', "Welcome, Guest.", array('id' => 'right'));
-			}
-
-			// Output the Breadcrumbs bar
-			echo $this -> Html -> tag('div', $this -> Html -> tag('div', $breadcrumbTrail . $message, array(
-				'id' => 'breadCrumbs',
-				'escape' => false
-			)), array('id' => 'breadCrumbWrapper'));
-            ?>
-        </div>
-        -->
-        
         <div id="content">
         <div class="clearfix">
 			<div class="ui-overlay" id="help" style="display:none;">
@@ -231,17 +189,6 @@
 			</div>
 
 			<?php echo $this -> Session -> flash('auth'); ?><?php echo $this -> fetch('content'); ?>
-            <!-- 
-            <div id="footer_old">
-                <?php /*
-				echo $this -> Html -> link("Privacy Policy", array(
-					'controller' => 'pages',
-					'action' => 'privacy_policy'
-				), array('style' => 'display:inline;float:left;text-decoration:none;color:#666;'));
-				echo $this -> Html -> para('', date('Y') . ' Georgia Tech Student Government Association', array('style' => 'display:inline;'));
-                */?>
-			</div>
-			-->
 			 </div>
 		</div><!-- content -->
 			
