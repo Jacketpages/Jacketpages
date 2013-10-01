@@ -109,7 +109,7 @@ th {
   text-align: left;
 }
 th a:link, th a:visited, 
-th a:hover, th a:active { color: #fff; }
+th a:hover, th a:active { color: #fff !important; }
 td { 
   border: 1px solid #bbb;
   border-collapse: collapse;
