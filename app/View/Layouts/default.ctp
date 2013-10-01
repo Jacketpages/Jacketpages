@@ -86,7 +86,6 @@
 </script>
     </head>
     <body>
-    <div id="page">
         <!--         <div id="container">  -->
         
         
@@ -280,7 +279,6 @@
 			
 			
 			
-			</div>
         <?php echo $this -> element('sql_dump'); ?>
 			</body>
 			</html>
