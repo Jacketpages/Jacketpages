@@ -225,15 +225,13 @@
         <div class="clearfix">
 			<div class="ui-overlay" id="help" style="display:none;">
 				<div class="ui-widget-overlay"></div>
-				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 100%; position: absolute;">
+				<div class="ui-corner-all" id="overlay" style="width: 100%; height: 600px; position: absolute;overflow-y:scroll; margin-top:10px;">
 					<?php
-					if (!strcmp($this -> fetch('helppage'), ""))
-						echo "This page is currently empty. Please let us know what would be most needed/helpful to put here.";
-					echo $this -> fetch('helppage');
 					echo $this -> Form -> button("X", array(
 						'onclick' => 'closeHelp()',
 						'style' => 'float:right;'
 					));
+					echo $this -> element('helppage');
 				?></div>
 			</div>
 
