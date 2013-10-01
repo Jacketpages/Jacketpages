@@ -15,7 +15,7 @@ $sidebar = array();
 if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < $AUTHORED) 
 		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
 {
-	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
+	$sidebar[] = $this -> Html -> link(__('Update Details', true), array(
 		'action' => "general_info",
 		$bill['Bill']['id']
 	));
@@ -76,7 +76,7 @@ if ($bill['Bill']['status'] < $AGENDA && ($sga_exec || $this -> Session -> read(
 	$sidebar[] = $this -> Html -> link('Delete Bill', array(
 		'action' => 'delete',
 		$bill['Bill']['id']
-	), array('style' => 'color:red'));
+	), array('style' => 'color:red'),sprintf(__('Are you sure you want to delete this bill?', true)));
 }
 if ($sidebar != null)
 {
