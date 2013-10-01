@@ -589,6 +589,7 @@
   float: left;
   padding: 0 0 10px;
   width: 100%;
+  min-height: 400px;
 }
 #content.sidebar-left {
   margin: 0 0 0 30%;
