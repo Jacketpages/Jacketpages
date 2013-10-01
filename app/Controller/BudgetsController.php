@@ -6,6 +6,17 @@
 
 class BudgetsController extends AppController
 {
+	public $uses = array(
+		'Budget',
+		'BudgetSubmitState',
+		'LineItemCategory',
+		'BudgetLineItem',
+		'Fundraiser',
+		'Expense',
+		'Asset',
+		'Liability',
+		'MemberContribution'
+	);
 	public $helpers = array(
 		'Form',
 		'Html',
@@ -81,7 +92,6 @@ class BudgetsController extends AppController
 		$this -> set('president', $president);
 		$this -> set('treasurer', $treasurer);
 		$this -> set('advisor', $advisor);
-		$this -> loadModel('LineItemCategory');
 		$categories = $this -> LineItemCategory -> find('all');
 		$this -> set('category_names', Hash::extract($categories, '{n}.LineItemCategory.name'));
 		$this -> set('category_descriptions', Hash::extract($categories, '{n}.LineItemCategory.description'));
@@ -330,11 +340,31 @@ class BudgetsController extends AppController
 
 	public function summary($org_id)
 	{
-		$this -> loadModel('BudgetSubmitState');
+		$budgetId = $this -> getBudgetId($org_id);
 		$this -> set('state', $this -> BudgetSubmitState -> findById($this -> getBudgetId($org_id)));
 		$this -> set('org_id', $org_id);
-		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $this -> getBudgetId($org_id)))));
-	}
+		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $budgetId))));
+		$totals = array();
+		$totals[] = 'N/A';
+		$totals[] = '$' . $this -> BudgetLineItem -> field('SUM(amount)', array('budget_id' => $budgetId));
+		$totals[] = '$' . $this -> Fundraiser -> field('SUM(revenue)', array('budget_id' => $budgetId));
+		$totals[] = '$' . $this -> Expense -> field('SUM(amount)', array('budget_id' => $budgetId));
+		$totals[] = '$' . ($this -> Asset -> field('SUM(amount)', array('budget_id' => $budgetId)) - $this -> Liability -> field('SUM(amount)', array('budget_id' => $budgetId)));
+		$totals[] = '$' . $this -> MemberContribution -> field('SUM(amount)', array('budget_id' => $budgetId));
+		$this -> set('totals', $totals);
+		$this -> set('last_updated', $this -> Budget -> field('last_mod_date'));
+		$this -> loadModel('User');
+		debug($this -> Budget -> field('last_mod_by'));
+		$this -> set('last_updated_by', $this -> User -> field("CONCAT(first_name,' ',last_name)", array('id' => $this -> Budget -> field('last_mod_by'))));
+		if($this -> request -> is('post'))
+		{
+			$this -> Budget -> id = $budgetId;
+			if($this -> Budget -> saveField('state','Submitted'))
+			{
+				$this -> redirect(array('controller' => 'organizations', 'action'=>'view',$org_id));
+			}
+		}	
+}
 
 	public function view()
 	{

@@ -5,26 +5,36 @@
  */
 
 $this -> extend('/Common/budgets');
-$this -> assign('title', "FY $fiscalYear Budget Submission Summary");
+$this -> assign('title', "FY 20$fiscalYear Budget Submission Summary");
 
 $pageNames = array(
 	'Past Organization Information',
 	'Budget Line Items',
 	'Revenue Generated From Fundraising',
 	'Non-Student Activity Fee Expenses',
-	'Assets and Liabilities',
+	'Assets minus Liabilities',
 	'Member Contributions'
 );
 $this -> start('middle');
 $i = 1;
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
-echo $this -> Html -> tableHeaders(array('','Page','Total',''));
-foreach ($pageNames as $pageName)
+echo $this -> Html -> tableHeaders(array('','Page','Totals','Status'));
+foreach ($pageNames as $key => $pageName)
 {
-	echo $this -> Html -> tableCells(array($i,$pageName,'', $state['BudgetSubmitState']['state_' . $i] ? "Satisfied" : "Has Not Been Reviewed"));
+	echo $this -> Html -> tableCells(array($i,$pageName,$totals[$key], $state['BudgetSubmitState']['state_' . $i] ? "Satisfied" : "Pending Review"));
 	$i++;
 }
 echo $this -> Html -> tableEnd();
-echo "Last updated by blank on blank.";
+echo "Last updated by $last_updated_by on $last_updated.";
+echo $this -> Form -> create('',array('onsubmit' => 'return finalBudgetSubmit()'));
+echo $this -> Form -> submit();
+?>
+<script>
+	function finalBudgetSubmit()
+	{
+		return confirm('Changes can not be made after submission. Are you sure you want to submit this budget?');
+	}
+</script>
+<?php
 $this -> end();
 ?>
