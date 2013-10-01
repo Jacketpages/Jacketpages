@@ -1,0 +1,189 @@
+/**
+ * @file
+ * CSS content types/elements styles
+ *
+ * Includes styling for specific content types available via GT Tools module,
+ * and for elements provided via core.
+ *
+ */
+
+/**
+ * Horizontal Landing page
+ */
+body.node-type-horizontal-landing-page #main .row {
+  padding: 0;
+  max-width: 100%;
+}
+body.node-type-horizontal-landing-page #main #content-lead .region,
+body.node-type-horizontal-landing-page #main #content-close .region {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 10px;
+}
+body.node-type-horizontal-landing-page #main #content-close .region { padding-top: 10px; }
+body.node-type-horizontal-landing-page #main #page-title .title {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1024px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+body.node-type-horizontal-landing-page #support div,
+body.node-type-horizontal-landing-page #support ul.tabs,
+body.node-type-horizontal-landing-page #support ul.action-links {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 984px;
+}
+body.node-type-horizontal-landing-page #content {
+  float: none;
+  padding: 0;
+}
+body.node-type-horizontal-landing-page #content.sidebar-left,
+body.node-type-horizontal-landing-page #content.sidebar-right,
+body.node-type-horizontal-landing-page #content.both-sidebars {
+  margin: 0;
+  width: 100%;
+}
+body.node-type-horizontal-landing-page #block-system-main { padding: 0; }
+
+body.node-type-horizontal-landing-page #content .row-content {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding: 0 10px;
+}
+body.node-type-horizontal-landing-page #content .body-row .row-content { padding: 0 20px; }
+.block-row { padding-top: 10px; }
+.block-row.block-row-odd { background-color: #EFEFEF; }
+.block-row.block-row-even { background-color: #CACACA; }
+.block-row .block { float: left; width: 100%; }
+.block-row.block-count-2 .block { width: 50%; }
+.block-row.block-count-3 .block { width: 33%; }
+.block-row.block-count-4 .block { width: 25%; }
+body.node-type-horizontal-landing-page #sidebar-left,
+body.node-type-horizontal-landing-page #sidebar-right {
+  float: none;
+  margin: 0 auto;
+  max-width: 1004px;
+  padding-top: 10px;
+  width: auto;
+}
+
+/**
+ * Multipurpose page
+ */
+body.node-type-multipurpose-page .body { padding-bottom: 20px; }
+body.node-type-multipurpose-page .body.with-aside {
+  float: left;
+  padding-right: 10px;
+  width: 70%;
+}
+body.node-type-multipurpose-page .sidebar {
+  float: right;
+  padding-bottom: 20px;
+  width: 30%;
+}
+body.node-type-multipurpose-page .articles {
+  background-color: #EFEFEF;
+  clear: both;
+  margin-bottom: 10px;
+  padding: 20px 10px 10px;
+}
+.articles .block {
+  float: left;
+  width: 100%;
+}
+.articles.block-count-2 .block { width: 50%; }
+.articles.block-count-3 .block { width: 33%; }
+.articles.block-count-4 .block { width: 25%; }
+#content.both-sidebars .articles.block-count-3 .block { width: 50%; }
+#content.both-sidebars .articles.block-count-3 .block.even { clear: left; }
+#content.both-sidebars .articles.block-count-4 .block { width: 50%; }
+#content.both-sidebars .articles.block-count-4 .block.even { clear: left; }
+#content.one-sidebar .articles.block-count-4 .block { width: 50%; }
+#content.one-sidebar .articles.block-count-4 .block.even { clear: left; }
+
+
+/* Vertical Landing Page */
+body.node-type-vertical-landing-page #content .column-left {
+  float: left;
+  padding-right: 20px;
+  width: 50%;
+}
+body.node-type-vertical-landing-page #content .column-right {
+  float: right;
+  padding-left: 20px;
+  width: 50%;
+}
+body.node-type-vertical-landing-page #content .body { padding: 0 0 20px 0; }
+body.node-type-vertical-landing-page #content .column-left .block,
+body.node-type-vertical-landing-page #content .column-right .block { padding: 0 0 20px 0; }
+
+/**
+ * Media Query Breakpoints
+ *
+ * Breakpoints are calculated based on a browser default font-size of 16px and NOT what the base
+ * font-size is set to be (which is ~14px in this case of this page.) Plus, if the user decides to
+ * increase their default font size for their browser the layout will drop down to a lower
+ * breakpoint (provided font size is increased enough), thus making for a more usable page!
+ */
+
+/* ~496px and less */
+@media only screen and (max-width: 31em) {
+
+  .articles.block-count-2 .block,
+  .articles.block-count-3 .block,
+  .articles.block-count-4 .block,
+  #content.both-sidebars .articles.block-count-3 .block,
+  #content.one-sidebar .articles.block-count-3 .block,
+  #content.both-sidebars .articles.block-count-4 .block,
+  #content.one-sidebar .articles.block-count-4 .block,
+  .block-row.block-count-2 .block,
+  .block-row.block-count-3 .block,
+  .block-row.block-count-4 .block { width: 100%; }
+  body.node-type-multipurpose-page .body.with-aside {
+    float: none;
+    width: 100%;
+  }
+  body.node-type-multipurpose-page .sidebar {
+    float: none;
+    width: 100%;
+  }
+  body.node-type-vertical-landing-page #content .column-left {
+    float: none;
+    padding: 0 0 10px;
+    width: 100%;
+  }
+  body.node-type-vertical-landing-page #content .column-right {
+    float: none;
+    padding: 0 0 10px;
+    width: 100%;
+  }
+
+}
+
+/* ~496px to ~816px */
+@media only screen and (min-width: 31em) and (max-width: 51em) {
+
+  .articles.block-count-3 .block,
+  .articles.block-count-4 .block,
+  #content.both-sidebars .articles.block-count-3 .block,
+  #content.one-sidebar .articles.block-count-3 .block,
+  #content.both-sidebars .articles.block-count-4 .block,
+  #content.one-sidebar .articles.block-count-4 .block,
+  .block-row.block-count-3 .block,
+  .block-row.block-count-4 .block { width: 50%; }
+  body.node-type-multipurpose-page .body.with-aside { width: 60%; }
+  body.node-type-multipurpose-page .sidebar { width: 40%; }
+
+}
+
+/* ~816px or more */
+@media only screen and (min-width: 51em) {
+
+}
+
+/* ~1024px or more */
+@media only screen and (min-width: 64em) {
+
+}

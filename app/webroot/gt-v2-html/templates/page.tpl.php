@@ -25,9 +25,9 @@
  * - $gt_logo_file: The Georgia Tech logo image file as configured in theme settings.
  * - $site_title: The site title as configured in the theme settings.
  * - $site_title_class: The CSS class associated with the site title.
- * - $map_image: The map image for the super footer of the site as configured in theme 
+ * - $map_image: The map image for the super footer of the site as configured in theme
  *   settings.
- * - $street_address: The street address below the map in the super footer as configured 
+ * - $street_address: The street address below the map in the super footer as configured
  *   in theme settings
  *
  * Menus and Search:
@@ -53,7 +53,7 @@
  * - $page['main_top'] = Area ABOVE Main Content (RESPECTS right region)
  * - $page['content'] = Main Content
  * - $page['main_bottom'] = Area BELOW Main Content (RESPECTS right region)
- * - $page['right'] = Right Sidebar 
+ * - $page['right'] = Right Sidebar
  * - $page['content_close'] = Area BELOW Main Content (IGNORES right region)
  *
  * @see template_preprocess()
@@ -64,20 +64,24 @@
 ?>
 
 <div id="page">
-  
+
   <header id="masthead">
-      
-    <section id="identity" class="clearfix">
-      <div id="identity-wrapper">
+
+    <section id="identity">
+      <div id="identity-wrapper" class="clearfix">
         <h1 id="gt-logo">
-          <a href="<?php print $front_page; ?>" rel="home" title="<?php print $site_name; ?>" ><?php print $gt_logo_file; ?></a>
+          <?php print $gt_logo_file; ?>
+          <a href="http://www.gatech.edu" id="gt-logo-mothership-link" title="Georgia Institute of Technology">Georgia Institute of Technology</a>
+          <?php if ($gt_logo_right_url != '') : ?>
+            <a href="<?php print $gt_logo_right_url; ?>" id="gt-logo-secondary-link" title="<?php print $gt_logo_right_title; ?>"><?php print $gt_logo_right_title; ?></a>
+          <?php endif; ?>
         </h1>
         <?php if ($site_title != '') : ?>
-          <h2 class="<?php print $site_title_class; ?>" id="site-title"><?php print $site_title; ?></h2>
+          <h2 class="<?php print $site_title_class; ?>" id="site-title" rel="home"><a href="<?php print $front_page; ?>"><?php print $site_title; ?></a></h2>
         <?php endif; ?>
       </div>
     </section><!-- /#identity -->
-  
+
     <section id="primary-menus">
       <div id="primary-menus-wrapper" class="clearfix">
         <a id="primary-menus-toggle" class="hide-for-desktop"><span>Menu</span></a>
@@ -85,7 +89,7 @@
           <a id="primary-menus-close" class="hide-for-desktop"><span>Close</span></a>
           <nav>
             <div id="main-menu-wrapper">
-              <?php if ($main_menu) : ?>          
+              <?php if ($main_menu) : ?>
                 <?php print $primary_main_menu; ?>
                 <?php if ($is_admin) : print $primary_main_menu_manage; endif; ?>
               <?php endif; ?>
@@ -105,9 +109,9 @@
                 <!-- utility-links -->
                 <ul class="menu">
                   <li class="mothership ulink"><a href="http://www.gatech.edu">Georgia Tech Home</a></li>
-                  <li class="campus-map ulink"><a href="http://www.map.gatech.edu">Map</a></li>
-                  <li class="directories ulink"><a href="http://www.gatech.edu/directory">Directory</a></li>
-                  <li class="offices ulink"><a href="http://www.gatech.edu/departments">Offices</a></li>
+                  <li class="campus-map ulink"><a href="http://map.gtalumni.org">Map</a></li>
+                  <li class="directories ulink"><a href="<?php echo $directory_url; ?>">Directory</a></li>
+                  <li class="offices ulink"><a href="http://www.gatech.edu/offices-and-departments">Offices</a></li>
                 </ul>
               </nav>
               <div id="social-media-links-wrapper">
@@ -122,7 +126,7 @@
           </div><!-- /#utility -->
         </div>
         <div id="site-search">
-          <?php if ($search_option_value == 0 || $search_option_value == 2) : ?> 
+          <?php if ($search_option_value == 0 || $search_option_value == 2) : ?>
             <a href="<?php print $base_path; ?>search" id="site-search-container-switch">Search</a>
           <?php else : ?>
             <a href="http://search.gatech.edu" id="site-search-container-switch">Search</a>
@@ -136,48 +140,51 @@
         <div class="row clearfix">
           <ul><?php print $breadcrumb; ?></ul>
         </div>
-      </div><!-- /#breadcrumb --> 
+      </div><!-- /#breadcrumb -->
     </section><!-- /#primary-menus -->
-      
-    <!--
-    Placeholder for TLW/College home page features
-    <section id="main-feature">
-      
-    </section>
-    -->
-    
+
+    <?php $spotlight = render($page['spotlight']); ?>
+
+    <?php if ($spotlight) : ?>
+      <section id="header-spotlight">
+        <?php print $spotlight; ?>
+      </section>
+    <?php endif; ?>
+
   </header><!-- /#masthead -->
-  
-  <section id="main">
+
+  <section id="main"<?php if ($spotlight) : print ' class="with-spotlight"'; endif; ?>">
     <div class="row clearfix">
-      
+
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>
-        <h2 class="title" id="page-title"><?php print $title; ?></h2>
+        <div id="page-title">
+          <h2 class="title"><?php print $title; ?></h2>
+        </div>
       <?php endif; ?>
       <?php print render($title_suffix); ?>
-      
+
       <?php
         // Check for content lead/close and left_nav
         $content_lead = render($page['content_lead']);
         $content_close = render($page['content_close']);
       ?>
-      
+
       <?php if ($content_lead) : ?>
         <div id="content-lead">
            <?php print $content_lead; ?>
         </div>
       <?php endif; ?>
-      
+
       <div class="<?php print $content_class; ?>" id="content">
-        
+
         <?php
           // Check for content page help and tabs
           $page_help = render($page['help']);
           $page_tabs = render($tabs);
         ?>
-        
-        <?php if ($messages || $page_help || $page_tabs || $action_links) : ?> 
+
+        <?php if ($messages || $page_help || $page_tabs || $action_links) : ?>
           <div id="support">
             <?php print $messages; ?>
             <?php print render($page['help']); ?>
@@ -194,14 +201,14 @@
         <?php print render($page['main_bottom']); ?>
         <?php print $feed_icons; ?>
       </div><!-- /#content -->
-      
+
       <?php
         // Render the sidebars to see if there's anything in them.
         $left_nav = render($page['left_nav']);
         $sidebar_left  = render($page['left']);
         $sidebar_right = render($page['right']);
       ?>
-      
+
       <?php if ($left_nav || $sidebar_left): ?>
         <aside id="sidebar-left" class="<?php print $sidebar_left_class; ?>">
           <?php if ($left_nav) : ?>
@@ -212,31 +219,31 @@
           <?php print $sidebar_left; ?>
         </aside>
       <?php endif; ?>
-      
+
       <?php if ($sidebar_right): ?>
         <aside id="sidebar-right" class="<?php print $sidebar_right_class; ?>">
           <?php print $sidebar_right; ?>
         </aside>
       <?php endif; ?>
-      
+
       <?php if ($content_close) : ?>
         <div id="content-close">
            <?php print $content_close; ?>
         </div>
       <?php endif; ?>
-      
+
     </div>
   </section><!-- /#main -->
 
   <section id="superfooter">
     <div class="row clearfix">
-      
+
       <div class="superfooter-resource-links" id="gt-default-resource-links">
         <h4 class="title">Georgia Tech Resources</h4>
         <ul class="menu" id="gt-default-resources">
-          <li><a href="http://www.gatech.edu/departments">Offices &amp; Departments</a></li>
-          <li><a href="http://www.news.gatech.edu">Newsroom</a></li>
-          <li><a href="http://www.calendar.gatech.edu">Campus Calendar</a></li>
+          <li><a href="http://www.gatech.edu/offices-and-departments">Offices &amp; Departments</a></li>
+          <li><a href="http://www.news.gatech.edu">News Center</a></li>
+          <li><a href="http://www.gatech.edu/calendar">Campus Calendar</a></li>
           <li><a href="http://www.specialevents.gatech.edu">Special Events</a></li>
           <li><a href="http://www.greenbuzz.gatech.edu">GreenBuzz</a></li>
           <li><a href="http://www.comm.gatech.edu">Institute Communications</a></li>
@@ -252,7 +259,7 @@
           <li><a href="http://www.ipst.gatech.edu/amp">Robert C. Williams Paper Museum</a></li>
         </ul>
       </div>
-      
+
       <div class="superfooter-resource-links" id="gt-footer-links-1">
         <?php if ($footer_links_1): ?>
           <?php print $footer_links_1; ?>
@@ -261,7 +268,7 @@
           <?php if ($is_admin) : print $footer_links_1_add; endif; ?>
         <?php endif; ?>
       </div>
-      
+
       <div class="superfooter-resource-links"  id="gt-footer-links-2">
         <?php if ($footer_links_2): ?>
           <?php print $footer_links_2; ?>
@@ -270,7 +277,7 @@
           <?php if ($is_admin) : print $footer_links_2_add; endif; ?>
         <?php endif; ?>
       </div>
-      
+
       <div class="superfooter-resource-links" id="gt-footer-links-3">
         <?php if ($footer_links_3): ?>
           <?php print $footer_links_3; ?>
@@ -279,12 +286,12 @@
           <?php if ($is_admin) : print $footer_links_3_add; endif; ?>
         <?php endif; ?>
       </div>
-      
+
       <div id="street-address-info">
         <?php print $map_image ?>
         <div class="street-address"><?php print $street_address; ?></div>
       </div>
-      
+
     </div>
   </section><!-- /superfooter -->
 
@@ -316,15 +323,15 @@
           <?php else : ?>
             <li class="last"><a href="http://www.careers.gatech.edu">Employment</a></li>
           <?php endif; ?>
-        </ul> 
+        </ul>
       </div>
       <div id="footer-logo">
         <a href="http://www.gatech.edu/"><img alt="Georgia Tech" src="<?php print $theme_path; ?>/images/logos/gt-logo-footer.png" ></a>
         <p>&copy; <?php  print $year = date("Y"); ?> Georgia Institute of Technology</p>
       </div>
     </div>
-  </footer><!-- /footer --> 
-  
-</div><!-- /#page --> 
+  </footer><!-- /footer -->
 
-<?php print render($page['bottom']); ?> 
+</div><!-- /#page -->
+
+<?php print render($page['bottom']); ?>

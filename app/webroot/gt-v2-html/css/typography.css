@@ -18,14 +18,14 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
   font-size: 60%;
   line-height: 0;
 }
-h1 { font-size: 2.286em; } /* 32px */
-h2 { font-size: 2em; } /* 28px */
-h3 { font-size: 1.714em; } /* 24px */
-h4 { font-size: 1.429em; } /* 20px */
-h5 { font-size: 1.286em; } /* 18px */
-h6 { font-size: 1.143em; } /* 16px */
+h1 { font-size: 2.266em; } /* 34px */
+h2 { font-size: 2em; } /* 30px */
+h3 { font-size: 1.733em; } /* 26px */
+h4 { font-size: 1.466em; } /* 22px */
+h5 { font-size: 1.266em; } /* ~19px */
+h6 { font-size: 1.1em; } /* ~16px */
 p {
-  font-size: 1em; /* 14px */
+  font-size: 1em; /* 15px */
   font-weight: normal;
   line-height: 1.6;
   margin: 0 0 1.29em;
@@ -51,7 +51,7 @@ dl dt {
 }
 dl dd { margin: 0 0 .5em .5em; }
 hr {
-  border: solid #dddddd;
+  border: solid #ACACAC;
   border-width: 1px 0 0;
   clear: both;
   margin: 1.25em 0 1.1875em;
@@ -82,6 +82,11 @@ abbr, acronym {
   text-transform: uppercase;
 }
 abbr { text-transform: none; }
+p.intro-text {
+  font-size: 1.4em;
+  line-height: 1.5;
+  margin: 0 0 1.142em;
+}
 blockquote {
   border-left: 5px solid #EEB211;
   color: #787878;
@@ -98,9 +103,14 @@ blockquote cite:before {
   font-family: "FontAwesome";
 }
 blockquote cite a, blockquote cite a:visited { color: #787878; }
-blockquote.pullquote {
+blockquote.pull-quote-left {
   float: left;
   margin: 0 12px 6px -5px;
+  width: 50%;
+}
+blockquote.pull-quote-right {
+  float: right;
+  margin: 0 -5px 6px 12px;
   width: 50%;
 }
 
@@ -109,10 +119,12 @@ blockquote.pullquote {
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
   display: inline-block;
   font-weight: 700;
-  padding: 10px 18px 10px 34px;
+  padding: 10px 14px 10px 36px;
   position: relative;
   vertical-align: bottom;
 }
+blockquote .highlight-link-blue a,
+blockquote .highlight-link-yellow a { padding-left: 40px; }
 .highlight-link-blue a:before, .highlight-link-yellow a:before { 
   content: "\f138";
   display: inline-block;
@@ -120,7 +132,7 @@ blockquote.pullquote {
   font-size: 1.5em;
   position: absolute;
   left: 10px;
-  top: 5px;
+  top: 4px;
 }
 .highlight-link-blue a:before { color: #EEB211; }
 .highlight-link-yellow a:before { color: #023D7B; }
@@ -139,6 +151,32 @@ blockquote.pullquote {
   color: #fff;
   text-decoration: none;
 }
+.jump-link a {
+  border-top: 1px solid #C7C7C7;
+  border-bottom: 1px solid #C7C7C7;
+  color: #454545;
+  display: inline-block;
+  padding: 3px 20px 5px 36px;
+  position: relative;
+  vertical-align: bottom;
+}
+.jump-link a:link, .jump-link a:visited { text-decoration: none; }
+.jump-link a:before {
+  background-color: #EEB211;
+  border-radius: 20px 20px 20px 20px;
+  color: #FFFFFF;
+  content: "\f064";
+  display: inline-block;
+  font-family: "FontAwesome";
+  font-size: 0.77em;
+  height: 20px;
+  left: 8px;
+  padding: 2px 0 0 5px;
+  position: absolute;
+  top: 5px;
+  width: 20px;
+}
+blockquote .jump-link a:before { top: 7px; }
 
 /* Microformats */
 .vcard {
@@ -175,7 +213,7 @@ blockquote.pullquote {
 tr.even { background-color: #F9F9F9; }
 ul.primary li a { 
   border-radius: 5px 5px 0 0;
-  padding: 0 1.5em; }
+  padding: 0 1.5em;
 }
 
 /* form elements */
@@ -210,32 +248,38 @@ input[type="textfield"], input[type="file"], input.form-text, input.form-file {
 /* ~496px and less */
 @media only screen and (max-width: 31em) {
   
+  /*
   h1, h2, h3, h4, h5, h6 { line-height: 1.2125em; }
   h1 { font-size: 2.125em; }
   h2 { font-size: 1.6875em; }
   h3 { font-size: 1.375em; }
   h4 { font-size: 1.125em; }
+  */
   
-  blockquote, blockquote.pullquote {
+  blockquote, blockquote.pull-quote-left, blockquote.pull-quote-right {
     float: none;
     margin-left: 0;
     width: 100%;
   }
-  
-}
+  p.intro-text {
+    font-size: 1.25em;
+    line-height: 1.5;
+  }
   
 }
 
 /* ~496px to ~816px */
 @media only screen and (min-width: 31em) and (max-width: 51em) {
   
+  /*
   h1, h2, h3, h4, h5, h6 { line-height: 1.2125em; }
   h1 { font-size: 2.125em; }
   h2 { font-size: 1.6875em; }
   h3 { font-size: 1.375em; }
   h4 { font-size: 1.125em; }
+  */
   
-  blockquote, blockquote.pullquote {
+  blockquote, blockquote.pull-quote-left, blockquote.pull-quote-right {
     float: none;
     margin-left: 0;
     width: 100%;

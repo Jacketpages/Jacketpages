@@ -19,14 +19,15 @@
 		echo $this -> fetch('script');
 		
 		// new gt theme css files
-		echo $this -> Html -> css('gtv2/reset.css');
-		echo $this -> Html -> css('gtv2/default.css');
-		echo $this -> Html -> css('gtv2/fonts.css');
-		echo $this -> Html -> css('gtv2/typography.css');
-		echo $this -> Html -> css('gtv2/layout.css');
-		echo $this -> Html -> css('gtv2/blocks.css');
-		echo $this -> Html -> css('gtv2/content.css');
-		echo $this -> Html -> css('gtv2/static.css');
+		echo $this -> Html -> css('gtv2/reset');
+		echo $this -> Html -> css('gtv2/default');
+		echo $this -> Html -> css('gtv2/fonts');
+		echo $this -> Html -> css('gtv2/typography');
+		echo $this -> Html -> css('gtv2/layout');
+		echo $this -> Html -> css('gtv2/blocks');
+		echo $this -> Html -> css('gtv2/content');
+		echo $this -> Html -> css('gtv2/editor');
+		echo $this -> Html -> css('gtv2/static');
 		
 		echo $this -> Html -> css('icing');
 		
@@ -265,8 +266,9 @@
 		      </div>
 
 		      <div id="footer-logo">
-		        <a href="http://www.gatech.edu/"><img alt="Georgia Tech" src="http://comm-whdev1.gatech.edu/sites/all/themes/gt/images/logos/gt-logo-footer.png" ></a>
-		        <a href="/" rel="home" title="Georgia Tech" ><img style="width:70px;" alt="Georgia Tech" src="/Jacketpages/img/sgalogogrey.png" /></a>     
+		        <a href="/" rel="home" title="Georgia Tech" style="margin-right:4px">
+		        	<?php echo $this->Html->image('sgalogogrey.png', array('alt' => 'Georgia Tech', 'style' => 'width: 70px')); ?>
+		        </a>     
 		    
 		        <p>&copy; <?php  print $year = date("Y"); ?> Georgia Tech Student Government Association</p>
 

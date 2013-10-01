@@ -14,12 +14,18 @@ $search_gt .= '<input name="proxystylesheet" value="default_frontend" type="hidd
 $search_gt .= '<input name="proxyreload" value="1" type="hidden" />';
 $search_gt .= '</form>';
 $search_gt .= '</div>';
-			
-$search_local = '<div id="search-local">' . render(module_invoke('search', 'block_view', 'search')) . '</div>';  
-	   
+
+if (module_exists('search')) {
+  $search_form = drupal_get_form('search_form');
+  $search_page = drupal_render($search_form);
+  $search_local = '<div id="search-local">' . $search_page . '</div>';
+} else {
+  $search_local = '';
+}
+	
 $search_user_choice = '<div class="clearfix" id="search-user-choice">';
-$search_user_choice .= '<a id="search-local-selection" class="checked">This Site</a>';
-$search_user_choice .= '<a id="search-gt-selection">All of Georgia Tech</a>';
+$search_user_choice .= '<a href="' . base_path() . 'search" id="search-local-selection" class="checked">This Site</a>';
+$search_user_choice .= '<a href="http://search.gatech.edu" id="search-gt-selection">All of Georgia Tech</a>';
 $search_user_choice .= $search_gt;
 $search_user_choice .= $search_local;
 $search_user_choice .= '</div>';

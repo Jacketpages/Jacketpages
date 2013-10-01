@@ -95,7 +95,7 @@
     </div>
   <?php endif; ?>
 
-  <div class="content"<?php print $content_attributes; ?>>
+  <div class="content node-body clearfix"<?php print $content_attributes; ?>>
     <?php
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
@@ -107,5 +107,5 @@
   <?php print render($content['links']); ?>
 
   <?php print render($content['comments']); ?>
-
+  
 </div>

@@ -11,11 +11,11 @@
  */
 .block { padding: 0 10px 10px; }
 .block .block-title-wrapper h4 { 
-  border-bottom: 1px solid #AAAAAA;
+  border-bottom: 2px solid #AAAAAA;
   font-size: 1.286em;
   line-height: 1.2;
   margin: 0 0 10px;
-  padding: 0 3px 5px;
+  padding: 5px 3px 6px;
 }
 
 /**
@@ -100,20 +100,69 @@
 #sidebar-right .block.quarter-width { width: 100% !important; }
 
 /**
- * Block style classes, which can be added by users via block class module
- * (https://drupal.org/project/block_class) for now - will be ported to GT Tools module
+ * Block style classes, which can be added by users via GT Tools module
+ * (go to Configuration -> System -> GT Tools)
  */
+ 
+ /* Gold stroke top/bottom w/ gray body bg */
 .promo-block .block-title-wrapper { padding: 5px; }
 .promo-block .block-title-wrapper h4 {
   border: none;
   margin: 0;
 }
-.promo-block .content {
+.promo-block .block-body {
   background-color: #f1f1f1;
   border-bottom: 4px solid #EEB211;
   border-top: 4px solid #EEB211;
   padding: 10px 10px 5px;
 }
+
+/* GT gold bg on title w/ gray body bg */
+.block.related-info-block .block-title-wrapper {
+    background: none repeat scroll 0 0 #EEB211;
+    color: inherit;
+    display: block;
+    margin: 0 0 3px;
+    padding: 10px;
+}
+.block.related-info-block .block-title-wrapper h4 {
+    border: none;
+    font-size: 1.286em;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+}
+.block.related-info-block .block-body {
+  background: none repeat scroll 0 0 #E6E6E6;
+  padding: 10px;
+}
+
+/* Block title icons */
+.block.icon-alert-title .block-title-wrapper h4,
+.block.icon-download-title .block-title-wrapper h4,
+.block.icon-info-title .block-title-wrapper h4,
+.block.icon-link-title .block-title-wrapper h4 { padding: 8px 3px; }
+.block.icon-alert-title .block-title-wrapper h4:before,
+.block.icon-download-title .block-title-wrapper h4:before,
+.block.icon-info-title .block-title-wrapper h4:before,
+.block.icon-link-title .block-title-wrapper h4:before {
+  color: #616161; 
+  display: inline-block;
+  float: left;
+  font-family: FontAwesome;
+  font-size: 30px;
+  margin: -6px 6px 0 0;
+}
+.block.icon-alert-title .block-title-wrapper h4:before { content: "\f06a"; }
+.block.icon-download-title .block-title-wrapper h4:before { content: "\f01a"; }
+.block.icon-info-title .block-title-wrapper h4:before { content: "\f05a"; }
+.block.icon-link-title .block-title-wrapper h4:before { content: "\f14c"; }
+
+/**
+ * Nodeblock tweaks
+ */
+/* Hide extra contextual links */
+.block-nodeblock .node .contextual-links-wrapper { display: none; }
 
 /**
  * Media Query Breakpoints
@@ -209,6 +258,21 @@
   #content.both-sidebars .region-main-bottom.block-count-2 .block,
   #content.both-sidebars .region-main-bottom.block-count-3 .block,
   #content.both-sidebars .region-main-bottom.block-count-4 .block { width: 50%; }
+  
+  /**
+   * Sidebars
+   * In "tablet" views, force blocks to 50% max-width if more than on in region
+   * (does not apply to menu sidebar)
+   */
+  .region-right.block-count-2 .block,
+  .region-right.block-count-3 .block,
+  .region-right.block-count-4 .block,
+  .region-right.block-count-2 .block,
+  .region-right.block-count-3 .block,
+  .region-right.block-count-4 .block {  
+    float: left;
+    width: 50%;
+  }
   
   /**
    * Block layout classes

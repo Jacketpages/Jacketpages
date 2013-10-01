@@ -13,7 +13,7 @@
  *   The name of the template being rendered ("html" in this case.)
  */
 function gt_preprocess_html(&$variables, $hook) { 
-
+    
 }
 
 
@@ -24,6 +24,7 @@ function gt_preprocess_html(&$variables, $hook) {
  *   An array of variables to pass to the theme template.
  * @param $hook
  *   The name of the template being rendered ("page" in this case.)
+ * @TODO: gt_tools check doesn't work properly with overlay turned on.
  */
 function gt_preprocess_page(&$variables, $hook) {
 
@@ -41,19 +42,12 @@ function gt_preprocess_page(&$variables, $hook) {
   $variables['theme_path'] = base_path() . drupal_get_path('theme', 'gt');
   
   // Main menu
-  if (module_exists('menu_minipanels')) {
-    // Mega menu option (no child links)
-    $variables['primary_main_menu'] = theme('links__system_main_menu', array('links' => $variables['main_menu'], 'attributes' => array('class' => array('mega-main-menu'), 'id' => 'main-menu'),));
-  } else {
-    // Standard drop-down (with child links)
-    $standard_main_menu = menu_tree_output(menu_tree_all_data('main-menu'));
-    $variables['primary_main_menu'] = render($standard_main_menu);
-  }
+  $standard_main_menu = menu_tree_output(menu_tree_all_data('main-menu'));
+  $variables['primary_main_menu'] = render($standard_main_menu);
   $variables['primary_main_menu_manage'] = l(t('Manage Links'), 'admin/structure/menu/manage/main-menu', array('query' => drupal_get_destination(), 'attributes' => array('class' => array('gt-tools-contextual-link', 'populated'), 'title' => 'Manage Links'),));
   
-  /**
-   * GT Tools menus variables
-   */
+  // GT Tools menus variables
+
   // social media links
   $variables['social_media_links'] = menu_navigation_links('gt-social-media');
   foreach ($variables['social_media_links'] as &$link) {
@@ -113,37 +107,58 @@ function gt_preprocess_page(&$variables, $hook) {
   } else {
     $variables['footer_ulinks_add'] = '<div class="gt-tools-contextual-link empty">' . t('Install GT Tools to add footer utility links here') . '.</div>';
   }
-  
-  
+
   // GT Logo variable
   $logo_default_flag = theme_get_setting('gt_logo_default');
   $logo_upload_fid = theme_get_setting('gt_logo_upload_file');
+  $logo_upload_url = theme_get_setting('logo_url');
   if ($logo_upload_fid != '' && $logo_default_flag == '' && $logo_upload_file = file_load($logo_upload_fid)) {
     $logo_upload_file_url = file_create_url($logo_upload_file->uri);
     $variables['gt_logo_file'] = '<img alt="' . $variables['site_name'] . '" class="uploaded-logo-file" src="' . $logo_upload_file_url . '" />';
+    if ($logo_upload_url != '') {
+      $variables['gt_logo_right_url'] = $logo_upload_url;
+      $variables['gt_logo_right_title'] = $variables['site_name'];
+    } else {
+      $variables['gt_logo_right_url'] = '';
+      $variables['gt_logo_right_title'] = '';
+    }
   } else {
     $gt_logo_selection = theme_get_setting('gt_logo_type');
     switch ($gt_logo_selection) {
       case 0:
         $variables['gt_logo_file'] = '<img alt="Georgia Tech" src="' . $variables['theme_path'] . '/images/logos/logo-gt.png" />';
+        $variables['gt_logo_right_url'] = '';
+        $variables['gt_logo_right_title'] = '';
         break;
       case 1:
         $variables['gt_logo_file'] = '<img alt="Georgia Tech | College of Architecture" src="' . $variables['theme_path'] . '/images/logos/logo-gt-coa.png" />';
+        $variables['gt_logo_right_url'] = 'http://www.coa.gatech.edu';
+        $variables['gt_logo_right_title'] = 'College of Architecture';
         break;
       case 2:
         $variables['gt_logo_file'] = '<img alt="Georgia Tech | College of Computing" src="' . $variables['theme_path'] . '/images/logos/logo-gt-coc.png" />';
+        $variables['gt_logo_right_url'] = 'http://www.cc.gatech.edu';
+        $variables['gt_logo_right_title'] = 'College of Computing';
         break;
       case 3:
         $variables['gt_logo_file'] = '<img alt="Georgia Tech | College of Engineering" src="' . $variables['theme_path'] . '/images/logos/logo-gt-coe.png" />';
+        $variables['gt_logo_right_url'] = 'http://www.coe.gatech.edu';
+        $variables['gt_logo_right_title'] = 'College of Engineering';
         break;
       case 4:
         $variables['gt_logo_file'] = '<img alt="Georgia Tech | College of Sciences" src="' . $variables['theme_path'] . '/images/logos/logo-gt-cos.png" />';
+        $variables['gt_logo_right_url'] = 'http://www.cos.gatech.edu';
+        $variables['gt_logo_right_title'] = 'College of Sciences';
         break;
       case 5:
         $variables['gt_logo_file'] = '<img alt="Georgia Tech | Ivan Allen College of Liberal Arts" src="' . $variables['theme_path'] . '/images/logos/logo-gt-iac.png" />';
+        $variables['gt_logo_right_url'] = 'http://www.iac.gatech.edu';
+        $variables['gt_logo_right_title'] = 'Ivan Allen College of Liberal Arts';
         break;
       case 6:
         $variables['gt_logo_file'] = '<img alt="Georgia Tech | Scheller College of Business" src="' . $variables['theme_path'] . '/images/logos/logo-gt-scheller.png" />';
+        $variables['gt_logo_right_url'] = 'http://www.scheller.gatech.edu';
+        $variables['gt_logo_right_title'] = 'Scheller College of Business';
         break;
       default:
         $variables['gt_logo_file'] = '<img alt="Georgia Tech" src="' . $variables['theme_path'] . '/images/logos/logo-gt.png" />';
@@ -182,6 +197,8 @@ function gt_preprocess_page(&$variables, $hook) {
     default:
       $variables['search_option'] = $search_gt;
   }
+  // Switch to GT search if search module is turned off
+  if (!module_exists('search')) { $variables['search_option'] = $search_gt; }
   
   // sidebar indicator classes for main content area
   $variables['content_class'] = 'no-sidebars';
@@ -211,7 +228,7 @@ function gt_preprocess_page(&$variables, $hook) {
   if ($map_image_custom_link != '') {
     $variables['map_image'] = l($variables['footer_map_image_file'], $map_image_custom_link, array('html' => TRUE));
   } else {
-    $variables['map_image'] = l($variables['footer_map_image_file'], 'http://www.map.gatech.edu', array('html' => TRUE));
+    $variables['map_image'] = l($variables['footer_map_image_file'], 'http://www.gtalumni.org/map', array('html' => TRUE));
   }
   
   // Street address
@@ -219,11 +236,14 @@ function gt_preprocess_page(&$variables, $hook) {
   if ($street_address != '') {
     $variables['street_address'] = check_markup($street_address);
   } else {
-    $variables['street_address'] = check_markup("Georgia Institue of Technology\nNorth Avenue, Atlanta, GA 30332\nPhone: 404-894-2000");
+    $variables['street_address'] = check_markup("Georgia Institute of Technology\nNorth Avenue, Atlanta, GA 30332\nPhone: 404-894-2000");
   }
   
   // Footer login link flag variable
   $variables['footer_login_link'] = theme_get_setting('login_link_option');
+  
+  // Directory URL variable
+  $variables['directory_url'] = module_exists('gt_directory') ? '/directory' : 'http://gatech.edu/directory';
 
 }
 
@@ -260,6 +280,9 @@ function gt_preprocess_node(&$variables) {
   if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
     $variables['classes_array'][] = 'node-full';
   }
+  
+  include('inc/template.gt_tools_content_types.inc');
+  
 }
 
 /**

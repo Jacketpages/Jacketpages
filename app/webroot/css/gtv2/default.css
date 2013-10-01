@@ -21,19 +21,49 @@ body {
   color: #454545;
   padding: 0;
   margin: 0;
-  font: 400 87.5%/1.25 "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font: 400 93.75%/1.25 "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 }
 
-img,
 object,
-embed {
-  max-width: 100%;
+embed,
+video {
   height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Forcing liquid widths/heights for YouTube videos added via media module, CKEditor embed,
+ * or video embed field module.
+ */
+div.media-youtube-video, div.media_embed, .embedded-video .player  {
+	height: 0;
+	margin-bottom: 15px;
+	overflow: hidden;
+	padding-bottom: 56.25%;
+	position: relative;
+}
+div.media-youtube-video iframe,
+div.media-youtube-video object,
+div.media-youtube-video embed,
+div.media_embed iframe,
+div.media_embed object,
+div.media_embed embed,
+.embedded-video .player iframe,
+.embedded-video .player object,
+.embedded-video .player embed {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
 }
 
 img {
   display: inline-block;
+  height: auto;
+  max-width: 100%;
   vertical-align: middle;
+  width: auto;
 }
 
 a:link, a:visited { color: #164679; text-decoration: underline; }
@@ -241,18 +271,8 @@ ul.secondary a:active {
   color: #fff;
 }
 
-/**
- * WYSIWYG Editor Styling
- */
- /* keep items no bigger than half the width of the block */
-.wysiwyg-float-left { float: left; margin: 5px 10px 5px 0; max-width: 50%; }
-.wysiwyg-float-right { float: right; margin: 5px 0x 5px 10px; max-width: 50%; }
-
-/* go full width for blocks in the sidebars */
-#sidebar-left.with-sidebar-right .wysiwyg-float-left,
-#sidebar-left.with-sidebar-right .wysiwyg-float-right,
-#sidebar-right.with-sidebar-left .wysiwyg-float-left,
-#sidebar-right.with-sidebar-left .wysiwyg-float-right { max-width: 100%; }
+/* General Utility Classes */
+.hide-for-desktop { display: none !important; }
 
 /**
  * Media Query Breakpoints
@@ -266,16 +286,28 @@ ul.secondary a:active {
 /* ~496px and less */
 @media only screen and (max-width: 31em) {
   
+  /* Form elements */
+  input[type="text"],
+  textarea { width: 100%; }
+  
   /* Utilities */
   .hide-for-mobile { display: none !important; }
+  .hide-for-desktop { display: block !important; }
     
 }
 
 /* ~496px to ~816px */
 @media only screen and (min-width: 31em) and (max-width: 51em) {
   
+  /* Form elements */
+  input[type="text"],
+  textarea { width: 100%; }
+  
   /* Utilities */
   .hide-for-mobile { display: none !important; }
+  .hide-for-desktop { display: block !important; }
+  .hide-for-tablet { display: none !important; }
+  .show-for-tablet { display: block !important; }
   
   /* sidebars wrap under main content at this point, which means they'll go full width,
    * so reset max width to match other regions
@@ -289,42 +321,11 @@ ul.secondary a:active {
 
 /* ~816px or more */
 @media only screen and (min-width: 51em) {
-  
-  /* Utilities */
-  .hide-for-desktop { display: none !important; }
 
 }
 
 /* ~1024px or more */
 @media only screen and (min-width: 64em) {
-  
-  /* Utilities */
-  .hide-for-desktop { display: none !important; }
 
 }
 
-.LineItemQuantity
-{
-	width:35px;
-}
-
-.LineItemButton
-{
-	width:30px;
-}
-
-.LineItemTotalCost
-{
-	width:65px;
-}
-
-.LineItemCostPerUnit
-{
-	width:65px;
-}
-
-.LineItemAmount
-{
-  	width:65px;
-}
-  

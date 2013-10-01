@@ -16,7 +16,7 @@
   <?php endif;?>
   <?php print render($title_suffix); ?>
 
-  <div class="content clearfix"<?php print $content_attributes; ?>>
+  <div class="content block-body clearfix"<?php print $content_attributes; ?>>
     <?php print $content ?>
   </div>
   
