@@ -94,7 +94,7 @@ div.table-container {
   overflow: auto;
 }
 table {
-  border: 1px solid #bbb;
+  /*border: 1px solid #bbb;*/
   border-collapse: collapse;
   margin: 0 0 1.29em 0;
   width: 100%;
@@ -111,7 +111,7 @@ th {
 th a:link, th a:visited, 
 th a:hover, th a:active { color: #fff !important; }
 td { 
-  border: 1px solid #bbb;
+  /*border: 1px solid #bbb;*/
   border-collapse: collapse;
   padding: .428em;
   vertical-align: top;
@@ -339,19 +339,18 @@ ul.secondary a:active {
   width:30px;
 }
 
-.LineItemTotalCost
+.LineItemCostPerUnit, .LineItemAmount, .LineItemTotalCost
 {
   width:65px;
 }
 
-.LineItemCostPerUnit
+.membership div
 {
-  width:65px;
+  padding-bottom:10px;
 }
-
-.LineItemAmount
+.membership select
 {
-  width:65px;
+  width:50% !important;
 }
   
 
