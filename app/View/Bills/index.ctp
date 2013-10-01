@@ -72,7 +72,7 @@ $this -> start('listing');
 ?>
 <div id='forupdate'>
 	<?php
-echo $this -> element('bills\index\billsTable', array('bills' => $bills));
+echo $this -> element('bills/index/billsTable', array('bills' => $bills));
 echo $this -> element('paging');
 ?></div>
 <?php
