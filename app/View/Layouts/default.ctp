@@ -96,9 +96,11 @@
 		  <div id="identity" class="clearfix">
 		    <div id="identity-wrapper">
 		      <h1 id="gt-logo">
-		        <a href="/" rel="home" title="Georgia Tech" ><img alt="Georgia Tech" src="http://comm-whdev1.gatech.edu/sites/all/themes/gt/images/logos/logo-gt.png" /></a>
-		      	<a href="/" rel="home" title="Georgia Tech" ><img style="float:right;" alt="Georgia Tech" src="/Jacketpages/img/jacketpages.png" /></a>     
+		        <a href="/" rel="home" title="Georgia Tech" ><img alt="Georgia Tech" src="http://comm-whdev1.gatech.edu/sites/all/themes/gt/images/logos/logo-gt.png" /></a>    
 		      </h1>
+		      <a href="/" rel="home" title="Georgia Tech" style="float: right">
+		      		<?php echo $this->Html->image('jacketpages.png', array('alt' => 'Georgia Tech')); ?>
+		      	</a> 
 		    </div>
 		  </div><!-- /#identity -->
 		
@@ -154,18 +156,10 @@
 		      </div>
 		      
 		      <div id="site-search">
-		        <a id="site-search-container-switch">Search</a>
-		        <div id="site-search-container">
-		          <div id="search-gt">
-		            <form action="http://search.gatech.edu/search" method="get">
-		            <input  value="" name="q" id="q" class="form-text" type="text" />
-		            <input name="site" value="default_collection" type="hidden" />
-		            <input name="client" value="default_frontend" type="hidden" />
-		            <input name="output" value="xml_no_dtd" type="hidden" />
-		            <input name="proxystylesheet" value="default_frontend" type="hidden" />
-		            <input name="proxyreload" value="1" type="hidden" /></form>
-		          </div>
-		        </div>
+				<?php echo $this -> Html -> link('Search', array(
+					'controller' => 'organizations',
+					'action' => ''),
+					array('id'=>'site-search-container-switch')); ?>
 		      </div>
 		      
 		    </div><!-- /#primary-menus-wrapper -->
