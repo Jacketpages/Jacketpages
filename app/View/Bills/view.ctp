@@ -33,19 +33,6 @@ echo $this -> element('bills/view/authors');
 echo $this -> element('bills/view/signatures');
 echo $this -> element('bills/view/outcomes');
 
-if ($bill['Bill']['status'] == $CREATED)
-{
-	echo $this -> Form -> postButton('Submit Bill', array(
-		'controller' => 'bills',
-		'action' => 'submit',
-		$bill['Bill']['id']
-	));
-}
-
-if ($submitted == null)
-{
-	$this -> end();
-}
 ?>
 <script>
 	$(function()
@@ -61,6 +48,7 @@ if ($submitted == null)
 		});
 	}); 
 </script>
+<br>
 <div id="tabs">
 	<ul>
 		<li>
@@ -146,6 +134,27 @@ if ($submitted == null)
 	)), array('id' => 'tabs-7'));
 	?>
 </div>
+<div class="ui-overlay" id="comments" style="display:none;">
+	<div class="ui-widget-overlay"></div>
+	<div class="ui-corner-all" id="overlay" style="width: 25%; height: 10%; position: absolute; top: 0;">
+		<?php echo $this -> Form -> button("X", array(
+			'onclick' => 'closeComments()',
+			'style' => 'float:right;'
+		));?>
+		<div id="comments_text"></div>
+		</div>
+</div>
+<br>
 <?php
+
+if ($bill['Bill']['status'] == $CREATED && $this -> Session -> read('User.id') == $bill['Submitter']['id'])
+{
+	echo $this -> Form -> postButton('Submit Bill', array(
+		'controller' => 'bills',
+		'action' => 'submit',
+		$bill['Bill']['id']
+	));
+}
+
 $this -> end();
 ?>

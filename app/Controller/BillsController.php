@@ -122,6 +122,7 @@ class BillsController extends AppController
 	{
 		// Set which bill to retrieve from the database.
 		$this -> Bill -> id = $id;
+		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";		
 		$bill = $this -> Bill -> read();
 		$this -> setAuthorNames($bill['Authors']['grad_auth_id'], $bill['Authors']['undr_auth_id']);
 		$this -> setSignatureNames($bill['Authors']);
@@ -325,7 +326,7 @@ class BillsController extends AppController
 			{
 				if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 				{
-					$this -> Session -> setFlash('The Bill has been saved.');
+					$this -> Session -> setFlash('The bill has been saved.');
 					$this -> redirect(array(
 						'action' => 'view',
 						$id
@@ -502,7 +503,8 @@ class BillsController extends AppController
 	// TODO Add email functionality to email authors.
 	public function submit($id)
 	{
-		$this -> setBillStatus($id, 2, true);
+		$this -> Session -> setFlash('The bill has been submitted to the authors.');	
+		$this -> setBillStatus($id, 2, true);			
 	}
 
 	public function general_info($bill_id)
@@ -605,7 +607,10 @@ class BillsController extends AppController
 			$this -> Bill -> saveField('status', $state);
 			if ($state == $this -> AGENDA && $category != null)
 			{
-				$this -> Bill -> saveField('number', $this -> getValidNumber($category));
+				if (!$this -> Bill -> saveField('number', $this -> getValidNumber($category)))
+				{
+					$this -> Session -> setFlash('There was an error updating the bill.');
+				}
 			}
 			if ($redirect)
 			{
@@ -705,26 +710,41 @@ class BillsController extends AppController
 		{
 			$gpres = $this -> User -> findBySgaId($data['grad_pres_id']);
 			$signee_names['grad_pres'] = $gpres['User']['name'];
+		} else
+		{
+			$signee_names['grad_pres'] = 'Unsigned';
 		}
 		if ($data['grad_secr_id'] != 0)
 		{
 			$gpres = $this -> User -> findBySgaId($data['grad_secr_id']);
 			$signee_names['grad_secr'] = $gpres['User']['name'];
+		} else
+		{
+			$signee_names['grad_secr'] = 'Unsigned';
 		}
 		if ($data['undr_pres_id'] != 0)
 		{
 			$gpres = $this -> User -> findBySgaId($data['undr_pres_id']);
 			$signee_names['undr_pres'] = $gpres['User']['name'];
+		} else
+		{
+			$signee_names['undr_pres'] = 'Unsigned';
 		}
 		if ($data['undr_secr_id'] != 0)
 		{
 			$gpres = $this -> User -> findBySgaId($data['undr_secr_id']);
 			$signee_names['undr_secr'] = $gpres['User']['name'];
+		} else
+		{
+			$signee_names['undr_secr'] = 'Unsigned';
 		}
 		if ($data['vp_fina_id'] != 0)
 		{
 			$gpres = $this -> User -> findBySgaId($data['vp_fina_id']);
 			$signee_names['vp_fina'] = $gpres['User']['name'];
+		} else
+		{
+			$signee_names['vp_fina'] = 'Unsigned';
 		}
 		$this -> set('signee_names', $signee_names);
 	}

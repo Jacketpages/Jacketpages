@@ -43,6 +43,13 @@ class Bill extends AppModel
 			)
 		)
 	);
+	
+	public $hasMany = array(
+		'LineItemRevision' => array(
+			'dependent' => true),
+		'LineItem' => array(
+			'dependent' => true)
+	);
 
 	public $validate = array(
 		'title' => array('declared' => array(

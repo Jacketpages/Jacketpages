@@ -44,23 +44,26 @@ class LineItemsController extends AppController
 	}
 
 	public function index($bill_id = null, $state = null)
-	{
+	{			
 		$this -> loadModel('Bill');
 		$bill = $this -> Bill -> findById($bill_id);
 		$this -> set('titleState', $state);
+		$this -> set('bill_id', $bill_id);
 		if ($this -> canEditLineItems($bill, $state))
 		{
 			date_default_timezone_set('EST5EDT');
 			if ($this -> request -> is('get'))
 			{
-				$lineitems = $this -> LineItem -> find('all', array('conditions' => array(
+				$lineitems = $this -> LineItem -> find('all',array(
+					'conditions' => array(
 						'bill_id' => $bill_id,
-						'state' => $state
-					)));
+						'state' => $state),
+					'order' => array('LineItem.line_number')
+				));
 				$this -> set('lineitems', $lineitems);
 			}
 			if ($this -> request -> is('post') || $this -> request -> is('put'))
-			{
+			{			
 				$conditions = array(
 					'conditions' => array(
 						'bill_id' => $bill_id,
@@ -70,9 +73,15 @@ class LineItemsController extends AppController
 				);
 				$existingLineItems = $this -> LineItem -> find('all', $conditions);
 				$existingLineItemIds = Hash::extract($existingLineItems, '{n}.LineItem.id');
-				$newLineItems = $this -> request -> data;
-				$this -> LineItem -> saveAll($newLineItems, array('validate' => 'only'));
-
+				$newLineItems = $this -> request -> data;		
+				if ($this -> LineItem -> saveAll($newLineItems, array('validate' => 'only')))
+				{
+					$this -> Session -> setFlash('The line items have been updated.');
+				} else
+				{
+					$this -> Session -> setFlash('Error updating line items.');
+				}
+				// Delete line items from DB that were removed in form
 				$newLineItemIds = Hash::extract($newLineItems, '{n}.LineItem.id');
 				foreach ($existingLineItemIds as $id)
 				{
@@ -85,7 +94,7 @@ class LineItemsController extends AppController
 						}
 					}
 				}
-
+				// Save line item revisions as log of changes
 				foreach ($newLineItems as $newLineItem)
 				{
 					$newLineItem['LineItem']['last_mod_by'] = $this -> Session -> read('User.id');
@@ -111,18 +120,17 @@ class LineItemsController extends AppController
 						}
 					}
 				}
+				/*$this -> redirect(array(
+					'action' => 'index',
+					$bill_id,
+					$state
+				));*/
 			}
 		}
 		else
 		{
 			$this -> Session -> setFlash("The bill is in an invalid status to edit line items in state: $state");
-		}
-		// $this -> redirect(array(
-			// 'controller' => 'bills',
-			// 'action' => 'view',
-			// $bill_id
-		// ));
-
+		}		
 	}
 
 	private function updateFieldForLineItemRevisions($lineItemId, $field, $value)

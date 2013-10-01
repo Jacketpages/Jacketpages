@@ -11,23 +11,28 @@ if ($this -> Session -> read('Sga.id') != null)
 }
 $sidebar = array();
 //@formatter:off
-if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] < $AUTHORED) 
-		|| $this -> Session -> read('Sga.id') != null)//@formatter:on
+if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] == $CREATED) 
+		|| ($this -> Session -> read('Sga.id') != null && $bill['Bill']['status'] == $AWAITING_AUTHOR && $this -> Session -> read('Sga.id') == $bill['Authors']['grad_auth_id'])
+		|| ($this -> Session -> read('Sga.id') != null && $bill['Bill']['status'] == $AWAITING_AUTHOR && $this -> Session -> read('Sga.id') == $bill['Authors']['undr_auth_id'])
+		|| $admin)//@formatter:on
 {
-	$sidebar[] = $this -> Html -> link(__('Update Bill', true), array(
+	$sidebar[] = $this -> Html -> link(__('Update Details', true), array(
 		'action' => "general_info",
 		$bill['Bill']['id']
 	));
-}
-
-if ($bill['Bill']['status'] == $CREATED)
-{
+	
 	$sidebar[] = $this -> Html -> link('Update Line Items', array(
 		'controller' => 'line_items',
 		'action' => 'index',
 		$bill['Bill']['id'],
 		'Submitted'
 	));
+	
+}
+
+if ($bill['Bill']['status'] == $CREATED && $bill['Submitter']['id'] == $this -> Session -> read('User.id')
+		|| ($bill['Bill']['status'] == $CREATED && $admin))
+{
 	$sidebar[] = $this -> Html -> link(__('Submit Bill', true), array(
 		'action' => 'submit',
 		$bill['Bill']['id']
@@ -70,7 +75,8 @@ if ($bill['Bill']['status'] == $CONFERENCE && $sga_exec)
 		$bill['UCC']['id']
 	));
 }
-if ($bill['Bill']['status'] < $AGENDA && ($sga_exec || $this -> Session -> read('User.id') == $bill['Submitter']['id']))
+if ($bill['Bill']['status'] < $AGENDA && ($sga_exec || $this -> Session -> read('User.id') == $bill['Submitter']['id'])
+		|| $admin)
 {
 	$sidebar[] = $this -> Html -> link('Delete Bill', array(
 		'action' => 'delete',

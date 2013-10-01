@@ -32,7 +32,8 @@ if (!isset($lineitems) || count($lineitems) == 0)
 			'cost_per_unit' => '',
 			'quantity' => '',
 			'total_cost' => '',
-			'amount' => ''
+			'amount' => '',
+			'account' => '',
 		));
 }
 foreach ($lineitems as $key => $lineitem)
@@ -84,22 +85,22 @@ foreach ($lineitems as $key => $lineitem)
 				'PY' => array(
 					'name' => 'Prior Year',
 					'value' => 'PY',
-					'title' => 'Prior year description.'
+					'title' => 'For non-capital expenses'
 				),
 				'CO' => array(
 					'name' => 'Capital Outlay',
 					'value' => 'CO',
-					'title' => 'Capital Outlay description.'
+					'title' => 'For items lasting three or more years'
 				),
 				'ULR' => array(
 					'name' => 'Undergraduate Legislative Reserve',
 					'value' => 'ULR',
-					'title' => 'desc'
+					'title' => 'Reserved for Undergraduate SGA'
 				),
 				'GLR' => array(
 					'name' => 'Graduate Legislative Reserve',
 					'value' => 'GLR',
-					'title' => 'White on rice on a paper plate in a snowstorm'
+					'title' => 'Reserved for Graduate SGA'
 				)
 			),
 			'onchange' => "updateTCAndRqstd($key)"
@@ -124,7 +125,7 @@ foreach ($lineitems as $key => $lineitem)
 			'onclick' => "deleteRow(" . $key . ")",
 			'escape' => false
 		)),
-	), array('id' => 'LineItem'));
+	));
 }
 echo $this -> Html -> tableEnd();
 ?>

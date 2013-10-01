@@ -45,6 +45,7 @@ function move(pos, moveTo)
 	{
 		// Save the values from the current row
 		var id = get("LineItemId" + pos).value;
+		var lnum = get("LineItemLineNumber" + pos).value;
 		var name = get("LineItemName" + pos).value;
 		var cost = get("LineItemCostPerUnit" + pos).value;
 		var qty = get("LineItemQuantity" + pos).value;
@@ -54,6 +55,7 @@ function move(pos, moveTo)
 
 		// Set the values of the current row to the row that of the row being moved to
 		get("LineItemId" + pos).value = get("LineItemId" + moveTo).value;
+		get("LineItemLineNumber" + pos).value = get("LineItemLineNumber" + moveTo).value;
 		get("LineItemName" + pos).value = get("LineItemName" + moveTo).value;
 		get("LineItemCostPerUnit" + pos).value = get("LineItemCostPerUnit" + moveTo).value;
 		get("LineItemQuantity" + pos).value = get("LineItemQuantity" + moveTo).value;
@@ -63,6 +65,7 @@ function move(pos, moveTo)
 
 		// Set the row being moved to, to the values of the current row
 		get("LineItemId" + moveTo).value = id;
+		get("LineItemLineNumber" + moveTo).value = lnum;
 		get("LineItemName" + moveTo).value = name;
 		get("LineItemCostPerUnit" + moveTo).value = cost;
 		get("LineItemQuantity" + moveTo).value = qty;
@@ -70,6 +73,7 @@ function move(pos, moveTo)
 		get("LineItemAmount" + moveTo).value = amt;
 		get("LineItemAccount" + moveTo).value = account;
 	}
+	var rows = get("LineItemsTable").rows;
 }
 
 /**
@@ -102,9 +106,26 @@ function addRow(pos)
 function deleteRow(pos)
 {
 	pos = pos + 1;
-	var table = get("LineItemsTable");
-	table.deleteRow(pos);
-	correctNumbers();
+	var table = get("LineItemsTable");	
+	if (table.rows.length != 2)
+	{
+		table.deleteRow(pos);
+		correctNumbers();
+	}
+	else
+	{
+		for (var i = 0; i < table.rows[1].cells.length; i++)
+		{
+			for (var j = 0; j < table.rows[1].cells[i].getElementsByTagName("input").length; j++)
+			{
+				if (!(table.rows[1].cells[i].getElementsByTagName("input")[j] == undefined))
+				{
+					table.rows[1].cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
+					table.rows[1].cells[i].getElementsByTagName("input")[j].value = '';
+				}
+			}
+		}
+	}
 }
 
 /**
