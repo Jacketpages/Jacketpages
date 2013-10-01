@@ -149,11 +149,13 @@ echo $this -> element('bills/view/outcomes');
 
 if ($bill['Bill']['status'] == $CREATED && $this -> Session -> read('User.id') == $bill['Submitter']['id'])
 {
-	echo $this -> Form -> postButton('Submit Bill', array(
+	echo $this -> Form -> create('Bill', array('url'=>array(
 		'controller' => 'bills',
 		'action' => 'submit',
 		$bill['Bill']['id']
-	));
+	)));
+	echo $this -> Form -> submit('Submit Bill');
+	
 }
 
 $this -> end();

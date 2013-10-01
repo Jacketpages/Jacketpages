@@ -21,7 +21,6 @@ echo $this -> Form -> create('Bill', array('onsubmit' => 'return validateForm()'
 echo $this -> Form -> input('title', array('label' => 'Title'));
 echo $this -> Form -> input('description', array('label' => 'Description'));
 echo $this -> Form -> input('fundraising', array('label' => 'Fundraising - Please describe related fundraising efforts'));
-echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Form -> input('type', array(
 	'label' => 'Type',
 	'options' => array(

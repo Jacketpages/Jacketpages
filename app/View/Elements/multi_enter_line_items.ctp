@@ -13,7 +13,7 @@ echo $this -> Html -> tableBegin(array(
 ));
 echo $this -> Html -> tableHeaders(array(
 	'#',
-	'Name',
+	array('Name' => array('width' => '200px')),
 	'Cost (Each)',
 	'Qty',
 	'Total Cost',
@@ -112,7 +112,8 @@ foreach ($lineitems as $key => $lineitem)
 					'title' => 'Reserved for Graduate SGA'
 				)
 			),
-			'onchange' => "updateTCAndRqstd($key)"
+			'onchange' => "updateTCAndRqstd($key)",
+			'style' => 'width: 125px'
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',

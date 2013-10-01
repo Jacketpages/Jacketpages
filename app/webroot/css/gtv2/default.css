@@ -336,7 +336,15 @@ ul.secondary a:active {
 
 .LineItemButton
 {
-  width:30px;
+  width: 25px;
+  margin: 0px;
+}
+
+.LineItemButton img {
+	position: relative;
+	top: -1px;
+	left: -2px;
+	max-width: none;
 }
 
 .LineItemCostPerUnit, .LineItemAmount, .LineItemTotalCost

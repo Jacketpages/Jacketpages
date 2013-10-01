@@ -23,6 +23,6 @@
 <?php } ?>
 
 <div id="<?php echo ($sidebarExists)?'middle':'full_middle'; ?>">
-    <h1><?php echo $this -> fetch('title');?></h1>
+    <div id="page_title"><?php echo $this -> fetch('title');?></div>
     <?php echo $this -> fetch('middle');?>
 </div>

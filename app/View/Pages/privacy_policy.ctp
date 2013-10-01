@@ -6,7 +6,6 @@
 $this -> extend("/Common/common");
 $this -> assign('title', 'Privacy Policy');
 
-echo $this -> Html -> tag('h1', 'Privacy Policy');
 $this -> start('middle');
 echo "The privacy of the users of JacketPages is of the highest priority. 
 This privacy policy explains what information we collect from you and how we may use it. 

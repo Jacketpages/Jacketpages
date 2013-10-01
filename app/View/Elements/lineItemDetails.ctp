@@ -20,17 +20,18 @@ if ($lineitems != null)
 		'Qty',
 		'TC',
 		'AR',
-		'Account'
+		'Account',
+		''
 	);
 	if ($showAll)
 	{
-		$tableHeaders[] = 'State';
+		$tableHeaders[7] = 'State';
 	}
-	if ($showEditAndDeleteButtons && !isset($first) && $form_state != 'Final' && $bill['Bill']['status'] < 6)
+	if (!$showAll && $showEditAndDeleteButtons && !isset($first) && $form_state != 'Final' && $bill['Bill']['status'] < 6)
 	{
 		$tableHeaders[] = '';
 	}
-	if (!isset($first))
+	if (!$showAll && !isset($first))
 		$tableHeaders[] = '';
 	echo $this -> Html -> tableHeaders($tableHeaders);
 	foreach ($lineitems as $lineitem)

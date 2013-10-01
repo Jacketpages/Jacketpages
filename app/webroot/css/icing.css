@@ -88,6 +88,13 @@ h3 {
 	/*margin-top: 12px;*/
 	/*margin-bottom: 0;*/
 }
+
+#page_title {
+	border-bottom: 1px solid #DDD;
+	font-size: 2em;
+	margin-bottom: 10px;
+}
+
 /**
  * Yep, this is currenty useless. Just a container.
  */
@@ -209,6 +216,7 @@ h3 {
 	float: right;
 	width: 805px;
 	min-height: 400px;
+	margin-top: 10px;
 }
 
 /*
@@ -216,6 +224,7 @@ h3 {
 */
 #middle_full {
 	min-height: 400px;
+	margin-top: 10px;
 }
 
 /**
@@ -628,4 +637,8 @@ table.list tr:nth-child(2n) td {
 
 #outcomes th{
 	text-align:left;
+}
+
+#accordion {
+	margin-bottom: 10px;
 }

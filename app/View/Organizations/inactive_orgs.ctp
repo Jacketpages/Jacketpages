@@ -26,13 +26,10 @@ if ($orgExportPerm)
 		'action' => 'export'
 	));
 }
-$sidebar[] = 'Organization Category';
-echo $this -> Html -> nestedList($sidebar);
-?>
-<div id='category'>
-	<?php
-	echo $this -> Form -> create();
-	echo $this -> Form -> input('category', array(
+$sidebar[] = '<a>Organization&nbsp;Category<br /><br />
+<div id=\'category\'>'.
+$this -> Form -> create().
+$this -> Form -> input('category', array(
 		'label' => false,
 		'default' => $this -> Session -> read('Search.category'),
 		'options' => array(
@@ -58,9 +55,9 @@ echo $this -> Html -> nestedList($sidebar);
 			'Umbrella' => 'Umbrella',
 			'Other' => 'Other'
 		)
-	));
-	?>
-</div>
+	)).'</div></a>';
+echo $this -> Html -> nestedList($sidebar);
+?>
 <?php
 $this -> end();
 

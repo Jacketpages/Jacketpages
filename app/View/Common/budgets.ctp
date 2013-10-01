@@ -9,11 +9,11 @@
 				$this -> Html -> link('Expenses', array('action' => 'index')),
 				$this -> Html -> link('Member Contributions', array('action' => 'index')),
 				$this -> Html -> link('Summary', array('action' => 'index'))
-			), array(), array('id' => 'underline'));
+			), array());
 		echo $this -> element('sidebar');
         ?>
 </div>
 <div id="middle">
-    <h1><?php echo $this -> fetch('title'); ?></h1>
+    <div id="page_title"><?php echo $this -> fetch('title'); ?></div>
     <?php echo $this -> fetch('middle'); ?>
 </div>
