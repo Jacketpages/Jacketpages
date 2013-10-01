@@ -1,57 +1,54 @@
 <?php
 /**
  * @author Stephen Roca
- * @since 8/26/2013
+ * @since 9/10/2013
  */
+
 $this -> extend('/Common/common');
+$this -> assign('title', 'Member Contributions');
 $this -> start('script');
-echo $this -> Html -> script('budgets/expenses_multi_enter');
+echo $this -> Html -> script('budgets/member_contributions');
 $this -> end();
-$this -> assign('title', 'Non-Student Activity Fee Expenses');
 $this -> start('middle');
-echo $this -> Html -> para('', 'Itemize all expenses paid for within funds from sources other than student activity fees. 
-This includes dues, revenue from fundraisers, revenue from other activities, and funds from other sources. 
-Do not include items purchased by individual members that will remain with them after leaving the 
-organization, i.e., swimsuits, etc. This section allows JFC to see how much the individual organization 
-is willing to commit to its goals and will greatly facilitate the budget process.
-');
-echo $this -> Form -> create('Expense');
+echo $this -> Html -> para('','In this section, list all personal items such as swimsuit or shoes, 
+which each member must purchase to be involved in the organization\'s activities. 
+Note: these items must be in addition to the amount paid to the club in dues or donations.');
+echo $this -> Form -> create('MemberContribution');
 echo $this -> Html -> tableBegin(array(
 	'class' => 'listing',
-	'id' => 'ExpensesTable'
+	'id' => 'MemberContributionsTable'
 ));
 echo $this -> Html -> tableHeaders(array(
 	'Item',
-	'Expense',
+	'Amount',
 	'',
 	'',
 	'',
 	''
 ));
-if (count($expenses) == 0)
+if (count($memberContributions) == 0)
 {
-	$expenses = array( array('Expense' => array(
-				'id' => '',
-				'item' => '',
+	$memberContributions = array( array('MemberContribution' => array(
+				'id' => '','item' => '',
 				'amount' => ''
 			)));
 }
-foreach ($expenses as $key => $expense)
+foreach ($memberContributions as $key => $memberContribution)
 {
 	echo $this -> Html -> tableCells(array(
-		$this -> Form -> input("$key.Expense.id", array(
-			'id' => 'ExpenseId' . $key,
+		$this -> Form -> input("$key.MemberContribution.id", array(
+			'id' => 'MemberContributionId' . $key,
 			'type' => 'hidden',
-			'value' => $expense['Expense']['id']
-		))  . $this -> Form -> input("$key.Expense.item", array(
+			'value' => $memberContribution['MemberContribution']['id']
+		))  . $this -> Form -> input("$key.MemberContribution.item", array(
 			'label' => false,
 			'id' => 'Item' . $key,
-			'value' => $expense['Expense']['item']
+			'value' => $memberContribution['MemberContribution']['item']
 		)),
-		$this -> Form -> input("$key.Expense.amount", array(
+		$this -> Form -> input("$key.MemberContribution.amount", array(
 			'label' => false,
 			'id' => 'Amount' . $key,
-			'value' => $expense['Expense']['amount'],
+			'value' => $memberContribution['MemberContribution']['amount'],
 			'onchange' => 'updateTotal()'
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(

@@ -9,6 +9,9 @@ $this -> assign('title', "FY $fiscalYear Budget Application for $orgName (Tier $
 $this -> start('middle');
 
 echo $this -> Form -> create();
+echo $this -> Form -> hidden('id'); 
+echo $this -> Form -> hidden('fiscal_year', array('value' => $fiscalYear));
+echo $this -> Form -> hidden('org_id', array('value' => $organization['Organization']['id']));
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableCells(array(
 	'President',
@@ -68,8 +71,8 @@ echo $this -> Html -> tableCells(array(
 	$this -> Form -> input('non_gt_member_count', array('type' => 'text','label' => false))
 ));
 echo $this -> Html -> tableEnd();
+echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
+echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));
 
-echo $this -> Html -> tag('h1', "FY " . ($fiscalYear - 1) . " Budget Summary");
-echo $this -> element('budgetLineItems/multi_enter');
 $this -> end();
 ?>

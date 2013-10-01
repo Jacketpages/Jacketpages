@@ -11,7 +11,8 @@ $pageNames = array(
 	'Past Organization Information',
 	'Budget Line Items',
 	'Revenue Generated From Fundraising',
-	'Non-Student Activity Fee Expenses'
+	'Non-Student Activity Fee Expenses',
+	'Member Contributions'
 );
 $this -> start('middle');
 $i = 1;

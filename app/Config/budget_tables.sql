@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS budget_line_items
 	id int(11) not null auto_increment,
 	primary key (id),
 	budget_id int(11),
+	line_number int(11),
 	category int(2),
 	name varchar(200),
 	state varchar(10),
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS budget_line_items
 	last_mod_by int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
-CREATE TABLE IF NOT EXISTS fundraising
+CREATE TABLE IF NOT EXISTS fundraisers
 (
 	id int(11) not null auto_increment,
 	primary key(id),
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS expenses
 	primary key (id),
 	budget_id int(11),
 	item varchar(200),
-	expense decimal(10,2)
+	amount decimal(10,2)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS line_item_categories
@@ -56,15 +57,15 @@ CREATE TABLE IF NOT EXISTS line_item_categories
 	description varchar(100)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
-CREATE TABLE IF NOT EXISTS budget_submit_state
+CREATE TABLE IF NOT EXISTS budget_submit_states
 (
-	budget_id int(11) not null,
+	id int(11) not null,
 	primary key (budget_id),
-	state_1 int(1),
-	state_2 int(1),
-	state_3 int(1),
-	state_4 int(1),
-	state_5 int(1)
+	state_1 int(1) default 0,
+	state_2 int(1) default 0,
+	state_3 int(1) default 0,
+	state_4 int(1) default 0,
+	state_5 int(1) default 0
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS dues
@@ -83,10 +84,20 @@ CREATE TABLE IF NOT EXISTS assets
 	primary key (id),
 	budget_id int(11),
 	item varchar(200),
-	amount decimal(10,2)
+	amount decimal(10,2),
+	tagged int(1)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS liabilities
+(
+	id int(11) not null auto_increment,
+	primary key (id),
+	budget_id int(11),
+	item varchar(200),
+	amount decimal(10,2)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS member_contributions
 (
 	id int(11) not null auto_increment,
 	primary key (id),
