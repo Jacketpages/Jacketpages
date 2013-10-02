@@ -11,7 +11,11 @@ $this -> start('middle');
 
 echo $this -> Form -> create();
 echo $this -> Form -> hidden('id'); 
-echo $this -> Form -> hidden('fiscal_year', array('value' => $fiscalYear));
+echo $this -> Form -> hidden('treasurer_id', array('value' => $treasurer['User']['id'])); 
+echo $this -> Form -> hidden('advisor_id',array('value' => $advisor['User']['id'])); 
+echo $this -> Form -> hidden('president_id',array('value' => $president['User']['id']));
+echo $this -> Form -> hidden('member_count',array('value' => $member_count)); 
+echo $this -> Form -> hidden('fiscal_year', array('value' => '20' . $fiscalYear));
 echo $this -> Form -> hidden('org_id', array('value' => $organization['Organization']['id']));
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableCells(array(array(

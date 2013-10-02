@@ -1,13 +1,9 @@
 <?php
+echo $this -> Html -> addCrumb($organization['Organization']['name'], '/organizations/view/' . $organization['Organization']['id']);
+echo $this -> Html -> addCrumb('Documents', '/documents/index/' . $organization['Organization']['id']);
 $this -> extend('/Common/common');
 
 $this -> assign('title', 'Documents');
-$this -> start('sidebar');
-echo $this -> Html -> nestedList(array(
-	$this -> Html -> link("Add File", array('action' => 'add', $id))),
-	array()
-);
-$this -> end();
 $this -> start('middle');
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableHeaders(array(
@@ -20,8 +16,12 @@ foreach ($documents as $document)
 			'controller' => 'documents',
 			'action' => 'sendFile',
 			$document['Document']['id']
-		)), $this -> Html -> link("Delete", array('controller' => 'documents', 'action'=> 'delete', $document['Document']['id']))));
+		)), array($this -> Html -> link("Delete", array('controller' => 'documents', 'action'=> 'delete', $document['Document']['id'])),array('style' => 'text-align:right'))));
 }
 echo $this -> Html -> tableEnd();
+echo $this -> Html -> tag('h2','Upload File');
+echo $this -> Form -> create('Document', array('type' => 'file'));
+echo $this->Form->file('Document.submittedfile');
+echo $this -> Form -> submit();
 $this -> end();
 ?>

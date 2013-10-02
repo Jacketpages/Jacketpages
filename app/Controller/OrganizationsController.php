@@ -205,10 +205,15 @@ class OrganizationsController extends AppController
 	 */
 	public function my_orgs($id = null)
 	{
-		if($id == null){
-			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		if ($id == null)
+		{
+			$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'my_orgs',
+				$this -> Session -> read('User.id')
+			));
 		}
-	
+
 		$org_ids = null;
 		$this -> loadModel('Membership');
 
@@ -222,65 +227,67 @@ class OrganizationsController extends AppController
 	 */
 	public function view($id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Please select an organization to view.');
-			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		if ($id == null)
+		{
+			$this -> Session -> setFlash('Please select an organization to view.');
+			$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'index'
+			));
 		}
-		
+
 		// Set which organization to retrieve from the database.
 		$this -> Organization -> id = $id;
 		$organization = $this -> Organization -> read();
-		if(empty($organization)){
+		if (empty($organization))
+		{
 			// no organization with that id
-			$this->Session->setFlash('Please select an organization to view.');
-			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+			$this -> Session -> setFlash('Please select an organization to view.');
+			$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'index'
+			));
 		}
 		$this -> set('organization', $this -> Organization -> read());
 		$this -> loadModel('Membership');
-		$president = $this -> Membership -> find('first', array(
-			'conditions' => array('AND' => array(
+		$president = $this -> Membership -> find('first', array('conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
 					'Membership.role' => 'President',
 					'Membership.start_date LIKE' => '2011%'
-				)),			
-		));
+				)), ));
 		$this -> set('president', $president);
-		$treasurer = $this -> Membership -> find('first', array(
-			'conditions' => array('AND' => array(
+		$treasurer = $this -> Membership -> find('first', array('conditions' => array('AND' => array(
 					'Membership.ORG_ID' => $id,
 					'Membership.ROLE' => 'Treasurer',
 					'Membership.START_DATE LIKE' => '2011%'
-				)),			
-		));
+				)), ));
 		$this -> set('treasurer', $treasurer);
-		$advisor = $this -> Membership -> find('first', array(
-			'conditions' => array('AND' => array(
+		$advisor = $this -> Membership -> find('first', array('conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
 					'Membership.role' => 'Advisor',
 					'Membership.start_date LIKE' => '2011%'
-				)),
-		));
+				)), ));
 		$this -> set('advisor', $advisor);
-		$officers = $this -> Membership -> find('all', array(
-			'conditions' => array('AND' => array(
+		$officers = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
 					'Membership.role' => 'Officer',
 					'Membership.start_date LIKE' => '2011%'
-				)),			
-		));
+				)), ));
 		$this -> set('officers', $officers);
-		
+
 		//MRE moved all of this to just the roster page
-		/*$members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
-					'Membership.role' => 'Member',
-					'Membership.org_id' => $id
-				))));
-		$this -> set('members', $members);
-		$pending_members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
-					'Membership.status' => 'Pending',
-					'Membership.org_id' => $id
-				))));
-		$this -> set('pending_members', $pending_members);*/
+		/*$members = $this -> Membership -> find('all', array('conditions' => array('AND'
+		 * => array(
+		 'Membership.role' => 'Member',
+		 'Membership.org_id' => $id
+		 ))));
+		 $this -> set('members', $members);
+		 $pending_members = $this -> Membership -> find('all', array('conditions' =>
+		 array('AND' => array(
+		 'Membership.status' => 'Pending',
+		 'Membership.org_id' => $id
+		 ))));
+		 $this -> set('pending_members', $pending_members);*/
 
 		$this -> set('orgJoinOrganizationPerm', $this -> Membership -> find('count', array('conditions' => array(
 				'Membership.status' => 'Active',
@@ -320,11 +327,15 @@ class OrganizationsController extends AppController
 	 */
 	public function edit($id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Please select an organization to view.');
-			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		if ($id == null)
+		{
+			$this -> Session -> setFlash('Please select an organization to view.');
+			$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'index'
+			));
 		}
-		
+
 		$this -> Organization -> id = $id;
 		if ($this -> request -> is('get'))
 		{
@@ -413,96 +424,41 @@ class OrganizationsController extends AppController
 		$this -> set('export', $build_export);
 	}
 
-	public function addlogo($id = null)
+	public function addlogo($org_id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Please select an organization to view.');
-			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
-		}
-		
-		$org = $this -> Organization -> read(null, $id);
-		/*if ($org['Organization']['status'] != 'Active' && !$this -> isLevel('admin'))
-		 {
-		 $this -> Session -> setFlash(__('Invalid organization', true));
-		 $this -> redirect(array('action' => 'index'));
-		 }
-		 if (!$id)
-		 {
-		 $this -> Session -> setFlash(__('Invalid organization.', true));
-		 $this -> redirect(array('action' => 'index'));
-		 }
-		 if (!$this -> isLevel('admin') && !$this -> _isOfficer($id))
-		 {
-		 $this -> Session -> setFlash(__('You are not an officer of this organization.',
-		 true));
-		 $this -> redirect(array(
-		 'action' => 'view',
-		 $id
-		 ));
-		 }*/
-		if (!empty($this -> data) && is_uploaded_file($this -> data['File']['image']['tmp_name']))
+		if ($this -> request -> is('post') && $this -> request -> data['File']['image']['size'] < 200000)
 		{
-			Configure::write('debug', 0);
-			$fileData = fread(fopen($this -> data['File']['image']['tmp_name'], "r"), $this -> data['File']['image']['size']);
-			$permitted = array(
-				'image/gif',
-				'image/jpeg',
-				'image/pjpeg',
-				'image/png'
-			);
-			$typeOK = false;
-			foreach ($permitted as $type)
+			$dir = new Folder("../webroot/img/" . $org_id, true, 0744);
+			debug($dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]);
+			if(move_uploaded_file($this -> request -> data['File']['image']['tmp_name'], $dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]))
 			{
-				if ($type == $this -> data['File']['image']['type'])
-				{
-					$typeOK = true;
-					break;
-				}
+				$this -> Organization -> id = $org_id;
+				$this -> Organization -> saveField('logo_path', '/img/' .$org_id . '/' . $this -> request -> data["File"]['image']["name"]);
 			}
-			if (!$typeOK)
-			{
-				$this -> Session -> setFlash(__('Invalid image type.', true));
-				$this -> redirect('/organizations/addlogo/' . $id);
-			}
-			$this -> Organization -> set('logo_name', $this -> data['File']['image']['name']);
-			$this -> Organization -> set('logo_type', $this -> data['File']['image']['type']);
-			$this -> Organization -> set('logo_size', $this -> data['File']['image']['size']);
-			$this -> Organization -> set('logo', $fileData);
-			if ($this -> data['File']['image']['size'] > 200000)
-			{
-				$this -> Session -> setFlash(__('Image is too large.', true));
-				$this -> redirect('/organizations/addlogo/' . $id);
-			}
-			if ($this -> Organization -> save())
-			{
-				$this -> Session -> setFlash(__('Logo uploaded.', true));
-				$this -> redirect(array(
-					'action' => 'view',
-					$id
-				));
-				exit();
-			}
-			else
-			{
-				$this -> Session -> setFlash(__('Error in upload.', true));
-				$this -> redirect(array(
-					'action' => 'view',
-					$id
-				));
-				exit();
-			}
-		}
 
-		$this -> set('organization', $this -> Organization -> read(null, $id));
+			$logo_path = $this -> Organization -> field('logo_path', array('id' => $org_id));
+			if (strcmp($logo_path, '/img/default_logo.gif') && strcmp($logo_path, '/img/' .$org_id. DS . $this -> request -> data["File"]['image']["name"]))
+			{
+			$webroot = new Folder("../webroot/".$org_id. "/");
+				$file = new File($webroot -> pwd(). $logo_path);
+				$file -> delete();
+			}
+			$this -> redirect('/organizations/view/' . $org_id);
+		}
+		$this -> set('organization', $this -> Organization -> read(null, $org_id));
 	}
 
 	function getlogo($id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Please select an organization to view.');
-			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		if ($id == null)
+		{
+			$this -> Session -> setFlash('Please select an organization to view.');
+			$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'index'
+			));
 		}
-		
+
 		$org = $this -> Organization -> read(null, $id);
 		if ($org['Organization']['status'] == 'Frozen' || !$id)
 		{
@@ -532,11 +488,15 @@ class OrganizationsController extends AppController
 
 	function emailList($org_id = null)
 	{
-		if($org_id == null){
-			$this->Session->setFlash('Please select an organization to view.');
-			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		if ($org_id == null)
+		{
+			$this -> Session -> setFlash('Please select an organization to view.');
+			$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'index'
+			));
 		}
-		
+
 		$this -> loadModel('Membership');
 		$members = $this -> Membership -> find('list', array(
 			'conditions' => array('Membership.org_id' => $org_id),

@@ -6,7 +6,7 @@
 
 App::uses('Folder', 'Utility');
 App::uses('File', 'Utility');
-class DocumentsController extends Controller
+class DocumentsController extends AppController
 {
 	public $helpers = array(
 		'Html',
@@ -41,12 +41,9 @@ class DocumentsController extends Controller
 				'action' => 'index'
 			));
 		}
-	}
-
-	public function add($id = null)
-	{
 		if ($this -> request -> is('post'))
 		{
+			$dir = new Folder(APP . DS . "Documents" . DS . $id, true, 0744);
 			move_uploaded_file($this -> request -> data['Document']['submittedfile']['tmp_name'], APP . DS . "Documents" . DS . $id . DS . $this -> request -> data['Document']['submittedfile']['name']);
 
 			$data = array(
@@ -60,7 +57,7 @@ class DocumentsController extends Controller
 				$this -> Document -> create();
 				if ($this -> Document -> save($data))
 				{
-					$this -> Session -> setFlash('The user has been saved.');
+					$this -> Session -> setFlash('The document has been successfully uploaded.');
 					$this -> redirect(array(
 						'action' => 'index',
 						$id
@@ -68,7 +65,7 @@ class DocumentsController extends Controller
 				}
 				else
 				{
-					$this -> Session -> setFlash('Unable to add the user.');
+					$this -> Session -> setFlash('The document failed to upload.');
 				}
 			}
 		}
