@@ -71,7 +71,7 @@ if (!$orgJoinOrganizationPerm)
 		'controller' => 'memberships',
 		'action' => 'joinOrganization',
 		$organization['Organization']['id']
-	), null, __('Are you sure %s you want to join ' . $organization['Organization']['name'] . '?', true));
+	), null, __('Are you sure you want to join ' . $organization['Organization']['name'] . '?', true));
 }
 
 if ($orgAdminPerm)

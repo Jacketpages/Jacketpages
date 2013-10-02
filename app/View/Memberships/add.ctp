@@ -11,7 +11,7 @@ $this -> start('middle');
 
 echo $this -> Form -> create('Membership');
 echo $this -> Form -> hidden('id');
-echo $this -> Form -> hidden('org_id');
+echo $this -> Form -> hidden('org_id', array('value' => $orgId));
 echo $this -> Form -> input('user_info', array('label' => 'Name or GT ID -- You must select from suggestions when they appear', 'id' => 'userName'));
 echo $this -> Form -> input('role', array(
 	'label' => 'Role',
@@ -67,7 +67,7 @@ echo $this -> Form -> end('Submit');
 	$(document).ready(function() {
 	$( "#userName" ).autocomplete({
 		minLength: 2,
-		source: wr+'ajax/userName',
+		source: '/users/userName',
 		focus: function( event, ui ) {
 			$( "#userName" ).val( ui.item.name );
 			return false;

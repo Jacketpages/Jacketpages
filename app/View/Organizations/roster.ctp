@@ -1,6 +1,7 @@
 <?php
 $this -> extend('/Common/common');
 $this -> assign('title', 'Roster');
+
 $this -> start('middle');
 
 echo $this -> Html -> tag('h1', 'Officers');

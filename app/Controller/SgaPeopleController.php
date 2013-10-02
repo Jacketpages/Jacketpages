@@ -44,7 +44,8 @@ class SgaPeopleController extends AppController
 					),
 					array($this -> User -> getVirtualField('name') . ' LIKE' => $letter . '%')
 				)),
-			'limit' => 20
+			'limit' => 20,
+			'order' => array('status' => 'ASC', 'house' => 'ASC', 'department' => 'ASC')
 		);
 		// If the request is ajax then change the layout to return just the updated user
 		// list

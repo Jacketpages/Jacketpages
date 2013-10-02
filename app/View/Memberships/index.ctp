@@ -6,6 +6,11 @@ $this -> Html -> addCrumb('My Organizations', '/organizations/my_orgs/'.$this ->
 $this -> Html -> addCrumb($orgName, '/organizations/view/'.$orgId);
 $this -> Html -> addCrumb('Roster', $this->here);
 
+$this -> start('sidebar');
+	echo $this -> Html -> nestedList(array(
+		$this -> Html -> link('Add Membership', array('action' => 'add', $orgId))));
+$this -> end();
+
 $this -> start('middle');
 
 echo $this -> Html -> tag('h1', 'Officers');
@@ -88,6 +93,7 @@ if($pending_members)
 		'Name (Click to Edit)',
 		'Email',
 		'Phone',
+		'',
 		''
 	));
 	foreach ($pending_members as $pending_member)
@@ -100,9 +106,15 @@ if($pending_members)
 			)),
 			$this->Text->autoLinkEmails($pending_member['User']['email']),
 			$pending_member['User']['phone'],
-			array($this -> Html -> link('Accept', array(
+			$this -> Html -> link('Accept', array(
 				'controller' => 'memberships',
 				'action' => 'accept',
+				$pending_member['Membership']['id'],
+				$orgId
+			)),
+			array($this -> Html -> link('Reject', array(
+				'controller' => 'memberships',
+				'action' => 'reject',
 				$pending_member['Membership']['id'],
 				$orgId
 			)), array('align'=>'right'))

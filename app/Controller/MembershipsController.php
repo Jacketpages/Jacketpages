@@ -117,6 +117,26 @@ class MembershipsController extends AppController {
 		$this -> Session -> setFlash(__('Membership was not deleted.', true));
 		$this -> redirect(array('controller' => 'memberships', 'action' => 'index', $orgId));
 	}
+	
+	// Reject a pending membership
+	// MRE TO DO: make sure permissions are set...
+	public function reject($id = null, $orgId = null)
+	{
+		if($id == null || $orgId == null){
+			$this->Session->setFlash('Please select your organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+
+		}
+		
+		$this -> Membership -> id = $id;
+		if ($this -> Membership -> delete()) {
+			$this -> Session -> setFlash(__('Membership deleted.', true));
+			$this -> redirect(array('controller' => 'memberships', 'action' => 'index', $orgId));
+		}
+		$this -> Session -> setFlash(__('Membership was not deleted.', true));
+		$this -> redirect(array('controller' => 'memberships', 'action' => 'index', $orgId));
+	}
+	
 
 	public function accept($id = null, $orgId = null)
 	{
@@ -150,8 +170,13 @@ class MembershipsController extends AppController {
 		$this -> Membership -> set('status', 'Pending');
 		$this -> Membership -> set('room_reserver', 'No');
 
-		if ($this -> Membership -> save())
+		if ($this -> Membership -> save()){
+			$this -> Session -> setFlash('Request sent to join organization.');
+		} else {
+			$this -> Session -> setFlash('Unable to join the organization.');
+		}
 			$this -> redirect($this -> referer());
+			
 	}
 
 }
