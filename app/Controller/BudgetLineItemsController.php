@@ -10,7 +10,6 @@ class BudgetLineItemsController extends AppController
 	{
 		$this -> loadModel('Budget');
 		$this -> loadModel('LineItemCategory');
-		debug($this -> request -> data);
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
 			$data = $this -> request -> data;
@@ -92,7 +91,6 @@ class BudgetLineItemsController extends AppController
 						'state_2' => 1
 					)));
 			}
-			debug($this -> request -> data['redirect']);
 			if (strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 				$this -> redirect(array(
 					'controller' => 'budgets',
