@@ -12,7 +12,7 @@ echo $this -> Form -> create('Dues');
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 
 echo $this -> Html -> tableHeaders(array(
-	'Member Type',
+	array('Member Type' => array('width' => '120px')),
 	'Number of Members',
 	'Dues Amount',
 	'Dues Income'

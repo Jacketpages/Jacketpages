@@ -7,7 +7,7 @@ echo $this -> Html -> div();
 $tableId = 'FundraiserTable' . $othernum;
 echo $this -> Html -> tableBegin(array('class' => 'listing', 'id' => $tableId));
 echo $this -> Html -> tableHeaders(array(
-		'Fundraiser/Activity',
+	array('Fundraiser/Activity' => array('width' => '400px')),
 	'Date',
 	'Revenue',
 	'',
@@ -37,7 +37,8 @@ foreach ($fundraisings as $key => $fundraising)
 		)).$this -> Form -> textarea($num . '.'. $key . '.Fundraiser.activity', array(
 			'label' => false,
 			'value' => $fundraising['Fundraiser']['activity'],
-			'id' => $othernum . 'Activity' . $key
+			'id' => $othernum . 'Activity' . $key,
+			'rows' => 4
 		)),
 		$this -> Form -> text($num . '.'. $key . '.Fundraiser.date', array(
 			'label' => false,

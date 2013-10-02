@@ -76,14 +76,14 @@ foreach ($expenses as $key => $expense)
 		)),
 	));
 }
-echo $this -> Html -> tableCells(array(
-	'Total',
+echo $this -> Html -> tableCells(array(array(
+	array('Total', array('align'=>'right')),
 	array('$0.00',array('id' => 'total')),
 	'',
 	'',
 	'',
 	''
-), array(), array('id' => 'TotalRow'));
+)), array(), array('id' => 'TotalRow'));
 echo $this -> Html -> tableEnd();
 echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
 echo $this -> Form -> submit('Save and Continue');

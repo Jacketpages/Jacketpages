@@ -13,23 +13,23 @@ echo $this -> Form -> hidden('id');
 echo $this -> Form -> hidden('fiscal_year', array('value' => $fiscalYear));
 echo $this -> Form -> hidden('org_id', array('value' => $organization['Organization']['id']));
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
-echo $this -> Html -> tableCells(array(
-	'President',
+echo $this -> Html -> tableCells(array(array(
+	array('President', array('width'=>'100px')),
 	$president['User']['name'],
-	'Email',
-	$president['User']['email']
-));
+	array('Email', array('width'=>'70px')),
+	$this->Text->autoLinkEmails($president['User']['email'])
+)));
 echo $this -> Html -> tableCells(array(
 	'Treasurer',
 	$treasurer['User']['name'],
 	'Email',
-	$treasurer['User']['email']
+	$this->Text->autoLinkEmails($treasurer['User']['email'])
 ));
 echo $this -> Html -> tableCells(array(
 	'Advisor',
 	$advisor['User']['name'],
 	'Email',
-	$advisor['User']['email']
+	$this->Text->autoLinkEmails($advisor['User']['email'])
 ));
 echo $this -> Html -> tableEnd();
 
