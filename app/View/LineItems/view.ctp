@@ -19,8 +19,8 @@ echo $this -> Html -> tableCells(array('Quantity', $lineitem['LineItem']['quanti
 echo $this -> Html -> tableCells(array('Total Cost', $lineitem['LineItem']['total_cost']));
 echo $this -> Html -> tableCells(array('Amount Requested', $lineitem['LineItem']['amount']));
 echo $this -> Html -> tableCells(array('Account', $lineitem['LineItem']['account']));
-echo $this -> Html -> tableCells(array('Parent State', $parent['LineItem']['state']));
-echo $this -> Html -> tableCells(array('Parent Line Number', $parent['LineItem']['line_number']));
+echo $this -> Html -> tableCells(array('Parent State', (isset($parent['LineItem']['state'])) ? $parent['LineItem']['state'] : 'N/A'));
+echo $this -> Html -> tableCells(array('Parent Line Number', (isset($parent['LineItem']['line_number'])) ? $parent['LineItem']['line_number'] : 'N/A'));
 
 echo $this -> Html -> tableEnd();
 
