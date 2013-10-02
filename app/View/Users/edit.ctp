@@ -7,8 +7,8 @@
  * @author Stephen Roca
  * @since 3/27/2012
  */
-echo $this -> Html -> addCrumb($user['User']['name'], '/users/view/' . $user['User']['id']);
-echo $this -> Html -> addCrumb('Edit Profile', '/users/edit/' . $user['User']['id']);
+$this -> Html -> addCrumb($user['User']['name'], '/users/view/' . $user['User']['id']);
+$this -> Html -> addCrumb('Edit Profile', '/users/edit/' . $user['User']['id']);
 
 $this -> extend('/Common/common');
 $this -> assign('title', 'Edit Profile');

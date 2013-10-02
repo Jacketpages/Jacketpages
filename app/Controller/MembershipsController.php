@@ -15,6 +15,11 @@ class MembershipsController extends AppController
 	// Add in or condition to check dates greater than today.
 	public function index($id = null)
 	{
+		
+		$this -> loadModel('Organization');
+		$orgName = $this -> Organization -> field('name', array('id' => $id));
+		$this -> set('orgName', $orgName);
+		
 		$this -> loadModel('Membership');
 		$db = ConnectionManager::getDataSource('default');
 		$officers = $this -> Membership -> find('all', array(
@@ -61,6 +66,7 @@ class MembershipsController extends AppController
 		$this -> set('members', $members);
 		$this -> set('pending_members', $pending_members);
 		$this -> set('orgId', $id);
+		
 	}
 
 	/**

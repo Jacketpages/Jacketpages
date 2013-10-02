@@ -14,6 +14,8 @@ echo $this -> Html -> nestedList(array(
 ), array());
 $this -> end();
 $this -> assign("title", "Bills");
+$this -> Html -> addCrumb('All Bills', '/bills');
+$this -> Html -> addCrumb('On Agenda', $this->here);
 $this -> start('search');
 echo $this -> element('search', array('action' =>  'onAgenda', 'endForm' => 0));
 $this -> end();

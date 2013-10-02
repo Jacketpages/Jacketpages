@@ -10,9 +10,10 @@ $this -> Paginator -> options(array(
 	'before' => $this -> Js -> get('#listing') -> effect('fadeOut', array('buffer' => false)),
 	'complete' => $this -> Js -> get('#listing') -> effect('fadeIn', array('buffer' => false)),
 ));
-echo $this -> Html -> addCrumb('All Organizations', '/organizations');
 $this -> extend('/Common/list');
 $this -> assign('title', 'Inactive Organizations');
+$this -> Html -> addCrumb('All Organizations', '/organizations');
+$this -> Html -> addCrumb('Inactive Organizations', $this->here);
 $this -> start('sidebar');
 $sidebar = array();
 if ($orgCreatePerm)

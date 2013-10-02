@@ -10,10 +10,8 @@ echo $this -> Html -> script('validation/validation');
 echo $this -> Html -> script('bills/billvalidation');
 $this -> end();
 $this -> extend('/Common/common');
-echo $this -> Html -> addCrumb('All Bills', '/bills');
-$this -> start('sidebar');
-echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array());
-$this -> end();
+$this -> Html -> addCrumb('All Bills', '/bills');
+$this -> Html -> addCrumb('Create New Bill', '/bills/add');
 $this -> assign('title', 'Create New Bill');
 $this -> start('middle');
 

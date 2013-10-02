@@ -19,12 +19,17 @@ $this -> Html -> addCrumb('Users', '/users');
 $this -> extend('/Common/list');
 $this -> assign('title', 'Users');
 
-$this -> start('sidebar');
-echo $this -> Html -> nestedList(array(
-   $this -> Html -> link('Add User', array('action' => 'add')),
-   $this -> Html -> link('Add SGA Member', array('action' => 'add'))
-), array());
-$this -> end();
+if($sga_exec){
+	$this -> start('sidebar');
+	$links = array();
+	$links[] = $this -> Html -> link('Add SGA Member', array('action' => 'add'));
+	if($admin){
+		$links[] = $this -> Html -> link('Add User', array('action' => 'add'));
+	}
+	echo $this -> Html -> nestedList($links);
+	$this -> end();
+}
+
 $this -> start('search');
 
 echo $this -> element('search', array('action' =>  'index', 'endForm' => 1));
@@ -66,7 +71,7 @@ echo $this -> element('search', array('action' =>  'index', 'endForm' => 1));
          $this -> Html -> link(__('Delete', true), array(
             'action' => 'delete',
             $user['User']['id']
-         ), null, sprintf(__('Are you sure you want to delete %s?', true), $user['User']['name']))
+         ), null, __('Are you sure you want to delete %s?', $user['User']['name']))
       ));
    }
     ?>

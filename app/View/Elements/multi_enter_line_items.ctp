@@ -13,7 +13,7 @@ echo $this -> Html -> tableBegin(array(
 ));
 echo $this -> Html -> tableHeaders(array(
 	'#',
-	array('Name' => array('width' => '200px')),
+	array('Name' => array('width' => '400px')),
 	'Cost (Each)',
 	'Qty',
 	'Total Cost',

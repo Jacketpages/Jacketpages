@@ -41,7 +41,6 @@ class BillsController extends AppController
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post') && !$this -> request -> is('ajax'))
 		{
-			debug($this -> request -> data['Bill']['keyword']);
 			$this -> Session -> write('Search.keyword', $this -> request -> data['Bill']['keyword']);
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
@@ -61,7 +60,7 @@ class BillsController extends AppController
 				$this -> Session -> write('Bill.from', $this -> data['Bill']['from']);
 				$this -> Session -> write('Bill.to', $this -> data['Bill']['to']);
 			}
-			if ($this -> data['Bill']['category'] != null)
+			if (isset($this -> data['Bill']['category']))
 			{
 				$this -> Session -> write('Bill.category', $this -> data['Bill']['category']);
 			}
@@ -327,15 +326,16 @@ class BillsController extends AppController
 				if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 				{
 					$this -> Session -> setFlash('The bill has been saved.');
-					$this -> redirect(array(
-						'action' => 'view',
-						$id
-					));
 				}
 				else
 				{
-					$this -> Session -> setFlash('Unable to save the Bill.');
+					$this -> Session -> setFlash('Unable to save the bill.');
 				}
+				
+				$this -> redirect(array(
+					'action' => 'view',
+					$id
+				));
 			}
 		}
 	}
@@ -554,11 +554,11 @@ class BillsController extends AppController
 
 	public function votes($bill_id, $organization, $votes_id = null)
 	{
-		debug('inside');
+		$this->set('bill_id', $bill_id);
+	
 		$this -> loadModel('BillVotes');
 		if ($this -> request -> is('get'))
 		{
-			debug("Bad");
 			$this -> BillVotes -> id = $votes_id;
 			$this -> request -> data = $this -> BillVotes -> read();
 		}
@@ -571,23 +571,31 @@ class BillsController extends AppController
 				if ($this -> BillVotes -> save($this -> request -> data))
 				{
 					$this -> Bill -> id = $bill_id;
-					$this -> Bill -> saveField($organization, $this -> BillVotes -> getInsertID());
-					// $this -> redirect(array(
-						// 'controller' => 'bills',
-						// 'action' => 'view',
-						// $bill_id
-					// ));
+					if($this -> Bill -> saveField($organization, $this -> BillVotes -> getInsertID())){
+						$this -> Session -> setFlash('Votes have been updated.');
+					} else {
+						$this -> Session -> setFlash('There was an error updating the votes.');
+					}
+					$this -> redirect(array(
+						'controller' => 'bills',
+						'action' => 'view',
+						$bill_id
+				));
 				}
 			}
 			else
 			{
 				$this -> BillVotes -> id = $votes_id;
-				$this -> BillVotes -> save($this -> request -> data);
-				// $this -> redirect(array(
-					// 'controller' => 'bills',
-					// 'action' => 'view',
-					// $bill_id
-				// ));
+				if($this -> BillVotes -> save($this -> request -> data)){
+					$this -> Session -> setFlash('Votes have been updated.');
+				} else {
+					$this -> Session -> setFlash('There was an error updating the votes.');
+				}
+				$this -> redirect(array(
+					'controller' => 'bills',
+					'action' => 'view',
+					$bill_id
+				));
 			}
 		}
 	}

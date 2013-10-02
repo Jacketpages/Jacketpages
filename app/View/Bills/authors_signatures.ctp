@@ -5,6 +5,8 @@
  */
 $this -> extend('/Common/common');
 $this -> assign('title', 'Update Details');
+$this -> Html -> addCrumb('All Bills', '/bills');
+$this -> Html -> addCrumb('Update Signature', $this->here);
 $this -> start('sidebar');
 echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array());
 $this -> end();

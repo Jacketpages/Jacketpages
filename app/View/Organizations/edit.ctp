@@ -6,6 +6,10 @@
 // TODO grab the javascript from the admin_edit.ctp from JP and implement it here.
 $this -> extend('/Common/common');
 $this -> assign('title', 'Edit Organization');
+$this -> Html -> addCrumb('All Organizations', '/organizations');
+$this -> Html -> addCrumb('My Organizations', '/organizations/my_orgs/'.$this -> Session -> read('User.id'));
+$this -> Html -> addCrumb($organization['Organization']['name'], '/organizations/view/'.$organization['Organization']['id']);
+$this -> Html -> addCrumb('Edit Organization', $this->here);
 $this -> start('middle');
 echo $this -> Form -> create('Organization');
 echo $this -> Form -> hidden('id');

@@ -1,6 +1,11 @@
 <?php
 $this -> extend('/Common/common');
 $this -> assign('title', 'Roster');
+$this -> Html -> addCrumb('All Organizations', '/organizations');
+$this -> Html -> addCrumb('My Organizations', '/organizations/my_orgs/'.$this -> Session -> read('User.id'));
+$this -> Html -> addCrumb($orgName, '/organizations/view/'.$orgId);
+$this -> Html -> addCrumb('Roster', $this->here);
+
 $this -> start('middle');
 
 echo $this -> Html -> tag('h1', 'Officers');

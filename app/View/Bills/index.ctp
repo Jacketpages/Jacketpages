@@ -10,10 +10,11 @@
 	'before' => $this -> Js -> get('#listing') -> effect('fadeOut', array('buffer' => false)),
 	'complete' => $this -> Js -> get('#listing') -> effect('fadeIn', array('buffer' => false)),
 ));
- echo $this -> Html -> addCrumb('All Bills', '/bills');
+$this -> Html -> addCrumb('All Bills', '/bills');
 $this -> extend("/Common/list");
 $this -> start('sidebar');
 echo $this -> Html -> nestedList(array(
+	$this -> Html -> link('My Bills', array('action' => 'my_bills')),
 	$this -> Html -> link('Create New Bill', array('action' => 'add')),
 	$this -> Html -> link('Export FY Data', array(
 		'admin' => false,

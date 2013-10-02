@@ -6,6 +6,8 @@
 
 $this -> extend('/Common/common');
 $this -> assign('title', 'My Organizations and Positions');
+$this -> Html -> addCrumb('All Organizations', '/organizations');
+$this -> Html -> addCrumb('My Organizations', $this->here);
 $this -> start('middle');
 echo $this -> Html -> tag('h1', 'Executive Positions');
 echo $this -> Html -> tag('h1', 'General Affilitations');
@@ -21,7 +23,7 @@ if (count($memberships) > 0)
 	foreach ($memberships as $membership)
 	{
 		echo $this -> Html -> tableCells(array(
-			$membership['Organization']['name'],
+			$this->Html->link($membership['Organization']['name'], array('action'=>'view', $membership['Organization']['id'])),
 			$membership['Membership']['role'],
 			$membership['Membership']['start_date'],
 			$membership['Membership']['end_date']

@@ -37,7 +37,7 @@ if ($orgEditPerm)
 		'action' => 'addlogo',
 		$organization['Organization']['id']
 	));
-	$sidebar[] = $this -> Html -> link(__('Edit Roster', true), array(
+	$sidebar[] = $this -> Html -> link(__('Roster', true), array(
 		'controller' => 'memberships',
 		'action' => 'index',
 		$organization['Organization']['id']
@@ -65,14 +65,14 @@ if (!$orgJoinOrganizationPerm)
 		'controller' => 'memberships',
 		'action' => 'joinOrganization',
 		$organization['Organization']['id']
-	), null, __('Are you sure you want to join ' . $organization['Organization']['name'] . '?', true));
+	), null, __('Are you sure %s you want to join ' . $organization['Organization']['name'] . '?', true));
 }
 if ($orgAdminPerm)
 {
-	$this -> Html -> link(__('Delete Organization', true), array(
+	$sidebar[] = $this -> Html -> link(__('Delete Organization', true), array(
 		'action' => 'delete',
 		$organization['Organization']['id']
-	), null, sprintf(__('Are you sure you want to delete %s?', true), $organization['Organization']['name']));
+	), array('style' => 'color:red'), __('Are you sure you want to delete %s?', $organization['Organization']['name']));
 }
 echo $this -> Html -> nestedList($sidebar, array());
 $this -> end();

@@ -3,7 +3,7 @@
  * @author Stephen Roca
  * @since 06/22/2012
  */
-$this -> Html -> addCrumb('SGA People', '/sga_people');
+$this -> Html -> addCrumb('SGA Records', '/sga_people');
 $this -> Paginator -> options(array(
 	'update' => '#forupdate',
 	'indicator' => '#indicator',
@@ -13,6 +13,14 @@ $this -> Paginator -> options(array(
 ));
 $this -> extend("/Common/list");
 $this -> assign('title', 'SGA Records');
+
+if($sga_exec){
+	$this -> start('sidebar');
+	echo $this -> Html -> nestedList(array(
+		$this -> Html -> link('Add SGA Member', array('action' => 'add'))));
+	$this -> end();
+}
+
 $this -> start('search');
 ?>
 
@@ -71,11 +79,11 @@ $this -> start('listing');
 			$this -> Paginator -> sort('house', 'House'),
 			$this -> Paginator -> sort('department', 'Department')
 		);
-		if ($sgaStatusEditDelete)
+		if ($sga_exec)
 		{
 			$headers[] = $this -> Paginator -> sort('status', 'Status');
 			$headers[] = "";
-			$headers[] = "";
+			//$headers[] = "";
 		}
 		// Print out all of the table headers
 		echo $this -> Html -> tableHeaders($headers, array('class' => 'links'));
@@ -90,17 +98,21 @@ $this -> start('listing');
 				$sgaperson['SgaPerson']['house'],
 				$sgaperson['SgaPerson']['department']
 			);
-			if ($sgaStatusEditDelete)
+			if ($sga_exec)
 			{
 				$cells[] = $sgaperson['SgaPerson']['status'];
 				$cells[] = $this -> Html -> link('Edit', array(
 					'action' => 'edit',
 					$sgaperson['SgaPerson']['id']
 				));
-				$cells[] = $this -> Html -> link(__('Delete', true), array(
-					'action' => 'delete',
-					$sgaperson['SgaPerson']['id']
-				), null, sprintf(__('Are you sure you want to delete %s?', true), $sgaperson['User']['name']));
+				/*
+				if($admin){
+					$cells[] = $this -> Html -> link(__('Delete', true), array(
+						'action' => 'delete',
+						$sgaperson['SgaPerson']['id']
+					), null, sprintf(__('Are you sure you want to delete %s?', true), $sgaperson['User']['name']));
+				}
+				*/
 			}
 			echo $this -> Html -> tableCells($cells);
 		}

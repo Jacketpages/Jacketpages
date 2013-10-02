@@ -5,9 +5,9 @@
  */
 $this -> extend('/Common/common');
 $this -> assign('title', 'Update Voting Information');
-$this -> start('sidebar');
-echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array());
-$this -> end();
+$this -> Html -> addCrumb('View Bills', '/bills');
+$this -> Html -> addCrumb('View Bill', '/bills/view/'.$bill_id);
+$this -> Html -> addCrumb('Update Voting Information', $this->here);
 $this -> start('middle');
 if ($admin)
 {

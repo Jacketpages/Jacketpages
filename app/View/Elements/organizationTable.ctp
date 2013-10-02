@@ -8,7 +8,7 @@ if ($admin || $lace)
 		'Status',
 		'Forms Date',
 		'',
-		''
+		//''
 	), array('class' => 'links'));
 	foreach ($organizations as $organization)
 	{
@@ -25,15 +25,17 @@ if ($admin || $lace)
 			)),
 			$summary,
 			$organization['Organization']['status'],
-			'',
+			$organization['Organization']['alcohol_form'],
 			$this -> Html -> link(__('Edit', true), array(
 				'action' => 'edit',
 				$organization['Organization']['id']
 			)),
+			/*
 			$this -> Html -> link(__('Delete', true), array(
 				'action' => 'delete',
 				$organization['Organization']['id']
 			), null, sprintf(__('Are you sure you want to delete this organization?', true)))
+			*/
 		));
 	}
 	echo $this -> Html -> tableEnd();

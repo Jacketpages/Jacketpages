@@ -4,11 +4,6 @@
  * @since 8/26/2013
  */
 
-$updateBillAction = 'general_info';
-if ($this -> Session -> read('Sga.id') != null)
-{
-	$updateBillAction = 'edit_index';
-}
 $sidebar = array();
 //@formatter:off
 if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['Bill']['status'] == $CREATED) 
@@ -21,13 +16,14 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		$bill['Bill']['id']
 	));
 
-	$sidebar[] = $this -> Html -> link('Update Line Items', array(
-		'controller' => 'line_items',
-		'action' => 'index',
-		$bill['Bill']['id'],
-		'Submitted'
-	));
-
+	if($bill['Bill']['type'] != 'Resolution'){
+		$sidebar[] = $this -> Html -> link('Update Line Items', array(
+			'controller' => 'line_items',
+			'action' => 'index',
+			$bill['Bill']['id'],
+			'Submitted'
+		));
+	}
 }
 
 if ($bill['Bill']['status'] == $CREATED && $bill['Submitter']['id'] == $this -> Session -> read('User.id') || ($bill['Bill']['status'] == $CREATED && $admin))
@@ -83,7 +79,8 @@ if ($bill['Bill']['status'] < $AGENDA && ($sga_exec || $this -> Session -> read(
 	$sidebar[] = $this -> Html -> link('Delete Bill', array(
 		'action' => 'delete',
 		$bill['Bill']['id']
-	), array('style' => 'color:red'));
+	), array('style' => 'color:red'),
+	__('Are you sure you want to delete this bill?'));
 }
 if ($sidebar != null)
 {

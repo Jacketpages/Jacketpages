@@ -5,9 +5,9 @@
  */
 $this -> extend('/Common/common');
 $this -> assign('title', 'Update General Bill Information');
-$this -> start('sidebar');
-echo $this -> Html -> nestedList(array($this -> Html -> link('View All Bills', array('action' => 'index'))), array());
-$this -> end();
+$this -> Html -> addCrumb('All Bills', '/bills');
+$this -> Html -> addCrumb('View Bill', '/bills/view/'.$bill['Bill']['id']);
+$this -> Html -> addCrumb('Update General Bill Information', $this->here);
 $this -> start('middle');
 echo $this -> HTML -> div("", "Note: details cannot be edited if an author has signed the bill.", array('style'=>'margin-bottom:10px;'));
 echo $this -> Form -> create();

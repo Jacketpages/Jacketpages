@@ -11,7 +11,6 @@
 //TODO Add in more information about the user. Location etc.
 
 // Add the appropriate breadcrumbs
-$this -> Html -> addCrumb('Users', '/users/index');
 $this -> Html -> addCrumb($user['User']['name'], '/users/view/' . $user['User']['id']);
 $this -> extend('/Common/common');
 $links = array();
@@ -27,7 +26,7 @@ if ($userDeletePerm)
 	$links[] = $this -> Html -> link(__('Delete Profile', true), array(
 		'action' => 'delete',
 		$user['User']['id']
-	), null, sprintf(__('Are you sure you want to delete %s?', true), $user['User']['name']));
+	), array('style' => 'color:red'), __('Are you sure you want to delete %s?', $user['User']['name']));
 }
 
 $this -> start('sidebar');

@@ -20,7 +20,7 @@ class SgaPeopleController extends AppController
 	public function index($letter = null)
 	{
 		// Set page view permissions
-		$this -> set('sgaStatusEditDelete', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'sgaStatusEditDelete'));
+		//$this -> set('sgaStatusEditDelete', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'sgaStatusEditDelete'));
 
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))

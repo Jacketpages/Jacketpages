@@ -8,6 +8,8 @@ $this -> start('sidebar');
 echo $this -> element('bills/sidebar_links');
 $this -> end();
 $this -> assign("title", "Bill");
+$this -> Html -> addCrumb('All Bills', '/bills');
+$this -> Html -> addCrumb('View Bill ', $this->here);
 $this -> start('middle');
 // General bill information table
 echo $this -> Html -> tableBegin(array('class' => 'list'));
@@ -49,6 +51,7 @@ echo $this -> element('bills/view/outcomes');
 	}); 
 </script>
 <br>
+<?php if($bill['Bill']['type'] != 'Resolution'){ ?>
 <div id="tabs">
 	<ul>
 		<li>
@@ -74,66 +77,67 @@ echo $this -> element('bills/view/outcomes');
 		</li>
 	</ul>
 	<?php
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
-		'lineitems' => $submitted,
-		'showAll' => 0,
-		'first' => 1,
-	)), array('id' => 'tabs-1'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
-		'lineitems' => $jfc,
-		'showAll' => 0,
-		'eligibleStates' => array('Submitted' => 'Submitted'),
-		'form_state' => 'JFC'
-	)), array('id' => 'tabs-2'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
-		'lineitems' => $graduate,
-		'showAll' => 0,
-		'eligibleStates' => array(
-			'Submitted' => 'Submitted',
-			'JFC' => 'JFC',
-			'Undergraduate' => 'Undergraduate'
-		),
-		'form_state' => 'Graduate'
-	)), array('id' => 'tabs-3'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
-		'lineitems' => $undergraduate,
-		'showAll' => 0,
-		'eligibleStates' => array(
-			'Submitted' => 'Submitted',
-			'JFC' => 'JFC',
-			'Graduate' => 'Graduate'
-		),
-		'form_state' => 'Undergraduate'
-	)), array('id' => 'tabs-4'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
-		'lineitems' => $conference,
-		'showAll' => 0,
-		'eligibleStates' => array(
-			'Submitted' => 'Submitted',
-			'JFC' => 'JFC',
-			'Graduate' => 'Graduate',
-			'Undergraduate' => 'Undergraduate'
-		),
-		'form_state' => 'Conference'
-	)), array('id' => 'tabs-5'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
-		'lineitems' => $all,
-		'showAll' => 1
-	)), array('id' => 'tabs-6'));
-	echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
-		'lineitems' => $final,
-		'showAll' => 0,
-		'eligibleStates' => array(
-			'Submitted' => 'Submitted',
-			'JFC' => 'JFC',
-			'Graduate' => 'Graduate',
-			'Undergraduate' => 'Undergraduate',
-			'Conference' => 'Conference'
-		),
-		'form_state' => 'Final'
-	)), array('id' => 'tabs-7'));
+		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+			'lineitems' => $submitted,
+			'showAll' => 0,
+			'first' => 1,
+		)), array('id' => 'tabs-1'));
+		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+			'lineitems' => $jfc,
+			'showAll' => 0,
+			'eligibleStates' => array('Submitted' => 'Submitted'),
+			'form_state' => 'JFC'
+		)), array('id' => 'tabs-2'));
+		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+			'lineitems' => $graduate,
+			'showAll' => 0,
+			'eligibleStates' => array(
+				'Submitted' => 'Submitted',
+				'JFC' => 'JFC',
+				'Undergraduate' => 'Undergraduate'
+			),
+			'form_state' => 'Graduate'
+		)), array('id' => 'tabs-3'));
+		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+			'lineitems' => $undergraduate,
+			'showAll' => 0,
+			'eligibleStates' => array(
+				'Submitted' => 'Submitted',
+				'JFC' => 'JFC',
+				'Graduate' => 'Graduate'
+			),
+			'form_state' => 'Undergraduate'
+		)), array('id' => 'tabs-4'));
+		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+			'lineitems' => $conference,
+			'showAll' => 0,
+			'eligibleStates' => array(
+				'Submitted' => 'Submitted',
+				'JFC' => 'JFC',
+				'Graduate' => 'Graduate',
+				'Undergraduate' => 'Undergraduate'
+			),
+			'form_state' => 'Conference'
+		)), array('id' => 'tabs-5'));
+		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+			'lineitems' => $all,
+			'showAll' => 1
+		)), array('id' => 'tabs-6'));
+		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
+			'lineitems' => $final,
+			'showAll' => 0,
+			'eligibleStates' => array(
+				'Submitted' => 'Submitted',
+				'JFC' => 'JFC',
+				'Graduate' => 'Graduate',
+				'Undergraduate' => 'Undergraduate',
+				'Conference' => 'Conference'
+			),
+			'form_state' => 'Final'
+		)), array('id' => 'tabs-7'));
 ?>
 </div>
+<?php }// bill != resolution ?>
 <div class="ui-overlay" id="comments" style="display:none;">
 	<div class="ui-widget-overlay"></div>
 	<div class="ui-corner-all" id="overlay" style="width: 25%; height: 10%; position: absolute; top: 0;">
