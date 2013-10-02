@@ -20,6 +20,7 @@ if($officers)
 	echo $this -> Html -> tableHeaders(array(
 		'Officer (Click to Edit)',
 		'Role',
+		'Title',
 		'Email',
 		'Phone',
 		''
@@ -33,14 +34,16 @@ if($officers)
 				$officer['Membership']['id']		
 			)),
 			$officer['Membership']['role'],
+			$officer['Membership']['title'],
 			$this->Text->autoLinkEmails($officer['User']['email']),
 			$officer['User']['phone'],
-			array($this -> Html -> link('Remove', array(
+			array($this -> Html -> link(__('Remove', true), array(
 				'controller' => 'memberships',
 				'action' => 'delete',
 				$officer['Membership']['id'],
 				$orgId
-			)), array('align'=>'right'))
+			), null, __('Are you sure you want to mark ' . $officer['User']['name'] . ' as inactive?', true))
+			, array('align'=>'right'))
 		)));
 	
 	}
@@ -70,12 +73,13 @@ if($members)
 			)),
 			$this->Text->autoLinkEmails($member['User']['email']),
 			$member['User']['phone'],
-			array($this -> Html -> link('Remove', array(
+			array($this -> Html -> link(__('Remove', true), array(
 				'controller' => 'memberships',
 				'action' => 'delete',
 				$member['Membership']['id'],
 				$orgId
-			)), array('align'=>'right'))
+			), null, __('Are you sure you want to mark ' . $member['User']['name'] . ' as inactive?', true))
+			, array('align'=>'right'))
 		)));
 	
 	}
@@ -112,12 +116,13 @@ if($pending_members)
 				$pending_member['Membership']['id'],
 				$orgId
 			)),
-			array($this -> Html -> link('Reject', array(
+			array($this -> Html -> link(__('Reject', true), array(
 				'controller' => 'memberships',
 				'action' => 'reject',
 				$pending_member['Membership']['id'],
 				$orgId
-			)), array('align'=>'right'))
+			), null, __('Are you sure you want to reject ' . $pending_member['User']['name'] . '?', true))
+			, array('align'=>'right'))
 		)));
 	
 	}

@@ -12,6 +12,7 @@ $this -> start('middle');
 echo $this -> Form -> create('Membership');
 echo $this -> Form -> hidden('id');
 echo $this -> Form -> hidden('org_id', array('value' => $orgId));
+echo $this -> Form -> hidden('user_id', array('id' => 'user_id'));
 echo $this -> Form -> input('user_info', array('label' => 'Name or GT ID -- You must select from suggestions when they appear', 'id' => 'userName'));
 echo $this -> Form -> input('role', array(
 	'label' => 'Role',
@@ -67,7 +68,7 @@ echo $this -> Form -> end('Submit');
 	$(document).ready(function() {
 	$( "#userName" ).autocomplete({
 		minLength: 2,
-		source: '/users/userName',
+		source: '<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'lookupByName'), true); ?>',
 		focus: function( event, ui ) {
 			$( "#userName" ).val( ui.item.name );
 			return false;
@@ -78,10 +79,10 @@ echo $this -> Form -> end('Submit');
 			return false;
 		}
 	})
-	.data( "autocomplete" )._renderItem = function( ul, item ) {
+	.data( "uiAutocomplete" )._renderItem = function( ul, item ) {
 		return $( "<li></li>" )
 			.data( "item.autocomplete", item )
-			.append( "<a>" + item.name + " (" + item.gtUsername + ")</a>")
+			.append( "<a>" + item.name + " (" + item.gt_user_name + ")</a>")
 			.appendTo( ul );
 	};
 	});
