@@ -1,10 +1,7 @@
 <?php
 
 // Define the links that are needed.
-$campusCalendar = $this -> Html -> link('Campus Calendar', array(
-  'controller' => 'pages',
-  'action' => 'calendar'
-));
+$campusCalendar = $this -> Html -> link('Campus Calendar', '/');
 $contactJacktpages = $this -> Html -> link('Contact JacketPages', array('controller' => 'pages', 'action' => 'contact'));
 $privacyPolicy = $this -> Html -> link("Privacy Policy", array('controller' => 'pages', 'action' => 'privacy_policy'));
 $gatechMain = $this -> Html -> link('Georgia Tech Main', 'http://www.gatech.edu');
