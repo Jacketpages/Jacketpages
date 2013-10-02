@@ -33,7 +33,7 @@ $this -> start('middle');
 					)));
 				echo $this -> Form -> end();
 			?>
-			Image should be less than 20 KB (or 150px x 150px).
+			Image should be less than 200 KB (or 200px x 200px).
 		</div>
 		<div id="descRight">
 			<?php

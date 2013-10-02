@@ -228,13 +228,7 @@ class OrganizationsController extends AppController
 					'Membership.org_id' => $id,
 					'Membership.role' => 'President',
 					'Membership.start_date LIKE' => '2011%'
-				)),
-			'fields' => array(
-				'Membership.role',
-				'Membership.name',
-				'Membership.status',
-				'Membership.title'
-			)
+				)),			
 		));
 		$this -> set('president', $president);
 		$treasurer = $this -> Membership -> find('first', array(
@@ -242,13 +236,7 @@ class OrganizationsController extends AppController
 					'Membership.ORG_ID' => $id,
 					'Membership.ROLE' => 'Treasurer',
 					'Membership.START_DATE LIKE' => '2011%'
-				)),
-			'fields' => array(
-				'Membership.role',
-				'Membership.name',
-				'Membership.status',
-				'Membership.title'
-			)
+				)),			
 		));
 		$this -> set('treasurer', $treasurer);
 		$advisor = $this -> Membership -> find('first', array(
@@ -257,12 +245,6 @@ class OrganizationsController extends AppController
 					'Membership.role' => 'Advisor',
 					'Membership.start_date LIKE' => '2011%'
 				)),
-			'fields' => array(
-				'Membership.role',
-				'Membership.name',
-				'Membership.status',
-				'Membership.title'
-			)
 		));
 		$this -> set('advisor', $advisor);
 		$officers = $this -> Membership -> find('all', array(
@@ -270,13 +252,7 @@ class OrganizationsController extends AppController
 					'Membership.org_id' => $id,
 					'Membership.role' => 'Officer',
 					'Membership.start_date LIKE' => '2011%'
-				)),
-			'fields' => array(
-				'Membership.role',
-				'Membership.name',
-				'Membership.status',
-				'Membership.title'
-			)
+				)),			
 		));
 		$this -> set('officers', $officers);
 		

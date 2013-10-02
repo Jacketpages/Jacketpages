@@ -60,7 +60,7 @@ if ($orgViewDocumentsPerm)
 
 //MRE TO DO: add ledger page in budgets
 $sidebar[] = $this -> Html -> link(__('Finance Ledger', true), array(
-	'controller' => 'budgets',
+	'controller' => 'bills',
 	'action' => 'ledger',
 	$organization['Organization']['id']
 ));
@@ -98,21 +98,21 @@ $this -> start('middle');
 	if (isset($president['Membership']))
 	{
 		echo $this -> Html -> tableCells(array(
-			$president['Membership']['name'],
+			$this -> Html -> link($president['Membership']['name'],'mailto:'.$president['User']['email']),
 			$president['Membership']['title']
 		));
 	}
 	if (isset($treasurer['Membership']))
 	{
 		echo $this -> Html -> tableCells(array(
-			$treasurer['Membership']['name'],
+			$this -> Html -> link($treasurer['Membership']['name'],'mailto:'.$treasurer['User']['email']),
 			$treasurer['Membership']['title']
 		));
 	}
 	if (isset($advisor['Membership']))
 	{
 		echo $this -> Html -> tableCells(array(
-			$advisor['Membership']['name'],
+			$this -> Html -> link($advisor['Membership']['name'],'mailto:'.$advisor['User']['email']),
 			$advisor['Membership']['title']
 		));
 	}
@@ -121,7 +121,7 @@ $this -> start('middle');
 		if (isset($officer['Membership']))
 		{
 			echo $this -> Html -> tableCells(array(
-				$officer['Membership']['name'],
+				$this -> Html -> link($officer['Membership']['name'],'mailto:'.$officer['User']['email']),
 				$officer['Membership']['title']
 			));
 		}

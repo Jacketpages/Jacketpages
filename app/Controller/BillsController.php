@@ -114,6 +114,23 @@ class BillsController extends AppController
 	}
 
 	/**
+	 * Finance ledger showing all bills and budgets
+	 */
+	public function ledger($org_id = null)
+	{		
+		$this -> paginate = array(
+			'conditions' => array('Bill.org_id' => $org_id),
+			'limit' => 20,
+			'order' => 'submit_date desc'
+		);
+		$this -> set('bills', $this -> paginate('Bill'));
+		$this -> loadModel('Organization');
+		$org_name = $this -> Organization -> field('name',array('id' => $org_id));
+		$this -> set('org_id', $org_id);
+		$this -> set('org_name', $org_name);
+	}
+
+	/**
 	 * View an individual bill's information
 	 * @param id - the bill's id
 	 */
