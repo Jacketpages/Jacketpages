@@ -48,10 +48,6 @@ $this -> start('middle');
 		$user['User']['email']
 	));
 	echo $this -> Html -> tableCells(array(
-		'Alternate Email',
-		$user['User']['alt_email']
-	));
-	echo $this -> Html -> tableCells(array(
 		'Phone',
 		$user['User']['phone']
 	));

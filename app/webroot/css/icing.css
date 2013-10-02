@@ -233,12 +233,34 @@ h3 {
 	font-size: 14px;
 	line-height: 24px;
 	padding-left: 0;
-	padding-right: 25px;
+	/*padding-right: 25px;*/
 	text-align: justify;
 }
 
+#middle_full p {
+	font-size: 14px;
+	line-height: 24px;
+	padding-left: 0;
+	/*padding-right: 25px;*/
+	text-align: justify;
+}
+
+
 #middle ul {
 	/*padding-left: 40px;*/
+}
+
+/*
+ * Notification popup on homepage
+ */
+#notification {
+	width: 100%;
+	background-color: #EEB211;
+	box-shadow: 5px 5px 5px #888888;
+	color: 454545;
+	padding: 15px;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 /**
  * 	Start CSS for drop down menu.

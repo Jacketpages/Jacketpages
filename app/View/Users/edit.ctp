@@ -25,7 +25,6 @@ echo $this -> Form -> input('first_name', array(
 echo $this -> Form -> input('last_name', array('label' => 'Last Name'));
 echo $this -> Form -> input('phone', array('label' => 'Phone Number'));
 echo $this -> Form -> input('email', array('label' => 'Email'));
-echo $this -> Form -> input('alt_email', array('label' => 'Alternate Email'));
 echo $this -> Form -> end('Submit');
 // End User Edit Form
 $this -> end();
