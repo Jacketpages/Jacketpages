@@ -21,7 +21,7 @@ echo $this -> Html -> tableBegin(array(
 	'id' => 'ExpensesTable'
 ));
 echo $this -> Html -> tableHeaders(array(
-	'Item',
+	array('Item' => array('width' => '500px')),
 	'Expense',
 	'',
 	'',

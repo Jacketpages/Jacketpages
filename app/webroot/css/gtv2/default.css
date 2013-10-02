@@ -334,19 +334,6 @@ ul.secondary a:active {
   width:35px;
 }
 
-.LineItemButton
-{
-  width: 25px;
-  margin: 0px;
-}
-
-.LineItemButton img {
-	position: relative;
-	top: -1px;
-	left: -2px;
-	max-width: none;
-}
-
 .LineItemCostPerUnit, .LineItemAmount, .LineItemTotalCost
 {
   width:65px;
