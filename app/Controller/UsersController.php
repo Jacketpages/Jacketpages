@@ -70,6 +70,10 @@ class UsersController extends AppController
 	 */
 	public function view($id = null)
 	{
+		if($id == null){
+			$this->redirect(array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')));
+		}
+		
 		$this -> set('userDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userDelete'));
 		$userEditPerm = $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userEditPerm');
 		if (!$userEditPerm && $id == $this -> Session -> read('User.id'))
@@ -122,6 +126,11 @@ class UsersController extends AppController
 
 	public function delete($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Invalid request.');
+			$this->redirect(array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')));
+		}
+		
 		$this -> User -> id = $id;
 		if ($this -> User -> exists() && $this -> User -> saveField('status', 'Inactive'))
 		{
@@ -145,6 +154,11 @@ class UsersController extends AppController
 	 */
 	public function edit($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Invalid request.');
+			$this->redirect(array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')));
+		}
+		
 		if ($this -> User -> exists($id))
 		{
 			$this -> User -> id = $id;

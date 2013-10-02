@@ -41,6 +41,11 @@ class BudgetsController extends AppController
 
 	public function submit($org_id = null, $redirect = false)
 	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select your organization to create a budget.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+	
 		$this -> set('org_id', $org_id);
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $this -> getBudgetId($org_id)))));
 		if ($this -> request -> is('put'))
@@ -109,8 +114,13 @@ class BudgetsController extends AppController
 		return true;
 	}
 
-	public function fundraising($org_id)
+	public function fundraising($org_id = null)
 	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select your organization to create a budget.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+		
 		$this -> set('org_id', $org_id);
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $this -> getBudgetId($org_id)))));
 		$this -> loadModel('Fundraiser');
@@ -175,8 +185,13 @@ class BudgetsController extends AppController
 		));
 	}
 
-	public function expenses($org_id)
+	public function expenses($org_id = null)
 	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select your organization to create a budget.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+		
 		$this -> set('org_id', $org_id);
 		$this -> loadModel('Expense');
 		$budgetId = $this -> getBudgetId($org_id);
@@ -213,8 +228,13 @@ class BudgetsController extends AppController
 		$this -> set('expenses', $expenses);
 	}
 
-	public function assets_and_liabilities($org_id)
+	public function assets_and_liabilities($org_id = null)
 	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select your organization to create a budget.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+		
 		$this -> set('org_id', $org_id);
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $this -> getBudgetId($org_id)))));
 		$this -> loadModel('Asset');
@@ -287,8 +307,13 @@ class BudgetsController extends AppController
 		}
 	}
 
-	public function member_contributions($org_id)
+	public function member_contributions($org_id = null)
 	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select your organization to create a budget.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+		
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $this -> getBudgetId($org_id)))));
 		$this -> loadModel('MemberContribution');
 		$budgetId = $this -> getBudgetId($org_id);
@@ -325,8 +350,13 @@ class BudgetsController extends AppController
 		$this -> set('org_id', $org_id);
 	}
 
-	public function summary($org_id)
+	public function summary($org_id = null)
 	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select your organization to create a budget.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+		
 		$budgetId = $this -> getBudgetId($org_id);
 		$this -> set('state', $this -> BudgetSubmitState -> findById($this -> getBudgetId($org_id)));
 		$this -> set('org_id', $org_id);
