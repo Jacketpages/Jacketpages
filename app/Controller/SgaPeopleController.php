@@ -70,15 +70,68 @@ class SgaPeopleController extends AppController
 	 */
 	public function add()
 	{
-		// TODO Implement
+		// TODO
+		// if(user has permissions){}
+	
+		$this -> loadModel('User');
+		if ($this -> request -> is('post'))
+		{
+			$this -> SgaPerson -> create();
+			if ($this -> SgaPerson -> save($this -> data))
+			{
+				$user = $this -> User -> read(null, $this -> data['SgaPerson']['user_id']);
+				$this -> User -> set('level', 'sga_user');
+				$this -> User -> save();
+				$this -> Session -> setFlash(__('The user has been added to SGA.', true));
+				$this -> redirect(array('action' => 'index'));
+			}
+			else
+			{
+				$this -> Session -> setFlash(__('Invalid user. User may already be assigned a role in SGA. Please try again.', true));
+			}
+		}
 	}
 
 	/**
 	 * Edit an individual SgaPerson
 	 */
-	public function edit()
+	public function edit($id = null)
 	{
-		// TODO Implement
+		if($id == null){
+			$this->Session->setFlash('Please select a person to edit.');
+			$this->redirect(array('controller' => 'sga_people', 'action' => 'index'));
+		}
+		
+		// TODO
+		// if(user has permissions){}
+		
+		if (!$this -> SgaPerson -> exists($id))
+		{
+			$this->Session->setFlash('Please select a person to edit.');
+			$this->redirect(array('controller' => 'sga_people', 'action' => 'index'));
+		}
+		
+		$this -> SgaPerson -> id = $id;
+		if ($this -> request -> is('get'))
+		{
+			$this -> request -> data = $this -> SgaPerson -> read();
+		}
+		else
+		{
+			if ($this -> SgaPerson -> save($this -> request -> data))
+			{
+				$this -> Session -> setFlash(__('The user has been edited.', true));
+				$this -> redirect(array('action' => 'index'));
+			}
+			else
+			{
+				$this -> Session -> setFlash(__('Error. Please try again.', true));
+			}
+		}
+		
+		$sgaPerson = $this -> SgaPerson -> read();
+		$this -> set('sgaPerson', $sgaPerson);
+		$this -> set('id', $sgaPerson['SgaPerson']['id']);
 	}
 
 }

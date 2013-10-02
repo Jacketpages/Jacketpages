@@ -17,11 +17,11 @@ echo $this->Form->end(__('Submit', true));
 
 ?>
 <script type="text/javascript">
-$(document).ready(function() {
+$(function() {
 
 $( "#userName" ).autocomplete({
 	minLength: 2,
-	source: wr+'ajax/userName',
+	source: '<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'lookupByName'), true); ?>',
 	focus: function( event, ui ) {
 		$( "#userName" ).val( ui.item.name );
 		return false;
@@ -31,11 +31,10 @@ $( "#userName" ).autocomplete({
 		$( "#user_id" ).val( ui.item.id );
 		return false;
 	}
-})
-.data( "autocomplete" )._renderItem = function( ul, item ) {
+}).data("uiAutocomplete")._renderItem = function( ul, item ) {
 	return $( "<li></li>" )
 		.data( "item.autocomplete", item )
-		.append( "<a>" + item.name + " (" + item.gtUsername + ")</a>")
+		.append( "<a>" + item.name + " (" + item.gt_user_name + ")</a>")
 		.appendTo( ul );
 };
 });

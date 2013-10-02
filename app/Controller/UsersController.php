@@ -255,5 +255,41 @@ class UsersController extends AppController
 		$this -> redirect($this -> Auth -> logout());
 	}
 
+	function lookupByName()
+	{
+		$this->viewClass = 'Json';
+	
+		$input = mysql_real_escape_string($_REQUEST['term']);
+		$p = $this -> User -> find('all', array(
+				'limit' => 5,
+				'recursive' => 0,
+				'fields' => array(
+						'User.first_name',
+						'User.last_name',
+						'User.id',
+						'User.gt_user_name',
+						'User.email'
+				),
+				'conditions' => array("or" => array(
+							'User.first_name LIKE' => '%' . $input . '%',
+							'User.last_name LIKE' => '%' . $input . '%',
+							'User.gt_user_name LIKE' => '%' . $input . '%'
+					))
+		));
+		$options = array();
+		while ($user = current($p))
+		{
+			$options[] = array(
+					'name' => $user['User']['first_name'].' '.$user['User']['last_name'],
+					'gt_user_name' => $user['User']['gt_user_name'],
+					'id' => $user['User']['id'],
+					'email' => $user['User']['email']
+			);
+			next($p);
+		}
+		
+		$this->set('options', $options);
+		$this->set('_serialize', 'options');
+	}
 }
 ?>
