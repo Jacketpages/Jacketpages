@@ -19,10 +19,10 @@ echo $this -> Html -> tableHeaders(array(
 	'FY ' . ($fiscalYear - 1) . ' Allocated',
 	"FY $fiscalYear Requested",
 	'Difference',
-	'',
-	'',
-	'',
-	''
+	array('' => array('width' => '37px')),
+	array('' => array('width' => '37px')),
+	array('' => array('width' => '37px')),
+	array('' => array('width' => '37px'))
 ));
 if (!isset($budgetLineItems) || count($budgetLineItems) == 0)
 {
@@ -79,7 +79,10 @@ foreach ($budgetLineItems as $key => $budgetLineItem)
 			'id' => $num . 'BudgetLineItemAmount' . $key,
 			'onchange' => "updateTotal('BudgetLineItemAmount', 'requested'); updateDiff();"
 		)),
-		array('$0.00',array('id' => $num . 'difference' . $key)),
+		array(
+			'$0.00',
+			array('id' => $num . 'difference' . $key)
+		),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',
 			'onclick' => "moveUp('$tableId' , $key)",

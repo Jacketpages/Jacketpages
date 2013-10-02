@@ -96,6 +96,7 @@ function addRow(tableId, pos, num)
 				cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
 			}
 	}
+	cells[4].innerHTML = '$0.00';
 	correctNumbers(tableId, num);
 }
 

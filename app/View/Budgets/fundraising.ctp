@@ -6,7 +6,7 @@
 
 $this -> extend('/Common/budgets');
 $this -> assign('title', 'Revenue Generated From Fundraising');
-$this -> Html -> addCrumb('Fundraising', $this->here);
+$this -> Html -> addCrumb('Fundraising', $this -> here);
 $this -> start('middle');
 echo $this -> Html -> script('budgets/fundraising');
 echo $this -> Form -> create('Dues');
@@ -24,6 +24,18 @@ $types = array(
 	'Spring',
 	'Summer'
 );
+if (!isset($dues) || count($dues) == 0)
+{
+	$element = array('Dues' => array(
+			'id' => '',
+			'members' => 0,
+			'amount' => 0
+		));
+	$dues[] = $element;
+	$dues[] = $element;
+	$dues[] = $element;
+	$dues[] = $element;
+}
 foreach ($types as $key => $type)
 {
 	echo $this -> Html -> tableCells(array(
@@ -73,11 +85,11 @@ echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect
 <script>
 	correctNumbers("FundraiserTable0", 0);
 	correctNumbers("FundraiserTable1", 1);
-	correctNumbers("FundraiserTable2", 2); 
+	correctNumbers("FundraiserTable2", 2);
 	updateIncome(0);
 	updateIncome(1);
 	updateIncome(2);
-	updateIncome(3);
+	updateIncome(3); 
 </script>
 <?php
 $this -> end();
