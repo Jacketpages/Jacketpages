@@ -21,7 +21,7 @@ class MembershipsController extends AppController
 		$this -> set('orgName', $orgName);
 		
 		$this -> loadModel('Membership');
-		$db = ConnectionManager::getDataSource('default');
+		$db = ConnectionManager::getDataSource('default');		
 		$officers = $this -> Membership -> find('all', array(
 			'conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
@@ -31,16 +31,8 @@ class MembershipsController extends AppController
 						'Membership.end_date' => '0000-00-00'
 					)
 				)),
-			'fields' => array(
-				'Membership.role',
-				'Membership.name',
-				'Membership.status',
-				'Membership.title',
-				'Membership.id',
-			),
-			'recursive' => 0
 		));
-
+		
 		$members = $this -> Membership -> find('all', array(
 			'conditions' => array('AND' => array(
 					'Membership.org_id' => $id,
@@ -50,13 +42,6 @@ class MembershipsController extends AppController
 						'Membership.end_date' => '0000-00-00'
 					)
 				)),
-			'fields' => array(
-				'Membership.role',
-				'Membership.name',
-				'Membership.status',
-				'Membership.title',
-				'Membership.id',
-			)
 		));
 		$pending_members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
 					'Membership.status' => 'Pending',
@@ -83,18 +68,21 @@ class MembershipsController extends AppController
 		}
 		else
 		{
-			if ($this -> Membership -> save($this -> request -> data))
+			$data = $this -> request -> data;
+			if ($this -> Membership -> save($data))
 			{
 				$this -> Session -> setFlash('The membership has been saved.');
-				$this -> redirect(array('action' => 'index'));
+				$this -> redirect(array('action' => 'index', $data['Membership']['org_id']));
 			}
 			else
 			{
 				$this -> Session -> setFlash('Unable to edit the membership.');
+				$this -> redirect(array('action' => 'index', $data['Membership']['org_id']));
 			}
 		}
 	}
-
+	
+	// MRE: Who should be able to delete memberships?
 	public function delete($id = null, $orgId = null)
 	{
 		if (!$id)

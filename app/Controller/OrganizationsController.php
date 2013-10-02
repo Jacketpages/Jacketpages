@@ -281,7 +281,9 @@ class OrganizationsController extends AppController
 			)
 		));
 		$this -> set('officers', $officers);
-		$members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
+		
+		//MRE moved all of this to just the roster page
+		/*$members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
 					'Membership.role' => 'Member',
 					'Membership.org_id' => $id
 				))));
@@ -290,7 +292,7 @@ class OrganizationsController extends AppController
 					'Membership.status' => 'Pending',
 					'Membership.org_id' => $id
 				))));
-		$this -> set('pending_members', $pending_members);
+		$this -> set('pending_members', $pending_members);*/
 
 		$this -> set('orgJoinOrganizationPerm', $this -> Membership -> find('count', array('conditions' => array(
 				'Membership.status' => 'Active',
