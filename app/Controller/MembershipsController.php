@@ -9,8 +9,13 @@ class MembershipsController extends AppController {
 	public $helpers = array('Form', 'Html');
 
 	// Add in or condition to check dates greater than today.
-	public function index($id = null) {
-
+	public function index($id = null)
+	{
+		if($id == null){
+			$this->Session->setFlash('Please select your organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+		
 		$this -> loadModel('Organization');
 		$orgName = $this -> Organization -> field('name', array('id' => $id));
 		$this -> set('orgName', $orgName);
@@ -32,7 +37,13 @@ class MembershipsController extends AppController {
 	 * Edits an individual Membership
 	 * @param id - a membership's id
 	 */
-	public function edit($id = null) {
+	public function edit($id = null)
+	{
+		if($id == null){
+			$this->Session->setFlash('Please select your organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+		
 		$this -> Membership -> id = $id;
 		if ($this -> request -> is('get')) {
 			$this -> request -> data = $this -> Membership -> read();
@@ -90,11 +101,14 @@ class MembershipsController extends AppController {
 	}
 
 	// MRE: Who should be able to delete memberships?
-	public function delete($id = null, $orgId = null) {
-		if (!$id) {
-			$this -> Session -> setFlash(__('Invalid ID for membership', true));
-			$this -> redirect(array('controller' => 'memberships', 'action' => 'index', $orgId));
+	public function delete($id = null, $orgId = null)
+	{
+		if($id == null || $orgId == null){
+			$this->Session->setFlash('Please select your organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+
 		}
+		
 		$this -> Membership -> id = $id;
 		if ($this -> Membership -> saveField('end_date', date("Y-m-d"))) {
 			$this -> Session -> setFlash(__('Membership deleted.', true));
@@ -104,11 +118,13 @@ class MembershipsController extends AppController {
 		$this -> redirect(array('controller' => 'memberships', 'action' => 'index', $orgId));
 	}
 
-	public function accept($id = null, $orgId = null) {
-		if (!$id) {
-			$this -> Session -> setFlash(__('Invalid ID for membership', true));
-			$this -> redirect(array('controller' => 'memberships', 'action' => 'index'));
+	public function accept($id = null, $orgId = null)
+	{
+		if($id == null || $orgId == null){
+			$this->Session->setFlash('Please select your organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
 		}
+		
 		$this -> Membership -> id = $id;
 		$this -> Membership -> set('status', 'Active');
 		$this -> Membership -> set('start_date', date("Y-m-d"));
@@ -121,7 +137,12 @@ class MembershipsController extends AppController {
 
 	}
 
-	public function joinOrganization($org_id) {
+	public function joinOrganization($org_id = null)
+	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select an organization.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		}
 		$this -> Membership -> set('org_id', $org_id);
 		$this -> Membership -> set('user_id', $this -> Session -> read('User.id'));
 		$this -> Membership -> set('role', 'Member');

@@ -136,6 +136,11 @@ class BillsController extends AppController
 	 */
 	public function view($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+	
 		// Set which bill to retrieve from the database.
 		$this -> Bill -> id = $id;
 		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";		
@@ -325,6 +330,11 @@ class BillsController extends AppController
 	 */
 	public function edit_index($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+	
 		$this -> Bill -> id = $id;
 		$this -> Bill -> set('last_mod_date', date('Y-m-d h:i:s'));
 		$this -> Bill -> set('last_mod_by', $this -> Session -> read('User.id'));
@@ -524,13 +534,18 @@ class BillsController extends AppController
 		$this -> setBillStatus($id, 2, true);			
 	}
 
-	public function general_info($bill_id)
+	public function general_info($bill_id = null)
 	{
 		$this -> edit_index($bill_id);
 	}
 
-	public function authors_signatures($id)
+	public function authors_signatures($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+	
 		$this -> loadModel('BillAuthor');
 		$bill_authors = $this -> BillAuthor -> findById($id);
 		$this -> BillAuthor -> id = $id;
@@ -569,8 +584,13 @@ class BillsController extends AppController
 		$this -> set('authors', $bill_authors);
 	}
 
-	public function votes($bill_id, $organization, $votes_id = null)
+	public function votes($bill_id = null, $organization = null, $votes_id = null)
 	{
+		if($bill_id == null || $organization == null || $votes_id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+	
 		$this->set('bill_id', $bill_id);
 	
 		$this -> loadModel('BillVotes');
@@ -774,7 +794,7 @@ class BillsController extends AppController
 		$this -> set('signee_names', $signee_names);
 	}
 
-	public function allocations($user_id)
+	public function allocations($user_id = null)
 	{
 		$bills = $this -> Bill -> find('all' ,array('conditions' => array('submitter' => $user_id)));
 		// Hash::extract all of the bill ids

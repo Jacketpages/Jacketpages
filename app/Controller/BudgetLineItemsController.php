@@ -6,8 +6,20 @@
 
 class BudgetLineItemsController extends AppController
 {
-	public function edit($org_id)
+	public function index()
 	{
+		// no index
+		$this->Session->setFlash('Please select your organization to create a budget.');
+		$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+	}
+
+	public function edit($org_id = null)
+	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select your organization to create a budget.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+	
 		$this -> loadModel('Budget');
 		$this -> loadModel('LineItemCategory');
 		if ($this -> request -> is('post') || $this -> request -> is('put'))

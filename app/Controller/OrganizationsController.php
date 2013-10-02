@@ -205,6 +205,10 @@ class OrganizationsController extends AppController
 	 */
 	public function my_orgs($id = null)
 	{
+		if($id == null){
+			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		}
+	
 		$org_ids = null;
 		$this -> loadModel('Membership');
 
@@ -218,9 +222,19 @@ class OrganizationsController extends AppController
 	 */
 	public function view($id = null)
 	{
-
+		if($id == null){
+			$this->Session->setFlash('Please select an organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		}
+		
 		// Set which organization to retrieve from the database.
 		$this -> Organization -> id = $id;
+		$organization = $this -> Organization -> read();
+		if(empty($organization)){
+			// no organization with that id
+			$this->Session->setFlash('Please select an organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		}
 		$this -> set('organization', $this -> Organization -> read());
 		$this -> loadModel('Membership');
 		$president = $this -> Membership -> find('first', array(
@@ -306,6 +320,11 @@ class OrganizationsController extends AppController
 	 */
 	public function edit($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select an organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		}
+		
 		$this -> Organization -> id = $id;
 		if ($this -> request -> is('get'))
 		{
@@ -396,6 +415,11 @@ class OrganizationsController extends AppController
 
 	public function addlogo($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select an organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		}
+		
 		$org = $this -> Organization -> read(null, $id);
 		/*if ($org['Organization']['status'] != 'Active' && !$this -> isLevel('admin'))
 		 {
@@ -474,6 +498,11 @@ class OrganizationsController extends AppController
 
 	function getlogo($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select an organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		}
+		
 		$org = $this -> Organization -> read(null, $id);
 		if ($org['Organization']['status'] == 'Frozen' || !$id)
 		{
@@ -501,8 +530,13 @@ class OrganizationsController extends AppController
 		}
 	}
 
-	function emailList($org_id)
+	function emailList($org_id = null)
 	{
+		if($org_id == null){
+			$this->Session->setFlash('Please select an organization to view.');
+			$this->redirect(array('controller' => 'organizations', 'action' => 'index'));
+		}
+		
 		$this -> loadModel('Membership');
 		$members = $this -> Membership -> find('list', array(
 			'conditions' => array('Membership.org_id' => $org_id),

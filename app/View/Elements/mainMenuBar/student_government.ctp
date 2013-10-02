@@ -6,9 +6,11 @@
 	</li>
 
 <?php if ($sga_user){ ?>
+	<?php /*
 	<li class="leaf">
 		<?php echo $this->Html->link('View Budgets', array('controller' => 'budgets', 'action' => 'index'))?>
 	</li>
+	*/ ?>
 	<li class="leaf last">
 		<?php echo $this->Html->link('View Bills on Agenda', array('controller' => 'bills', 'action' => 'onAgenda'))?>
 	</li>

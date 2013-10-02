@@ -42,7 +42,7 @@ echo $this -> Form -> input('Category.name', array('label' => 'Category','option
       'Umbrella' => 'Umbrella'
    )));
 echo $this -> Form -> input('User.name', array('label' => 'Primary Contact','id' => 'primary_contact'));
-echo $this -> Form -> input('User.email', array('label' => 'Priamry Contact Email','id' => 'primary_email'));
+echo $this -> Form -> input('User.email', array('label' => 'Primary Contact Email','id' => 'primary_email'));
 echo $this -> Form -> input('description', array('label' => 'Description','type' => 'textarea'));
 echo $this -> Form -> input('website', array('label' => 'Website'));
 echo $this -> Form -> input('meeting_info', array('label' => 'Meeting Information'));

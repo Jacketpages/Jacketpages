@@ -45,6 +45,11 @@ class LineItemsController extends AppController
 
 	public function index($bill_id = null, $state = null)
 	{			
+		if($bill_id == null || $state == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+	
 		$this -> loadModel('Bill');
 		$bill = $this -> Bill -> findById($bill_id);
 		$this -> set('titleState', $state);
@@ -218,6 +223,11 @@ class LineItemsController extends AppController
 
 	public function view($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+		
 		$lineitem = $this -> LineItem -> findById($id);
 		$this -> set('lineitem', $lineitem);
 		$this -> set('parent', $this -> LineItem -> findById($lineitem['LineItem']['parent_id']));
@@ -229,6 +239,11 @@ class LineItemsController extends AppController
 	 */
 	public function add($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+		
 		$this -> loadModel('Bill');
 		$this -> set('bill', $this -> Bill -> find('first', array(
 			'conditions' => array('Bill.id' => $id),
@@ -265,6 +280,11 @@ class LineItemsController extends AppController
 
 	public function delete($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+		
 		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
 		if ($this -> LineItem -> delete($id))
 		{
@@ -281,6 +301,11 @@ class LineItemsController extends AppController
 	//TODO Doesn't work yet. Still putting it together.
 	public function edit($bill_id = null, $state = null)
 	{
+		if($bill_id == null || $state == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+		
 		$this -> index($bill_id, $state);
 		// $this -> loadModel('Bill');
 		// $this -> set('bill', $this -> Bill -> find('first', array(
@@ -321,8 +346,13 @@ class LineItemsController extends AppController
 	}
 
 	// Take out from state and pass it in through the form.
-	public function copy($bill_id, $to_state)
+	public function copy($bill_id = null, $to_state = nul)
 	{
+		if($bill_id == null || $state == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+		
 		// If $to_state is Final then don't copy stuck line items
 		if ($to_state == 'Final')
 		{
@@ -367,8 +397,13 @@ class LineItemsController extends AppController
 		return $data;
 	}
 
-	public function strikeLineItem($id)
+	public function strikeLineItem($id = null)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+		
 		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
 		$this -> LineItem -> id = $id;
 		$this -> LineItem -> saveField('struck', 1);
@@ -382,6 +417,11 @@ class LineItemsController extends AppController
 
 	public function unstrikeLineItem($id)
 	{
+		if($id == null){
+			$this->Session->setFlash('Please select a bill to view.');
+			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		}
+		
 		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
 		$this -> LineItem -> id = $id;
 		$this -> LineItem -> saveField('struck', 0);
