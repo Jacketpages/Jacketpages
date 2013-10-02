@@ -21,7 +21,7 @@ if($officers)
 	));
 	foreach ($officers as $officer)
 	{
-		echo $this -> Html -> tableCells(array(
+		echo $this -> Html -> tableCells(array(array(
 			$this -> Html -> link($officer['Membership']['name'], array(
 				'controller' => 'memberships',
 				'action' => 'edit',
@@ -30,13 +30,13 @@ if($officers)
 			$officer['Membership']['role'],
 			$this->Text->autoLinkEmails($officer['User']['email']),
 			$officer['User']['phone'],
-			$this -> Html -> link('Remove', array(
+			array($this -> Html -> link('Remove', array(
 				'controller' => 'memberships',
 				'action' => 'delete',
 				$officer['Membership']['id'],
 				$orgId
-			))
-		));
+			)), array('align'=>'right'))
+		)));
 	
 	}
 	echo $this -> Html -> tableEnd();
@@ -57,7 +57,7 @@ if($members)
 	));
 	foreach ($members as $member)
 	{
-		echo $this -> Html -> tableCells(array(
+		echo $this -> Html -> tableCells(array(array(
 			$this -> Html -> link($member['Membership']['name'], array(
 				'controller' => 'memberships',
 				'action' => 'edit',
@@ -65,13 +65,13 @@ if($members)
 			)),
 			$this->Text->autoLinkEmails($member['User']['email']),
 			$member['User']['phone'],
-			$this -> Html -> link('Remove', array(
+			array($this -> Html -> link('Remove', array(
 				'controller' => 'memberships',
 				'action' => 'delete',
 				$member['Membership']['id'],
 				$orgId
-			))
-		));
+			)), array('align'=>'right'))
+		)));
 	
 	}
 	echo $this -> Html -> tableEnd();
@@ -92,7 +92,7 @@ if($pending_members)
 	));
 	foreach ($pending_members as $pending_member)
 	{
-		echo $this -> Html -> tableCells(array(
+		echo $this -> Html -> tableCells(array(array(
 			$this -> Html -> link($pending_member['Membership']['name'], array(
 				'controller' => 'memberships',
 				'action' => 'edit',
@@ -100,13 +100,13 @@ if($pending_members)
 			)),
 			$this->Text->autoLinkEmails($pending_member['User']['email']),
 			$pending_member['User']['phone'],
-			$this -> Html -> link('Accept', array(
+			array($this -> Html -> link('Accept', array(
 				'controller' => 'memberships',
 				'action' => 'accept',
 				$pending_member['Membership']['id'],
 				$orgId
-			))
-		));
+			)), array('align'=>'right'))
+		)));
 	
 	}
 	echo $this -> Html -> tableEnd();
