@@ -1,4 +1,4 @@
-<?php if($sidebarExists = ($this->fetch('sidebar') != '')){ ?>
+<?php if($sidebarExists = ($this->fetch('sidebar') != '' || $budgetSubmitted)){ ?>
 <div class="links left-nav" id="sidebar">
         <?php
 		echo $this -> fetch('sidebar');

@@ -8,6 +8,7 @@ $this -> start('script');
 echo $this -> Html -> script('budgets/expenses_multi_enter');
 $this -> end();
 $this -> assign('title', 'Non-Student Activity Fee Expenses');
+$this -> Html -> addCrumb('Expenses', $this->here);
 $this -> start('middle');
 echo $this -> Html -> para('', 'Itemize all expenses paid for within funds from sources other than student activity fees. 
 This includes dues, revenue from fundraisers, revenue from other activities, and funds from other sources. 

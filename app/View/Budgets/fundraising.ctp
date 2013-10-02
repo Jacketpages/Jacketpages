@@ -6,6 +6,7 @@
 
 $this -> extend('/Common/budgets');
 $this -> assign('title', 'Revenue Generated From Fundraising');
+$this -> Html -> addCrumb('Fundraising', $this->here);
 $this -> start('middle');
 echo $this -> Html -> script('budgets/fundraising');
 echo $this -> Form -> create('Dues');
