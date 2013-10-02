@@ -38,7 +38,6 @@ class OrganizationsController extends AppController
 			$file -> write(utf8_decode($orgs[$i]['organizations']['logo']));
 			$file -> close();
 		}
-		debug("Done");
 	}
 
 	/**
@@ -77,7 +76,6 @@ class OrganizationsController extends AppController
 			$file -> write($orgs[$i]['budgets']['file']);
 			$file -> close();
 		}
-		debug($orgs);
 	}
 
 	/**
@@ -521,7 +519,6 @@ class OrganizationsController extends AppController
 		}
 		else
 		{
-			debug($logo);
 			$this -> set('file', $logo);
 			$this -> render('download', 'image');
 			return true;
@@ -539,8 +536,6 @@ class OrganizationsController extends AppController
 			),
 			'recursive' => 1
 		));
-		debug($members);
-		//debug(array_keys(array_flip($members)));
 	}
 
 }

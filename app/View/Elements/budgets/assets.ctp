@@ -6,14 +6,14 @@
  $this -> start('script');
 echo $this -> Html -> script('budgets/assets');
 $this -> end();
-echo $this -> Html -> div(null, null, array('id' => "assets_accordion"));
+echo $this -> Html -> div(null, null, array('id' => "assets_accordion", 'class' => 'accordion_no_padding'));
 echo $this -> Html -> link('Assets', array());
 echo $this -> Html -> div();
 echo $this -> Html -> tableBegin(array('class' => 'listing','id' => 'AssetsTable'));
 echo $this -> Html -> tableHeaders(array(
-	'Asset',
+	array('Asset' => array('width' => '400px')),
 	'Amount',
-	array('Tag'=>  array('title' => 'has gt tag')),
+	array('Tag' => array('width' => '30px', 'title' => 'Has GT tag')),
 	'',
 	'',
 	'',
@@ -44,7 +44,8 @@ foreach ($assets as $key => $asset)
 				'label' => false,
 				'id' => 'Tagged' . $key,
 				'checked' => $asset['Asset']['tagged'],
-				'type' => 'checkbox'
+				'type' => 'checkbox',
+				'style' => 'height: 18px'
 			)),
 			$this -> Form -> button($this -> Html -> image('up.gif'), array(
 				'type' => 'button',

@@ -43,14 +43,11 @@ class BudgetsController extends AppController
 	{
 		$this -> set('org_id', $org_id);
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $this -> getBudgetId($org_id)))));
-		debug($this -> request -> data);
 		if ($this -> request -> is('put'))
 		{
-			debug($this -> request -> data['redirect']);
 			$this -> Budget -> data = $this -> request -> data;
 			$this -> Budget -> set('status', 'Submitted');
 			$this -> Budget -> set('last_mod_by', $this -> Session -> read('User.id'));
-			debug($this -> Budget -> data);
 			if ($this -> Budget -> save($this -> request -> data))
 			{
 				$this -> loadModel('BudgetSubmitState');
@@ -96,9 +93,7 @@ class BudgetsController extends AppController
 		$this -> set('category_names', Hash::extract($categories, '{n}.LineItemCategory.name'));
 		$this -> set('category_descriptions', Hash::extract($categories, '{n}.LineItemCategory.description'));
 		$this -> set('budgetLineItems', array());
-		debug($this -> getFiscalYear());
 		$this -> request -> data = $this -> Budget -> findByOrgIdAndFiscalYear($org_id, '20' . ($this -> getFiscalYear() + 2));
-		debug($this -> request -> data);
 		//$this ->getStudentType('sroca3');
 
 	}
@@ -107,12 +102,10 @@ class BudgetsController extends AppController
 	{
 		$json = file_get_contents('http://m2.cip.gatech.edu/proxy/iam-dev01.iam.gatech.edu/directory/people.json?uid=' . $gtid);
 		$info = json_decode($json);
-		debug($info);
 	}
 
 	private static function removeBlanks()
 	{
-		debug($items);
 		return true;
 	}
 
@@ -120,7 +113,6 @@ class BudgetsController extends AppController
 	{
 		$this -> set('org_id', $org_id);
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $this -> getBudgetId($org_id)))));
-		debug($this -> request -> data);
 		$this -> loadModel('Fundraiser');
 		$this -> loadModel('Dues');
 		$budgetId = $this -> Budget -> field('id', array(
@@ -134,7 +126,6 @@ class BudgetsController extends AppController
 			$oldIds = Hash::extract($this -> Fundraiser -> findAllByBudgetId($budgetId), '{n}.Fundraiser.id');
 			foreach (Hash::diff($oldIds, $newIds) as $id)
 				$this -> Fundraiser -> delete($id);
-			debug(Hash::diff($oldIds, $newIds));
 			$types = array(
 				'Executed',
 				'Expected',
@@ -144,7 +135,6 @@ class BudgetsController extends AppController
 			{
 				$items = $this -> request -> data[$type];
 				unset($this -> request -> data[$type]);
-				//debug(array_filter($items, "BudgetsController::removeBlanks"));
 				foreach ($items as $item)
 				{
 					if (strcmp($item['Fundraiser']['activity'], '') != 0)
@@ -155,7 +145,6 @@ class BudgetsController extends AppController
 					}
 				}
 			}
-			debug($this -> request -> data);
 			if ($this -> Dues -> saveAll($this -> request -> data))
 			{
 
@@ -246,8 +235,6 @@ class BudgetsController extends AppController
 		}
 		$this -> set('assets', $this -> Asset -> findAllByBudgetId($budgetId));
 		$this -> set('liabilities', $this -> Liability -> findAllByBudgetId($budgetId));
-		debug($assets);
-		debug($liabilities);
 	}
 
 	private function assets($assets, $budgetId)
@@ -354,7 +341,6 @@ class BudgetsController extends AppController
 		$this -> set('totals', $totals);
 		$this -> set('last_updated', $this -> Budget -> field('last_mod_date'));
 		$this -> loadModel('User');
-		debug($this -> Budget -> field('last_mod_by'));
 		$this -> set('last_updated_by', $this -> User -> field("CONCAT(first_name,' ',last_name)", array('id' => $this -> Budget -> field('last_mod_by'))));
 		if($this -> request -> is('post'))
 		{

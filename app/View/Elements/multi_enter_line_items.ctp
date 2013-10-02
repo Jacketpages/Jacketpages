@@ -117,25 +117,21 @@ foreach ($lineitems as $key => $lineitem)
 		)),
 		$this -> Form -> button($this -> Html -> image('up.gif'), array(
 			'type' => 'button',
-			'class' => 'LineItemButton',
 			'onclick' => "moveUp(" . $key . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('down.gif'), array(
 			'type' => 'button',
-			'class' => 'LineItemButton',
 			'onclick' => "moveDown(" . $key . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('plus_sign.gif'), array(
 			'type' => 'button',
-			'class' => 'LineItemButton',
 			'onclick' => "addRow(" . $key . ")",
 			'escape' => false
 		)),
 		$this -> Form -> button($this -> Html -> image('minus_sign.png'), array(
 			'type' => 'button',
-			'class' => 'LineItemButton',
 			'onclick' => "deleteRow(" . $key . ")",
 			'escape' => false
 		)),

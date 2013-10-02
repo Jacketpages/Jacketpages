@@ -18,6 +18,8 @@
 		echo $this -> Html -> script('http://code.jquery.com/ui/1.10.3/jquery-ui.js');
 		echo $this -> fetch('script');
 		
+		echo $this -> Html -> css('jquery-ui-1.10.3.custom');
+		
 		// new gt theme css files
 		echo $this -> Html -> css('gtv2/reset');
 		echo $this -> Html -> css('gtv2/default');
@@ -31,10 +33,9 @@
 		
 		echo $this -> Html -> css('icing');
 		
-		
 		//echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
-		echo $this -> Html -> css('jquery-ui-1.10.3.custom');
 		echo $this -> fetch('css');
+		
         ?>
         <script type="text/javascript">
 			// @TODO Generate this script using the HTML and Js helpers

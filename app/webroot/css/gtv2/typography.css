@@ -217,7 +217,10 @@ ul.primary li a {
 }
 
 /* form elements */
-button, html input[type="button"], input[type="reset"], input[type="submit"] {
+button {
+	font-weight: 700;
+}
+html input[type="button"], input[type="reset"], input[type="submit"] {
     font-weight: 700;
     margin: 0 0.5em;
 }

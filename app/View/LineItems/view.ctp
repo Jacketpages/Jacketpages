@@ -8,7 +8,7 @@ $this -> assign('title', 'Line Item');
 $this -> Html -> addCrumb('View Bill', '/bills/view/'.$lineitem['Bill']['id']);
 $this -> Html -> addCrumb('View Line Item ', $this->here);
 $this -> start('middle');
-debug($parent);
+
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 
 echo $this -> Html -> tableCells(array('Bill', $lineitem['Bill']['title']));

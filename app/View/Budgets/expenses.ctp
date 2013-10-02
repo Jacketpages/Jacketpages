@@ -8,6 +8,7 @@ $this -> start('script');
 echo $this -> Html -> script('budgets/expenses_multi_enter');
 $this -> end();
 $this -> assign('title', 'Non-Student Activity Fee Expenses');
+$this -> Html -> addCrumb('Expenses', $this->here);
 $this -> start('middle');
 echo $this -> Html -> para('', 'Itemize all expenses paid for within funds from sources other than student activity fees. 
 This includes dues, revenue from fundraisers, revenue from other activities, and funds from other sources. 
@@ -21,7 +22,7 @@ echo $this -> Html -> tableBegin(array(
 	'id' => 'ExpensesTable'
 ));
 echo $this -> Html -> tableHeaders(array(
-	'Item',
+	array('Item' => array('width' => '500px')),
 	'Expense',
 	'',
 	'',
@@ -76,14 +77,14 @@ foreach ($expenses as $key => $expense)
 		)),
 	));
 }
-echo $this -> Html -> tableCells(array(
-	'Total',
+echo $this -> Html -> tableCells(array(array(
+	array('Total', array('align'=>'right')),
 	array('$0.00',array('id' => 'total')),
 	'',
 	'',
 	'',
 	''
-), array(), array('id' => 'TotalRow'));
+)), array(), array('id' => 'TotalRow'));
 echo $this -> Html -> tableEnd();
 echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
 echo $this -> Form -> submit('Save and Continue');

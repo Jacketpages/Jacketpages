@@ -518,7 +518,7 @@ class BillsController extends AppController
 		$bill_authors = $this -> BillAuthor -> findById($id);
 		$this -> BillAuthor -> id = $id;
 		$bill = $this -> Bill -> findByAuthId($id, array('id'));
-		debug($bill);
+
 		if ($this -> request -> is('get'))
 		{
 			$this -> request -> data = $this -> BillAuthor -> read();
@@ -645,7 +645,6 @@ class BillsController extends AppController
 		$email -> to('gimpyroca@gmail.com');
 		$email -> subject('Subject');
 		$email -> send();
-		debug("Email has been sent.");
 	}
 
 	// TODO decide whether this method is unnecessary and if so delete it.
@@ -761,7 +760,6 @@ class BillsController extends AppController
 	public function allocations($user_id)
 	{
 		$bills = $this -> Bill -> find('all' ,array('conditions' => array('submitter' => $user_id)));
-		debug(count($bills));
 		// Hash::extract all of the bill ids
 		// find all of the line items
 		// sum the totals for each account

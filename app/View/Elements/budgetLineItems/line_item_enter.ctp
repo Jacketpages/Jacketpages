@@ -14,7 +14,7 @@ echo $this -> Html -> tableBegin(array(
 ));
 
 echo $this -> Html -> tableHeaders(array(
-	'Name',
+	array('Name' => array('width' => '350px')),
 	'FY ' . ($fiscalYear - 1) . ' Requested',
 	'FY ' . ($fiscalYear - 1) . ' Allocated',
 	"FY $fiscalYear Requested",

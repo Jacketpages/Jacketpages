@@ -6,13 +6,14 @@
   $this -> start('script');
 echo $this -> Html -> script('budgets/liabilities');
 $this -> end();
-echo $this -> Html -> div(null, null, array('id' => "liabilities_accordion"));
+echo $this -> Html -> div(null, null, array('id' => "liabilities_accordion", 'class' => 'accordion_no_padding'));
 echo $this -> Html -> link('Liabilities', array());
 echo $this -> Html -> div();
-echo $this -> Html -> tableBegin(array('class' => 'listing', 'id' => 'LiabilitiesTable'));
+echo $this -> Html -> tableBegin(array('class' => 'listing accordion_no_padding', 'id' => 'LiabilitiesTable'));
 echo $this -> Html -> tableHeaders(array(
-	'Liability',
+	array('Liability' => array('width' => '400px')),
 	'Amount',
+	array('' => array('width' => '30px')),
 	'',
 	'',
 	'',
@@ -39,6 +40,7 @@ foreach ($liabilities as $key => $liability)
 				'id' => 'Amount' . $key,
 				'value' => $liability['Liability']['amount']
 			)),
+			'',
 			$this -> Form -> button($this -> Html -> image('up.gif'), array(
 				'type' => 'button',
 				'onclick' => "lmoveUp(" . $key . ")",

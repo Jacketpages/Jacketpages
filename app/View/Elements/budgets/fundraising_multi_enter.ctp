@@ -12,7 +12,7 @@ $names = array(
 );
 foreach ($names as $key => $name)
 {
-	echo $this -> Html -> div(null, null, array('id' => 'accordion' . $key));
+	echo $this -> Html -> div(null, null, array('id' => 'accordion' . $key, 'class'=>'accordion_no_padding'));
 	echo $this -> Html -> link($name, '#');
 	$arr = explode(' ', trim($name));
 	echo $this -> element('budgets/fundraising_multi', array(

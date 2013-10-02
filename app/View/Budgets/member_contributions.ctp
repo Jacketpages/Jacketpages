@@ -6,6 +6,7 @@
 
 $this -> extend('/Common/budgets');
 $this -> assign('title', 'Member Contributions');
+$this -> Html -> addCrumb('Member Contributions', $this->here);
 $this -> start('script');
 echo $this -> Html -> script('budgets/member_contributions');
 $this -> end();
@@ -19,7 +20,7 @@ echo $this -> Html -> tableBegin(array(
 	'id' => 'MemberContributionsTable'
 ));
 echo $this -> Html -> tableHeaders(array(
-	'Item',
+	array('Item' => array('width' => '500px')),
 	'Amount',
 	'',
 	'',
@@ -73,14 +74,14 @@ foreach ($memberContributions as $key => $memberContribution)
 		)),
 	));
 }
-echo $this -> Html -> tableCells(array(
-	'Total',
-	array('$0.00',array('id' => 'total')),
+echo $this -> Html -> tableCells(array(array(
+	array('Total', array('align'=>'right')),
+	array('$0.00', array('id' => 'total')),
 	'',
 	'',
 	'',
 	''
-), array(), array('id' => 'TotalRow'));
+)), array(), array('id' => 'TotalRow'));
 echo $this -> Html -> tableEnd();
 echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
 echo $this -> Form -> submit('Save and Continue');

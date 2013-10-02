@@ -644,3 +644,7 @@ table.list tr:nth-child(2n) td {
 #accordion {
 	margin-bottom: 10px;
 }
+
+.accordion_no_padding .ui-accordion-content {
+	padding: 0px;
+}
