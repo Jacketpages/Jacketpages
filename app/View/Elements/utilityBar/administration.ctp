@@ -24,12 +24,12 @@ if ($admin)
 			)),
 			$this -> Html -> link('Login as Other User', array(
 				'controller' => 'users',
-				'action' => 'login'
+				'action' => 'loginAsOtherUser'
 			)),
-			$this -> Html -> link('Submit Bill as Other User', array(
-				'controller' => 'bills',
-				'action' => 'add'
-			)),
+			// $this -> Html -> link('Submit Bill as Other User', array(
+				// 'controller' => 'bills',
+				// 'action' => 'add'
+			// )),
 			$this -> Html -> link('Post Message', '/Messages/message')
 		));
 

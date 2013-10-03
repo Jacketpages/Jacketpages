@@ -6,7 +6,7 @@ $this -> Html -> addCrumb('My Organizations', '/organizations/my_orgs/' . $this 
 $this -> Html -> addCrumb($orgName, '/organizations/view/' . $orgId);
 $this -> Html -> addCrumb('Roster', $this -> here);
 
-if (!$isOfficer || !$lace)
+if ($isOfficer || $lace)
 {
 	$this -> start('sidebar');
 	echo $this -> Html -> nestedList(array($this -> Html -> link('Add Membership', array(
@@ -16,9 +16,8 @@ if (!$isOfficer || !$lace)
 	$this -> end();
 }
 $this -> start('middle');
-
 echo $this -> Html -> tag('h1', 'Officers');
-if (!$isOfficer || !$lace)
+if ($isOfficer || $lace)
 {
 	if ($officers)
 	{

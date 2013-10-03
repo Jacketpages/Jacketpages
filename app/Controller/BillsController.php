@@ -631,8 +631,13 @@ class BillsController extends AppController
 	// TODO Add email functionality to email authors.
 	public function submit($id)
 	{
-		$this -> Session -> setFlash('The bill has been submitted to the authors.');
-		$this -> setBillStatus($id, 2, true);
+		$submitter_id = $this -> Bill -> field('submitter', array('id' => $id));
+		if ($this -> Session -> read('User.id') == $submitter_id)
+		{
+			$this -> Session -> setFlash('The bill has been submitted to the authors.');
+			$this -> setBillStatus($id, 2, true);
+			$this -> updateBillOwners($id);
+		}
 	}
 
 	public function general_info($bill_id = null)
@@ -931,6 +936,36 @@ class BillsController extends AppController
 		// find all of the line items
 		// sum the totals for each account
 		// set view variables for the totals
+	}
+
+	/**
+	 * Creates and sends an email to all of the owners of a bill.
+	 */
+	private function updateBillOwners($id)
+	{
+		$bill = $this -> Bill -> findById($id);
+		debug($bill);
+		$this -> loadModel('User');
+		$gradAuthor = $this -> User -> findBySgaId($bill['Authors']['grad_auth_id']);
+		$undrAuthor = $this -> User -> findBySgaId($bill['Authors']['undr_auth_id']);
+		$submitter = $this -> User -> findById($bill['Bill']['submitter']);
+		$authors = array();
+		if (strlen($gradAuthor['User']['id']) > 0)
+			$authors[] = $gradAuthor['User']['email'];
+		if (strlen($undrAuthor['User']['id']) > 0)
+			$authors[] = $undrAuthor['User']['email'];
+		$authors[] = $submitter['User']['email'];
+		$this -> set('bill', $bill);
+		$this -> set('grad_name', $gradAuthor['User']['name']);
+		$this -> set('undr_name', $undrAuthor['User']['name']);
+		$email = new CakeEmail();
+		$email -> deliver('mail');
+		$email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
+		$email -> to($authors);
+		$email -> subject('New Bill');
+		$email -> template('newbill');
+		$email -> sendAs('both');
+		$email -> send();
 	}
 
 }

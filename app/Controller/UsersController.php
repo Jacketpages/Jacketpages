@@ -252,7 +252,7 @@ class UsersController extends AppController
 	 * Logs a User into JacketPages using Cakephp's Auth Component
 	 * with no interfacing with CAS
 	 */
-	public function loginAsOtherUser()
+	public function login()
 	{
 		if ($this -> request -> is('post'))
 		{
