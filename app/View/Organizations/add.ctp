@@ -41,8 +41,8 @@ echo $this -> Form -> input('category', array('options' => array(
 		'Umbrella' => 'Umbrella',
 		'Other' => 'Other'
 	)));
-echo $this -> Form -> input('organization_contact', array('id' => 'primary_contact'));
-echo $this -> Form -> input('organization_contact_preferred_email', array('id' => 'primary_email'));
+echo $this -> Form -> input('organization_contact', array('label' => 'Primary Contact'));
+echo $this -> Form -> input('organization_contact_campus_email', array('label' => 'Primary Contact Email'));
 echo $this -> Form -> input('description');
 echo $this -> Form -> input('website');
 echo $this -> Form -> input('meeting_info');

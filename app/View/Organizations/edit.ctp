@@ -41,8 +41,8 @@ echo $this -> Form -> input('Category.name', array('label' => 'Category','option
       'Student Government' => 'Student Government',
       'Umbrella' => 'Umbrella'
    )));
-echo $this -> Form -> input('User.name', array('label' => 'Primary Contact','id' => 'primary_contact'));
-echo $this -> Form -> input('User.email', array('label' => 'Primary Contact Email','id' => 'primary_email'));
+echo $this -> Form -> input('organization_contact', array('label' => 'Primary Contact'));
+echo $this -> Form -> input('organization_contact_campus_email', array('label' => 'Primary Contact Email'));
 echo $this -> Form -> input('description', array('label' => 'Description','type' => 'textarea'));
 echo $this -> Form -> input('website', array('label' => 'Website'));
 echo $this -> Form -> input('meeting_info', array('label' => 'Meeting Information'));
