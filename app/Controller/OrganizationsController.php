@@ -286,16 +286,14 @@ class OrganizationsController extends AppController
 			{
 				$this -> setFlash('This organization has been created successfully.');
 				$this -> redirect(array(
-					'action' => 'index',
-					$org_id
+					'action' => 'index'			
 				));
 			}
 			else
 			{
 				$this -> setFlash('This organization was not able to be created.');
 				$this -> redirect(array(
-					'action' => 'index',
-					$org_id
+					'action' => 'index'					
 				));
 			}
 		}

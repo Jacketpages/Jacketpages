@@ -149,7 +149,7 @@ $this -> start('middle');
 	echo $this -> Html -> para('leftalign', $organization['Organization']['description']);
 	echo $this -> Html -> nestedList(array(
 		'Status: ' . $organization['Organization']['status'],
-		'Organization Contact: ' . $this -> Html -> link($organization['User']['name'], $organization['User']['email']),
+		'Organization Contact: ' . $this -> Html -> link($organization['Organization']['organization_contact'], 'mailto:'.$organization['Organization']['organization_contact_campus_email']),
 		'External Website: ' . $this -> Html -> link($organization['Organization']['website']),
 		'Meetings: ' . $organization['Organization']['meeting_information']
 	), array('id' => 'description'));
