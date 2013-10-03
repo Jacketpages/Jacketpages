@@ -27,7 +27,7 @@ class DocumentsController extends AppController
 				$this -> Session -> setFlash(__('Invalid organization', true));
 				$this -> redirect(array(
 					'controller' => 'organizations',
-					'action' => 'index'
+					'action' => 'index' 
 				));
 			}
 			$this -> set('organization', $org);
