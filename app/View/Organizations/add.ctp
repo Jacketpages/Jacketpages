@@ -41,8 +41,19 @@ echo $this -> Form -> input('category', array('options' => array(
 		'Umbrella' => 'Umbrella',
 		'Other' => 'Other'
 	)));
-echo $this -> Form -> input('organization_contact', array('id' => 'primary_contact'));
-echo $this -> Form -> input('organization_contact_preferred_email', array('id' => 'primary_email'));
+echo $this -> Form -> hidden('contact_id', array('id' => 'contact_id'));
+echo $this -> Form -> input('User.name', array(
+	'label' => 'Primary Contact Name -- You must select from suggestions when they appear',
+	'id' => 'userName'
+));
+/*echo $this -> Form -> input('User.name', array(
+ 'label' => 'Primary Contact',
+ 'id' => 'primary_contact'
+ ));
+ echo $this -> Form -> input('User.email', array(
+ 'label' => 'Primary Contact Email',
+ 'id' => 'primary_email'
+ ));*/
 echo $this -> Form -> input('description');
 echo $this -> Form -> input('website');
 echo $this -> Form -> input('meeting_info');
@@ -50,5 +61,34 @@ echo $this -> Form -> input('meeting_frequency');
 echo $this -> Form -> input('annual_events');
 echo $this -> Form -> input('dues');
 echo $this -> Form -> submit('Create');
-$this -> end();
+?>
+</script>
+
+	$(document).ready(function() {
+	$( "#userName" ).autocomplete({
+	minLength: 2,
+	source: '<?php echo $this -> Html -> url(array(
+			'controller' => 'users',
+			'action' => 'lookupByName'
+		), true);?>',
+		focus: function( event, ui ) {
+		$( "#userName" ).val( ui.item.name );
+		return false;
+		},
+		select: function( event, ui ) {
+		$( "#userName" ).val( ui.item.name );
+		$( "#contact_id" ).val( ui.item.id );
+		return false;
+		}
+		})
+		.data( "uiAutocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+		.data( "item.autocomplete", item )
+		.append( "<a>" + item.name + " (" + item.gt_user_name + ")</a>")
+		.appendTo( ul );
+		};
+		});
+</script>
+
+<?php $this -> end();
 ?>
