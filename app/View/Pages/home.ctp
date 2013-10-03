@@ -2,9 +2,9 @@
 <div id="middle_full">
     <?php
    	echo $this -> Html -> div('', 'Welcome to JacketPages', array('id'=>'page_title')); 
-	if($student) {
+	if($student && !$gt_member) {
 		echo '<div id="notification">';
-		echo "Welcome, " . $this->Session->read('User.gtUsername') . ". It appears that you have not yet created a JacketPages account. Please create a JacketPages profile " . $this->Html->link('here','/users/add') . ".";
+		echo "Welcome, " . $this->Session->read('User.gt_user_name') . ". It appears that you have not yet created a JacketPages account. Please create a JacketPages profile " . $this->Html->link('here','/users/add') . ".";
 		echo '</div>'; 					
 	} 
 	

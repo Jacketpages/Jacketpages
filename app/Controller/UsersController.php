@@ -70,10 +70,15 @@ class UsersController extends AppController
 	 */
 	public function view($id = null)
 	{
-		if($id == null){
-			$this->redirect(array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')));
+		if ($id == null)
+		{
+			$this -> redirect(array(
+				'controller' => 'users',
+				'action' => 'view',
+				$this -> Session -> read('User.id')
+			));
 		}
-		
+
 		$this -> set('userDeletePerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userDelete'));
 		$userEditPerm = $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'userEditPerm');
 		if (!$userEditPerm && $id == $this -> Session -> read('User.id'))
@@ -112,10 +117,21 @@ class UsersController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			$this -> User -> create();
+			$this -> request -> data['User']['level'] = 'gt_member';
 			if ($this -> User -> saveAssociated($this -> request -> data))
 			{
+				$user = $this -> User -> findById($this -> User -> getInsertId());
+				$this -> Session -> write('User.gt_user_name', $user['User']['gt_user_name']);
+				$this -> Session -> write('Auth.User', $user['User']['level']);
+				$this -> Session -> write('User.name', $user['User']['name']);
+				$this -> Session -> write('User.level', $user['User']['level']);
+				$this -> Session -> write('User.id', $user['User']['id']);
+				$this -> Session -> write('Sga.id', $user['User']['sga_id']);
 				$this -> Session -> setFlash('The user has been saved.');
-				return $this -> redirect(array('action' => 'index'));
+				return $this -> redirect(array(
+					'controller' => 'pages',
+					'action' => 'home'
+				));
 			}
 			else
 			{
@@ -126,11 +142,16 @@ class UsersController extends AppController
 
 	public function delete($id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Invalid request.');
-			$this->redirect(array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')));
+		if ($id == null)
+		{
+			$this -> Session -> setFlash('Invalid request.');
+			$this -> redirect(array(
+				'controller' => 'users',
+				'action' => 'view',
+				$this -> Session -> read('User.id')
+			));
 		}
-		
+
 		$this -> User -> id = $id;
 		if ($this -> User -> exists() && $this -> User -> saveField('status', 'Inactive'))
 		{
@@ -154,16 +175,21 @@ class UsersController extends AppController
 	 */
 	public function edit($id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Invalid request.');
-			$this->redirect(array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')));
-		}
-		
-		if ($this -> User -> exists($id)&& $this -> Session -> read('User.id') == $id)
+		if ($id == null)
 		{
-			$this -> User -> id = $id;
+			$this -> Session -> setFlash('Invalid request.');
+			$this -> redirect(array(
+				'controller' => 'users',
+				'action' => 'view',
+				$this -> Session -> read('User.id')
+			));
+		}
+
+		if ($this -> User -> exists($id) && ($this -> Session -> read('User.id') == $id || $this -> Session -> read('User.level') == 'admin'))
+		{
 			if ($this -> request -> is('get'))
 			{
+				$this -> User -> id = $id;
 				$this -> request -> data = $this -> User -> read();
 				$this -> set('user', $this -> User -> read());
 			}
@@ -176,6 +202,7 @@ class UsersController extends AppController
 				}
 				else
 				{
+					debug($this -> request -> data);
 					CakeLog::error("Unable to edit user: $id.");
 					$this -> Session -> setFlash('Unable to edit the user.');
 				}
@@ -193,66 +220,42 @@ class UsersController extends AppController
 	 * Logs in a User using Georgia Tech's CAS login system.
 	 * Writes often used User variables to the Session.
 	 */
-	/*public function login()
-	 {
-	 // Set debug mode
-	 $this -> phpCAS -> setDebug();
-	 //Initialize phpCAS
-	 $this -> phpCAS -> client(CAS_VERSION_2_0, Configure::read('CAS.hostname'),
-	 Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
-	 // No SSL validation for the CAS server
-	 $this -> phpCAS -> setNoCasServerValidation();
-	 // Force CAS authentication if required
-	 $this -> phpCAS -> forceAuthentication();
+	public function login()
+	{
+		// Set debug mode
+		phpCAS::setDebug();
+		//Initialize phpCAS
+		phpCAS::client(CAS_VERSION_2_0, Configure::read('CAS.hostname'), Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
+		// No SSL validation for the CAS server
+		phpCAS::setNoCasServerValidation();
+		// Force CAS authentication if required
+		phpCAS::forceAuthentication();
+		$gtUsername = phpCAS::getUser();
+		$user = $this -> User -> find('first', array('conditions' => array('User.gt_user_name' => $gtUsername)));
+		if (!empty($user))
+		{
+			$this -> Session -> write('User.gt_user_name', $gtUsername);
+			$this -> Session -> write('Auth.User', $user['User']['level']);
+			$this -> Session -> write('User.name', $user['User']['name']);
+			$this -> Session -> write('User.level', $user['User']['level']);
+			$this -> Session -> write('User.id', $user['User']['id']);
+			$this -> Session -> write('Sga.id', $user['User']['sga_id']);
+		}
+		else
+		{
+			$this -> Session -> write('User.level', 'student');
+			$this -> Session -> write('User.gt_user_name', $gtUsername);
+			$this -> Session -> write('Auth.User', 'student');
+		}
+		$this -> redirect($this -> Auth -> redirect());
 
-	 $GTUsername = $this -> phpCAS -> getUser();
-	 if ($GTUsername != '')
-	 {
+	}
 
-	 }
-	 }*/
-// public function login()
-		// {
-			// // Set debug mode
-			// phpCAS::setDebug();
-			// //Initialize phpCAS
-			// phpCAS::client(CAS_VERSION_2_0, Configure::read('CAS.hostname'), Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
-			// // No SSL validation for the CAS server
-			// phpCAS::setNoCasServerValidation();
-			// // Force CAS authentication if required
-			// phpCAS::forceAuthentication();
-			// $gtUsername = phpCAS::getUser();
-			// $user = $this -> User -> find('first', array('conditions' => array('User.gt_user_name' => $gtUsername)));
-			// if (!empty($user))
-			// {
-				// $this -> Session -> write('User.gt_user_name', $gtUsername);
-				// $this -> Session -> write('Auth.User', $user['User']['level']);
-				// $this -> Session -> write('User.name', $user['User']['name']);
-				// $this -> Session -> write('User.level', $user['User']['level']);
-				// $this -> Session -> write('User.id', $user['User']['id']);
-				// $this -> Session -> write('Sga.id', $user['User']['sga_id']);
-			// }
-			// else {
-				// $this -> Session -> write('User.level', 'student');
-			// }
-			// if ($this -> Auth -> login())
-			// {
-				// CakeLog::info("Login successful for user: $gtUsername.");
-				// return $this -> redirect($this -> Auth -> redirect());
-			// }
-			// else
-			// {
-				// CakeLog::warning("Login failed for user: $gtUsername.");
-				// $this -> Session -> setFlash('Your username/password was incorrect.');
-			// }
-// 			
-		// }
-	 
 	/**
 	 * Logs a User into JacketPages using Cakephp's Auth Component
 	 * with no interfacing with CAS
 	 */
-	public function login()
+	public function loginAsOtherUser()
 	{
 		if ($this -> request -> is('post'))
 		{
@@ -293,39 +296,40 @@ class UsersController extends AppController
 
 	function lookupByName()
 	{
-		$this->viewClass = 'Json';
-	
+		$this -> viewClass = 'Json';
+
 		$input = mysql_real_escape_string($_REQUEST['term']);
 		$p = $this -> User -> find('all', array(
-				'limit' => 5,
-				'recursive' => 0,
-				'fields' => array(
-						'User.first_name',
-						'User.last_name',
-						'User.id',
-						'User.gt_user_name',
-						'User.email'
-				),
-				'conditions' => array("or" => array(
-							'User.first_name LIKE' => '%' . $input . '%',
-							'User.last_name LIKE' => '%' . $input . '%',
-							'User.gt_user_name LIKE' => '%' . $input . '%'
-					))
+			'limit' => 5,
+			'recursive' => 0,
+			'fields' => array(
+				'User.first_name',
+				'User.last_name',
+				'User.id',
+				'User.gt_user_name',
+				'User.email'
+			),
+			'conditions' => array("or" => array(
+					'User.first_name LIKE' => '%' . $input . '%',
+					'User.last_name LIKE' => '%' . $input . '%',
+					'User.gt_user_name LIKE' => '%' . $input . '%'
+				))
 		));
 		$options = array();
 		while ($user = current($p))
 		{
 			$options[] = array(
-					'name' => $user['User']['first_name'].' '.$user['User']['last_name'],
-					'gt_user_name' => $user['User']['gt_user_name'],
-					'id' => $user['User']['id'],
-					'email' => $user['User']['email']
+				'name' => $user['User']['first_name'] . ' ' . $user['User']['last_name'],
+				'gt_user_name' => $user['User']['gt_user_name'],
+				'id' => $user['User']['id'],
+				'email' => $user['User']['email']
 			);
 			next($p);
 		}
-		
-		$this->set('options', $options);
-		$this->set('_serialize', 'options');
+
+		$this -> set('options', $options);
+		$this -> set('_serialize', 'options');
 	}
+
 }
 ?>

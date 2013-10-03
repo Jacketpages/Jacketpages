@@ -73,6 +73,7 @@ class AppController extends Controller
 		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";
 
 		$this -> set('general', $this -> Acl -> check("Role/$level", 'general'));
+		$this -> set('student', $this -> Acl -> check("Role/$level", 'student'));
 		$this -> set('gt_member', $this -> Acl -> check("Role/$level", 'gt_member'));
 		$this -> set('sga_user', $this -> Acl -> check("Role/$level", 'sga_user'));
 		$this -> set('sga_exec', $this -> Acl -> check("Role/$level", 'sga_exec'));
@@ -83,6 +84,7 @@ class AppController extends Controller
 
 		if (!$this -> Acl -> check("Role/$level", "controllers/" . $this -> name . "/" . $this -> params['action']))
 		{
+			//$this -> Session -> setFlash("controllers/" . $this -> name . "/" . $this -> params['action']);
 			$this -> Session -> setFlash("You do not have permission to access that page.");
 			if (strcmp($this -> referer(), "/") == 0)
 				$this -> redirect(array(
@@ -221,7 +223,7 @@ class AppController extends Controller
 	protected function isOfficer($org_id)
 	{
 		$this -> loadModel('Membership');
-		return in_array($this -> Membership -> field('role', array('org_id' => $org_id)), array(
+		return in_array($this -> Membership -> field('role', array('org_id' => $org_id, 'user_id' => $this -> Session -> read('User.id'))), array(
 			'Officer',
 			'President',
 			'Treasurer',
@@ -232,7 +234,7 @@ class AppController extends Controller
 	protected function isMember($org_id)
 	{
 		$this -> loadModel('Membership');
-		return (strcmp($this -> Membership -> field('role', array('org_id' => $org_id)), 'Member') == 0);
+		return (strcmp($this -> Membership -> field('role', array('org_id' => $org_id, 'user_id' => $this -> Session -> read('User.id'))), 'Member') == 0);
 	}
 
 	public function getMembers($org_id = null, $roles = array(), $single = false, $statuses = array('Active'))

@@ -81,7 +81,11 @@ class BillsController extends AppController
 		}
 		$keyword = $this -> Session -> read('Search.keyword');
 		$this -> loadModel('User');
-		$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
+		if($id == null)
+			$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
+		else {
+			$authorId = $this -> User -> field('sga_id', array('id' => $id));
+		}
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.status BETWEEN ? AND ?' => array(
@@ -157,7 +161,7 @@ class BillsController extends AppController
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AWAITING_AUTHOR :
-				if (!$this -> isAuthor($id) || !$this -> isSubmitter($id) || !$this -> isSGA())
+				if (!($this -> isAuthor($id) || $this -> isSubmitter($id) || $this -> isSGA()))
 					$this -> redirect($this -> referer());
 				break;
 		}
