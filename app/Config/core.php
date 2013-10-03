@@ -352,3 +352,8 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+//CAS
+	Configure::write('CAS.hostname', 'login.gatech.edu');
+	Configure::write('CAS.port', 443);
+	Configure::write('CAS.uri', 'cas');

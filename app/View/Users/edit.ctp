@@ -16,13 +16,17 @@ $this -> assign('title', 'Edit Profile');
 $this -> start('middle');
 
 // Begin User Edit Form
-echo $this -> Form -> create('User');
+echo $this -> Form -> create();
 echo $this -> Form -> hidden('id');
 echo $this -> Form -> input('first_name', array(
 	'label' => 'First Name',
 	array('id' => 'block')
 ));
 echo $this -> Form -> input('last_name', array('label' => 'Last Name'));
+if($admin)
+{
+	echo $this -> Form -> input('level', array('label' => 'Level'));
+}
 echo $this -> Form -> input('phone', array('label' => 'Phone Number'));
 echo $this -> Form -> input('email', array('label' => 'Email'));
 echo $this -> Form -> end('Submit');

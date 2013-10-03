@@ -7,8 +7,8 @@ function assignAndRunValidationRules()
 {
 	notEmptyRule("#BillTitle");
 	notEmptyRule("#BillDescription");
-	notEmptyRule("#AuthorsUndrAuthId", "You must specify an author.");
-	notEmptyRule("#AuthorsGradAuthId", "You must specify an author.");
+	//notEmptyRule("#AuthorsUndrAuthId", "You must specify an author.");
+	//notEmptyRule("#AuthorsGradAuthId", "You must specify an author.");
 	notEmptyRule("#BillOrgId", "You must specify an organization.");
 
 	var rows = get("LineItemsTable").rows;
