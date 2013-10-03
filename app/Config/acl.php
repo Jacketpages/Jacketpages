@@ -150,6 +150,7 @@ $config['roles'] = array(
 	'Role/lace' => 'Role/gt_member',
 	'Role/sofo' => 'Role/gt_member',
 	'Role/gt_member' => 'Role/general',
+	'Role/student' => 'Role/general',
 	'Role/general' => null,
 );
 
@@ -179,6 +180,8 @@ $config['rules'] = array(
 		'controllers/users/edit' => 'Role/gt_member',
 		'controllers/users/delete' => 'Role/admin',
 		'controllers/pages/*' => 'Role/general',
+		'controllers/users/add' => 'Role/lace',
+		'controllers/users/add' => 'Role/student',
 		'controllers/users/(login|logout)' => 'Role/general',
 		'controllers/sgapeople/index' => 'Role/general',
 		'controllers/users/view' => 'Role/general',

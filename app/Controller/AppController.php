@@ -154,12 +154,12 @@ class AppController extends Controller
 		return true;
 	}
 
-	public function getFiscalYear()
+	private function getFiscalYear()
 	{
 		return substr($this -> calculateFiscalYearForDate(date('n/d/y')), -2);
 	}
 
-	public function calculateFiscalYearForDate($inputDate, $fyStart = "6/1/", $fyEnd = "5/31/")
+	private function calculateFiscalYearForDate($inputDate, $fyStart = "6/1/", $fyEnd = "5/31/")
 	{
 		$date = strtotime($inputDate);
 		$inputyear = strftime('%y', $date);
@@ -179,7 +179,7 @@ class AppController extends Controller
 	}
 
 	// A function to return the Roman Numeral, given an integer
-	public function roman_numerals($num)
+	protected function roman_numerals($num)
 	{
 		// Make sure that we only use the integer portion of the value
 		$n = intval($num);
@@ -218,7 +218,7 @@ class AppController extends Controller
 		return $result;
 	}
 
-	public function isOfficer($org_id)
+	protected function isOfficer($org_id)
 	{
 		$this -> loadModel('Membership');
 		return in_array($this -> Membership -> field('role', array('org_id' => $org_id)), array(
@@ -229,7 +229,7 @@ class AppController extends Controller
 		));
 	}
 
-	public function isMember($org_id)
+	protected function isMember($org_id)
 	{
 		$this -> loadModel('Membership');
 		return (strcmp($this -> Membership -> field('role', array('org_id' => $org_id)), 'Member') == 0);
@@ -252,11 +252,12 @@ class AppController extends Controller
 								$db -> expression('Membership.end_date >= NOW()'),
 								'Membership.end_date' => null
 							)
-						)) ));
+						))));
 			}
 			else
 			{
-				$members = $this -> Membership -> find('first', array('conditions' => array('AND' => array(
+				$members = $this -> Membership -> find('first', array(
+					'conditions' => array('AND' => array(
 							'Membership.org_id' => $org_id,
 							'Membership.role' => $roles,
 							'Membership.status' => $statuses,
@@ -264,10 +265,38 @@ class AppController extends Controller
 								$db -> expression('Membership.end_date >= NOW()'),
 								'Membership.end_date' => null
 							)
-						)),'order' => 'Membership.start_date desc' ));
+						)),
+					'order' => 'Membership.start_date desc'
+				));
 			}
 		}
 		return $members;
+	}
+
+	protected function isSubmitter($bill_id)
+	{
+		$this -> loadModel('Bill');
+		$submitter_id = $this -> Bill -> field('submitter', array('id' => $bill_id));
+		return $this -> Session -> read('User.id') == $submitter_id;
+	}
+
+	protected function isAuthor($bill_id)
+	{
+		$this -> loadModel('Bill');
+		$bill = $this -> Bill -> findById($bill_id);
+		return ($this -> Session -> read('Sga.id') == $bill['Authors']['grad_auth_id'] || $this -> Session -> read('Sga.id') == $bill['Authors']['undr_auth_id']);
+	}
+
+	protected function isSGA()
+	{
+		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";
+		return $this -> Acl -> check("Role/$level", 'sga_exec');
+	}
+
+	protected function isLace()
+	{
+		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";
+		return $this -> Acl -> check("Role/$level", 'lace');
 	}
 
 }

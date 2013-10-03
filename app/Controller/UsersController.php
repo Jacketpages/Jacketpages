@@ -8,7 +8,7 @@
  * @since 03/22/2012
  */
 
-//App::import('Vendor', 'cas', array('file' => 'CAS-1.2.0' . DS . 'CAS.php'));
+App::import('Vendor', 'cas', array('file' => 'CAS-1.2.0' . DS . 'CAS.php'));
 class UsersController extends AppController
 {
 	/**
@@ -159,7 +159,7 @@ class UsersController extends AppController
 			$this->redirect(array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')));
 		}
 		
-		if ($this -> User -> exists($id))
+		if ($this -> User -> exists($id)&& $this -> Session -> read('User.id') == $id)
 		{
 			$this -> User -> id = $id;
 			if ($this -> request -> is('get'))
@@ -211,12 +211,48 @@ class UsersController extends AppController
 
 	 }
 	 }*/
-
+// public function login()
+		// {
+			// // Set debug mode
+			// phpCAS::setDebug();
+			// //Initialize phpCAS
+			// phpCAS::client(CAS_VERSION_2_0, Configure::read('CAS.hostname'), Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
+			// // No SSL validation for the CAS server
+			// phpCAS::setNoCasServerValidation();
+			// // Force CAS authentication if required
+			// phpCAS::forceAuthentication();
+			// $gtUsername = phpCAS::getUser();
+			// $user = $this -> User -> find('first', array('conditions' => array('User.gt_user_name' => $gtUsername)));
+			// if (!empty($user))
+			// {
+				// $this -> Session -> write('User.gt_user_name', $gtUsername);
+				// $this -> Session -> write('Auth.User', $user['User']['level']);
+				// $this -> Session -> write('User.name', $user['User']['name']);
+				// $this -> Session -> write('User.level', $user['User']['level']);
+				// $this -> Session -> write('User.id', $user['User']['id']);
+				// $this -> Session -> write('Sga.id', $user['User']['sga_id']);
+			// }
+			// else {
+				// $this -> Session -> write('User.level', 'student');
+			// }
+			// if ($this -> Auth -> login())
+			// {
+				// CakeLog::info("Login successful for user: $gtUsername.");
+				// return $this -> redirect($this -> Auth -> redirect());
+			// }
+			// else
+			// {
+				// CakeLog::warning("Login failed for user: $gtUsername.");
+				// $this -> Session -> setFlash('Your username/password was incorrect.');
+			// }
+// 			
+		// }
+	 
 	/**
 	 * Logs a User into JacketPages using Cakephp's Auth Component
 	 * with no interfacing with CAS
 	 */
-	public function login()
+	public function loginAsOtherUser()
 	{
 		if ($this -> request -> is('post'))
 		{

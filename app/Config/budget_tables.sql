@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS line_item_categories
 CREATE TABLE IF NOT EXISTS budget_submit_states
 (
 	id int(11) not null,
-	primary key (budget_id),
+	primary key (id),
 	state_1 int(1) default 0,
 	state_2 int(1) default 0,
 	state_3 int(1) default 0,

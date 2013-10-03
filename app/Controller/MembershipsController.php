@@ -15,6 +15,10 @@ class MembershipsController extends AppController
 	// Add in or condition to check dates greater than today.
 	public function index($id = null)
 	{
+		$this -> set('isOfficer', $this -> isOfficer($id));
+		$this -> set('isMember', $this -> isMember($id));
+		if (!($this -> isOfficer($id) || $this -> isMember($id) || $this -> isLace()))
+			$this -> redirect($this -> referer());
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');
@@ -30,17 +34,15 @@ class MembershipsController extends AppController
 		$this -> set('orgName', $orgName);
 
 		$this -> loadModel('Membership');
-		$officers = $this -> getMembers($id,array(
+		$officers = $this -> getMembers($id, array(
 			'Officer',
 			'President',
 			'Treasurer',
 			'Advisor'
 		));
 
-		$members = $this -> getMembers($id,array(
-			'Member'
-		));
-		$pending_members = $this -> getMembers($id,array('Member'),false,array('Pending'));
+		$members = $this -> getMembers($id, array('Member'));
+		$pending_members = $this -> getMembers($id, array('Member'), false, array('Pending'));
 		$this -> set('officers', $officers);
 		$this -> set('members', $members);
 		$this -> set('pending_members', $pending_members);
@@ -54,6 +56,8 @@ class MembershipsController extends AppController
 	 */
 	public function edit($id = null)
 	{
+		if (!($this -> isOfficer($id) || $this -> isLace()))
+			$this -> redirect($this -> referer());
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');
@@ -97,6 +101,8 @@ class MembershipsController extends AppController
 	 */
 	function add($id = null)
 	{
+		if (!($this -> isOfficer($id) || $this -> isLace()))
+			$this -> redirect($this -> referer());
 		if (!$id && empty($this -> data))
 		{
 			$this -> Session -> setFlash(__('Invalid organization.', true));
@@ -109,16 +115,16 @@ class MembershipsController extends AppController
 		 $this -> loadModel('User');
 		 $this -> loadModel('Organization');
 		 $user = $this -> User -> find('all', array('conditions' => array('User.id' =>
-		$userId), 'recursive' => 0));
+		 $userId), 'recursive' => 0));
 		 $org = $this -> Organization -> find('all', array('conditions' =>
-		array('Organization.id' => $orgId), 'recursive' => 0));
+		 array('Organization.id' => $orgId), 'recursive' => 0));
 		 $this -> set('user', $user);
 		 $this -> set('org', $org);
 		 if (!$this -> isLevel('admin') && !$this -> _isOfficer($orgId)) {
 		 $this -> Session -> setFlash(__('You are not an officer of this organization.',
-		true));
+		 true));
 		 $this -> redirect(array('controller' => 'organizations', 'action' => 'view',
-		$orgId));
+		 $orgId));
 		 }
 		 }*/
 		$this -> loadModel('Organization');
@@ -149,6 +155,8 @@ class MembershipsController extends AppController
 	// MRE: Who should be able to delete memberships?
 	public function delete($id = null, $orgId = null)
 	{
+		if (!($this -> isOfficer($id) || $this -> isLace()))
+			$this -> redirect($this -> referer());
 		if ($id == null || $orgId == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');
@@ -182,6 +190,8 @@ class MembershipsController extends AppController
 	// MRE TO DO: make sure permissions are set...
 	public function reject($id = null, $orgId = null)
 	{
+		if (!($this -> isOfficer($id) || $this -> isLace()))
+			$this -> redirect($this -> referer());
 		if ($id == null || $orgId == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');

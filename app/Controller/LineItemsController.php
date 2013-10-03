@@ -52,6 +52,26 @@ class LineItemsController extends AppController
 	
 		$this -> loadModel('Bill');
 		$bill = $this -> Bill -> findById($bill_id);
+		switch ($bill['Bill']['status'])
+		{
+			case $this -> CREATED :
+				if (!$this -> isSubmitter($id))
+					$this -> redirect($this -> referer());
+				break;
+			case $this -> AWAITING_AUTHOR :
+				if (!$this -> isAuthor($id))
+					$this -> redirect($this -> referer());
+				break;
+			case $this -> AUTHORED :
+			case $this -> AGENDA :
+			case $this -> PASSED :
+			case $this -> FAILED :
+			case $this -> TABLED :
+			case $this -> CONFERENCE :
+				if ($this -> isSGA())
+					$this -> redirect($this -> referer());
+				break;
+		}
 		$this -> set('titleState', $state);
 		$this -> set('bill_id', $bill_id);
 		if ($this -> canEditLineItems($bill, $state))

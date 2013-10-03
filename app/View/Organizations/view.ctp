@@ -12,10 +12,6 @@
  * @param $pending_members - The pending members of the selected organization
  */
 
-// TODO sort out the officers issues
-// TODO fill in budgets, bills, etc.
-// TODO rethink the sidebar links
-
 // Define which view this view extends.
 $this -> extend('/Common/common');
 
@@ -27,7 +23,7 @@ echo $this -> Html -> addCrumb($organization['Organization']['name'], '/organiza
 $this -> start('sidebar');
 $sidebar = array();
 
-if ($orgEditPerm)
+if ($lace || $isOfficer)
 {
 	$sidebar[] = $this -> Html -> link(__('Edit Information', true), array(
 		'action' => 'edit',

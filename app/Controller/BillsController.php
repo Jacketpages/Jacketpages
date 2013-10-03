@@ -117,7 +117,7 @@ class BillsController extends AppController
 	 * Finance ledger showing all bills and budgets
 	 */
 	public function ledger($org_id = null)
-	{		
+	{
 		$this -> paginate = array(
 			'conditions' => array('Bill.org_id' => $org_id),
 			'limit' => 20,
@@ -125,7 +125,7 @@ class BillsController extends AppController
 		);
 		$this -> set('bills', $this -> paginate('Bill'));
 		$this -> loadModel('Organization');
-		$org_name = $this -> Organization -> field('name',array('id' => $org_id));
+		$org_name = $this -> Organization -> field('name', array('id' => $org_id));
 		$this -> set('org_id', $org_id);
 		$this -> set('org_name', $org_name);
 	}
@@ -136,49 +136,83 @@ class BillsController extends AppController
 	 */
 	public function view($id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Please select a bill to view.');
-			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+
+		if ($id == null)
+		{
+			$this -> Session -> setFlash('Please select a bill to view.');
+			$this -> redirect(array(
+				'controller' => 'bills',
+				'action' => 'index'
+			));
 		}
-	
+
 		// Set which bill to retrieve from the database.
 		$this -> Bill -> id = $id;
-		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";		
+		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";
 		$bill = $this -> Bill -> read();
+		switch ($bill['Bill']['status'])
+		{
+			case $this -> CREATED :
+				if (!$this -> isSubmitter($id))
+					$this -> redirect($this -> referer());
+				break;
+			case $this -> AWAITING_AUTHOR :
+				if (!$this -> isAuthor($id) || !$this -> isSubmitter($id) || !$this -> isSGA())
+					$this -> redirect($this -> referer());
+				break;
+		}
 		$this -> setAuthorNames($bill['Authors']['grad_auth_id'], $bill['Authors']['undr_auth_id']);
 		$this -> setSignatureNames($bill['Authors']);
 		$this -> set('bill', $bill);
 		// Set the lineitem arrays for the different states to
 		// pass to the view.
 		$this -> loadModel('LineItem');
-		$this -> set('submitted', $this -> LineItem -> find('all', array('conditions' => array(
+		$this -> set('submitted', $this -> LineItem -> find('all', array(
+			'conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Submitted'
-			),'order' => 'line_number asc')));
-		$this -> set('jfc', $this -> LineItem -> find('all', array('conditions' => array(
+			),
+			'order' => 'line_number asc'
+		)));
+		$this -> set('jfc', $this -> LineItem -> find('all', array(
+			'conditions' => array(
 				'bill_id' => $id,
 				'state' => 'JFC'
-			),'order' => 'line_number asc')));
-		$this -> set('graduate', $this -> LineItem -> find('all', array('conditions' => array(
+			),
+			'order' => 'line_number asc'
+		)));
+		$this -> set('graduate', $this -> LineItem -> find('all', array(
+			'conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Graduate'
-			),'order' => 'line_number asc')));
-		$this -> set('undergraduate', $this -> LineItem -> find('all', array('conditions' => array(
+			),
+			'order' => 'line_number asc'
+		)));
+		$this -> set('undergraduate', $this -> LineItem -> find('all', array(
+			'conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Undergraduate'
-			),'order' => 'line_number asc')));
-		$this -> set('conference', $this -> LineItem -> find('all', array('conditions' => array(
+			),
+			'order' => 'line_number asc'
+		)));
+		$this -> set('conference', $this -> LineItem -> find('all', array(
+			'conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Conference'
-			),'order' => 'line_number asc')));
+			),
+			'order' => 'line_number asc'
+		)));
 		$this -> set('all', $this -> LineItem -> find('all', array(
 			'conditions' => array('bill_id' => $id),
 			'order' => array("FIELD(STATE, 'Submitted','JFC', 'Graduate', 'Undergraduate', 'Conference', 'Final')")
 		)));
-		$this -> set('final', $this -> LineItem -> find('all', array('conditions' => array(
+		$this -> set('final', $this -> LineItem -> find('all', array(
+			'conditions' => array(
 				'bill_id' => $id,
 				'state' => 'Final'
-			),'order' => 'line_number asc')));
+			),
+			'order' => 'line_number asc'
+		)));
 		// Set the amounts for prior year, capital outlay, and total
 		$totals = $this -> LineItem -> find('all', array(
 			'fields' => array(
@@ -330,11 +364,37 @@ class BillsController extends AppController
 	 */
 	public function edit_index($id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Please select a bill to view.');
-			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		if ($id == null)
+		{
+			$this -> Session -> setFlash('Please select a bill to view.');
+			$this -> redirect(array(
+				'controller' => 'bills',
+				'action' => 'index'
+			));
 		}
-	
+
+		$this -> Bill -> id = $id;
+		$bill = $this -> Bill -> read();
+		switch ($bill['Bill']['status'])
+		{
+			case $this -> CREATED :
+				if (!$this -> isSubmitter($id))
+					$this -> redirect($this -> referer());
+				break;
+			case $this -> AWAITING_AUTHOR :
+				if (!$this -> isAuthor($id))
+					$this -> redirect($this -> referer());
+				break;
+			case $this -> AUTHORED :
+			case $this -> AGENDA :
+			case $this -> PASSED :
+			case $this -> FAILED :
+			case $this -> TABLED :
+			case $this -> CONFERENCE :
+				if ($this -> isSGA())
+					$this -> redirect($this -> referer());
+				break;
+		}
 		$this -> Bill -> id = $id;
 		$this -> Bill -> set('last_mod_date', date('Y-m-d h:i:s'));
 		$this -> Bill -> set('last_mod_by', $this -> Session -> read('User.id'));
@@ -383,7 +443,7 @@ class BillsController extends AppController
 				{
 					$this -> Session -> setFlash('Unable to save the bill.');
 				}
-				
+
 				$this -> redirect(array(
 					'action' => 'view',
 					$id
@@ -448,6 +508,22 @@ class BillsController extends AppController
 
 	public function delete($id = null)
 	{
+		$state = $this -> Bill -> field('status', array('id' => $bill_id));
+		switch ($state)
+		{
+			case $this -> CREATED :
+				if (!$this -> isSubmitter($id))
+					$this -> redirect($this -> referer());
+				break;
+			case $this -> AWAITING_AUTHOR :
+			case $this -> AUTHORED :
+				if (!$this -> isAuthor($id))
+					$this -> redirect($this -> referer());
+				break;
+			default :
+				$this -> redirect($this -> referer());
+				break;
+		}
 		if ($this -> Bill -> exists($id))
 		{
 			$this -> Bill -> id = $id;
@@ -555,8 +631,8 @@ class BillsController extends AppController
 	// TODO Add email functionality to email authors.
 	public function submit($id)
 	{
-		$this -> Session -> setFlash('The bill has been submitted to the authors.');	
-		$this -> setBillStatus($id, 2, true);			
+		$this -> Session -> setFlash('The bill has been submitted to the authors.');
+		$this -> setBillStatus($id, 2, true);
 	}
 
 	public function general_info($bill_id = null)
@@ -566,11 +642,15 @@ class BillsController extends AppController
 
 	public function authors_signatures($id = null)
 	{
-		if($id == null){
-			$this->Session->setFlash('Please select a bill to view.');
-			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
+		if ($id == null)
+		{
+			$this -> Session -> setFlash('Please select a bill to view.');
+			$this -> redirect(array(
+				'controller' => 'bills',
+				'action' => 'index'
+			));
 		}
-	
+
 		$this -> loadModel('BillAuthor');
 		$bill_authors = $this -> BillAuthor -> findById($id);
 		$this -> BillAuthor -> id = $id;
@@ -611,61 +691,77 @@ class BillsController extends AppController
 
 	public function votes($bill_id = null, $organization = null, $votes_id = null)
 	{
-		if($bill_id == null || $organization == null || $votes_id == null){
-			$this->Session->setFlash('Please select a bill to view.');
-			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
-		}
-	
-		$this->set('bill_id', $bill_id);
-	
-		$this -> loadModel('BillVotes');
-		if ($this -> request -> is('get'))
+		$state = $this -> Bill -> field('status', array('id' => $bill_id));
+		if ($this -> isSGA() && $state == $this -> AGENDA)
 		{
-			$this -> BillVotes -> id = $votes_id;
-			$this -> request -> data = $this -> BillVotes -> read();
-		}
-		else
-		{
-			if ($votes_id == null)
+			if ($bill_id == null || $organization == null || $votes_id == null)
 			{
-				$this -> BillVotes -> create();
-				$this -> BillVotes -> set('date', date('Y-m-d'));
-				if ($this -> BillVotes -> save($this -> request -> data))
+				$this -> Session -> setFlash('Please select a bill to view.');
+				$this -> redirect(array(
+					'controller' => 'bills',
+					'action' => 'index'
+				));
+			}
+
+			$this -> set('bill_id', $bill_id);
+
+			$this -> loadModel('BillVotes');
+			if ($this -> request -> is('get'))
+			{
+				$this -> BillVotes -> id = $votes_id;
+				$this -> request -> data = $this -> BillVotes -> read();
+			}
+			else
+			{
+				if ($votes_id == null)
 				{
-					$this -> Bill -> id = $bill_id;
-					if($this -> Bill -> saveField($organization, $this -> BillVotes -> getInsertID())){
+					$this -> BillVotes -> create();
+					$this -> BillVotes -> set('date', date('Y-m-d'));
+					if ($this -> BillVotes -> save($this -> request -> data))
+					{
+						$this -> Bill -> id = $bill_id;
+						if ($this -> Bill -> saveField($organization, $this -> BillVotes -> getInsertID()))
+						{
+							$this -> Session -> setFlash('Votes have been updated.');
+						}
+						else
+						{
+							$this -> Session -> setFlash('There was an error updating the votes.');
+						}
+						$this -> redirect(array(
+							'controller' => 'bills',
+							'action' => 'view',
+							$bill_id
+						));
+					}
+				}
+				else
+				{
+					$this -> BillVotes -> id = $votes_id;
+					if ($this -> BillVotes -> save($this -> request -> data))
+					{
 						$this -> Session -> setFlash('Votes have been updated.');
-					} else {
+					}
+					else
+					{
 						$this -> Session -> setFlash('There was an error updating the votes.');
 					}
 					$this -> redirect(array(
 						'controller' => 'bills',
 						'action' => 'view',
 						$bill_id
-				));
+					));
 				}
-			}
-			else
-			{
-				$this -> BillVotes -> id = $votes_id;
-				if($this -> BillVotes -> save($this -> request -> data)){
-					$this -> Session -> setFlash('Votes have been updated.');
-				} else {
-					$this -> Session -> setFlash('There was an error updating the votes.');
-				}
-				$this -> redirect(array(
-					'controller' => 'bills',
-					'action' => 'view',
-					$bill_id
-				));
 			}
 		}
+		$this -> redirect($this -> referer());
 	}
 
 	public function putOnAgenda($id)
 	{
-		$bill = $this -> Bill -> findById($id, array('fields' => 'category'));
-		$this -> setBillStatus($id, $this -> AGENDA, true, $bill['Bill']['category']);
+		$bill = $this -> Bill -> findById($id);
+		if ($bill['Bill']['status'] == $this -> AUTHORED && $this -> isSGA())
+			$this -> setBillStatus($id, $this -> AGENDA, true, $bill['Bill']['category']);
 
 	}
 
@@ -732,22 +828,26 @@ class BillsController extends AppController
 
 	public function authorSign($bill_id, $field, $value)
 	{
-		$auth_id = $this -> getAuthorIdFromBillId($bill_id);
-		$this -> BillAuthor -> id = $auth_id;
-		$this -> BillAuthor -> saveField($field, $value);
-		$authors = $this -> BillAuthor -> findById($auth_id, array(
-			'undr_auth_appr',
-			'grad_auth_appr'
-		));
-		$this -> Bill -> id = $bill_id;
-		if ($authors['BillAuthor']['undr_auth_appr'] && $authors['BillAuthor']['grad_auth_appr'])
+		$state = $this -> Bill -> field('status', array('id' => $bill_id));
+		if ($this -> isAuthor($bill_id) && ($state == $this -> AWAITING_AUTHOR || $state == $this -> AUTHORED))
 		{
-			$bill = $this -> Bill -> read();
-			$this -> Bill -> saveField('status', $this -> AUTHORED);
-		}
-		else
-		{
-			$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);
+			$auth_id = $this -> getAuthorIdFromBillId($bill_id);
+			$this -> BillAuthor -> id = $auth_id;
+			$this -> BillAuthor -> saveField($field, $value);
+			$authors = $this -> BillAuthor -> findById($auth_id, array(
+				'undr_auth_appr',
+				'grad_auth_appr'
+			));
+			$this -> Bill -> id = $bill_id;
+			if ($authors['BillAuthor']['undr_auth_appr'] && $authors['BillAuthor']['grad_auth_appr'])
+			{
+				$bill = $this -> Bill -> read();
+				$this -> Bill -> saveField('status', $this -> AUTHORED);
+			}
+			else
+			{
+				$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);
+			}
 		}
 		$this -> redirect($this -> referer());
 	}
@@ -780,7 +880,8 @@ class BillsController extends AppController
 		{
 			$gpres = $this -> User -> findBySgaId($data['grad_pres_id']);
 			$signee_names['grad_pres'] = $gpres['User']['name'];
-		} else
+		}
+		else
 		{
 			$signee_names['grad_pres'] = 'Unsigned';
 		}
@@ -788,7 +889,8 @@ class BillsController extends AppController
 		{
 			$gpres = $this -> User -> findBySgaId($data['grad_secr_id']);
 			$signee_names['grad_secr'] = $gpres['User']['name'];
-		} else
+		}
+		else
 		{
 			$signee_names['grad_secr'] = 'Unsigned';
 		}
@@ -796,7 +898,8 @@ class BillsController extends AppController
 		{
 			$gpres = $this -> User -> findBySgaId($data['undr_pres_id']);
 			$signee_names['undr_pres'] = $gpres['User']['name'];
-		} else
+		}
+		else
 		{
 			$signee_names['undr_pres'] = 'Unsigned';
 		}
@@ -804,7 +907,8 @@ class BillsController extends AppController
 		{
 			$gpres = $this -> User -> findBySgaId($data['undr_secr_id']);
 			$signee_names['undr_secr'] = $gpres['User']['name'];
-		} else
+		}
+		else
 		{
 			$signee_names['undr_secr'] = 'Unsigned';
 		}
@@ -812,7 +916,8 @@ class BillsController extends AppController
 		{
 			$gpres = $this -> User -> findBySgaId($data['vp_fina_id']);
 			$signee_names['vp_fina'] = $gpres['User']['name'];
-		} else
+		}
+		else
 		{
 			$signee_names['vp_fina'] = 'Unsigned';
 		}
@@ -821,7 +926,7 @@ class BillsController extends AppController
 
 	public function allocations($user_id = null)
 	{
-		$bills = $this -> Bill -> find('all' ,array('conditions' => array('submitter' => $user_id)));
+		$bills = $this -> Bill -> find('all', array('conditions' => array('submitter' => $user_id)));
 		// Hash::extract all of the bill ids
 		// find all of the line items
 		// sum the totals for each account

@@ -35,7 +35,7 @@ class OrganizationsController extends AppController
 		{
 			$dir = new Folder("../webroot/img/" . $orgs[$i]["organizations"]["id"], true, 0744);
 			$file = new File($dir -> pwd() . DS . $orgs[$i]["organizations"]["logo_name"], true, 0744);
-			$file -> write(utf8_decode($orgs[$i]['organizations']['logo']));
+			$file -> write(($orgs[$i]['organizations']['logo']));
 			$file -> close();
 		}
 	}
@@ -45,7 +45,7 @@ class OrganizationsController extends AppController
 	 */
 	public function getcharterFiles()
 	{
-		$orgs = $this -> Organization -> query("SELECT organization_id, name, file from charters where organization_id > 44723 and size != 0");
+		$orgs = $this -> Organization -> query("SELECT organization_id, name, file from charters where id between 900 and 1382 and size != 0");
 		for ($i = 0; $i < count($orgs); $i++)
 		{
 			$dir = new Folder();
@@ -227,6 +227,8 @@ class OrganizationsController extends AppController
 	 */
 	public function view($id = null)
 	{
+		$this -> set('isOfficer',$this -> isOfficer($id));
+		$this -> set('isMember',$this -> isMember($id));
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Please select an organization to view.');
@@ -307,6 +309,8 @@ class OrganizationsController extends AppController
 	 */
 	public function edit($id = null)
 	{
+		if(!($this -> isOfficer($id) || $this -> isLace()))
+		$this -> redirect($this -> referer());
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Please select an organization to view.');
@@ -406,6 +410,8 @@ class OrganizationsController extends AppController
 
 	public function addlogo($org_id = null)
 	{
+		if(!($this -> isOfficer($org_id) || $this -> isLace()))
+		$this -> redirect($this -> referer());
 		if ($this -> request -> is('post') && $this -> request -> data['File']['image']['size'] < 200000)
 		{
 			$dir = new Folder("../webroot/img/" . $org_id, true, 0744);

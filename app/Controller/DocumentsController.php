@@ -16,6 +16,8 @@ class DocumentsController extends AppController
 
 	public function index($id = null)
 	{
+		$this -> set('isOfficer', $this -> isOfficer($id));
+		$this -> set('isMember', $this -> isMember($id));
 		if ($id != null)
 		{
 			$this -> loadModel('Organization');
@@ -43,31 +45,37 @@ class DocumentsController extends AppController
 		}
 		if ($this -> request -> is('post'))
 		{
-			$dir = new Folder(APP . DS . "Documents" . DS . $id, true, 0744);
-			move_uploaded_file($this -> request -> data['Document']['submittedfile']['tmp_name'], APP . DS . "Documents" . DS . $id . DS . $this -> request -> data['Document']['submittedfile']['name']);
-
-			$data = array(
-				'org_id' => $id,
-				'name' => $this -> request -> data['Document']['submittedfile']['name'],
-				'path' => '',
-				'last_updated' => 'NOW()'
-			);
-			if ($this -> request -> is('post'))
+			if ($this -> request -> data['Document']['submittedfile']['file_size'] < 2500000)
 			{
-				$this -> Document -> create();
-				if ($this -> Document -> save($data))
+				$dir = new Folder(APP . DS . "Documents" . DS . $id, true, 0744);
+				move_uploaded_file($this -> request -> data['Document']['submittedfile']['tmp_name'], APP . DS . "Documents" . DS . $id . DS . $this -> request -> data['Document']['submittedfile']['name']);
+
+				$data = array(
+					'org_id' => $id,
+					'name' => $this -> request -> data['Document']['submittedfile']['name'],
+					'path' => '',
+					'last_updated' => 'NOW()'
+				);
+				if ($this -> request -> is('post'))
 				{
-					$this -> Session -> setFlash('The document has been successfully uploaded.');
-					$this -> redirect(array(
-						'action' => 'index',
-						$id
-					));
+					$this -> Document -> create();
+					if ($this -> Document -> save($data))
+					{
+						$this -> Session -> setFlash('The document has been successfully uploaded.');
+						$this -> redirect(array(
+							'action' => 'index',
+							$id
+						));
+					}
+					else
+					{
+						$this -> Session -> setFlash('The document failed to upload.');
+					}
 				}
-				else
-				{
-					$this -> Session -> setFlash('The document failed to upload.');
-				}
-			}
+			}else
+					{
+						$this -> Session -> setFlash('File size is larger than 2.5MB.');
+					}
 		}
 	}
 
@@ -77,6 +85,8 @@ class DocumentsController extends AppController
 	 */
 	public function delete($id)
 	{
+		if(!($this -> isOfficer($id) || $this -> isLace()))
+		$this -> redirect($this -> referer());
 		if (!$id)
 		{
 			$this -> Session -> setFlash(__('Invalid ID for document', true));
