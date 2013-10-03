@@ -345,6 +345,31 @@ class BillsController extends AppController
 			$this -> request -> data = $bill = $this -> Bill -> read();
 			$this -> setAuthorNames($bill['Authors']['grad_auth_id'], $bill['Authors']['undr_auth_id']);
 			$this -> set('bill', $this -> Bill -> read());
+			// Set the graduate authors drop down list
+			// for creating a new bill
+			$this -> loadModel('SgaPerson');
+			$sga_graduate = $this -> SgaPerson -> find('list', array(
+				'fields' => array('name_department'),
+				'conditions' => array(
+					'SgaPerson.status' => 'Active',
+					'house' => 'Graduate'
+				),
+				'recursive' => 0
+			));
+			$gradAuthors[''] = "Unknown";
+			$gradAuthors['SGA'] = $sga_graduate;
+			$this -> set('gradAuthors', $gradAuthors);
+			$sga_undergraduate = $this -> SgaPerson -> find('list', array(
+				'fields' => array('name_department'),
+				'conditions' => array(
+					'SgaPerson.status' => 'Active',
+					'house' => 'Undergraduate'
+				),
+				'recursive' => 0
+			));
+			$underAuthors[''] = "Unknown";
+			$underAuthors['SGA'] = $sga_undergraduate;
+			$this -> set('underAuthors', $underAuthors);
 		}
 		else
 		{

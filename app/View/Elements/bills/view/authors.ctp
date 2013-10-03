@@ -23,15 +23,17 @@ else
 {
 	$undr[] = $UnderAuthor['User']['name'] . " - Signed";
 }
-$rows = array(
-	$grad,
-	$undr,
-	array(
+$rows = array();
+if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Graduate')
+	$rows[] = $grad;
+if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Undergraduate')
+	$rows[] = $undr;
+$rows[] = array(
 		'Submitter',
 		$bill['Submitter']['name'],
 		""
-	),
-	array(
+);
+$rows[] = array(
 		'Organization',
 		$this -> Html -> link($bill['Organization']['name'], array(
 			'controller' => 'organizations',
@@ -39,11 +41,11 @@ $rows = array(
 			$bill['Organization']['id']
 		)),
 		""
-	)
 );
+
 if ($bill['Bill']['status'] < $AGENDA)
 {
-	if ($this -> Session -> read('Sga.id') == $bill['Authors']['grad_auth_id'])
+	if ($this -> Session -> read('Sga.id') == $bill['Authors']['grad_auth_id']  && ($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Graduate'))
 	{
 		if (!$bill['Authors']['grad_auth_appr'])
 		{
@@ -66,7 +68,7 @@ if ($bill['Bill']['status'] < $AGENDA)
 			));
 		}
 	}
-	if ($this -> Session -> read('Sga.id') == $bill['Authors']['undr_auth_id'])
+	if ($this -> Session -> read('Sga.id') == $bill['Authors']['undr_auth_id'] && ($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Undergraduate'))
 	{
 		if (!$bill['Authors']['undr_auth_appr'])
 		{

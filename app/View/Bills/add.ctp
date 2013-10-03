@@ -30,6 +30,8 @@ echo $this -> Form -> input('type', array(
 echo $this -> Form -> input('category', array(
 	'label' => 'Category',
 	'type' => 'select',
+	'id' => 'categoryChoice',
+	'onChange' => 'hideAuthors()',
 	'options' => array(
 		'Joint' => 'Joint',
 		'Graduate' => 'Graduate',
