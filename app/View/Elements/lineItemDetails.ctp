@@ -56,39 +56,43 @@ if ($lineitems != null)
 		}
 		else
 		{
-
-			if ($showEditAndDeleteButtons && $lineitem['LineItem']['state'] != 'Final' && $bill['Bill']['status'] < 6)
+			// MRE hack fix to permissions
+			if ($sga_exec && $lineitem['LineItem']['state'] != 'Final' && $bill['Bill']['status'] < 6)
 			{
-				$tableCells[] = $this -> Html -> link("Edit/Delete", array(
-					'controller' => 'LineItems',
-					'action' => 'edit',
-					$bill['Bill']['id'],
-					$lineitem['LineItem']['state']
-				));
-			}
-			if (!$lineitem['LineItem']['struck'] && !in_array($lineitem['LineItem']['state'], array(
-				'Submitted',
-				'Final'
-			)))
-			{
-				$tableCells[] = $this -> Html -> link("Strike", array(
-					'controller' => 'LineItems',
-					'action' => 'strikeLineItem',
-					$lineitem['LineItem']['id']
-				));
-				echo $this -> Html -> tableCells($tableCells);
-			}
-			else if (!in_array($lineitem['LineItem']['state'], array(
-				'Submitted',
-				'Final'
-			)))
-			{
-				$tableCells[] = $this -> Html -> link("Unstrike", array(
-					'controller' => 'LineItems',
-					'action' => 'unstrikeLineItem',
-					$lineitem['LineItem']['id']
-				));
-				echo $this -> Html -> tableCells($tableCells, array('id' => 'struck'), array('id' => 'struck'));
+					$tableCells[] = $this -> Html -> link("Edit/Delete", array(
+						'controller' => 'LineItems',
+						'action' => 'edit',
+						$bill['Bill']['id'],
+						$lineitem['LineItem']['state']
+					));
+				if (!$lineitem['LineItem']['struck'] && !in_array($lineitem['LineItem']['state'], array(
+					'Submitted',
+					'Final'
+				)))
+				{
+					$tableCells[] = $this -> Html -> link("Strike", array(
+						'controller' => 'LineItems',
+						'action' => 'strikeLineItem',
+						$lineitem['LineItem']['id']
+					));
+					echo $this -> Html -> tableCells($tableCells);
+				}
+				else if (!in_array($lineitem['LineItem']['state'], array(
+					'Submitted',
+					'Final'
+				)))
+				{
+					$tableCells[] = $this -> Html -> link("Unstrike", array(
+						'controller' => 'LineItems',
+						'action' => 'unstrikeLineItem',
+						$lineitem['LineItem']['id']
+					));
+					echo $this -> Html -> tableCells($tableCells, array('id' => 'struck'), array('id' => 'struck'));
+				}
+				else
+				{
+					echo $this -> Html -> tableCells($tableCells);
+				}
 			}
 			else
 			{

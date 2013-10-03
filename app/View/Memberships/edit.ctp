@@ -73,9 +73,9 @@ echo $this -> Form -> end('Submit');
 
 <script>
 	$(function() {
-		$("#start_date").datepicker();
-		$("#end_date").datepicker();
-		$("#dues_paid").datepicker();
+		$("#start_date").datepicker( { dateFormat: "yy-mm-dd" } );
+		$("#end_date").datepicker( { dateFormat: "yy-mm-dd" } );
+		$("#dues_paid").datepicker( { dateFormat: "yy-mm-dd" } );
 	}); 
 </script>
 <?php

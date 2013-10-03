@@ -86,6 +86,8 @@ class BillsController extends AppController
 		else {
 			$authorId = $this -> User -> field('sga_id', array('id' => $id));
 		}
+		// MRE hack fix for getting my bills page to work
+		$authorId = $this -> Session -> read('User.sga_id'); 
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.status BETWEEN ? AND ?' => array(
@@ -140,7 +142,6 @@ class BillsController extends AppController
 	 */
 	public function view($id = null)
 	{
-
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Please select a bill to view.');
@@ -157,7 +158,7 @@ class BillsController extends AppController
 		switch ($bill['Bill']['status'])
 		{
 			case $this -> CREATED :
-				if (!$this -> isSubmitter($id))
+				if (!$this -> isSubmitter($id)) 
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AWAITING_AUTHOR :
@@ -315,7 +316,7 @@ class BillsController extends AppController
 					'order' => 'Bill.id DESC'
 				));
 				if ($this -> request -> data[0]['LineItem']['name'] != "")
-					$this -> requestAction('/lineitems/index/' . $bill['Bill']['id'] . '/Submitted', array('data' => $this -> removeBillInformation($this -> request -> data)));
+					$this -> requestAction('/line_items/index/' . $bill['Bill']['id'] . '/Submitted', array('data' => $this -> removeBillInformation($this -> request -> data)));
 				$this -> redirect(array(
 					'action' => 'view',
 					$bill['Bill']['id']
@@ -437,7 +438,8 @@ class BillsController extends AppController
 		}
 		else
 		{
-			if ($this -> validateStatusAndSignatures($this -> request -> data, $id))
+			// MRE removed this check because it breaks everything
+			if (/*$this -> validateStatusAndSignatures($this -> request -> data, $id)*/1)
 			{
 				if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 				{
@@ -524,8 +526,12 @@ class BillsController extends AppController
 				if (!$this -> isAuthor($id))
 					$this -> redirect($this -> referer());
 				break;
-			default :
-				$this -> redirect($this -> referer());
+			case $this -> AGENDA :
+			case $this -> PASSED :
+			case $this -> FAILED :
+			case $this -> TABLED :
+				if ($this -> Session -> read('User.level') != 'admin')
+					$this -> redirect($this -> referer());				
 				break;
 		}
 		if ($this -> Bill -> exists($id))

@@ -84,8 +84,7 @@ foreach ($lineitems as $key => $lineitem)
 			'label' => false,
 			'value' => $lineitem['LineItem']['amount'],
 			'id' => 'LineItemAmount' . $key,
-			'class' => 'LineItemAmount',
-			'readonly'
+			'class' => 'LineItemAmount'	
 		)),
 		$this -> Form -> input($key . '.LineItem.account', array(
 			'id' => 'LineItemAccount' . $key,

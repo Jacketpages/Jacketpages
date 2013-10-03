@@ -156,12 +156,12 @@ class AppController extends Controller
 		return true;
 	}
 
-	private function getFiscalYear()
+	protected function getFiscalYear()
 	{
 		return substr($this -> calculateFiscalYearForDate(date('n/d/y')), -2);
 	}
 
-	private function calculateFiscalYearForDate($inputDate, $fyStart = "6/1/", $fyEnd = "5/31/")
+	protected function calculateFiscalYearForDate($inputDate, $fyStart = "6/1/", $fyEnd = "5/31/")
 	{
 		$date = strtotime($inputDate);
 		$inputyear = strftime('%y', $date);

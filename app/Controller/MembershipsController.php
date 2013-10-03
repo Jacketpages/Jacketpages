@@ -136,6 +136,7 @@ class MembershipsController extends AppController
 		{
 			$orgId = $this -> data['Membership']['org_id'];
 			$this -> Membership -> create();
+			$this -> Membership -> set('status','Active');
 			if ($this -> Membership -> save($this -> data))
 			{
 				$this -> Session -> setFlash(__('The membership has been saved.', true));

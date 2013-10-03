@@ -8,7 +8,6 @@ $this -> extend('/Common/budgets');
 $this -> assign('title', "FY 20$fiscalYear Budget Application for $orgName (Tier $tier)");
 $this -> Html -> addCrumb('Organization Information', $this->here);
 $this -> start('middle');
-
 echo $this -> Form -> create();
 echo $this -> Form -> hidden('id'); 
 echo $this -> Form -> hidden('treasurer_id', array('value' => isset($treasurer['User']['id']) ? $treasurer['User']['id'] : '')); 

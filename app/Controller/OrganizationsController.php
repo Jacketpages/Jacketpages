@@ -284,9 +284,10 @@ class OrganizationsController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			$this -> Organization -> create();
+			$this -> Organization -> set('addr_id', 1); //for stupid FK
 			if ($this -> Organization -> save($this -> request -> data))
 			{
-				$this -> setFlash('This organization has been created successfully.');
+				$this -> Session -> setFlash('This organization has been created successfully.');
 				$this -> redirect(array(
 					'action' => 'index',
 					$org_id
@@ -294,7 +295,7 @@ class OrganizationsController extends AppController
 			}
 			else
 			{
-				$this -> setFlash('This organization was not able to be created.');
+				$this -> Session -> setFlash('This organization was not able to be created.');
 				$this -> redirect(array(
 					'action' => 'index',
 					$org_id

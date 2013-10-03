@@ -28,8 +28,8 @@ echo $this -> Form -> input('title', array('label' => 'Title (default to Role na
 echo $this -> Form -> input('status', array(
 	'label' => 'Status',
 	'options' => array(
-		'Active',	
-		'Pending'
+		'Active' => 'Active',	
+		'Pending' => 'Pending'
 	)
 ));
 echo $this -> Form -> input('room_reserver', array(
@@ -59,9 +59,9 @@ echo $this -> Form -> end('Submit');
 
 <script type="text/javascript">
 	$(function() {
-		$("#start_date").datepicker();
-		$("#end_date").datepicker();
-		$("#dues_paid").datepicker();
+		$("#start_date").datepicker( { dateFormat: "yy-mm-dd" } );
+		$("#end_date").datepicker( { dateFormat: "yy-mm-dd" } );
+		$("#dues_paid").datepicker( { dateFormat: "yy-mm-dd" } );
 	}); 
 	
 	

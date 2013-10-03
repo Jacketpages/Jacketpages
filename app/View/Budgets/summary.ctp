@@ -27,7 +27,7 @@ foreach ($pageNames as $key => $pageName)
 echo $this -> Html -> tableEnd();
 echo "Last updated by $last_updated_by on $last_updated.";
 echo $this -> Form -> create('',array('onsubmit' => 'return finalBudgetSubmit()'));
-if($budgetSubmitted)
+if(!$budgetSubmitted)
 echo $this -> Form -> submit();
 ?>
 <script>

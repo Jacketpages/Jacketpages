@@ -124,7 +124,10 @@ class BudgetLineItemsController extends AppController
 			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
 		));
 		$this -> set('org_id', $org_id);
-		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array('id' => $budgetId))));
+		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array(
+			'conditions' => array(
+				'id' => $budgetId,
+				'state' => 'Submitted'))));
 		if ($oldBudgetId)
 		{
 			$oldAllocatedLineItems = $this -> BudgetLineItem -> findAllByBudgetIdAndState($oldBudgetId, 'Final', array(), array('line_number asc'));
