@@ -65,10 +65,10 @@ echo $this -> Form -> end('Submit');
 	}); 
 	
 	
-	$(document).ready(function() {
+	
 	$( "#userName" ).autocomplete({
 		minLength: 2,
-		source: '<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'lookupByName'), true); ?>',
+		source: '<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'lookupByName'), false); ?>',
 		focus: function( event, ui ) {
 			$( "#userName" ).val( ui.item.name );
 			return false;
@@ -85,7 +85,7 @@ echo $this -> Form -> end('Submit');
 			.append( "<a>" + item.name + " (" + item.gt_user_name + ")</a>")
 			.appendTo( ul );
 	};
-	});
+
 </script>
 
 <?php

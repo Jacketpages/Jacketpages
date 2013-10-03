@@ -126,6 +126,9 @@ class UsersController extends AppController
 
 	public function delete($id = null)
 	{
+		if (!($this -> Session -> read('User.level') == 'admin')) {
+			$this -> redirect($this -> referer());
+        }
 		if($id == null){
 			$this->Session->setFlash('Invalid request.');
 			$this->redirect(array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')));
@@ -291,11 +294,11 @@ class UsersController extends AppController
 		$this -> redirect($this -> Auth -> logout());
 	}
 
-	function lookupByName()
+	public function lookupByName()
 	{
 		$this->viewClass = 'Json';
 	
-		$input = mysql_real_escape_string($_REQUEST['term']);
+		$input = filter_var(($_REQUEST['term']), FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 		$p = $this -> User -> find('all', array(
 				'limit' => 5,
 				'recursive' => 0,
@@ -309,6 +312,7 @@ class UsersController extends AppController
 				'conditions' => array("or" => array(
 							'User.first_name LIKE' => '%' . $input . '%',
 							'User.last_name LIKE' => '%' . $input . '%',
+							'User.name LIKE' => '%' . $input . '%',
 							'User.gt_user_name LIKE' => '%' . $input . '%'
 					))
 		));
@@ -323,7 +327,6 @@ class UsersController extends AppController
 			);
 			next($p);
 		}
-		
 		$this->set('options', $options);
 		$this->set('_serialize', 'options');
 	}
