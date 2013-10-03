@@ -15,6 +15,7 @@ class BudgetLineItemsController extends AppController
 
 	public function edit($org_id = null)
 	{
+		debug($this -> request -> data);
 		if($org_id == null){
 			$this->Session->setFlash('Please select your organization to create a budget.');
 			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
@@ -103,7 +104,7 @@ class BudgetLineItemsController extends AppController
 						'state_2' => 1
 					)));
 			}
-			if (strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
+			if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 				$this -> redirect(array(
 					'controller' => 'budgets',
 					'action' => 'fundraising',

@@ -27,17 +27,17 @@ foreach ($liabilities as $key => $liability)
 {
 	echo $this -> Html -> tableCells(array( array(
 			$this -> Form -> input("$key.Liability.id", array(
-				'id' => 'AssetId' . $key,
+				'id' => 'LiabilityId' . $key,
 				'type' => 'hidden',
 				'value' => $liability['Liability']['id']
 			)) . $this -> Form -> input("$key.Liability.item", array(
 				'label' => false,
-				'id' => 'Item' . $key,
+				'id' => 'LItem' . $key,
 				'value' => $liability['Liability']['item']
 			)),
 			$this -> Form -> input("$key.Liability.amount", array(
 				'label' => false,
-				'id' => 'Amount' . $key,
+				'id' => 'LAmount' . $key,
 				'value' => $liability['Liability']['amount']
 			)),
 			'',

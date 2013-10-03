@@ -34,6 +34,6 @@ echo $this -> element('/budgets/liabilities');
 <?php
 
 echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
-echo $this -> Form -> submit('Save and Continue');
+echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));
 $this -> end();
 ?>

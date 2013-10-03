@@ -42,8 +42,8 @@ echo $this -> Form -> input('title', array('label' => 'Title (default to Role na
 echo $this -> Form -> input('status', array(
 	'label' => 'Status',
 	'options' => array(
-		'Active',	
-		'Pending'
+		'Active' => 'Active',	
+		'Pending' => 'Pending'
 	)
 ));
 echo $this -> Form -> input('room_reserver', array(

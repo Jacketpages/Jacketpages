@@ -250,30 +250,10 @@ class OrganizationsController extends AppController
 		}
 		$this -> set('organization', $this -> Organization -> read());
 		$this -> loadModel('Membership');
-		$president = $this -> Membership -> find('first', array('conditions' => array('AND' => array(
-					'Membership.org_id' => $id,
-					'Membership.role' => 'President',
-					'Membership.start_date LIKE' => '2011%'
-				)), ));
-		$this -> set('president', $president);
-		$treasurer = $this -> Membership -> find('first', array('conditions' => array('AND' => array(
-					'Membership.ORG_ID' => $id,
-					'Membership.ROLE' => 'Treasurer',
-					'Membership.START_DATE LIKE' => '2011%'
-				)), ));
-		$this -> set('treasurer', $treasurer);
-		$advisor = $this -> Membership -> find('first', array('conditions' => array('AND' => array(
-					'Membership.org_id' => $id,
-					'Membership.role' => 'Advisor',
-					'Membership.start_date LIKE' => '2011%'
-				)), ));
-		$this -> set('advisor', $advisor);
-		$officers = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
-					'Membership.org_id' => $id,
-					'Membership.role' => 'Officer',
-					'Membership.start_date LIKE' => '2011%'
-				)), ));
-		$this -> set('officers', $officers);
+		$this -> set('presidents', $this -> getMembers($id, array('President')));
+		$this -> set('treasurers', $this -> getMembers($id, array('Treasurer')));
+		$this -> set('advisors', $this -> getMembers($id, array('Advisor')));
+		$this -> set('officers', $this -> getMembers($id, array('Officer')));
 
 		//MRE moved all of this to just the roster page
 		/*$members = $this -> Membership -> find('all', array('conditions' => array('AND'
@@ -430,17 +410,17 @@ class OrganizationsController extends AppController
 		{
 			$dir = new Folder("../webroot/img/" . $org_id, true, 0744);
 			debug($dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]);
-			if(move_uploaded_file($this -> request -> data['File']['image']['tmp_name'], $dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]))
+			if (move_uploaded_file($this -> request -> data['File']['image']['tmp_name'], $dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]))
 			{
 				$this -> Organization -> id = $org_id;
-				$this -> Organization -> saveField('logo_path', '/img/' .$org_id . '/' . $this -> request -> data["File"]['image']["name"]);
+				$this -> Organization -> saveField('logo_path', '/img/' . $org_id . '/' . $this -> request -> data["File"]['image']["name"]);
 			}
 
 			$logo_path = $this -> Organization -> field('logo_path', array('id' => $org_id));
-			if (strcmp($logo_path, '/img/default_logo.gif') && strcmp($logo_path, '/img/' .$org_id. DS . $this -> request -> data["File"]['image']["name"]))
+			if (strcmp($logo_path, '/img/default_logo.gif') && strcmp($logo_path, '/img/' . $org_id . DS . $this -> request -> data["File"]['image']["name"]))
 			{
-			$webroot = new Folder("../webroot/".$org_id. "/");
-				$file = new File($webroot -> pwd(). $logo_path);
+				$webroot = new Folder("../webroot/" . $org_id . "/");
+				$file = new File($webroot -> pwd() . $logo_path);
 				$file -> delete();
 			}
 			$this -> redirect('/organizations/view/' . $org_id);

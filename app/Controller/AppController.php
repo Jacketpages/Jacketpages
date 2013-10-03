@@ -154,12 +154,12 @@ class AppController extends Controller
 		return true;
 	}
 
-	function getFiscalYear()
+	public function getFiscalYear()
 	{
 		return substr($this -> calculateFiscalYearForDate(date('n/d/y')), -2);
 	}
 
-	function calculateFiscalYearForDate($inputDate, $fyStart = "6/1/", $fyEnd = "5/31/")
+	public function calculateFiscalYearForDate($inputDate, $fyStart = "6/1/", $fyEnd = "5/31/")
 	{
 		$date = strtotime($inputDate);
 		$inputyear = strftime('%y', $date);
@@ -179,7 +179,7 @@ class AppController extends Controller
 	}
 
 	// A function to return the Roman Numeral, given an integer
-	function roman_numerals($num)
+	public function roman_numerals($num)
 	{
 		// Make sure that we only use the integer portion of the value
 		$n = intval($num);
@@ -216,6 +216,58 @@ class AppController extends Controller
 
 		// The Roman numeral should be built, return it
 		return $result;
+	}
+
+	public function isOfficer($org_id)
+	{
+		$this -> loadModel('Membership');
+		return in_array($this -> Membership -> field('role', array('org_id' => $org_id)), array(
+			'Officer',
+			'President',
+			'Treasurer',
+			'Advisor'
+		));
+	}
+
+	public function isMember($org_id)
+	{
+		$this -> loadModel('Membership');
+		return (strcmp($this -> Membership -> field('role', array('org_id' => $org_id)), 'Member') == 0);
+	}
+
+	public function getMembers($org_id = null, $roles = array(), $single = false, $statuses = array('Active'))
+	{
+		$this -> loadModel('Membership');
+		$members = null;
+		if (isset($org_id) && count($roles))
+		{
+			$db = ConnectionManager::getDataSource('default');
+			if (!$single)
+			{
+				$members = $this -> Membership -> find('all', array('conditions' => array('AND' => array(
+							'Membership.org_id' => $org_id,
+							'Membership.role' => $roles,
+							'Membership.status' => $statuses,
+							'OR' => array(
+								$db -> expression('Membership.end_date >= NOW()'),
+								'Membership.end_date' => null
+							)
+						)) ));
+			}
+			else
+			{
+				$members = $this -> Membership -> find('first', array('conditions' => array('AND' => array(
+							'Membership.org_id' => $org_id,
+							'Membership.role' => $roles,
+							'Membership.status' => $statuses,
+							'OR' => array(
+								$db -> expression('Membership.end_date >= NOW()'),
+								'Membership.end_date' => null
+							)
+						)),'order' => 'Membership.start_date desc' ));
+			}
+		}
+		return $members;
 	}
 
 }

@@ -87,7 +87,7 @@ echo $this -> Html -> tableCells(array(array(
 )), array(), array('id' => 'TotalRow'));
 echo $this -> Html -> tableEnd();
 echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
-echo $this -> Form -> submit('Save and Continue');
+echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));
 echo "<script>updateTotal();</script>";
 $this -> end();
 ?>

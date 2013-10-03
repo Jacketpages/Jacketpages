@@ -5,7 +5,6 @@
  */
 
 echo $this -> Html -> div();
-echo $this -> Form -> create();
 //, array('onsubmit' => 'return validateForm()'));
 $tableId = 'BudgetLineItemsTable' . $num;
 echo $this -> Html -> tableBegin(array(

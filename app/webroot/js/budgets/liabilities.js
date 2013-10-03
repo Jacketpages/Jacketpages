@@ -45,18 +45,18 @@ function lmove(pos, moveTo)
 	{
 		// Save the values from the current row
 		var id = get("LiabilityId" + pos).value;
-		var item = get("Item" + pos).value;
-		var expense = get("Amount" + pos).value;
+		var item = get("LItem" + pos).value;
+		var expense = get("LAmount" + pos).value;
 
 		// Set the values of the current row to the row that of the row being moved to
 		get("LiabilityId" + pos).value = get("LiabilityId" + moveTo).value;
-		get("Item" + pos).value = get("Item" + moveTo).value;
-		get("Amount" + pos).value = get("Amount" + moveTo).value;
+		get("LItem" + pos).value = get("LItem" + moveTo).value;
+		get("LAmount" + pos).value = get("LAmount" + moveTo).value;
 
 		// Set the row being moved to, to the values of the current row
 		get("LiabilityId" + moveTo).value = id;
-		get("Item" + moveTo).value = item;
-		get("Amount" + moveTo).value = expense;
+		get("LItem" + moveTo).value = item;
+		get("LAmount" + moveTo).value = expense;
 	}
 }
 
@@ -97,7 +97,6 @@ function ldeleteRow(pos)
 	if (table.rows.length != 2)
 	{
 		table.deleteRow(pos);
-		lcorrectNumbers();
 	}
 	else
 	{
@@ -110,6 +109,7 @@ function ldeleteRow(pos)
 			}
 		}
 	}
+		lcorrectNumbers();
 }
 
 /**
@@ -132,10 +132,10 @@ function lcorrectNumbers()
 		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[Budget][" + i + "][Liability][item]");
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", "Amount" + i);
 		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[Budget][" + i + "][Liability][amount]");
-		cells[2].getElementsByTagName("button")[0].setAttribute("onclick", "lmoveUp(" + i + ")");
-		cells[3].getElementsByTagName("button")[0].setAttribute("onclick", "lmoveDown(" + i + ")");
-		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "laddRow(" + i + ")");
-		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "ldeleteRow(" + i + ")");
+		cells[3].getElementsByTagName("button")[0].setAttribute("onclick", "lmoveUp(" + i + ")");
+		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "lmoveDown(" + i + ")");
+		cells[5].getElementsByTagName("button")[0].setAttribute("onclick", "laddRow(" + i + ")");
+		cells[6].getElementsByTagName("button")[0].setAttribute("onclick", "ldeleteRow(" + i + ")");
 
 	}
 }

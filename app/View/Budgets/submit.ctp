@@ -5,36 +5,36 @@
  */
 
 $this -> extend('/Common/budgets');
-$this -> assign('title', "FY $fiscalYear Budget Application for $orgName (Tier $tier)");
+$this -> assign('title', "FY 20$fiscalYear Budget Application for $orgName (Tier $tier)");
 $this -> Html -> addCrumb('Organization Information', $this->here);
 $this -> start('middle');
 
 echo $this -> Form -> create();
 echo $this -> Form -> hidden('id'); 
-echo $this -> Form -> hidden('treasurer_id', array('value' => $treasurer['User']['id'])); 
-echo $this -> Form -> hidden('advisor_id',array('value' => $advisor['User']['id'])); 
-echo $this -> Form -> hidden('president_id',array('value' => $president['User']['id']));
+echo $this -> Form -> hidden('treasurer_id', array('value' => isset($treasurer['User']['id']) ? $treasurer['User']['id'] : '')); 
+echo $this -> Form -> hidden('advisor_id',array('value' => isset($advisor['User']['id']) ? $advisor['User']['id'] : '')); 
+echo $this -> Form -> hidden('president_id',array('value' => isset($president['User']['id']) ? $president['User']['id'] : ''));
 echo $this -> Form -> hidden('member_count',array('value' => $member_count)); 
 echo $this -> Form -> hidden('fiscal_year', array('value' => '20' . $fiscalYear));
 echo $this -> Form -> hidden('org_id', array('value' => $organization['Organization']['id']));
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableCells(array(array(
 	array('President', array('width'=>'100px')),
-	$president['User']['name'],
+	(isset($president['User']['name'])) ? $president['User']['name']: 'Missing',
 	array('Email', array('width'=>'70px')),
-	$this->Text->autoLinkEmails($president['User']['email'])
+	$this->Text->autoLinkEmails((isset($president['User']['email'])) ? $president['User']['email']: 'Missing')
 )));
 echo $this -> Html -> tableCells(array(
 	'Treasurer',
-	$treasurer['User']['name'],
+	(isset($treasurer['User']['name'])) ? $treasurer['User']['name']: 'Missing',
 	'Email',
-	$this->Text->autoLinkEmails($treasurer['User']['email'])
+	$this->Text->autoLinkEmails((isset($treasurer['User']['email'])) ? $treasurer['User']['email']: 'Missing')
 ));
 echo $this -> Html -> tableCells(array(
 	'Advisor',
-	$advisor['User']['name'],
+	(isset($advisor['User']['name'])) ? $advisor['User']['name']: 'Missing',
 	'Email',
-	$this->Text->autoLinkEmails($advisor['User']['email'])
+	$this->Text->autoLinkEmails((isset($advisor['User']['email'])) ? $advisor['User']['email']: 'Missing')
 ));
 echo $this -> Html -> tableEnd();
 

@@ -8,7 +8,7 @@ $this -> extend('/Common/budgets');
 $this -> assign('title', "FY 20$fiscalYear Budget Submission Summary");
 $this -> Html -> addCrumb('Budget Submission Summary', $this->here);
 $pageNames = array(
-	'Past Organization Information',
+	'Organization Information',
 	'Budget Line Items',
 	'Revenue Generated From Fundraising',
 	'Non-Student Activity Fee Expenses',
@@ -27,6 +27,7 @@ foreach ($pageNames as $key => $pageName)
 echo $this -> Html -> tableEnd();
 echo "Last updated by $last_updated_by on $last_updated.";
 echo $this -> Form -> create('',array('onsubmit' => 'return finalBudgetSubmit()'));
+if($budgetSubmitted)
 echo $this -> Form -> submit();
 ?>
 <script>

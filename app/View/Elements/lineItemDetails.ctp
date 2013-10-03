@@ -148,7 +148,7 @@ else
 		{
 			echo "Copy line items from $input state or " . $this -> Html -> link("add new line items.", array(
 				'controller' => 'LineItems',
-				'action' => 'edit',
+				'action' => 'index',
 				$bill['Bill']['id'],
 				$form_state
 			));

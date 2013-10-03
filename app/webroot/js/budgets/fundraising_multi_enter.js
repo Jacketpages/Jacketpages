@@ -145,11 +145,15 @@ function correctNumbers(tableId, num)
 		var cells = rows[i + 1].cells;
 		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "FundraiserId" + i);
 		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][id]");
+		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "FundraiserType" + i);
+		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][type]");
+		cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "FundraiserId" + i);
+		cells[0].getElementsByTagName("input")[1].setAttribute("value", category);
 		cells[0].getElementsByTagName("textarea")[0].setAttribute("id", num + "Activity" + i);
 		cells[0].getElementsByTagName("textarea")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][activity]");
 		cells[1].getElementsByTagName("input")[0].setAttribute("id", num + "Date" + i);
-		$('#' + num + "Date" + i).datepicker({dateFormat:'yy-mm-dd'});
 		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][date]");
+		$('#' + num + "Date" + i).removeClass('hasDatepicker').datepicker({dateFormat:'yy-mm-dd'});
 		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "Revenue" + i);
 		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][Fundraiser][revenue]");
 		cells[3].getElementsByTagName("button")[0].setAttribute("onclick", "moveUp('" + tableId + "'," + i + ")");

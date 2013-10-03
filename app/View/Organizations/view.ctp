@@ -38,11 +38,11 @@ if ($orgEditPerm)
 		$organization['Organization']['id']
 	));
 	$sidebar[] = $this -> Html -> link(__('Submit Budget', true), array(
-	'controller' => 'budgets',
-	'action' => 'submit',
-	$organization['Organization']['id']
+		'controller' => 'budgets',
+		'action' => 'submit',
+		$organization['Organization']['id']
 	));
-	
+
 }
 if ($orgViewDocumentsPerm)
 {
@@ -82,7 +82,6 @@ if ($orgAdminPerm)
 	), array('style' => 'color:red'), __('Are you sure you want to delete %s?', $organization['Organization']['name']));
 }
 
-
 echo $this -> Html -> nestedList($sidebar, array());
 $this -> end();
 
@@ -95,33 +94,42 @@ $this -> start('middle');
 	<?php
 	echo $this -> Html -> tag('h1', 'Officers:');
 	echo $this -> Html -> tableBegin(array('class' => 'listing'));
-	if (isset($president['Membership']))
+	foreach ($presidents as $president)
 	{
-		echo $this -> Html -> tableCells(array(
-			$this -> Html -> link($president['Membership']['name'],'mailto:'.$president['User']['email']),
-			$president['Membership']['title']
-		));
+		if (isset($president['Membership']))
+		{
+			echo $this -> Html -> tableCells(array(
+				$this -> Html -> link($president['Membership']['name'], 'mailto:' . $president['User']['email']),
+				(!strcmp($president['Membership']['title'], $president['Membership']['role'])) ? $president['Membership']['title'] : $president['Membership']['title'] . " (" . $president['Membership']['role'] . ")"
+			));
+		}
 	}
-	if (isset($treasurer['Membership']))
+	foreach ($treasurers as $treasurer)
 	{
-		echo $this -> Html -> tableCells(array(
-			$this -> Html -> link($treasurer['Membership']['name'],'mailto:'.$treasurer['User']['email']),
-			$treasurer['Membership']['title']
-		));
+		if (isset($treasurer['Membership']))
+		{
+			echo $this -> Html -> tableCells(array(
+				$this -> Html -> link($treasurer['Membership']['name'], 'mailto:' . $treasurer['User']['email']),
+				(!strcmp($treasurer['Membership']['title'], $treasurer['Membership']['role'])) ? $treasurer['Membership']['title'] : $treasurer['Membership']['title'] . " (" . $treasurer['Membership']['role'] . ")"
+			));
+		}
 	}
-	if (isset($advisor['Membership']))
+	foreach ($advisors as $advisor)
 	{
-		echo $this -> Html -> tableCells(array(
-			$this -> Html -> link($advisor['Membership']['name'],'mailto:'.$advisor['User']['email']),
-			$advisor['Membership']['title']
-		));
+		if (isset($advisor['Membership']))
+		{
+			echo $this -> Html -> tableCells(array(
+				$this -> Html -> link($advisor['Membership']['name'], 'mailto:' . $advisor['User']['email']),
+				(!strcmp($advisor['Membership']['title'], $advisor['Membership']['role'])) ? $advisor['Membership']['title'] : $advisor['Membership']['title'] . " (" . $advisor['Membership']['role'] . ")"
+			));
+		}
 	}
 	foreach ($officers as $officer)
 	{
 		if (isset($officer['Membership']))
 		{
 			echo $this -> Html -> tableCells(array(
-				$this -> Html -> link($officer['Membership']['name'],'mailto:'.$officer['User']['email']),
+				$this -> Html -> link($officer['Membership']['name'], 'mailto:' . $officer['User']['email']),
 				$officer['Membership']['title']
 			));
 		}
@@ -141,7 +149,7 @@ $this -> start('middle');
 	echo $this -> Html -> para('leftalign', $organization['Organization']['description']);
 	echo $this -> Html -> nestedList(array(
 		'Status: ' . $organization['Organization']['status'],
-		'Organization Contact: ' . $this -> Html -> link($organization['User']['name'],$organization['User']['email']),
+		'Organization Contact: ' . $this -> Html -> link($organization['User']['name'], $organization['User']['email']),
 		'External Website: ' . $this -> Html -> link($organization['Organization']['website']),
 		'Meetings: ' . $organization['Organization']['meeting_information']
 	), array('id' => 'description'));

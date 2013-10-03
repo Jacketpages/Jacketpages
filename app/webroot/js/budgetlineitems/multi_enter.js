@@ -52,6 +52,7 @@ function move(tableId, pos, moveTo)
 		var oldAllocationAmount = get(unique + "OldAllocationAmount" + pos).value;
 		var oldRequestedId = get(unique + "OldRequestedId" + pos).value;
 		var oldRequestedAmount = get(unique + "OldRequestedAmount" + pos).value;
+		var diff = get(unique + 'difference' + pos).innerHTML;
 
 		// Set the values of the current row to the row that of the row being moved to
 		get(unique + "BudgetLineItemId" + pos).value = get(unique + "BudgetLineItemId" + moveTo).value;
@@ -61,6 +62,7 @@ function move(tableId, pos, moveTo)
 		get(unique + "OldRequestedAmount" + pos).value = get(unique + "OldRequestedAmount" + moveTo).value;
 		get(unique + "OldAllocationId" + pos).value = get(unique + "OldAllocationId" + moveTo).value;
 		get(unique + "OldAllocationAmount" + pos).value = get(unique + "OldRequestedAmount" + moveTo).value;
+		get(unique + "difference" + pos).innerHTML = get(unique + "difference" + moveTo).innerHTML;
 
 		// Set the row being moved to, to the values of the current row
 		get(unique + "BudgetLineItemId" + moveTo).value = id;
@@ -70,6 +72,7 @@ function move(tableId, pos, moveTo)
 		get(unique + "OldAllocationAmount" + moveTo).value = oldAllocationAmount;
 		get(unique + "OldRequestedId" + moveTo).value = oldRequestedId;
 		get(unique + "OldRequestedAmount" + moveTo).value = oldRequestedAmount;
+		get(unique + "difference" + moveTo).value = diff;
 	}
 }
 

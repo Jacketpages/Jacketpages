@@ -5,7 +5,7 @@
 		if($budgetSubmitted)
 		{
 			echo $this -> Html -> nestedList(array(
-				$this -> Html -> link('Past Organization Information', array('controller' => 'budgets','action' => 'submit',$org_id)),
+				$this -> Html -> link('Organization Information', array('controller' => 'budgets','action' => 'submit',$org_id)),
 				$this -> Html -> link('Budget Line Items', array('controller' => 'budgetlineitems','action' => 'edit',$org_id)),
 				$this -> Html -> link('Fundraising', array('controller' => 'budgets','action' => 'fundraising',$org_id)),
 				$this -> Html -> link('Expenses', array('controller' => 'budgets','action' => 'expenses',$org_id)),

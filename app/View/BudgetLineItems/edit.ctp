@@ -16,6 +16,7 @@ each expense. Be as specific as possible about for your own sake; large and ambi
 amounts look suspicious and are more likely to be cut! For travel expenses, please include 
 the round-trip mileage from http://maps.google.com/
 ');
+echo $this -> Form -> create();
 echo $this -> element('budgetLineItems/multi_enter');
 echo "</br>";
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
