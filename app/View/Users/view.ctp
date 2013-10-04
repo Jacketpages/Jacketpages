@@ -61,11 +61,12 @@ echo $this -> Html -> tag('h1', 'Executive Positions');
 	echo $this -> Html -> tableHeaders(array(
 		'Organization',
 		'Title',
-		'Start Date'
+		'Start Date',
+		'End Date'
 	));
 	foreach ($memberships as $membership)
 	{
-		if ($membership['Membership']['title'] != 'Member')
+		if ($membership['Membership']['role'] != 'Member')
 		{
 			echo $this -> Html -> tableCells(array(
 				$this -> Html -> link($membership['Organization']['name'], array(
@@ -74,7 +75,8 @@ echo $this -> Html -> tag('h1', 'Executive Positions');
 					$membership['Organization']['id']
 				)),
 				$membership['Membership']['title'],
-				$membership['Membership']['start_date']
+				$membership['Membership']['start_date'],
+				$membership['Membership']['end_date']
 			));
 		}
 	}
@@ -88,11 +90,12 @@ echo $this -> Html -> tag('h1', 'General Affiliations');
 	echo $this -> Html -> tableHeaders(array(
 		'Organization',
 		'Title',
-		'Start Date'
+		'Start Date',
+		'End Date'
 	));
 	foreach ($memberships as $membership)
 	{
-		if ($membership['Membership']['title'] == 'Member')
+		if ($membership['Membership']['role'] == 'Member')
 		{
 			echo $this -> Html -> tableCells(array(
 				$this -> Html -> link($membership['Organization']['name'], array(
@@ -101,7 +104,8 @@ echo $this -> Html -> tag('h1', 'General Affiliations');
 					$membership['Organization']['id']
 				)),
 				$membership['Membership']['title'],
-				$membership['Membership']['start_date']
+				$membership['Membership']['start_date'],
+				$membership['Membership']['end_date']
 			));
 		}
 	}

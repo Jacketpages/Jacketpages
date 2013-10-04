@@ -172,3 +172,5 @@ app/webroot/img/3*
 app/webroot/img/4*
 app/webroot/coverage
 app/webroot/files
+app/Vendor/CAS*
+app/webroot/phpCAS.log

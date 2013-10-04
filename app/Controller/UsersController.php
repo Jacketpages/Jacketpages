@@ -13,7 +13,7 @@ class UsersController extends AppController
 {
 	/**
 	 * Overidden $components, $helpers, and $uses
-	 */
+	 */	 
 	public $helpers = array(
 		'Html',
 		'Form',
@@ -95,16 +95,17 @@ class UsersController extends AppController
 		$this -> loadModel('Membership');
 		$memberships = $this -> Membership -> find('all', array(
 			'conditions' => array('AND' => array(
-					'Membership.user_id' => $id,
-					'Membership.end_date =' => '0000-00-00'
+					'Membership.user_id' => $id
 				)),
 			'fields' => array(
 				'Organization.name',
 				'Organization.id',
 				'Membership.role',
 				'Membership.title',
-				'Membership.start_date'
-			)
+				'Membership.start_date',
+				'Membership.end_date'
+			),
+			'order' => 'end_date asc'
 		));
 		$this -> set('memberships', $memberships);
 	}
@@ -142,9 +143,10 @@ class UsersController extends AppController
 
 	public function delete($id = null)
 	{
-		if (!($this -> Session -> read('User.level') == 'admin')) {
+		if (!($this -> Session -> read('User.level') == 'admin'))
+		{
 			$this -> redirect($this -> referer());
-        }
+		}
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Invalid request.');
@@ -220,41 +222,6 @@ class UsersController extends AppController
 	}
 
 	/**
-	 * Logs in a User using Georgia Tech's CAS login system.
-	 * Writes often used User variables to the Session.
-	 */
-	public function login()
-	{
-		// Set debug mode
-		phpCAS::setDebug();
-		//Initialize phpCAS
-		phpCAS::client(CAS_VERSION_2_0, Configure::read('CAS.hostname'), Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
-		// No SSL validation for the CAS server
-		phpCAS::setNoCasServerValidation();
-		// Force CAS authentication if required
-		phpCAS::forceAuthentication();
-		$gtUsername = phpCAS::getUser();
-		$user = $this -> User -> find('first', array('conditions' => array('User.gt_user_name' => $gtUsername)));
-		if (!empty($user))
-		{
-			$this -> Session -> write('User.gt_user_name', $gtUsername);
-			$this -> Session -> write('Auth.User', $user['User']['level']);
-			$this -> Session -> write('User.name', $user['User']['name']);
-			$this -> Session -> write('User.level', $user['User']['level']);
-			$this -> Session -> write('User.id', $user['User']['id']);
-			$this -> Session -> write('Sga.id', $user['User']['sga_id']);
-		}
-		else
-		{
-			$this -> Session -> write('User.level', 'student');
-			$this -> Session -> write('User.gt_user_name', $gtUsername);
-			$this -> Session -> write('Auth.User', 'student');
-		}
-		$this -> redirect($this -> Auth -> redirect());
-
-	}
-
-	/**
 	 * Logs a User into JacketPages using Cakephp's Auth Component
 	 * with no interfacing with CAS
 	 */
@@ -287,6 +254,41 @@ class UsersController extends AppController
 	}
 
 	/**
+	 * Logs in a User using Georgia Tech's CAS login system.
+	 * Writes often used User variables to the Session.
+	 */
+	public function login()
+	{
+		//Set debug mode
+		phpCAS::setDebug();
+		//Initialize phpCAS
+		phpCAS::client(CAS_VERSION_2_0, Configure::read('CAS.hostname'), Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
+		// No SSL validation for the CAS server
+		phpCAS::setNoCasServerValidation();
+		// Force CAS authentication if required
+		phpCAS::forceAuthentication();
+		$gtUsername = phpCAS::getUser();
+		$user = $this -> User -> find('first', array('conditions' => array('User.gt_user_name' => $gtUsername)));
+		if (!empty($user))
+		{
+			$this -> Session -> write('User.gt_user_name', $gtUsername);
+			$this -> Session -> write('Auth.User', $user['User']['level']);
+			$this -> Session -> write('User.name', $user['User']['name']);
+			$this -> Session -> write('User.level', $user['User']['level']);
+			$this -> Session -> write('User.id', $user['User']['id']);
+			$this -> Session -> write('Sga.id', $user['User']['sga_id']);
+		}
+		else
+		{
+			$this -> Session -> write('User.level', 'student');
+			$this -> Session -> write('User.gt_user_name', $gtUsername);
+			$this -> Session -> write('Auth.User', 'student');
+		}
+		$this -> redirect($this -> Auth -> redirect());
+
+	}
+
+	/**
 	 * Logs a User out of JacketPages using Cakephp's Auth Component
 	 * with no interfacing with CAS
 	 */
@@ -294,30 +296,36 @@ class UsersController extends AppController
 	{
 		CakeLog::info("Logging out user: " . $this -> Session -> read('User.gt_user_name'));
 		$this -> Session -> destroy();
+		phpCAS::client(CAS_VERSION_2_0, Configure::read('CAS.hostname'), Configure::read('CAS.port'), Configure::read('CAS.uri'), false);
+		phpCAS::setNoCasServerValidation();
+		if (phpCAS::isAuthenticated())
+		{
+			phpCAS::logout(array('url' => 'http://jacketpages.gatech.edu'));
+		}
 		$this -> redirect($this -> Auth -> logout());
 	}
 
 	public function lookupByName()
 	{
-		$this->viewClass = 'Json';
-	
+		$this -> viewClass = 'Json';
+
 		$input = filter_var(($_REQUEST['term']), FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 		$p = $this -> User -> find('all', array(
-				'limit' => 5,
-				'recursive' => 0,
-				'fields' => array(
-						'User.first_name',
-						'User.last_name',
-						'User.id',
-						'User.gt_user_name',
-						'User.email'
-				),
-				'conditions' => array("or" => array(
-							'User.first_name LIKE' => '%' . $input . '%',
-							'User.last_name LIKE' => '%' . $input . '%',
-							'User.name LIKE' => '%' . $input . '%',
-							'User.gt_user_name LIKE' => '%' . $input . '%'
-					))
+			'limit' => 5,
+			'recursive' => 0,
+			'fields' => array(
+				'User.first_name',
+				'User.last_name',
+				'User.id',
+				'User.gt_user_name',
+				'User.email'
+			),
+			'conditions' => array("or" => array(
+					'User.first_name LIKE' => '%' . $input . '%',
+					'User.last_name LIKE' => '%' . $input . '%',
+					'User.name LIKE' => '%' . $input . '%',
+					'User.gt_user_name LIKE' => '%' . $input . '%'
+				))
 		));
 		$options = array();
 		while ($user = current($p))
@@ -330,8 +338,9 @@ class UsersController extends AppController
 			);
 			next($p);
 		}
-		$this->set('options', $options);
-		$this->set('_serialize', 'options');
+		$this -> set('options', $options);
+		$this -> set('_serialize', 'options');
 	}
+
 }
 ?>
