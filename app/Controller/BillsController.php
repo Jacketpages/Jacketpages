@@ -408,7 +408,7 @@ class BillsController extends AppController
 			case $this -> FAILED :
 			case $this -> TABLED :
 			case $this -> CONFERENCE :
-				if ($this -> isSGA())
+				if (!$this -> isSGA())
 					$this -> redirect($this -> referer());
 				break;
 		}
@@ -719,8 +719,8 @@ class BillsController extends AppController
 
 	public function votes($bill_id = null, $organization = null, $votes_id = null)
 	{
-		$state = $this -> Bill -> field('status', array('id' => $bill_id));
-		if ($this -> isSGA() && $state == $this -> AGENDA)
+		$state = $this -> Bill -> field('status', array('id' => $bill_id));		
+		if ($this -> isSGA() && $state >= $this -> AGENDA)
 		{
 			if ($bill_id == null || $organization == null || $votes_id == null)
 			{
@@ -782,7 +782,8 @@ class BillsController extends AppController
 				}
 			}
 		}
-		$this -> redirect($this -> referer());
+		//MRE don't know why this redirect is here as it won't ever let you got to the page
+		//$this -> redirect($this -> referer());
 	}
 
 	public function putOnAgenda($id)

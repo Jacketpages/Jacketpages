@@ -49,7 +49,7 @@ else if ($bill['Bill']['status'] == $AUTHORED && $sga_exec
 		$bill['Bill']['id']
 	));
 }
-else if ($bill['Bill']['status'] == $AGENDA && $sga_exec
+if ($bill['Bill']['status'] == $AGENDA && $sga_exec
 		|| $admin)
 {
 	if (strcmp($bill['Bill']['category'], 'Graduate') == 0
@@ -71,7 +71,7 @@ else if ($bill['Bill']['status'] == $AGENDA && $sga_exec
 			$bill['UHR']['id']
 		));
 }
-if ($bill['Bill']['status'] == $CONFERENCE && $sga_exec
+else if ($bill['Bill']['status'] == $CONFERENCE && $sga_exec
 		|| $admin)
 {
 	if (strcmp($bill['Bill']['category'], 'Joint') == 0

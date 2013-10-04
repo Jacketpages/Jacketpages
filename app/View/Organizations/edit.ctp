@@ -74,13 +74,29 @@ echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));
 	<?php
 	if ($lace)
 	{
-		echo $this -> Form -> input('aadipf_date', array(
+		echo $this -> Form -> input('alcohol_form', array(
 			'type' => 'text',
 			'minYear' => date("Y") - 1,
 			'maxYear' => date("Y"),
 			'dateFormat' => 'MDY',
 			'label' => 'Acknowledgement of Alcohol & Illegal Drug Policy Form Date',
-			'id' => 'forms'
+			'id' => 'forms1'
+		));
+		echo $this -> Form -> input('advisor_date', array(
+			'type' => 'text',
+			'minYear' => date("Y") - 1,
+			'maxYear' => date("Y"),
+			'dateFormat' => 'MDY',
+			'label' => 'Roles and Responsibilities of Advisors Form Date',
+			'id' => 'forms2'
+		));
+		echo $this -> Form -> input('constitution_date', array(
+			'type' => 'text',
+			'minYear' => date("Y") - 1,
+			'maxYear' => date("Y"),
+			'dateFormat' => 'MDY',
+			'label' => 'Constitution Form Date',
+			'id' => 'forms3'
 		));
 	}
 	?>
@@ -89,7 +105,9 @@ echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));
 <?php echo $this -> Form -> end(__('Submit', true)); ?>
 <script>
 	$(function(){	
-		$("#forms").datepicker( { dateFormat: "yy-mm-dd" } );		
+		$("#forms1").datepicker( { dateFormat: "yy-mm-dd" } );
+		$("#forms2").datepicker( { dateFormat: "yy-mm-dd" } );
+		$("#forms3").datepicker( { dateFormat: "yy-mm-dd" } );		
 	});
 	
 
