@@ -13,7 +13,7 @@ class UsersController extends AppController
 {
 	/**
 	 * Overidden $components, $helpers, and $uses
-	 */
+	 */	 
 	public $helpers = array(
 		'Html',
 		'Form',
@@ -95,16 +95,17 @@ class UsersController extends AppController
 		$this -> loadModel('Membership');
 		$memberships = $this -> Membership -> find('all', array(
 			'conditions' => array('AND' => array(
-					'Membership.user_id' => $id,
-					'Membership.end_date =' => '0000-00-00'
+					'Membership.user_id' => $id
 				)),
 			'fields' => array(
 				'Organization.name',
 				'Organization.id',
 				'Membership.role',
 				'Membership.title',
-				'Membership.start_date'
-			)
+				'Membership.start_date',
+				'Membership.end_date'
+			),
+			'order' => 'end_date asc'
 		));
 		$this -> set('memberships', $memberships);
 	}

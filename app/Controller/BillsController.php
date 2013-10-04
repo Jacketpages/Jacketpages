@@ -112,11 +112,18 @@ class BillsController extends AppController
 		// If given a user's id then filter to show only that user's bills
 		if ($id != null)
 		{
-			$this -> set('bills', $this -> paginate('Bill', array('OR' => array(
-					array('submitter' => $id),
-					array('Authors.grad_auth_id' => $authorId),
-					array('Authors.undr_auth_id' => $authorId)
-				))));
+			if (strlen($authorId) != 0)
+			{
+				$this -> set('bills', $this -> paginate('Bill', array('OR' => array(
+						array('submitter' => $id),
+						array('Authors.grad_auth_id' => $authorId),
+						array('Authors.undr_auth_id' => $authorId)
+					))));
+			}
+			else
+			{
+				$this -> set('bills', $this -> paginate('Bill', array('OR' => array( array('submitter' => $id)))));
+			}
 		}
 		else
 		{

@@ -19,7 +19,7 @@ echo $this -> Html -> tableCells(array(
 ));
 echo $this -> Html -> tableCells(array(
 	'Description',
-	$bill['Bill']['description']
+	nl2br($bill['Bill']['description'])
 ));
 echo $this -> Html -> tableCells(array(
 	'Number',
