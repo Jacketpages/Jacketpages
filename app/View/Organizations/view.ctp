@@ -55,19 +55,22 @@ if ($orgViewDocumentsPerm)
 }
 
 //MRE TO DO: add ledger page in budgets
-$sidebar[] = $this -> Html -> link(__('Finance Ledger', true), array(
-	'controller' => 'bills',
-	'action' => 'ledger',
-	$organization['Organization']['id']
-));
-
-if (!$orgJoinOrganizationPerm)
+if ($gt_member)
 {
-	$sidebar[] = $this -> Html -> link(__('Join Organization', true), array(
-		'controller' => 'memberships',
-		'action' => 'joinOrganization',
+	$sidebar[] = $this -> Html -> link(__('Finance Ledger', true), array(
+		'controller' => 'bills',
+		'action' => 'ledger',
 		$organization['Organization']['id']
-	), null, __('Are you sure you want to join ' . $organization['Organization']['name'] . '?', true));
+	));
+	
+	if (!$orgJoinOrganizationPerm)
+	{
+		$sidebar[] = $this -> Html -> link(__('Join Organization', true), array(
+			'controller' => 'memberships',
+			'action' => 'joinOrganization',
+			$organization['Organization']['id']
+		), null, __('Are you sure you want to join ' . $organization['Organization']['name'] . '?', true));
+	}
 }
 
 if ($orgAdminPerm)
@@ -95,7 +98,7 @@ $this -> start('middle');
 		if (isset($president['Membership']))
 		{
 			echo $this -> Html -> tableCells(array(
-				$this -> Html -> link($president['Membership']['name'], 'mailto:' . $president['User']['email']),
+				($gt_member) ? $this -> Html -> link($president['Membership']['name'], 'mailto:' . $president['User']['email']) : $president['Membership']['name'],
 				(!strcmp($president['Membership']['title'], $president['Membership']['role'])) ? $president['Membership']['title'] : $president['Membership']['title'] . " (" . $president['Membership']['role'] . ")"
 			));
 		}
@@ -105,7 +108,7 @@ $this -> start('middle');
 		if (isset($treasurer['Membership']))
 		{
 			echo $this -> Html -> tableCells(array(
-				$this -> Html -> link($treasurer['Membership']['name'], 'mailto:' . $treasurer['User']['email']),
+				($gt_member) ? $this -> Html -> link($treasurer['Membership']['name'], 'mailto:' . $treasurer['User']['email']) : $treasurer['Membership']['name'],
 				(!strcmp($treasurer['Membership']['title'], $treasurer['Membership']['role'])) ? $treasurer['Membership']['title'] : $treasurer['Membership']['title'] . " (" . $treasurer['Membership']['role'] . ")"
 			));
 		}
@@ -115,7 +118,7 @@ $this -> start('middle');
 		if (isset($advisor['Membership']))
 		{
 			echo $this -> Html -> tableCells(array(
-				$this -> Html -> link($advisor['Membership']['name'], 'mailto:' . $advisor['User']['email']),
+				($gt_member) ? $this -> Html -> link($advisor['Membership']['name'], 'mailto:' . $advisor['User']['email']) : $advisor['Membership']['name'],
 				(!strcmp($advisor['Membership']['title'], $advisor['Membership']['role'])) ? $advisor['Membership']['title'] : $advisor['Membership']['title'] . " (" . $advisor['Membership']['role'] . ")"
 			));
 		}
@@ -125,7 +128,7 @@ $this -> start('middle');
 		if (isset($officer['Membership']))
 		{
 			echo $this -> Html -> tableCells(array(
-				$this -> Html -> link($officer['Membership']['name'], 'mailto:' . $officer['User']['email']),
+				($gt_member) ? $this -> Html -> link($officer['Membership']['name'], 'mailto:' . $officer['User']['email']) : $officer['Membership']['name'],
 				$officer['Membership']['title']
 			));
 		}
@@ -145,9 +148,9 @@ $this -> start('middle');
 	echo $this -> Html -> para('leftalign', $organization['Organization']['description']);
 	echo $this -> Html -> nestedList(array(
 		'Status: ' . $organization['Organization']['status'],
-		'Organization Contact: ' . $this -> Html -> link($organization['User']['name'], 'mailto:' . $organization['User']['email']),
-		'External Website: ' . $this -> Html -> link($organization['Organization']['website']),
-		'Meetings: ' . $organization['Organization']['meeting_information']
+		'Organization Contact: ' . (($organization['User']['name'] != '') ? $this -> Html -> link($organization['User']['name'], 'mailto:' . $organization['User']['email']) : 'N/A'),
+		'External Website: ' . (($organization['Organization']['website'] != '') ? $this -> Html -> link($organization['Organization']['website']) : 'N/A'),
+		'Meetings: ' . (($organization['Organization']['meeting_information'] != '') ? $organization['Organization']['meeting_information'] : 'N//A')
 	), array('id' => 'description'));
 	echo "<br/><br/>";
 	$this -> end();

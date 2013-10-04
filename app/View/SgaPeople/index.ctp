@@ -90,11 +90,13 @@ $this -> start('listing');
 		foreach ($sgapeople as $sgaperson)
 		{
 			$cells = array(
-				$this -> Html -> link($sgaperson['User']['name'], array(
-					'controller' => 'users',
-					'action' => 'view',
-					$sgaperson['SgaPerson']['user_id']
-				)),
+				($gt_member) ?
+					$this -> Html -> link($sgaperson['User']['name'], array(
+						'controller' => 'users',
+						'action' => 'view',
+						$sgaperson['SgaPerson']['user_id']
+					)) : $sgaperson['User']['name']
+				,
 				$sgaperson['SgaPerson']['house'],
 				$sgaperson['SgaPerson']['department']
 			);
