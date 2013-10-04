@@ -28,7 +28,7 @@ class OrganizationsController extends AppController
 	/**
 	 * @deprecated
 	 */
-	public function getlogoFiles()
+	private function getlogoFiles()
 	{
 		$orgs = $this -> Organization -> query("SELECT id, logo, logo_name, logo_type from organizations where logo is not null");
 		for ($i = 0; $i < count($orgs); $i++)
@@ -43,7 +43,7 @@ class OrganizationsController extends AppController
 	/**
 	 * @deprecated
 	 */
-	public function getcharterFiles()
+	private function getcharterFiles()
 	{
 		$orgs = $this -> Organization -> query("SELECT organization_id, name, file from charters where id between 900 and 1382 and size != 0");
 		for ($i = 0; $i < count($orgs); $i++)
@@ -62,7 +62,7 @@ class OrganizationsController extends AppController
 	/**
 	 * @deprecated
 	 */
-	public function getBudgetFiles()
+	private function getBudgetFiles()
 	{
 		$orgs = $this -> Organization -> query("SELECT organization_id, name, file from budgets where size != 0");
 		for ($i = 0; $i < count($orgs); $i++)
@@ -81,7 +81,7 @@ class OrganizationsController extends AppController
 	/**
 	 *	@deprecated
 	 */
-	public function updateLogoPaths()
+	private function updateLogoPaths()
 	{
 		$orgIds = $this -> Organization -> query("SELECT id from organizations");
 		for ($i = 0; $i < count($orgIds); $i++)
@@ -99,7 +99,7 @@ class OrganizationsController extends AppController
 	/**
 	 *	@deprecated
 	 */
-	public function updateDocumentPaths()
+	private function updateDocumentPaths()
 	{
 		$dir = new Folder();
 		if ($dir -> cd($dir -> pwd() . ".." . DS . "webroot" . DS . "files"))
@@ -256,6 +256,7 @@ class OrganizationsController extends AppController
 		$this -> set('treasurers', $this -> getMembers($id, array('Treasurer')));
 		$this -> set('advisors', $this -> getMembers($id, array('Advisor')));
 		$this -> set('officers', $this -> getMembers($id, array('Officer')));
+		$this -> set('members', $this -> getMembers($id, array('Member')));
 
 		//MRE moved all of this to just the roster page
 		/*$members = $this -> Membership -> find('all', array('conditions' => array('AND'

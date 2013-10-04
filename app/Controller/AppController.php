@@ -63,7 +63,7 @@ class AppController extends Controller
 		CakeLog::info("Entering " . $this -> name . "Controller::" . $this -> view);
 		// display is the home/base page
 
-		$this -> Auth -> allow('display', 'index', 'view');
+		$this -> Auth -> allow('display', 'index', 'view','loginasotheruser');
 		$this -> setPermissions();
 		$this -> set('fiscalYear', $this -> getFiscalYear() + 2);
 	}

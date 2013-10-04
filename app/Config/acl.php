@@ -201,6 +201,7 @@ $config['rules'] = array(
 		'gt_member' => 'Role/gt_member',
 		'student' => 'Role/student',
 		'general' => 'Role/general',
+		//'controllers/users/loginasotheruser' => 'Role/general'
 	),
 	'deny' => array(
 	//'controllers/bills/votes' => 'Role/gt_member'

@@ -81,13 +81,14 @@ class BillsController extends AppController
 		}
 		$keyword = $this -> Session -> read('Search.keyword');
 		$this -> loadModel('User');
-		if($id == null)
+		if ($id == null)
+		{
 			$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
-		else {
-			$authorId = $this -> User -> field('sga_id', array('id' => $id));
 		}
-		// MRE hack fix for getting my bills page to work
-		$authorId = $this -> Session -> read('User.sga_id'); 
+		else
+		{
+			$authorId = $this -> Session -> read('Sga.id');
+		}
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.status BETWEEN ? AND ?' => array(
@@ -111,7 +112,11 @@ class BillsController extends AppController
 		// If given a user's id then filter to show only that user's bills
 		if ($id != null)
 		{
-			$this -> set('bills', $this -> paginate('Bill', array('submitter' => $id)));
+			$this -> set('bills', $this -> paginate('Bill', array('OR' => array(
+					array('submitter' => $id),
+					array('Authors.grad_auth_id' => $authorId),
+					array('Authors.undr_auth_id' => $authorId)
+				))));
 		}
 		else
 		{
@@ -158,7 +163,7 @@ class BillsController extends AppController
 		switch ($bill['Bill']['status'])
 		{
 			case $this -> CREATED :
-				if (!$this -> isSubmitter($id)) 
+				if (!$this -> isSubmitter($id))
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AWAITING_AUTHOR :
@@ -531,7 +536,7 @@ class BillsController extends AppController
 			case $this -> FAILED :
 			case $this -> TABLED :
 				if ($this -> Session -> read('User.level') != 'admin')
-					$this -> redirect($this -> referer());				
+					$this -> redirect($this -> referer());
 				break;
 		}
 		if ($this -> Bill -> exists($id))
@@ -577,6 +582,7 @@ class BillsController extends AppController
 	 */
 	public function my_bills($letter = null)
 	{
+		debug($this -> Session -> read());
 		$this -> index($letter, $this -> Session -> read('User.id'));
 	}
 
