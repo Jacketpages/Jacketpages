@@ -368,7 +368,7 @@ class LineItemsController extends AppController
 	// Take out from state and pass it in through the form.
 	public function copy($bill_id = null, $to_state = nul)
 	{
-		if($bill_id == null || $state == null){
+		if($bill_id == null || $to_state == null){
 			$this->Session->setFlash('Please select a bill to view.');
 			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
 		}

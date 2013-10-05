@@ -217,7 +217,7 @@ class OrganizationsController extends AppController
 		$org_ids = null;
 		$this -> loadModel('Membership');
 
-		$memberships = $this -> Membership -> find('all', array('conditions' => array('user_id' => $id)));
+		$memberships = $this -> Membership -> find('all', array('conditions' => array('user_id' => $id),'order' => 'start_date desc'));
 		$this -> set('memberships', $memberships);
 	}
 
