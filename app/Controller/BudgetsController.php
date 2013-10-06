@@ -32,7 +32,7 @@ class BudgetsController extends AppController
 
 	public function index($org_id = null)
 	{
-		if (!($this -> isOfficer($org_id) || $this -> isSGA()))
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 		if ($org_id != null)
 		{
@@ -44,7 +44,7 @@ class BudgetsController extends AppController
 	public function submit($org_id = null)
 	{
 		//page permissions
-		if (!($this -> isOfficer($org_id) || $this -> isSGA()))
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
@@ -154,7 +154,7 @@ class BudgetsController extends AppController
 
 	public function fundraising($org_id = null)
 	{
-		if (!($this -> isOfficer($org_id) || $this -> isSGA()))
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 		if ($org_id == null)
 		{
@@ -241,7 +241,7 @@ class BudgetsController extends AppController
 
 	public function expenses($org_id = null)
 	{
-		if (!($this -> isOfficer($org_id) || $this -> isSGA()))
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 		$redirect = false;
 		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
@@ -303,7 +303,7 @@ class BudgetsController extends AppController
 
 	public function assets_and_liabilities($org_id = null)
 	{
-		if (!($this -> isOfficer($org_id) || $this -> isSGA()))
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 		if ($org_id == null)
 		{
@@ -400,7 +400,7 @@ class BudgetsController extends AppController
 
 	public function member_contributions($org_id = null)
 	{
-		if (!($this -> isOfficer($org_id) || $this -> isSGA()))
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 			$redirect = true;
@@ -465,7 +465,7 @@ class BudgetsController extends AppController
 
 	public function summary($org_id = null)
 	{
-		if (!($this -> isOfficer($org_id) || $this -> isSGA()))
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 		if ($org_id == null)
 		{

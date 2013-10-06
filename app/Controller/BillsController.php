@@ -408,7 +408,7 @@ class BillsController extends AppController
 			case $this -> FAILED :
 			case $this -> TABLED :
 			case $this -> CONFERENCE :
-				if (!$this -> isSGA())
+				if (!$this -> isSGAExec())
 					$this -> redirect($this -> referer());
 				break;
 		}
@@ -720,7 +720,7 @@ class BillsController extends AppController
 	public function votes($bill_id = null, $organization = null, $votes_id = null)
 	{
 		$state = $this -> Bill -> field('status', array('id' => $bill_id));		
-		if ($this -> isSGA() && $state >= $this -> AGENDA)
+		if ($this -> isSGAExec() && $state >= $this -> AGENDA)
 		{
 			if ($bill_id == null || $organization == null || $votes_id == null)
 			{
@@ -789,7 +789,7 @@ class BillsController extends AppController
 	public function putOnAgenda($id)
 	{
 		$bill = $this -> Bill -> findById($id);
-		if ($bill['Bill']['status'] == $this -> AUTHORED && $this -> isSGA())
+		if ($bill['Bill']['status'] == $this -> AUTHORED && $this -> isSGAExec())
 			$this -> setBillStatus($id, $this -> AGENDA, true, $bill['Bill']['category']);
 
 	}

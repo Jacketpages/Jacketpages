@@ -68,7 +68,7 @@ class LineItemsController extends AppController
 			case $this -> FAILED :
 			case $this -> TABLED :
 			case $this -> CONFERENCE :
-				if ($this -> isSGA())
+				if ($this -> isSGAExec())
 					$this -> redirect($this -> referer());
 				break;
 		}

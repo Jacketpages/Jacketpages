@@ -56,7 +56,8 @@ class MembershipsController extends AppController
 	 */
 	public function edit($id = null)
 	{
-		if (!($this -> isOfficer($id) || $this -> isLace()))
+		$org_id = $this -> Membership -> field('org_id',array('id' => $id));
+		if (!($this -> isOfficer($org_id) || $this -> isLace()))
 			$this -> redirect($this -> referer());
 		if ($id == null)
 		{
