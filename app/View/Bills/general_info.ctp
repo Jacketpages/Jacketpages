@@ -45,6 +45,7 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		'options' => $organizations,
 		'default' => 'Select Organization'
 	));
+	echo $this -> Form -> input('Authors.id', array('type' => 'hidden'));
 	echo $this -> Form -> input('Authors.undr_auth_id', array(
 		'div' => 'underAuthor_id',
 		'label' => 'Undergraduate Author',
@@ -55,11 +56,13 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		'label' => 'Graduate Author',
 		'options' => $gradAuthors
 	));
-	if ($this -> Session -> read("Sga.id") != null && $bill['Bill']['status'] >= $AGENDA)
-	{
-		echo $this -> Form -> input('status', array(
+}
+if ($bill['Bill']['status'] >= $AUTHORED && $sga_exec)
+{
+	echo $this -> Form -> input('status', array(
 			'label' => 'Status',
 			'options' => array(
+				3 => 'Authored',
 				4 => 'Agenda',
 				5 => 'Passed',
 				6 => 'Failed',
@@ -67,24 +70,7 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 			),
 			'default' => $bill['Bill']['status']
 		));
-	}
-}
-if ($bill['Bill']['status'] >= $AUTHORED && $sga_exec)
-{
 	echo $this -> Form -> input('number', array('label' => 'Number'));
-} else if ($sga_exec && $bill['Bill']['status'] >= $AGENDA)
-{
-	echo $this -> Form -> input('number', array('label' => 'Number'));
-	echo $this -> Form -> input('status', array(
-		'label' => 'Status',
-		'options' => array(
-			4 => 'Agenda',
-			5 => 'Passed',
-			6 => 'Failed',
-			7 => 'Conference'
-		),
-		'default' => $bill['Bill']['status']
-	));
 }
 
 echo $this -> Form -> end('Submit');
