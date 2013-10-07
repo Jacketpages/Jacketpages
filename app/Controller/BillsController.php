@@ -170,7 +170,7 @@ class BillsController extends AppController
 		switch ($bill['Bill']['status'])
 		{
 			case $this -> CREATED :
-				if (!$this -> isSubmitter($id))
+				if (!($this -> isSubmitter($id) || isSGAExec()))
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AWAITING_AUTHOR :
