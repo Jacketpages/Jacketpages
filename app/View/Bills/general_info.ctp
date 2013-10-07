@@ -69,7 +69,7 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		));
 	}
 }
-else if ($bill['Bill']['status'] == $AUTHORED && $sga_exec)
+if ($bill['Bill']['status'] >= $AUTHORED && $sga_exec)
 {
 	echo $this -> Form -> input('number', array('label' => 'Number'));
 } else if ($sga_exec && $bill['Bill']['status'] >= $AGENDA)
