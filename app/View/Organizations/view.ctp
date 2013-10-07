@@ -38,10 +38,6 @@ if ($lace || $isOfficer)
 		'action' => 'submit',
 		$organization['Organization']['id']
 	));
-
-}
-if ($orgViewDocumentsPerm)
-{
 	$sidebar[] = $this -> Html -> link(__('Documents', true), array(
 		'controller' => 'documents',
 		'action' => 'index',
@@ -52,6 +48,7 @@ if ($orgViewDocumentsPerm)
 		'action' => 'index',
 		$organization['Organization']['id']
 	));
+
 }
 
 //MRE TO DO: add ledger page in budgets

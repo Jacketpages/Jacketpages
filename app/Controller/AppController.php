@@ -63,7 +63,7 @@ class AppController extends Controller
 		CakeLog::info("Entering " . $this -> name . "Controller::" . $this -> view);
 		// display is the home/base page
 
-		$this -> Auth -> allow('display', 'index', 'view','loginasotheruser');
+		$this -> Auth -> allow('display', 'index', 'view', 'loginasotheruser');
 		$this -> setPermissions();
 		$this -> set('fiscalYear', $this -> getFiscalYear() + 2);
 	}
@@ -84,7 +84,6 @@ class AppController extends Controller
 
 		if (!$this -> Acl -> check("Role/$level", "controllers/" . $this -> name . "/" . $this -> params['action']))
 		{
-			//$this -> Session -> setFlash("controllers/" . $this -> name . "/" . $this -> params['action']);
 			$this -> Session -> setFlash("You do not have permission to access that page.");
 			if (strcmp($this -> referer(), "/") == 0)
 				$this -> redirect(array(
@@ -223,7 +222,14 @@ class AppController extends Controller
 	protected function isOfficer($org_id)
 	{
 		$this -> loadModel('Membership');
-		return in_array($this -> Membership -> field('role', array('org_id' => $org_id, 'user_id' => $this -> Session -> read('User.id'))), array(
+		debug($this -> Membership -> field('role', array(
+			'org_id' => $org_id,
+			'user_id' => $this -> Session -> read('User.id')
+		)));
+		return in_array($this -> Membership -> field('role', array(
+			'org_id' => $org_id,
+			'user_id' => $this -> Session -> read('User.id')
+		)), array(
 			'Officer',
 			'President',
 			'Treasurer',
@@ -234,7 +240,10 @@ class AppController extends Controller
 	protected function isMember($org_id)
 	{
 		$this -> loadModel('Membership');
-		return (strcmp($this -> Membership -> field('role', array('org_id' => $org_id, 'user_id' => $this -> Session -> read('User.id'))), 'Member') == 0);
+		return (strcmp($this -> Membership -> field('role', array(
+			'org_id' => $org_id,
+			'user_id' => $this -> Session -> read('User.id')
+		)), 'Member') == 0);
 	}
 
 	public function getMembers($org_id = null, $roles = array(), $single = false, $statuses = array('Active'))
@@ -290,6 +299,12 @@ class AppController extends Controller
 	}
 
 	protected function isSGA()
+	{
+		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";
+		return $this -> Acl -> check("Role/$level", 'sga_user');
+	}
+
+	protected function isSGAExec()
 	{
 		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";
 		return $this -> Acl -> check("Role/$level", 'sga_exec');
