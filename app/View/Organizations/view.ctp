@@ -143,10 +143,18 @@ $this -> start('middle');
 	// general information.
 	echo $this -> Html -> tag('h1', 'Description');
 	echo $this -> Html -> para('leftalign', $organization['Organization']['description']);
+	if (stristr($organization['Organization']['website'], "http://") ==  false)
+	{
+		$site = "http://" . $organization['Organization']['website'];
+	} 
+	else
+	{
+		$site = $organization['Organization']['website'];
+	}
 	echo $this -> Html -> nestedList(array(
 		'Status: ' . $organization['Organization']['status'],
 		'Organization Contact: ' . (($organization['User']['name'] != '') ? $this -> Html -> link($organization['User']['name'], 'mailto:' . $organization['User']['email']) : 'N/A'),
-		'External Website: ' . (($organization['Organization']['website'] != '') ? $this -> Html -> link($organization['Organization']['website']) : 'N/A'),
+		'External Website: ' . (($organization['Organization']['website'] != '') ? $this -> Html -> link($site) : 'N/A'),
 		'Meetings: ' . (($organization['Organization']['meeting_information'] != '') ? $organization['Organization']['meeting_information'] : 'N//A')
 	), array('id' => 'description'));
 	echo "<br/><br/>";

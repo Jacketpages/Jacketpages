@@ -24,13 +24,24 @@ echo $this -> Html -> tableCells(array(
 	'Title',
 	$bill['Bill']['title']
 ));
+if($bill['Bill']['status'] >= $AGENDA)
+{
+	echo $this -> Html -> tableCells(array(
+		'Number',
+		$bill['Bill']['number']
+	));
+}
 echo $this -> Html -> tableCells(array(
 	'Description',
 	nl2br($bill['Bill']['description'])
 ));
 echo $this -> Html -> tableCells(array(
-	'Number',
-	$bill['Bill']['number']
+	'Fundraising',
+	nl2br($bill['Bill']['fundraising'])
+));
+echo $this -> Html -> tableCells(array(
+	'Dues',
+	$bill['Bill']['dues']
 ));
 echo $this -> Html -> tableCells(array(
 	'Submit Date',
