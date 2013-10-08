@@ -9,20 +9,28 @@ $undr = array('Undergraduate Author');
 
 if (!$bill['Authors']['grad_auth_appr'])
 {
-	$grad[] = $GradAuthor['User']['name'] . " - Not Signed";
+	$signed = 'Not Signed';
 }
 else
 {
-	$grad[] = $GradAuthor['User']['name'] . " - Signed";
+	$signed = 'Signed';
 }
+$name = (isset($GradAuthor['User']['name'])) ? $GradAuthor['User']['name'] : '';
+$email = (isset($GradAuthor['User']['email'])) ? $GradAuthor['User']['email'] : '';
+$grad[] = $this -> Html -> link ($name, 'mailto:' . $email) . " - " . $signed;
+
 if (!$bill['Authors']['undr_auth_appr'])
 {
-	$undr[] = $UnderAuthor['User']['name'] . " - Not Signed";
+	$signed = 'Not Signed';
 }
 else
 {
-	$undr[] = $UnderAuthor['User']['name'] . " - Signed";
+	$signed = 'Signed';
 }
+$name = (isset($UnderAuthor['User']['name'])) ? $UnderAuthor['User']['name'] : '';
+$email = (isset($UnderAuthor['User']['email'])) ? $UnderAuthor['User']['email'] : '';
+$undr[] = $this -> Html -> link ($name, 'mailto:' . $email) . " - " . $signed;
+
 $rows = array();
 if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Graduate')
 	$rows[] = $grad;
@@ -30,7 +38,7 @@ if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Undergr
 	$rows[] = $undr;
 $rows[] = array(
 		'Submitter',
-		$bill['Submitter']['name'],
+		$this -> Html -> link($bill['Submitter']['name'], 'mailto:' . $bill['Submitter']['email']),
 		""
 );
 $rows[] = array(
