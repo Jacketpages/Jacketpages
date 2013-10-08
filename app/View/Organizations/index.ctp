@@ -29,7 +29,7 @@ if ($orgExportPerm)
 $sidebar[] = '<a>Organization&nbsp;Category<br /><br />
 <div id=\'category\'>'.
 $this -> Form -> create().
-$this -> Form -> input('category', array(
+$this -> Form -> input('Organization.category', array(
 		'label' => false,
 		'default' => $this -> Session -> read('Search.category'),
 		'options' => array(
@@ -68,7 +68,7 @@ $this -> start('search');
 	<div id="leftHalf">
 		<?php
 		echo $this -> Form -> create();
-		echo $this -> Form -> input('keyword', array(
+		echo $this -> Form -> input('Organization.keyword', array(
 			'label' => array(
 				'text' => 'Search',
 				'style' => 'display:inline'

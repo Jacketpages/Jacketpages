@@ -88,7 +88,7 @@ $this -> start('middle');
 <div style="display:inline-block;position:relative;width:100%">
 <div style="float:left;width:50%;">
 	<?php
-	echo $this -> Html -> tag('h1', 'Officers:');
+	echo $this -> Html -> tag('h1', 'Officers');
 	echo $this -> Html -> tableBegin(array('class' => 'listing'));
 	foreach ($presidents as $president)
 	{

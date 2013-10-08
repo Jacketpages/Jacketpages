@@ -101,8 +101,8 @@ class BillsController extends AppController
 					array('Bill.description LIKE' => "%$keyword%"),
 					array('Bill.number LIKE' => "%$keyword%"),
 					array('(CONCAT(first_name, " ", last_name)) LIKE' => "%$keyword%"),
-					array('Authors.grad_auth_id' => $authorId),
-					array('Authors.undr_auth_id' => $authorId)
+					//array('Authors.grad_auth_id' => $authorId),
+					//array('Authors.undr_auth_id' => $authorId)
 				),
 				array('Bill.title LIKE' => $letter . '%')
 			),
@@ -170,7 +170,7 @@ class BillsController extends AppController
 		switch ($bill['Bill']['status'])
 		{
 			case $this -> CREATED :
-				if (!$this -> isSubmitter($id))
+				if (!($this -> isSubmitter($id) || isSGAExec()))
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AWAITING_AUTHOR :
@@ -233,24 +233,24 @@ class BillsController extends AppController
 		// Set the amounts for prior year, capital outlay, and total
 		$totals = $this -> LineItem -> find('all', array(
 			'fields' => array(
-				"SUM(IF(account = 'PY' AND state = 'Submitted',total_cost, 0)) AS PY_SUBMITTED",
-				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Submitted',TOTAL_COST, 0)) AS CO_SUBMITTED",
-				"SUM(IF(STATE = 'Submitted',TOTAL_COST, 0)) AS TOTAL_SUBMITTED",
-				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'JFC',TOTAL_COST, 0)) AS PY_JFC",
-				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'JFC',TOTAL_COST, 0)) AS CO_JFC",
-				"SUM(IF(STATE = 'JFC',TOTAL_COST, 0)) AS TOTAL_JFC",
-				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Graduate',TOTAL_COST, 0)) AS PY_GRADUATE",
-				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Graduate',TOTAL_COST, 0)) AS CO_GRADUATE",
-				"SUM(IF(STATE = 'Graduate',TOTAL_COST, 0)) AS TOTAL_GRADUATE",
-				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Undergraduate',TOTAL_COST, 0)) AS PY_UNDERGRADUATE",
-				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Undergraduate',TOTAL_COST, 0)) AS CO_UNDERGRADUATE",
-				"SUM(IF(STATE = 'Undergraduate',TOTAL_COST, 0)) AS TOTAL_UNDERGRADUATE",
-				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final',TOTAL_COST, 0)) AS PY_FINAL",
-				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final',TOTAL_COST, 0)) AS CO_FINAL",
-				"SUM(IF(STATE = 'Final',TOTAL_COST, 0)) AS TOTAL_FINAL",
-				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Conference',TOTAL_COST, 0)) AS PY_CONFERENCE",
-				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Conference',TOTAL_COST, 0)) AS CO_CONFERENCE",
-				"SUM(IF(STATE = 'Conference',TOTAL_COST, 0)) AS TOTAL_CONFERENCE"
+				"SUM(IF(account = 'PY' AND state = 'Submitted',amount, 0)) AS PY_SUBMITTED",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Submitted',amount, 0)) AS CO_SUBMITTED",
+				"SUM(IF(STATE = 'Submitted',amount, 0)) AS TOTAL_SUBMITTED",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'JFC',amount, 0)) AS PY_JFC",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'JFC',amount, 0)) AS CO_JFC",
+				"SUM(IF(STATE = 'JFC',amount, 0)) AS TOTAL_JFC",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Graduate',amount, 0)) AS PY_GRADUATE",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Graduate',amount, 0)) AS CO_GRADUATE",
+				"SUM(IF(STATE = 'Graduate',amount, 0)) AS TOTAL_GRADUATE",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Undergraduate',amount, 0)) AS PY_UNDERGRADUATE",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Undergraduate',amount, 0)) AS CO_UNDERGRADUATE",
+				"SUM(IF(STATE = 'Undergraduate',amount, 0)) AS TOTAL_UNDERGRADUATE",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final',amount, 0)) AS PY_FINAL",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final',amount, 0)) AS CO_FINAL",
+				"SUM(IF(STATE = 'Final',amount, 0)) AS TOTAL_FINAL",
+				"SUM(IF(ACCOUNT = 'PY' AND STATE = 'Conference',amount, 0)) AS PY_CONFERENCE",
+				"SUM(IF(ACCOUNT = 'CO' AND STATE = 'Conference',amount, 0)) AS CO_CONFERENCE",
+				"SUM(IF(STATE = 'Conference',amount, 0)) AS TOTAL_CONFERENCE"
 			),
 			'conditions' => array(
 				'bill_id' => $id,
@@ -557,8 +557,7 @@ class BillsController extends AppController
 					$this -> Session -> setFlash(__('Bill deleted.', true));
 					$this -> redirect(array(
 						'controller' => 'bills',
-						'action' => 'index',
-						$org_id
+						'action' => 'index'						
 					));
 				}
 				else
@@ -623,20 +622,20 @@ class BillsController extends AppController
 		$this -> loadModel('BillAuthor');
 		$this -> loadModel('User');
 		$gradAuthor = $this -> User -> find('first', array(
-			'fields' => array('name'),
+			'fields' => array('name', 'email'),
 			'conditions' => array('User.sga_id' => $grad_id)
 		));
 		if ($gradAuthor == null)
 		{
-			$gradAuthor = array("User" => array("name" => "Awaiting Author Signature"));
+			$gradAuthor = array("User" => array("name" => "Awaiting Author Selection"));
 		}
 		$undrAuthor = $this -> User -> find('first', array(
-			'fields' => array('name'),
+			'fields' => array('name', 'email'),
 			'conditions' => array('User.sga_id' => $undr_id)
 		));
 		if ($undrAuthor == null)
 		{
-			$undrAuthor = array("User" => array("name" => "Awaiting Author Signature"));
+			$undrAuthor = array("User" => array("name" => "Awaiting Author Selection"));
 		}
 		$this -> set('GradAuthor', $gradAuthor);
 

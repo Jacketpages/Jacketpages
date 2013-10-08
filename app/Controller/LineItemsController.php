@@ -304,7 +304,8 @@ class LineItemsController extends AppController
 			$this->Session->setFlash('Please select a bill to view.');
 			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
 		}
-		
+		if (!$this -> isSGAExec())
+			$this -> redirect($this -> referer());
 		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
 		if ($this -> LineItem -> delete($id))
 		{
@@ -372,7 +373,8 @@ class LineItemsController extends AppController
 			$this->Session->setFlash('Please select a bill to view.');
 			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
 		}
-		
+		if (!$this -> isSGAExec())
+			$this -> redirect($this -> referer());
 		// If $to_state is Final then don't copy stuck line items
 		if ($to_state == 'Final')
 		{
@@ -423,7 +425,8 @@ class LineItemsController extends AppController
 			$this->Session->setFlash('Please select a bill to view.');
 			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
 		}
-		
+		if (!$this -> isSGAExec())
+			$this -> redirect($this -> referer());
 		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
 		$this -> LineItem -> id = $id;
 		$this -> LineItem -> saveField('struck', 1);
@@ -441,7 +444,8 @@ class LineItemsController extends AppController
 			$this->Session->setFlash('Please select a bill to view.');
 			$this->redirect(array('controller' => 'bills', 'action' => 'index'));
 		}
-		
+		if (!$this -> isSGAExec())
+			$this -> redirect($this -> referer());
 		$lineitem = $this -> LineItem -> findById($id, array('bill_id'));
 		$this -> LineItem -> id = $id;
 		$this -> LineItem -> saveField('struck', 0);

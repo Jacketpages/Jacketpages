@@ -41,7 +41,7 @@ if ($bill['Bill']['status'] == $CREATED && $bill['Submitter']['id'] == $this -> 
 		$bill['Bill']['id']
 	));
 }
-else if ($bill['Bill']['status'] == $AUTHORED && $sga_exec
+if ($bill['Bill']['status'] == $AUTHORED && $sga_exec
 		|| $admin)
 {
 	$sidebar[] = $this -> Html -> link(__('Place on Agenda', true), array(
@@ -71,7 +71,7 @@ if ($bill['Bill']['status'] == $AGENDA && $sga_exec
 			$bill['UHR']['id']
 		));
 }
-else if ($bill['Bill']['status'] == $CONFERENCE && $sga_exec
+if ($bill['Bill']['status'] == $CONFERENCE && $sga_exec
 		|| $admin)
 {
 	if (strcmp($bill['Bill']['category'], 'Joint') == 0

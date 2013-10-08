@@ -290,16 +290,14 @@ class OrganizationsController extends AppController
 			{
 				$this -> Session -> setFlash('This organization has been created successfully.');
 				$this -> redirect(array(
-					'action' => 'index',
-					$org_id
+					'action' => 'index'			
 				));
 			}
 			else
 			{
 				$this -> Session -> setFlash('This organization was not able to be created.');
 				$this -> redirect(array(
-					'action' => 'index',
-					$org_id
+					'action' => 'index'
 				));
 			}
 		}
@@ -353,6 +351,8 @@ class OrganizationsController extends AppController
 	 */
 	public function export()
 	{
+		$this -> Session -> setFlash('UNDER CONSTRUCTION');
+		$this -> redirect('/organizations/index');
 		$organizations = $this -> Organization -> find('all', array('fields' => array(
 				'Organization.id',
 				'Organization.name',
@@ -380,6 +380,20 @@ class OrganizationsController extends AppController
 				'Treasurer',
 				'Advisor'
 			);
+			// initialize variables
+			$advisor = array(
+				'Membership' => array('name' => ''),
+				'User' => array('email' => '')
+			);
+			$treasurer = array(
+				'Membership' => array('name' => ''),
+				'User' => array('email' => '')
+			);
+			$president = array(
+				'Membership' => array('name' => ''),
+				'User' => array('email' => '')
+			);
+			// get values if they exist
 			$president = $this -> Membership -> findByRoleAndOrgId('President', $organization['Organization']['id'], array(
 				'name',
 				'User.email'

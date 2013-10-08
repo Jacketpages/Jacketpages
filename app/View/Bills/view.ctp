@@ -11,6 +11,13 @@ $this -> assign("title", "Bill");
 $this -> Html -> addCrumb('All Bills', '/bills');
 $this -> Html -> addCrumb('View Bill ', $this->here);
 $this -> start('middle');
+if($bill['Bill']['status'] == $CREATED)
+{
+	echo '<div id="notification">';
+	echo "Once you have completed editing your bill, please use the Submit button or Submit sidebar link to release the bill to the authors. No further changes can be made after submitting.";
+	echo '</div>';
+	echo '<br>'; 					
+}
 // General bill information table
 echo $this -> Html -> tableBegin(array('class' => 'list'));
 echo $this -> Html -> tableCells(array(

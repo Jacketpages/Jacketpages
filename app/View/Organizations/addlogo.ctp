@@ -23,14 +23,16 @@
 	echo "Image should be less than 200 KB.";
 	echo "<br>";
 	echo "<br>";
-	echo $this -> Form -> create('false', array(
+	//MRE debugging
+	/*echo $this -> Form -> create('false', array(
 		'url' => array(
 			'controller' => 'organizations',
 			'action' => 'addlogo',
 			$organization['Organization']['id']
 		),
 		'type' => 'file'
-	));
+	));*/
+	echo $this -> Form -> create('File', array('type' => 'file'));
 	echo $this -> Form -> file('File.image');
 	echo $this -> Form -> submit('Upload', array('url' => array(
 			'controller' => 'organizations',
