@@ -311,11 +311,11 @@ class BillsController extends AppController
 			// then set them to a place holder author.
 			if ($this -> request -> data['Authors']['grad_auth_id'] == null)
 			{
-				$this -> request -> data['Authors']['grad_auth_id'] = 1;
+				$this -> request -> data['Authors']['grad_auth_id'] = 0;
 			}
 			if ($this -> request -> data['Authors']['undr_auth_id'] == null)
 			{
-				$this -> request -> data['Authors']['undr_auth_id'] = 1;
+				$this -> request -> data['Authors']['undr_auth_id'] = 0;
 			}
 			$this -> request -> data['Authors']['category'] = $this -> request -> data['Bill']['category'];
 
@@ -526,7 +526,7 @@ class BillsController extends AppController
 
 	public function delete($id = null)
 	{
-		$state = $this -> Bill -> field('status', array('id' => $bill_id));
+		$state = $this -> Bill -> field('status', array('id' => $id));
 		switch ($state)
 		{
 			case $this -> CREATED :
@@ -658,9 +658,10 @@ class BillsController extends AppController
 		if ($this -> Session -> read('User.id') == $submitter_id)
 		{
 			$this -> Session -> setFlash('The bill has been submitted to the authors.');
-			$this -> setBillStatus($id, 2, true);
 			$this -> updateBillOwners($id);
+			$this -> setBillStatus($id, 2, true);
 		}
+		$this -> redirect($this -> referer());
 	}
 
 	public function general_info($bill_id = null)
@@ -825,7 +826,7 @@ class BillsController extends AppController
 	public function email()
 	{
 		$email = new CakeEmail();
-		$email -> config('gmail');
+		$email -> config('default');
 		$email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
 		$email -> template('removedFromOrg');
 		$email -> emailFormat('html');
@@ -983,12 +984,13 @@ class BillsController extends AppController
 		$this -> set('grad_name', $gradAuthor['User']['name']);
 		$this -> set('undr_name', $undrAuthor['User']['name']);
 		$email = new CakeEmail();
-		$email -> deliver('mail');
+		$email -> config('default');
 		$email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
 		$email -> to($authors);
 		$email -> subject('New Bill');
 		$email -> template('newbill');
-		$email -> sendAs('both');
+		$email -> emailFormat('html');
+		$email -> viewVars(array('bill'=>$bill,'grad_name' => $gradAuthor['User']['name'], 'undr_name' => $undrAuthor['User']['name']));
 		$email -> send();
 	}
 

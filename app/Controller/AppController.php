@@ -32,7 +32,6 @@ class AppController extends Controller
 	public $helpers = array(
 		'Js',
 		'Session',
-		'Permission',
 		'Html'
 	);
 	public $components = array(

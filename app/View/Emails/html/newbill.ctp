@@ -1,26 +1,22 @@
-A new bill was created with you as an author. Title:
-<?php echo $bill['Bill']['title']; ?>
+A new bill was created with you as an author. 
 
-Description:
-<?php echo $bill['Bill']['description']; ?>
+Title: <?php echo $bill['Bill']['title']; ?>
 
-Dues Collected $
-<?php echo $bill['Bill']['dues']; ?>
+Description: <?php echo $bill['Bill']['description']; ?>
 
-Fundraising:
-<?php echo $bill['Bill']['fundraising']; ?>
+Fundraising: <?php echo $bill['Bill']['fundraising']; ?>
+
 <?php if(isset($undr_name)):?>
-Undergraduate Author:
-<?php echo $undr_name; ?>
+Undergraduate Author: <?php echo $undr_name; ?>
+
 <?php endif;
 if(isset($grad_name)):
 ?>
-Graduate Author:
-<?php echo $grad_name; ?>
+Graduate Author: <?php echo $grad_name; ?>
 <?php endif;?>
-Submitter:
-<?php echo $bill['Submitter']['name']; ?>
+
+Submitter: <?php echo $bill['Submitter']['name']; ?>
+
 <?php if(isset($bill['Organization']['name'])):?>
-Organization:
-<?php echo $bill['Organization']['name']; ?>
+Organization: <?php echo $bill['Organization']['name']; ?>
 <?php endif;?>
