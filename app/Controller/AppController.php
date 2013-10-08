@@ -84,13 +84,10 @@ class AppController extends Controller
 		if (!$this -> Acl -> check("Role/$level", "controllers/" . $this -> name . "/" . $this -> params['action']))
 		{
 			$this -> Session -> setFlash("You do not have permission to access that page.");
-			if (strcmp($this -> referer(), "/") == 0)
-				$this -> redirect(array(
-					'controller' => 'pages',
-					'action' => 'home'
-				));
-			else
-				$this -> redirect($this -> referer());
+			$this -> redirect(array(
+				'controller' => 'pages',
+				'action' => 'home'
+			));
 		}
 		switch($this -> name)
 		{
@@ -221,10 +218,6 @@ class AppController extends Controller
 	protected function isOfficer($org_id)
 	{
 		$this -> loadModel('Membership');
-		debug($this -> Membership -> field('role', array(
-			'org_id' => $org_id,
-			'user_id' => $this -> Session -> read('User.id')
-		)));
 		return in_array($this -> Membership -> field('role', array(
 			'org_id' => $org_id,
 			'user_id' => $this -> Session -> read('User.id')
@@ -313,6 +306,14 @@ class AppController extends Controller
 	{
 		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";
 		return $this -> Acl -> check("Role/$level", 'lace');
+	}
+
+	protected function redirectHome()
+	{
+		$this -> redirect(array(
+				'controller' => 'pages',
+				'action' => 'home'
+			));
 	}
 
 }

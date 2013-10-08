@@ -10,7 +10,6 @@ class DocumentsController extends AppController
 {
 	public $helpers = array(
 		'Html',
-		'Permission',
 		'Session'
 	);
 
@@ -86,7 +85,7 @@ class DocumentsController extends AppController
 	public function delete($id)
 	{
 		if(!($this -> isOfficer($id) || $this -> isLace()))
-		$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		if (!$id)
 		{
 			$this -> Session -> setFlash(__('Invalid ID for document', true));

@@ -145,7 +145,7 @@ class UsersController extends AppController
 	{
 		if (!($this -> Session -> read('User.level') == 'admin'))
 		{
-			$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		}
 		if ($id == null)
 		{
@@ -217,7 +217,7 @@ class UsersController extends AppController
 		{
 			CakeLog::warning("User doesn't exist for user id: $id.");
 			$this -> Session -> setFlash("Unable to edit user. User does not exist.");
-			$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		}
 	}
 

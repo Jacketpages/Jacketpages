@@ -15,7 +15,6 @@ class OrganizationsController extends AppController
 		'Form',
 		'Paginator',
 		'Js',
-		'Permission',
 		'Csv'
 	);
 	public $components = array(
@@ -310,7 +309,7 @@ class OrganizationsController extends AppController
 	public function edit($id = null)
 	{
 		if(!($this -> isOfficer($id) || $this -> isLace()))
-		$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Please select an organization to view.');
@@ -427,7 +426,7 @@ class OrganizationsController extends AppController
 	public function addlogo($org_id = null)
 	{
 		if(!($this -> isOfficer($org_id) || $this -> isLace()))
-		$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		if ($this -> request -> is('post') && $this -> request -> data['File']['image']['size'] < 200000)
 		{
 			$dir = new Folder("../webroot/img/" . $org_id, true, 0744);

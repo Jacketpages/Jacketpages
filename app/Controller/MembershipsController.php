@@ -18,7 +18,7 @@ class MembershipsController extends AppController
 		$this -> set('isOfficer', $this -> isOfficer($id));
 		$this -> set('isMember', $this -> isMember($id));
 		if (!($this -> isOfficer($id) || $this -> isMember($id) || $this -> isLace()))
-			$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');
@@ -58,7 +58,7 @@ class MembershipsController extends AppController
 	{
 		$org_id = $this -> Membership -> field('org_id',array('id' => $id));
 		if (!($this -> isOfficer($org_id) || $this -> isLace()))
-			$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		if ($id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');
@@ -103,7 +103,7 @@ class MembershipsController extends AppController
 	function add($id = null)
 	{
 		if (!($this -> isOfficer($id) || $this -> isLace()))
-			$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		if (!$id && empty($this -> data))
 		{
 			$this -> Session -> setFlash(__('Invalid organization.', true));
@@ -158,7 +158,7 @@ class MembershipsController extends AppController
 	public function delete($id = null, $orgId = null)
 	{
 		if (!($this -> isOfficer($id) || $this -> isLace()))
-			$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		if ($id == null || $orgId == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');
@@ -193,7 +193,7 @@ class MembershipsController extends AppController
 	public function reject($id = null, $orgId = null)
 	{
 		if (!($this -> isOfficer($id) || $this -> isLace()))
-			$this -> redirect($this -> referer());
+			$this -> redirectHome();
 		if ($id == null || $orgId == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');

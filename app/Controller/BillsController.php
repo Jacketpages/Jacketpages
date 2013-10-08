@@ -170,7 +170,7 @@ class BillsController extends AppController
 		switch ($bill['Bill']['status'])
 		{
 			case $this -> CREATED :
-				if (!($this -> isSubmitter($id) || isSGAExec()))
+				if (!($this -> isSubmitter($id) || $this -> isSGAExec()))
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AWAITING_AUTHOR :
@@ -531,19 +531,19 @@ class BillsController extends AppController
 		{
 			case $this -> CREATED :
 				if (!$this -> isSubmitter($id))
-					$this -> redirect($this -> referer());
+					$this -> redirectHome();
 				break;
 			case $this -> AWAITING_AUTHOR :
 			case $this -> AUTHORED :
 				if (!$this -> isAuthor($id))
-					$this -> redirect($this -> referer());
+					$this -> redirectHome();
 				break;
 			case $this -> AGENDA :
 			case $this -> PASSED :
 			case $this -> FAILED :
 			case $this -> TABLED :
 				if ($this -> Session -> read('User.level') != 'admin')
-					$this -> redirect($this -> referer());
+					$this -> redirectHome();
 				break;
 		}
 		if ($this -> Bill -> exists($id))
@@ -557,7 +557,7 @@ class BillsController extends AppController
 					$this -> Session -> setFlash(__('Bill deleted.', true));
 					$this -> redirect(array(
 						'controller' => 'bills',
-						'action' => 'index'						
+						'action' => 'index'
 					));
 				}
 				else
@@ -622,7 +622,10 @@ class BillsController extends AppController
 		$this -> loadModel('BillAuthor');
 		$this -> loadModel('User');
 		$gradAuthor = $this -> User -> find('first', array(
-			'fields' => array('name', 'email'),
+			'fields' => array(
+				'name',
+				'email'
+			),
 			'conditions' => array('User.sga_id' => $grad_id)
 		));
 		if ($gradAuthor == null)
@@ -630,7 +633,10 @@ class BillsController extends AppController
 			$gradAuthor = array("User" => array("name" => "Awaiting Author Selection"));
 		}
 		$undrAuthor = $this -> User -> find('first', array(
-			'fields' => array('name', 'email'),
+			'fields' => array(
+				'name',
+				'email'
+			),
 			'conditions' => array('User.sga_id' => $undr_id)
 		));
 		if ($undrAuthor == null)
@@ -719,7 +725,7 @@ class BillsController extends AppController
 
 	public function votes($bill_id = null, $organization = null, $votes_id = null)
 	{
-		$state = $this -> Bill -> field('status', array('id' => $bill_id));		
+		$state = $this -> Bill -> field('status', array('id' => $bill_id));
 		if ($this -> isSGAExec() && $state >= $this -> AGENDA)
 		{
 			if ($bill_id == null || $organization == null || $votes_id == null)
@@ -782,7 +788,8 @@ class BillsController extends AppController
 				}
 			}
 		}
-		//MRE don't know why this redirect is here as it won't ever let you got to the page
+		//MRE don't know why this redirect is here as it won't ever let you got to the
+		// page
 		//$this -> redirect($this -> referer());
 	}
 
@@ -877,8 +884,14 @@ class BillsController extends AppController
 			{
 				$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);
 			}
+			$this -> redirect($this -> referer());
+
 		}
-		$this -> redirect($this -> referer());
+		else
+		{
+			$this -> Session -> setFlash('You cannot sign this bill.');
+			$this -> redirectHome();
+		}
 	}
 
 	public function sign($bill_id, $sig_field, $sig_value)
@@ -989,7 +1002,11 @@ class BillsController extends AppController
 		$email -> subject('New Bill');
 		$email -> template('newbill');
 		$email -> emailFormat('html');
-		$email -> viewVars(array('bill'=>$bill,'grad_name' => $gradAuthor['User']['name'], 'undr_name' => $undrAuthor['User']['name']));
+		$email -> viewVars(array(
+			'bill' => $bill,
+			'grad_name' => $gradAuthor['User']['name'],
+			'undr_name' => $undrAuthor['User']['name']
+		));
 		$email -> send();
 	}
 
