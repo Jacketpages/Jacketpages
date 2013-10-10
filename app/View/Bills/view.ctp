@@ -41,7 +41,7 @@ echo $this -> Html -> tableCells(array(
 ));
 echo $this -> Html -> tableCells(array(
 	'Dues',
-	$bill['Bill']['dues']
+	$bill['Organization']['dues']
 ));
 echo $this -> Html -> tableCells(array(
 	'Submit Date',

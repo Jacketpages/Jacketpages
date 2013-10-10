@@ -39,7 +39,8 @@ class Bill extends AppModel
 			'foreignKey' => 'org_id',
 			'fields' => array(
 				'id',
-				'name'
+				'name',
+				'dues'
 			)
 		)
 	);

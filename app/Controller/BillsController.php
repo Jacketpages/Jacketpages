@@ -530,12 +530,12 @@ class BillsController extends AppController
 		switch ($state)
 		{
 			case $this -> CREATED :
-				if (!$this -> isSubmitter($id))
+				if (!($this -> isSubmitter($id) || $this -> isSGAExec()))
 					$this -> redirectHome();
 				break;
 			case $this -> AWAITING_AUTHOR :
 			case $this -> AUTHORED :
-				if (!$this -> isAuthor($id))
+				if (!($this -> isAuthor($id) || $this -> isSGAExec()))
 					$this -> redirectHome();
 				break;
 			case $this -> AGENDA :
