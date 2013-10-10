@@ -284,6 +284,7 @@ class UsersController extends AppController
 			$this -> Session -> write('User.gt_user_name', $gtUsername);
 			$this -> Session -> write('Auth.User', 'student');
 		}
+		$this -> Session -> renew();
 		$this -> redirect($this -> Auth -> redirect());
 
 	}
@@ -302,11 +303,12 @@ class UsersController extends AppController
 		{
 			phpCAS::logout(array('url' => 'http://jacketpages.gatech.edu'));
 		}
+		$this -> Session -> destroy();
 		$this -> redirect($this -> Auth -> logout());
 	}
 
 	public function lookupByName()
-	{
+	{ 
 		$this -> viewClass = 'Json';
 
 		$input = filter_var(($_REQUEST['term']), FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
