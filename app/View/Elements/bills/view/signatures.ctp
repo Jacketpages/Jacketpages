@@ -26,7 +26,7 @@ if ($bill['Bill']['status'] >= $AGENDA)
 	{
 		$tableCells = array();
 		$tableCells[] = $sign_labels[$i];
-		if ($bill['Bill']['status'] == $AGENDA && $sga_exec)
+		if ($sga_exec)
 		{
 			if ($bill['Authors'][$signatures[$i]] == 0)
 			{

@@ -133,9 +133,15 @@ class OrganizationsController extends AppController
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post'))
 		{
-			$this -> Session -> write('Search.keyword', trim($this -> request -> data['Organization']['keyword']));
-			$this -> Session -> write('Search.category', $this -> request -> data['Organization']['category']);
-			//CakeLog::info($this -> request -> data['Organization']['keyword'], 'db');
+			if (isset($this -> request -> data['Organization']['keyword']))
+			{
+				$this -> Session -> write('Search.keyword', trim($this -> request -> data['Organization']['keyword']));
+				//CakeLog::info($this -> request -> data['Organization']['keyword'], 'db');	
+			}
+			if (isset($this -> request -> data['Organization']['category']))
+			{
+				$this -> Session -> write('Search.category', $this -> request -> data['Organization']['category']);	
+			}						
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
 		else if (!$this -> RequestHandler -> isAjax() && $letter == null)
@@ -427,23 +433,25 @@ class OrganizationsController extends AppController
 	{
 		if(!($this -> isOfficer($org_id) || $this -> isLace()))
 			$this -> redirectHome();
-		if ($this -> request -> is('post') && $this -> request -> data['File']['image']['size'] < 200000)
+		if ($this -> request -> is('post') && $this -> request -> data['Logo']['image']['size'] < 200000)
 		{
-			$dir = new Folder("../webroot/img/" . $org_id, true, 0744);
-			debug($dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]);
-			if (move_uploaded_file($this -> request -> data['File']['image']['tmp_name'], $dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]))
+			$dir = new Folder("../webroot/img/" . $org_id, true);
+			//debug($dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]);
+			if (move_uploaded_file($this -> request -> data['Logo']['image']['tmp_name'], 'img/' . $org_id . '/' . $this -> request -> data['Logo']['image']['name']))
 			{
 				$this -> Organization -> id = $org_id;
-				$this -> Organization -> saveField('logo_path', '/img/' . $org_id . '/' . $this -> request -> data["File"]['image']["name"]);
+				$this -> Organization -> saveField('logo_path', '/img/' . $org_id . '/' . $this -> request -> data['Logo']['image']['name']);
 			}
 
 			$logo_path = $this -> Organization -> field('logo_path', array('id' => $org_id));
-			if (strcmp($logo_path, '/img/default_logo.gif') && strcmp($logo_path, '/img/' . $org_id . DS . $this -> request -> data["File"]['image']["name"]))
+			
+			 //MRE What does this do?
+			 /*if (strcmp($logo_path, '/img/default_logo.gif') && strcmp($logo_path, '/img/' . $org_id . DS . $this -> request -> data['Logo']['image']['name']))
 			{
 				$webroot = new Folder("../webroot/" . $org_id . "/");
 				$file = new File($webroot -> pwd() . $logo_path);
 				$file -> delete();
-			}
+			}*/
 			$this -> redirect('/organizations/view/' . $org_id);
 		}
 		$this -> set('organization', $this -> Organization -> read(null, $org_id));

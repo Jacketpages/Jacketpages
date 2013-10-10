@@ -99,6 +99,7 @@ echo $this -> element('bills/view/outcomes');
 			'lineitems' => $submitted,
 			'showAll' => 0,
 			'first' => 1,
+			'form_state' => 'Submitted'
 		)), array('id' => 'tabs-1'));
 		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
 			'lineitems' => $jfc,

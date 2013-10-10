@@ -4,9 +4,13 @@
  * @since 8/7/2013
  */
 
-if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $AGENDA) || ($bill['Bill']['status'] == $AGENDA && $sga_user))
+ //MRE no clue why outcomes WERE only being shown for finance requests...
+ //Also, may have to change != null checks to isset
+if ($bill['Bill']['status'] >= $AGENDA)
 {
-	if ($bill['Bill']['category'] == 'Graduate' || $bill['Bill']['category'] == 'Joint')
+	if ($bill['Bill']['category'] == 'Graduate'
+		|| $bill['Bill']['category'] == 'Joint'
+		&& $bill['GSS']['id'] != null)
 	{
 		$titles[] = $this -> Html -> link('GSS:','#',array('onclick'=> 'javascript:openComments()'));
 		$titles[] = '';
@@ -20,7 +24,9 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $AG
 		$abstains[] = $bill['GSS']['abstains'];
 	}
 
-	if ($bill['Bill']['category'] == 'Undergraduate' || $bill['Bill']['category'] == 'Joint')
+	if ($bill['Bill']['category'] == 'Undergraduate'
+		|| $bill['Bill']['category'] == 'Joint'
+		&& $bill['UHR']['id'] != null)
 	{
 		$titles[] = $this -> Html -> link('UHR:','#',array('onclick'=> 'javascript:openComments()'));
 		$titles[] = '';
@@ -33,43 +39,54 @@ if (($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $AG
 		$abstains[] = 'Abstains';
 		$abstains[] = $bill['UHR']['abstains'];
 	}
-
-	echo $this -> Html -> tag('h1', 'Outcomes:');
-	echo $this -> Html -> tableBegin(array(
-		'class' => 'list',
-		'id' => 'outcomes',
-		'width' => '50%'
-	));
-	echo $this -> Html -> tableHeaders($titles);
-	echo $this -> Html -> tableCells($dates);
-	echo $this -> Html -> tableCells($yeas);
-	echo $this -> Html -> tableCells($nays);
-	echo $this -> Html -> tableCells($abstains);
-	echo $this -> Html -> tableEnd();
-
-	if (($bill['Bill']['status'] == $CONFERENCE && $sga_user) || 
-	($bill['Bill']['type'] == 'Finance Request' && $bill['Bill']['status'] > $CONFERENCE && $bill['GCC']['id'] != null))
+	
+	if($bill['GSS']['id'] != null || $bill['UHR']['id'] != null)
+	{
+		echo $this -> Html -> tag('h1', 'Outcomes:');
+		echo $this -> Html -> tableBegin(array(
+			'class' => 'list',
+			'id' => 'outcomes',
+			'width' => '50%'
+		));
+		echo $this -> Html -> tableHeaders($titles);
+		echo $this -> Html -> tableCells($dates);
+		echo $this -> Html -> tableCells($yeas);
+		echo $this -> Html -> tableCells($nays);
+		echo $this -> Html -> tableCells($abstains);
+		echo $this -> Html -> tableEnd();
+	}
+	
+	if ($bill['Bill']['category'] == 'Joint'
+		&& $bill['GCC']['id'] != null)
 	{
 		$ctitles[] = $this -> Html -> link('GSS Conference:','#',array('onclick'=> 'javascript:openComments()'));
 		$ctitles[] = '';
+		$cdates[] = 'Date';
+		$cdates[] = $bill['GCC']['date'];
+		$cyeas[] = 'Yeas';
+		$cyeas[] = $bill['GCC']['yeas'];
+		$cnays[] = 'Nays';
+		$cnays[] = $bill['GCC']['nays'];
+		$cabstains[] = 'Abstains';
+		$cabstains[] = $bill['GCC']['abstains'];
+	}
+	if ($bill['Bill']['category'] == 'Joint'
+		&& $bill['UCC']['id'] != null)
+	{
 		$ctitles[] = $this -> Html -> link('UHR Conference:','#',array('onclick'=> 'javascript:openComments()'));
 		$ctitles[] = '';
 		$cdates[] = 'Date';
-		$cdates[] = $bill['GCC']['date'];
-		$cdates[] = 'Date';
 		$cdates[] = $bill['UCC']['date'];
-		$cyeas[] = 'Yeas';
-		$cyeas[] = $bill['GCC']['yeas'];
 		$cyeas[] = 'Yeas';
 		$cyeas[] = $bill['UCC']['yeas'];
 		$cnays[] = 'Nays';
-		$cnays[] = $bill['GCC']['nays'];
-		$cnays[] = 'Nays';
-		$cnays[] = $bill['UCC']['nays'];
-		$cabstains[] = 'Abstains';
-		$cabstains[] = $bill['GCC']['abstains'];
+		$cnays[] = $bill['UCC']['nays'];	
 		$cabstains[] = 'Abstains';
 		$cabstains[] = $bill['UCC']['abstains'];
+	}	
+	
+	if($bill['GCC']['id'] != null || $bill['UCC']['id'] != null)
+	{	
 		echo $this -> Html -> tag('h1', 'Conference Outcomes:');
 		echo $this -> Html -> tableBegin(array(
 			'class' => 'list',
