@@ -262,6 +262,7 @@ class OrganizationsController extends AppController
 		$this -> set('advisors', $this -> getMembers($id, array('Advisor')));
 		$this -> set('officers', $this -> getMembers($id, array('Officer')));
 		$this -> set('members', $this -> getMembers($id, array('Member')));
+		$this -> set('tier', $this -> roman_numerals($organization['Organization']['tier']));
 
 		//MRE moved all of this to just the roster page
 		/*$members = $this -> Membership -> find('all', array('conditions' => array('AND'

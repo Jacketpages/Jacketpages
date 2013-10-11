@@ -153,6 +153,7 @@ $this -> start('middle');
 	}
 	echo $this -> Html -> nestedList(array(
 		'Status: ' . $organization['Organization']['status'],
+		'Tier: ' . $tier,
 		'Organization Contact: ' . (($organization['User']['name'] != '') ? $this -> Html -> link($organization['User']['name'], 'mailto:' . $organization['User']['email']) : 'N/A'),
 		'External Website: ' . (($organization['Organization']['website'] != '') ? $this -> Html -> link($site) : 'N/A'),
 		'Meetings: ' . (($organization['Organization']['meeting_information'] != '') ? $organization['Organization']['meeting_information'] : 'N//A'),

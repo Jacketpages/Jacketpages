@@ -16,12 +16,26 @@ class BudgetLineItemsController extends AppController
 	public function edit($org_id = null)
 	{
 		debug($this -> request -> data);
+		//page permissions
+		$this -> loadModel('Budget');
+		$budgetId = $this -> Budget -> field('id', array(
+			'org_id' => $org_id,
+			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
+		));
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+			$this -> redirect($this -> referer());
+		if ($this -> Budget -> find('count', array('conditions' => array(
+					'id' => $budgetId,
+					'state' => 'Submitted'
+				))) && !$this-> isSGAExec())
+			$this -> redirect(array(
+				'action' => 'summary',
+				$org_id
+			));
 		if($org_id == null){
 			$this->Session->setFlash('Please select your organization to create a budget.');
 			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
-		}
-	
-		$this -> loadModel('Budget');
+		}		
 		$this -> loadModel('LineItemCategory');
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{

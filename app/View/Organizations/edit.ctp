@@ -27,6 +27,17 @@ if ($lace)
 		)
 	));
 }
+if ($sga_exec || $lace)
+{
+	echo $this -> Form -> input('tier', array(
+		'label' => 'Tier',
+		'options' => array(
+			'1' => 'I',
+			'2' => 'II',
+			'3' => 'III'
+		)
+	));
+}
 echo $this -> Form -> input('category', array('options' => array(
 		'1' => 'CPC Sorority',
 		'2' => 'Cultural/Diversity',
