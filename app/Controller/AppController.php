@@ -143,7 +143,6 @@ class AppController extends Controller
 		$this -> set('PASSED', $this -> PASSED);
 		$this -> set('FAILED', $this -> FAILED);
 		$this -> set('TABLED', $this -> TABLED);
-		$this -> set('permitted', $this -> Acl -> check('Role/' . $this -> Session -> read('USER.LEVEL'), 'controllers/' . $this -> viewPath . "/" . $this -> view));
 	}
 
 	public function isAuthorized($user)

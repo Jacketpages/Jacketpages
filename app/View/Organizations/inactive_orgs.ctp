@@ -70,8 +70,7 @@ echo $this -> element('search', array('action' => 'inactive_orgs', 'endForm' => 
 <div id='forupdate'>
 	<?php
 	echo $this -> element('organizationTable', array(
-		'organizations' => $organizations,
-		'admin' => $permitted
+		'organizations' => $organizations
 	));
 	echo $this -> element('paging');
 	// Implement Ajax for this page.
