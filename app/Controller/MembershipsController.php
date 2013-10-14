@@ -157,7 +157,7 @@ class MembershipsController extends AppController
 	// MRE: Who should be able to delete memberships?
 	public function delete($id = null, $orgId = null)
 	{
-		if (!($this -> isOfficer($id) || $this -> isLace()))
+		if (!($this -> isOfficer($orgId) || $this -> isLace()))
 			$this -> redirectHome();
 		if ($id == null || $orgId == null)
 		{
@@ -192,7 +192,7 @@ class MembershipsController extends AppController
 	// MRE TO DO: make sure permissions are set...
 	public function reject($id = null, $orgId = null)
 	{
-		if (!($this -> isOfficer($id) || $this -> isLace()))
+		if (!($this -> isOfficer($orgId) || $this -> isLace()))
 			$this -> redirectHome();
 		if ($id == null || $orgId == null)
 		{
@@ -225,6 +225,8 @@ class MembershipsController extends AppController
 
 	public function accept($id = null, $orgId = null)
 	{
+		if (!($this -> isOfficer($orgId) || $this -> isLace()))
+			$this -> redirectHome();
 		if ($id == null || $orgId == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to view.');

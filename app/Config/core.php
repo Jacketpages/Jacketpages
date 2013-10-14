@@ -194,8 +194,8 @@
  *
  */
 	Configure::write('Session', array(
-		'defaults' => 'php',
-		'timeout' => 240
+		'defaults' => 'cake',
+		'timeout' => 60
 	));
 
 /**
