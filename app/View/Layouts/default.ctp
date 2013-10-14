@@ -97,7 +97,7 @@
 		  <div id="identity" class="clearfix">
 		    <div id="identity-wrapper">
 		      <h1 id="gt-logo">
-		        <a href="/" rel="home" title="Georgia Tech" ><img alt="Georgia Tech" src="http://comm-whdev1.gatech.edu/sites/all/themes/gt/images/logos/logo-gt.png" /></a>    
+		        <a href="/" rel="home" title="Georgia Tech" ><?php echo $this->Html->image('logo-gt.png', array('alt' => 'Georgia Tech')); ?></a>    
 		      </h1>
 		      <a href="/" rel="home" title="Georgia Tech" style="float: right">
 		      		<?php echo $this->Html->image('jacketpages.png', array('alt' => 'Georgia Tech')); ?>
