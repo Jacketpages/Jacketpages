@@ -24,13 +24,24 @@ echo $this -> Html -> tableCells(array(
 	'Title',
 	$bill['Bill']['title']
 ));
+if($bill['Bill']['status'] >= $AGENDA)
+{
+	echo $this -> Html -> tableCells(array(
+		'Number',
+		$bill['Bill']['number']
+	));
+}
 echo $this -> Html -> tableCells(array(
 	'Description',
 	nl2br($bill['Bill']['description'])
 ));
 echo $this -> Html -> tableCells(array(
-	'Number',
-	$bill['Bill']['number']
+	'Fundraising',
+	nl2br($bill['Bill']['fundraising'])
+));
+echo $this -> Html -> tableCells(array(
+	'Dues',
+	$bill['Organization']['dues']
 ));
 echo $this -> Html -> tableCells(array(
 	'Submit Date',
@@ -88,6 +99,7 @@ echo $this -> element('bills/view/outcomes');
 			'lineitems' => $submitted,
 			'showAll' => 0,
 			'first' => 1,
+			'form_state' => 'Submitted'
 		)), array('id' => 'tabs-1'));
 		echo $this -> Html -> tag('div', $this -> element('lineItemDetails', array(
 			'lineitems' => $jfc,

@@ -55,7 +55,7 @@ class BillsController extends AppController
 
 		if (isset($this -> request -> data['Bill']))
 		{
-			if ($this -> request -> data['Bill']['from'] != null && $this -> request -> data['Bill']['to'])
+			if (isset($this -> request -> data['Bill']['from']) && $this -> request -> data['Bill']['to'])
 			{
 				$this -> Session -> write('Bill.from', $this -> data['Bill']['from']);
 				$this -> Session -> write('Bill.to', $this -> data['Bill']['to']);
@@ -530,12 +530,12 @@ class BillsController extends AppController
 		switch ($state)
 		{
 			case $this -> CREATED :
-				if (!$this -> isSubmitter($id))
+				if (!($this -> isSubmitter($id) || $this -> isSGAExec()))
 					$this -> redirectHome();
 				break;
 			case $this -> AWAITING_AUTHOR :
 			case $this -> AUTHORED :
-				if (!$this -> isAuthor($id))
+				if (!($this -> isAuthor($id) || $this -> isSGAExec()))
 					$this -> redirectHome();
 				break;
 			case $this -> AGENDA :
@@ -992,14 +992,18 @@ class BillsController extends AppController
 		$undrAuthor = $this -> User -> findBySgaId($bill['Authors']['undr_auth_id']);
 		$submitter = $this -> User -> findById($bill['Bill']['submitter']);
 		$authors = array();
-		if (strlen($gradAuthor['User']['id']) > 0)
+		if (isset($gradAuthor['User']['id']))
+		{
 			$authors[] = $gradAuthor['User']['email'];
-		if (strlen($undrAuthor['User']['id']) > 0)
+			$this -> set('grad_name', $gradAuthor['User']['name']);
+		}
+		if (isset($undrAuthor['User']['id']))
+		{
 			$authors[] = $undrAuthor['User']['email'];
+			$this -> set('undr_name', $undrAuthor['User']['name']);
+		}
 		$authors[] = $submitter['User']['email'];
 		$this -> set('bill', $bill);
-		$this -> set('grad_name', $gradAuthor['User']['name']);
-		$this -> set('undr_name', $undrAuthor['User']['name']);
 		$email = new CakeEmail();
 		$email -> config('default');
 		$email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
@@ -1007,6 +1011,7 @@ class BillsController extends AppController
 		$email -> subject('New Bill');
 		$email -> template('newbill');
 		$email -> emailFormat('html');
+		//MRE TO DO: still need to catch the fact the $gradAuthor, etc. can be null
 		$email -> viewVars(array(
 			'bill' => $bill,
 			'grad_name' => $gradAuthor['User']['name'],

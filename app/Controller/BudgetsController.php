@@ -49,7 +49,7 @@ class BudgetsController extends AppController
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
 					'state' => 'Submitted'
-				))))
+				))) && !$this-> isSGAExec())
 			$this -> redirect(array(
 				'action' => 'summary',
 				$org_id
@@ -154,8 +154,17 @@ class BudgetsController extends AppController
 
 	public function fundraising($org_id = null)
 	{
+		//page permissions
 		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
+		if ($this -> Budget -> find('count', array('conditions' => array(
+					'id' => $this -> getBudgetId($org_id),
+					'state' => 'Submitted'
+				))) && !$this-> isSGAExec())
+			$this -> redirect(array(
+				'action' => 'summary',
+				$org_id
+			));
 		if ($org_id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to create a budget.');
@@ -241,8 +250,17 @@ class BudgetsController extends AppController
 
 	public function expenses($org_id = null)
 	{
+		//page permissions
 		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
+		if ($this -> Budget -> find('count', array('conditions' => array(
+					'id' => $this -> getBudgetId($org_id),
+					'state' => 'Submitted'
+				))) && !$this-> isSGAExec())
+			$this -> redirect(array(
+				'action' => 'summary',
+				$org_id
+			));
 		$redirect = false;
 		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 			$redirect = true;
@@ -303,8 +321,17 @@ class BudgetsController extends AppController
 
 	public function assets_and_liabilities($org_id = null)
 	{
+		//page permissions
 		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
+		if ($this -> Budget -> find('count', array('conditions' => array(
+					'id' => $this -> getBudgetId($org_id),
+					'state' => 'Submitted'
+				))) && !$this-> isSGAExec())
+			$this -> redirect(array(
+				'action' => 'summary',
+				$org_id
+			));
 		if ($org_id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to create a budget.');
@@ -400,8 +427,17 @@ class BudgetsController extends AppController
 
 	public function member_contributions($org_id = null)
 	{
+		//page permissions
 		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
+		if ($this -> Budget -> find('count', array('conditions' => array(
+					'id' => $this -> getBudgetId($org_id),
+					'state' => 'Submitted'
+				))) && !$this-> isSGAExec())
+			$this -> redirect(array(
+				'action' => 'summary',
+				$org_id
+			));
 		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 			$redirect = true;
 		else

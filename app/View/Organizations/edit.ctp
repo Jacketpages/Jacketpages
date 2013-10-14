@@ -15,15 +15,29 @@ $this -> start('middle');
 echo $this -> Form -> create('Organization');
 echo $this -> Form -> hidden('id');
 echo $this -> Form -> input('name', array('label' => 'Name'));
-echo $this -> Form -> input('status', array(
-	'label' => 'Status',
-	'options' => array(
-		'Active' => 'Active/Good Standing',
-		'Inactive' => 'Inactive',
-		'Under Review' => 'Under Review',
-		'Pending' => 'Pending'
-	)
-));
+if ($lace)
+{
+	echo $this -> Form -> input('status', array(
+		'label' => 'Status',
+		'options' => array(
+			'Active' => 'Active/Good Standing',
+			'Inactive' => 'Inactive',
+			'Under Review' => 'Under Review',
+			'Pending' => 'Pending'
+		)
+	));
+}
+if ($sga_exec || $lace)
+{
+	echo $this -> Form -> input('tier', array(
+		'label' => 'Tier',
+		'options' => array(
+			'1' => 'I',
+			'2' => 'II',
+			'3' => 'III'
+		)
+	));
+}
 echo $this -> Form -> input('category', array('options' => array(
 		'1' => 'CPC Sorority',
 		'2' => 'Cultural/Diversity',

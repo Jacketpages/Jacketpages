@@ -8,7 +8,9 @@ function assignAndRunValidationRules()
 		numberRule("#LineItemQuantity" + (i));
 		moneyRule("#LineItemTotalCost" + (i));
 		moneyRule("#LineItemAmount" + (i));
-		exactValueRule("#LineItemTotalCost" + (i), $("#LineItemQuantity" + (i)).val() * $("#LineItemCostPerUnit" + (i)).val());
+		//MRE: I don't know why this is here since you can't edit total cost anyway
+		//...It just throws errors due to rounding...
+		//exactValueRule("#LineItemTotalCost" + (i), $("#LineItemQuantity" + (i)).val() * $("#LineItemCostPerUnit" + (i)).val());
 	}
 	alreadyValidated = true;
 }

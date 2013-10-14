@@ -136,7 +136,7 @@ if ($lineitems != null)
 else
 {
 	echo "There are no line items for this state.<br/>";
-	if ($bill['Bill']['status'] > 2 && $sga_exec && $bill['Bill']['status'] < 6)
+	if (!$showAll && strcmp($form_state, "Submitted") && $bill['Bill']['status'] > 2 && $sga_exec && $bill['Bill']['status'] < 6)
 	{
 		echo $this -> Form -> create('LineItem', array(
 			'action' => ('copy/' . $bill['Bill']['id'] . '/' . $form_state),

@@ -32,19 +32,19 @@ class BillAuthor extends AppModel
 		$valid = true;
 		if (key($check) == 'undr_auth_id')
 		{
-			if ($check['undr_auth_id'] == 1 && $this -> data['Authors']['category'] == 'Undergraduate')
+			if ($check['undr_auth_id'] == 1 && $this -> data['Bill']['category'] == 'Undergraduate')
 			{
 				$valid = false;
 			}
 		}
 		else
 		{
-			if ($check['grad_auth_id'] == 1 && $this -> data['Authors']['category'] == 'Graduate')
+			if ($check['grad_auth_id'] == 1 && $this -> data['Bill']['category'] == 'Graduate')
 			{
 				$valid = false;
 			}
 		}
-		if ($this -> data['Authors']['category'] == 'Joint')
+		if ($this -> data['Bill']['category'] == 'Joint')
 		{
 			if(key($check) == 'undr_auth_id' && $this -> data['Authors']['undr_auth_id'] == 1)
 			{
