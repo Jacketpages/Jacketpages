@@ -309,11 +309,11 @@ class BillsController extends AppController
 			$this -> request -> data['Bill']['last_mod_date'] = date('Y-m-d h:i:s');
 			// If Graduate author or Undergraduate author are set as Unknown
 			// then set them to a place holder author.
-			if ($this -> request -> data['Authors']['grad_auth_id'] == null)
+			if ($this -> request -> data['Authors']['grad_auth_id'] == null || $this -> request -> data['Bill']['category'] == 'Undergraduate')
 			{
 				$this -> request -> data['Authors']['grad_auth_id'] = 0;
 			}
-			if ($this -> request -> data['Authors']['undr_auth_id'] == null)
+			if ($this -> request -> data['Authors']['undr_auth_id'] == null || $this -> request -> data['Bill']['category'] == 'Graduate')
 			{
 				$this -> request -> data['Authors']['undr_auth_id'] = 0;
 			}
@@ -453,6 +453,16 @@ class BillsController extends AppController
 			// MRE removed this check because it breaks everything
 			if (/*$this -> validateStatusAndSignatures($this -> request -> data, $id)*/1)
 			{
+				// If Graduate author or Undergraduate author are set as Unknown
+				// then set them to a place holder author.
+				if ($this -> request -> data['Authors']['grad_auth_id'] == null || $this -> request -> data['Bill']['category'] == 'Undergraduate')
+				{
+					$this -> request -> data['Authors']['grad_auth_id'] = 0;
+				}
+				if ($this -> request -> data['Authors']['undr_auth_id'] == null || $this -> request -> data['Bill']['category'] == 'Graduate')
+				{
+					$this -> request -> data['Authors']['undr_auth_id'] = 0;
+				}
 				if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 				{
 					$this -> Session -> setFlash('The bill has been saved.');
