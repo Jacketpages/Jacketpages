@@ -14,8 +14,9 @@ class BillAuthor extends AppModel
 		'UndrAuthor' => array(
 			'className' => 'user',
 			'foreignKey' => 'undr_auth_id'
-		));
-	
+		)
+	);
+
 	public $validate = array(
 		'undr_auth_id' => array(
 			'rule' => array('authors'),
@@ -30,29 +31,32 @@ class BillAuthor extends AppModel
 	public function authors($check)
 	{
 		$valid = true;
-		if (key($check) == 'undr_auth_id')
+		if (isset($this -> data['Authors']))
 		{
-			if ($check['undr_auth_id'] == 1 && $this -> data['Bill']['category'] == 'Undergraduate')
+			if (key($check) == 'undr_auth_id')
 			{
-				$valid = false;
+				if ($check['undr_auth_id'] == 0 && $this -> data['Authors']['category'] == 'Undergraduate')
+				{
+					$valid = false;
+				}
 			}
-		}
-		else
-		{
-			if ($check['grad_auth_id'] == 1 && $this -> data['Bill']['category'] == 'Graduate')
+			else
 			{
-				$valid = false;
+				if ($check['grad_auth_id'] == 0 && $this -> data['Authors']['category'] == 'Graduate')
+				{
+					$valid = false;
+				}
 			}
-		}
-		if ($this -> data['Bill']['category'] == 'Joint')
-		{
-			if(key($check) == 'undr_auth_id' && $this -> data['Authors']['undr_auth_id'] == 1)
+			if ($this -> data['Authors']['category'] == 'Joint')
 			{
-				$valid = false;
-			}
-			else if(key($check) == 'grad_auth_id' && $this -> data['Authors']['grad_auth_id'] == 1)
-			{
-				$valid = false;
+				if (key($check) == 'undr_auth_id' && $this -> data['Authors']['undr_auth_id'] == 0)
+				{
+					$valid = false;
+				}
+				else if (key($check) == 'grad_auth_id' && $this -> data['Authors']['grad_auth_id'] == 0)
+				{
+					$valid = false;
+				}
 			}
 		}
 		return $valid;

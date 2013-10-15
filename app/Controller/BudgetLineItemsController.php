@@ -15,7 +15,6 @@ class BudgetLineItemsController extends AppController
 
 	public function edit($org_id = null)
 	{
-		debug($this -> request -> data);
 		//page permissions
 		$this -> loadModel('Budget');
 		$budgetId = $this -> Budget -> field('id', array(

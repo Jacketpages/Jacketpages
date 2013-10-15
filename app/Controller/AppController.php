@@ -217,9 +217,14 @@ class AppController extends Controller
 	protected function isOfficer($org_id)
 	{
 		$this -> loadModel('Membership');
+		$db = ConnectionManager::getDataSource('default');
 		return in_array($this -> Membership -> field('role', array(
 			'org_id' => $org_id,
-			'user_id' => $this -> Session -> read('User.id')
+			'user_id' => $this -> Session -> read('User.id'),
+			'OR' => array(
+								$db -> expression('Membership.end_date >= NOW()'),
+								'Membership.end_date' => null
+							)
 		)), array(
 			'Officer',
 			'President',
@@ -231,9 +236,14 @@ class AppController extends Controller
 	protected function isMember($org_id)
 	{
 		$this -> loadModel('Membership');
+		$db = ConnectionManager::getDataSource('default');
 		return (strcmp($this -> Membership -> field('role', array(
 			'org_id' => $org_id,
-			'user_id' => $this -> Session -> read('User.id')
+			'user_id' => $this -> Session -> read('User.id'),
+			'OR' => array(
+								$db -> expression('Membership.end_date >= NOW()'),
+								'Membership.end_date' => null
+							)
 		)), 'Member') == 0);
 	}
 
