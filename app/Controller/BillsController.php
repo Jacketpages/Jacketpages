@@ -660,7 +660,7 @@ class BillsController extends AppController
 	public function submit($id)
 	{
 		$submitter_id = $this -> Bill -> field('submitter', array('id' => $id));
-		if ($this -> Session -> read('User.id') == $submitter_id)
+		if ($this -> Session -> read('User.id') == $submitter_id || $this -> isSGAExec())
 		{
 			$this -> Session -> setFlash('The bill has been submitted to the authors.');
 			$this -> updateBillOwners($id);
@@ -802,7 +802,16 @@ class BillsController extends AppController
 	{
 		$bill = $this -> Bill -> findById($id);
 		if ($bill['Bill']['status'] == $this -> AUTHORED && $this -> isSGAExec())
+		{
 			$this -> setBillStatus($id, $this -> AGENDA, true, $bill['Bill']['category']);
+		}
+		else
+		{
+			$this -> redirect(array(
+				'action' => 'view',
+				$id
+			));
+		}
 
 	}
 
@@ -880,14 +889,28 @@ class BillsController extends AppController
 				'grad_auth_appr'
 			));
 			$this -> Bill -> id = $bill_id;
-			if ($authors['BillAuthor']['undr_auth_appr'] && $authors['BillAuthor']['grad_auth_appr'])
+			$bill = $this -> Bill -> read();
+			if ($bill['Bill']['category'] == 'Joint')
 			{
-				$bill = $this -> Bill -> read();
-				$this -> Bill -> saveField('status', $this -> AUTHORED);
+				if($authors['BillAuthor']['undr_auth_appr'] && $authors['BillAuthor']['grad_auth_appr'])
+				{		
+					$this -> Bill -> saveField('status', $this -> AUTHORED);
+				}
+				else
+				{
+					$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);	
+				}
 			}
 			else
 			{
-				$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);
+				if($authors['BillAuthor']['undr_auth_appr'] || $authors['BillAuthor']['grad_auth_appr'])
+				{		
+					$this -> Bill -> saveField('status', $this -> AUTHORED);
+				}
+				else
+				{
+					$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);	
+				}
 			}
 			$this -> redirect($this -> referer());
 
