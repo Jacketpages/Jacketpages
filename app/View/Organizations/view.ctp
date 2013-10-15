@@ -51,7 +51,7 @@ if ($lace || $isOfficer)
 
 }
 
-//MRE TO DO: add ledger page in budgets
+//MRE TODO add ledger page in budgets
 if ($gt_member)
 {
 	$sidebar[] = $this -> Html -> link(__('Finance Ledger', true), array(

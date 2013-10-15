@@ -109,8 +109,13 @@ class MembershipsController extends AppController
 			$this -> Session -> setFlash(__('Invalid organization.', true));
 			$this -> redirect('/');
 		}
-
-		/*if ($id) {
+		$this -> loadModel('User');
+		if($this -> request -> is('post') && !$this -> User -> exists($this -> request -> data['Membership']['user_id']))
+		{
+			$this -> Session -> setFlash("Please select a valid JacketPages user to add.");
+			$this -> redirect(array('action' => 'index',$id));
+		}
+				/*if ($id) {
 		 $orgId = $id;
 		 $userId = $this -> getUser();
 		 $this -> loadModel('User');

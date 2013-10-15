@@ -334,6 +334,12 @@ class OrganizationsController extends AppController
 		}
 		else
 		{
+			$this -> loadModel('User');
+			if(!$this -> User -> exists($this -> request -> data['Organization']['contact_id']))
+			{
+				$this -> Session -> setFlash("Please select a valid JacketPages user to use as the organization contact.");
+				$this -> redirect(array('action' => 'index',$id));
+			}
 			if ($this -> Organization -> save($this -> request -> data))
 			{
 				CakeLog::write('info', 'User[' . $this -> Session -> read('USER.name') . '] has edited Organization[' . $this -> request -> data['Organization']['name'] . ']');

@@ -788,9 +788,14 @@ class BillsController extends AppController
 				}
 			}
 		}
-		//MRE don't know why this redirect is here as it won't ever let you got to the
-		// page
-		//$this -> redirect($this -> referer());
+		else
+		{
+			$this -> redirect(array(
+				'controller' => 'bills',
+				'action' => 'view',
+				$bill_id
+			));
+		}
 	}
 
 	public function putOnAgenda($id)
