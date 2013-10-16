@@ -352,7 +352,7 @@ class BillsController extends AppController
 			),
 			'recursive' => 0
 		));
-		$gradAuthors[''] = "Unknown";
+		//$gradAuthors[''] = "Unknown";
 		$gradAuthors['SGA'] = $sga_graduate;
 		$this -> set('gradAuthors', $gradAuthors);
 		$sga_undergraduate = $this -> SgaPerson -> find('list', array(
@@ -363,7 +363,7 @@ class BillsController extends AppController
 			),
 			'recursive' => 0
 		));
-		$underAuthors[''] = "Unknown";
+		//$underAuthors[''] = "Unknown";
 		$underAuthors['SGA'] = $sga_undergraduate;
 		$this -> set('underAuthors', $underAuthors);
 	}
@@ -395,11 +395,11 @@ class BillsController extends AppController
 		switch ($bill['Bill']['status'])
 		{
 			case $this -> CREATED :
-				if (!$this -> isSubmitter($id))
+				if (!($this -> isSubmitter($id) || $this -> isSGAExec()))
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AWAITING_AUTHOR :
-				if (!$this -> isAuthor($id))
+				if (!($this -> isAuthor($id) || $this -> isSGAExec()))
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AUTHORED :
@@ -433,7 +433,7 @@ class BillsController extends AppController
 				),
 				'recursive' => 0
 			));
-			$gradAuthors[''] = "Unknown";
+			//$gradAuthors[''] = "Unknown";
 			$gradAuthors['SGA'] = $sga_graduate;
 			$this -> set('gradAuthors', $gradAuthors);
 			$sga_undergraduate = $this -> SgaPerson -> find('list', array(
@@ -444,7 +444,7 @@ class BillsController extends AppController
 				),
 				'recursive' => 0
 			));
-			$underAuthors[''] = "Unknown";
+			//$underAuthors[''] = "Unknown";
 			$underAuthors['SGA'] = $sga_undergraduate;
 			$this -> set('underAuthors', $underAuthors);
 		}
@@ -1014,44 +1014,53 @@ class BillsController extends AppController
 	}
 
 	/**
-	 * Creates and sends an email to all of the owners of a bill.
-	 */
-	private function updateBillOwners($id)
-	{
-		$bill = $this -> Bill -> findById($id);
-		debug($bill);
-		$this -> loadModel('User');
-		$gradAuthor = $this -> User -> findBySgaId($bill['Authors']['grad_auth_id']);
-		$undrAuthor = $this -> User -> findBySgaId($bill['Authors']['undr_auth_id']);
-		$submitter = $this -> User -> findById($bill['Bill']['submitter']);
-		$authors = array();
-		if (isset($gradAuthor['User']['id']))
-		{
-			$authors[] = $gradAuthor['User']['email'];
-			$this -> set('grad_name', $gradAuthor['User']['name']);
-		}
-		if (isset($undrAuthor['User']['id']))
-		{
-			$authors[] = $undrAuthor['User']['email'];
-			$this -> set('undr_name', $undrAuthor['User']['name']);
-		}
-		$authors[] = $submitter['User']['email'];
-		$this -> set('bill', $bill);
-		$email = new CakeEmail();
-		$email -> config('default');
-		$email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
-		$email -> to($authors);
-		$email -> subject('New Bill');
-		$email -> template('newbill');
-		$email -> emailFormat('html');
-		//MRE TO DO: still need to catch the fact the $gradAuthor, etc. can be null
-		$email -> viewVars(array(
-			'bill' => $bill,
-			'grad_name' => $gradAuthor['User']['name'],
-			'undr_name' => $undrAuthor['User']['name']
-		));
-		$email -> send();
-	}
+     * Creates and sends an email to all of the owners of a bill.
+     */
+    private function updateBillOwners($id)
+    {
+        $bill = $this -> Bill -> findById($id);
+        debug($bill);
+        $this -> loadModel('User');
+        $submitter = $this -> User -> findById($bill['Bill']['submitter']);
+        $authors = array();
+		// MRE added this check as an extra safeguard to prevent
+		// random people from receiving emails. Emails were sent
+		// erroneously before because a null was making it into
+		// the author id field, and non-sga user have a null sga id
+        if ($bill['Authors']['grad_auth_id'] != null)
+        {
+                $gradAuthor = $this -> User -> findBySgaId($bill['Authors']['grad_auth_id']);
+                if(isset($gradAuthor['User']['id']))
+                {
+                        $authors[] = $gradAuthor['User']['email'];
+                        $this -> set('grad_name', $gradAuthor['User']['name']);
+                }
+        }
+        if ($bill['Authors']['undr_auth_id'] != null)
+        {
+                $undrAuthor = $this -> User -> findBySgaId($bill['Authors']['undr_auth_id']);
+                if(isset($undrAuthor['User']['id']))
+                {
+                        $authors[] = $undrAuthor['User']['email'];
+                        $this -> set('undr_name', $undrAuthor['User']['name']);
+                }
+        }
+        $authors[] = $submitter['User']['email'];
+        $this -> set('bill', $bill);
+        $email = new CakeEmail();
+        $email -> config('default');
+        $email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
+        $email -> to($authors);
+        $email -> subject('New Bill');
+        $email -> template('newbill');
+        $email -> emailFormat('html');       
+        $email -> viewVars(array(
+                'bill' => $bill,
+                'grad_name' => (isset($gradAuthor['User']['name'])) ? $gradAuthor['User']['name'] : '',
+                'undr_name' => (isset($undrAuthor['User']['name'])) ? $undrAuthor['User']['name'] : ''
+        ));
+        $email -> send();
+    }
 
 }
 ?>

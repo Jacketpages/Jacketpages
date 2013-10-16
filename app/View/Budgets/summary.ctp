@@ -29,6 +29,9 @@ echo "Last updated by $last_updated_by on $last_updated.";
 echo $this -> Form -> create('',array('onsubmit' => 'return finalBudgetSubmit()'));
 if(!$budgetSubmitted)
 echo $this -> Form -> submit();
+echo '<div id="notification">';
+echo "Once you have completed your application, please use the Submit button to release it to SGA. No further changes can be made after submitting.";
+echo '</div>';
 ?>
 <script>
 	function finalBudgetSubmit()
