@@ -309,11 +309,11 @@ class BillsController extends AppController
 			$this -> request -> data['Bill']['last_mod_date'] = date('Y-m-d h:i:s');
 			// If Graduate author or Undergraduate author are set as Unknown
 			// then set them to a place holder author.
-			if ($this -> request -> data['Authors']['grad_auth_id'] == null)
+			if ($this -> request -> data['Authors']['grad_auth_id'] == null || $this -> request -> data['Bill']['category'] == 'Undergraduate')
 			{
 				$this -> request -> data['Authors']['grad_auth_id'] = 0;
 			}
-			if ($this -> request -> data['Authors']['undr_auth_id'] == null)
+			if ($this -> request -> data['Authors']['undr_auth_id'] == null || $this -> request -> data['Bill']['category'] == 'Graduate')
 			{
 				$this -> request -> data['Authors']['undr_auth_id'] = 0;
 			}
@@ -352,7 +352,7 @@ class BillsController extends AppController
 			),
 			'recursive' => 0
 		));
-		$gradAuthors[''] = "Unknown";
+		//$gradAuthors[''] = "Unknown";
 		$gradAuthors['SGA'] = $sga_graduate;
 		$this -> set('gradAuthors', $gradAuthors);
 		$sga_undergraduate = $this -> SgaPerson -> find('list', array(
@@ -363,7 +363,7 @@ class BillsController extends AppController
 			),
 			'recursive' => 0
 		));
-		$underAuthors[''] = "Unknown";
+		//$underAuthors[''] = "Unknown";
 		$underAuthors['SGA'] = $sga_undergraduate;
 		$this -> set('underAuthors', $underAuthors);
 	}
@@ -395,11 +395,11 @@ class BillsController extends AppController
 		switch ($bill['Bill']['status'])
 		{
 			case $this -> CREATED :
-				if (!$this -> isSubmitter($id))
+				if (!($this -> isSubmitter($id) || $this -> isSGAExec()))
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AWAITING_AUTHOR :
-				if (!$this -> isAuthor($id))
+				if (!($this -> isAuthor($id) || $this -> isSGAExec()))
 					$this -> redirect($this -> referer());
 				break;
 			case $this -> AUTHORED :
@@ -433,7 +433,7 @@ class BillsController extends AppController
 				),
 				'recursive' => 0
 			));
-			$gradAuthors[''] = "Unknown";
+			//$gradAuthors[''] = "Unknown";
 			$gradAuthors['SGA'] = $sga_graduate;
 			$this -> set('gradAuthors', $gradAuthors);
 			$sga_undergraduate = $this -> SgaPerson -> find('list', array(
@@ -444,7 +444,7 @@ class BillsController extends AppController
 				),
 				'recursive' => 0
 			));
-			$underAuthors[''] = "Unknown";
+			//$underAuthors[''] = "Unknown";
 			$underAuthors['SGA'] = $sga_undergraduate;
 			$this -> set('underAuthors', $underAuthors);
 		}
@@ -453,6 +453,16 @@ class BillsController extends AppController
 			// MRE removed this check because it breaks everything
 			if (/*$this -> validateStatusAndSignatures($this -> request -> data, $id)*/1)
 			{
+				// If Graduate author or Undergraduate author are set as Unknown
+				// then set them to a place holder author.
+				if ($this -> request -> data['Authors']['grad_auth_id'] == null || $this -> request -> data['Bill']['category'] == 'Undergraduate')
+				{
+					$this -> request -> data['Authors']['grad_auth_id'] = 0;
+				}
+				if ($this -> request -> data['Authors']['undr_auth_id'] == null || $this -> request -> data['Bill']['category'] == 'Graduate')
+				{
+					$this -> request -> data['Authors']['undr_auth_id'] = 0;
+				}
 				if ($this -> Bill -> saveAssociated($this -> request -> data, array('deep' => true)))
 				{
 					$this -> Session -> setFlash('The bill has been saved.');
@@ -660,7 +670,7 @@ class BillsController extends AppController
 	public function submit($id)
 	{
 		$submitter_id = $this -> Bill -> field('submitter', array('id' => $id));
-		if ($this -> Session -> read('User.id') == $submitter_id)
+		if ($this -> Session -> read('User.id') == $submitter_id || $this -> isSGAExec())
 		{
 			$this -> Session -> setFlash('The bill has been submitted to the authors.');
 			$this -> updateBillOwners($id);
@@ -726,10 +736,9 @@ class BillsController extends AppController
 	public function votes($bill_id = null, $organization = null, $votes_id = null)
 	{
 		$state = $this -> Bill -> field('status', array('id' => $bill_id));
-			$this -> set('bill_id', $bill_id);
+		$this -> set('bill_id', $bill_id);
 		if ($this -> isSGAExec() && $state >= $this -> AGENDA)
 		{
-			if ($bill_id == null || $organization == null || $votes_id == null)
 			{
 				$this -> Session -> setFlash('Please select a bill to view.');
 				$this -> redirect(array(
@@ -802,7 +811,16 @@ class BillsController extends AppController
 	{
 		$bill = $this -> Bill -> findById($id);
 		if ($bill['Bill']['status'] == $this -> AUTHORED && $this -> isSGAExec())
+		{
 			$this -> setBillStatus($id, $this -> AGENDA, true, $bill['Bill']['category']);
+		}
+		else
+		{
+			$this -> redirect(array(
+				'action' => 'view',
+				$id
+			));
+		}
 
 	}
 
@@ -880,14 +898,28 @@ class BillsController extends AppController
 				'grad_auth_appr'
 			));
 			$this -> Bill -> id = $bill_id;
-			if ($authors['BillAuthor']['undr_auth_appr'] && $authors['BillAuthor']['grad_auth_appr'])
+			$bill = $this -> Bill -> read();
+			if ($bill['Bill']['category'] == 'Joint')
 			{
-				$bill = $this -> Bill -> read();
-				$this -> Bill -> saveField('status', $this -> AUTHORED);
+				if($authors['BillAuthor']['undr_auth_appr'] && $authors['BillAuthor']['grad_auth_appr'])
+				{		
+					$this -> Bill -> saveField('status', $this -> AUTHORED);
+				}
+				else
+				{
+					$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);	
+				}
 			}
 			else
 			{
-				$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);
+				if($authors['BillAuthor']['undr_auth_appr'] || $authors['BillAuthor']['grad_auth_appr'])
+				{		
+					$this -> Bill -> saveField('status', $this -> AUTHORED);
+				}
+				else
+				{
+					$this -> Bill -> saveField('status', $this -> AWAITING_AUTHOR);	
+				}
 			}
 			$this -> redirect($this -> referer());
 
@@ -981,44 +1013,53 @@ class BillsController extends AppController
 	}
 
 	/**
-	 * Creates and sends an email to all of the owners of a bill.
-	 */
-	private function updateBillOwners($id)
-	{
-		$bill = $this -> Bill -> findById($id);
-		debug($bill);
-		$this -> loadModel('User');
-		$gradAuthor = $this -> User -> findBySgaId($bill['Authors']['grad_auth_id']);
-		$undrAuthor = $this -> User -> findBySgaId($bill['Authors']['undr_auth_id']);
-		$submitter = $this -> User -> findById($bill['Bill']['submitter']);
-		$authors = array();
-		if (isset($gradAuthor['User']['id']))
-		{
-			$authors[] = $gradAuthor['User']['email'];
-			$this -> set('grad_name', $gradAuthor['User']['name']);
-		}
-		if (isset($undrAuthor['User']['id']))
-		{
-			$authors[] = $undrAuthor['User']['email'];
-			$this -> set('undr_name', $undrAuthor['User']['name']);
-		}
-		$authors[] = $submitter['User']['email'];
-		$this -> set('bill', $bill);
-		$email = new CakeEmail();
-		$email -> config('default');
-		$email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
-		$email -> to($authors);
-		$email -> subject('New Bill');
-		$email -> template('newbill');
-		$email -> emailFormat('html');
-		//MRE TO DO: still need to catch the fact the $gradAuthor, etc. can be null
-		$email -> viewVars(array(
-			'bill' => $bill,
-			'grad_name' => $gradAuthor['User']['name'],
-			'undr_name' => $undrAuthor['User']['name']
-		));
-		$email -> send();
-	}
+     * Creates and sends an email to all of the owners of a bill.
+     */
+    private function updateBillOwners($id)
+    {
+        $bill = $this -> Bill -> findById($id);
+        debug($bill);
+        $this -> loadModel('User');
+        $submitter = $this -> User -> findById($bill['Bill']['submitter']);
+        $authors = array();
+		// MRE added this check as an extra safeguard to prevent
+		// random people from receiving emails. Emails were sent
+		// erroneously before because a null was making it into
+		// the author id field, and non-sga user have a null sga id
+        if ($bill['Authors']['grad_auth_id'] != null)
+        {
+                $gradAuthor = $this -> User -> findBySgaId($bill['Authors']['grad_auth_id']);
+                if(isset($gradAuthor['User']['id']))
+                {
+                        $authors[] = $gradAuthor['User']['email'];
+                        $this -> set('grad_name', $gradAuthor['User']['name']);
+                }
+        }
+        if ($bill['Authors']['undr_auth_id'] != null)
+        {
+                $undrAuthor = $this -> User -> findBySgaId($bill['Authors']['undr_auth_id']);
+                if(isset($undrAuthor['User']['id']))
+                {
+                        $authors[] = $undrAuthor['User']['email'];
+                        $this -> set('undr_name', $undrAuthor['User']['name']);
+                }
+        }
+        $authors[] = $submitter['User']['email'];
+        $this -> set('bill', $bill);
+        $email = new CakeEmail();
+        $email -> config('default');
+        $email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
+        $email -> to($authors);
+        $email -> subject('New Bill');
+        $email -> template('newbill');
+        $email -> emailFormat('html');       
+        $email -> viewVars(array(
+                'bill' => $bill,
+                'grad_name' => (isset($gradAuthor['User']['name'])) ? $gradAuthor['User']['name'] : '',
+                'undr_name' => (isset($undrAuthor['User']['name'])) ? $undrAuthor['User']['name'] : ''
+        ));
+        $email -> send();
+    }
 
 }
 ?>

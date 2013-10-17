@@ -57,7 +57,24 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		'options' => $gradAuthors
 	));
 }
-if ($bill['Bill']['status'] >= $AUTHORED && $sga_exec)
+if($sga_admin)
+{
+	echo $this -> Form -> input('status', array(
+			'label' => 'Status',
+			'options' => array(
+				1 => 'Created',
+				2 => 'Awaiting Author',
+				3 => 'Authored',
+				4 => 'Agenda',
+				5 => 'Passed',
+				6 => 'Failed',
+				7 => 'Conference'
+			),
+			'default' => $bill['Bill']['status']
+		));
+	echo $this -> Form -> input('number', array('label' => 'Number'));
+}
+else if ($bill['Bill']['status'] >= $AUTHORED && $sga_exec)
 {
 	echo $this -> Form -> input('status', array(
 			'label' => 'Status',

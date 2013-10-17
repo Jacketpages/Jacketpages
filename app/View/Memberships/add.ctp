@@ -42,7 +42,8 @@ echo $this -> Form -> input('room_reserver', array(
 echo $this -> Form -> input('start_date', array(
 	'label' => 'Start Date',
 	'type' => 'text',
-	'id' => 'start_date'
+	'id' => 'start_date',
+	'default' => date("Y-m-d")
 ));
 echo $this -> Form -> input('end_date', array(
 	'label' => 'End Date',

@@ -58,5 +58,8 @@ echo $this -> Form -> submit('Save and Continue', array(
 	'formnovalidate',
 	'onclick' => 'openToolTips()'
 ));
+echo '<div id="notification">';
+echo "If applicable, please include at least one line item. Should you intend on submitting many line items, you may want to continue adding line items using the link on the next page and saving your updates periodically since your login session may time out. ";
+echo '</div>'; 
 $this -> end();
 ?>
