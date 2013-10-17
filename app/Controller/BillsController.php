@@ -572,6 +572,7 @@ class BillsController extends AppController
 			else
 			{
 				$this -> Bill -> saveField('status', $this -> TABLED);
+				$this -> redirect(array('action' => 'index'));
 			}
 		}
 		else
