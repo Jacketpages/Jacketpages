@@ -253,6 +253,7 @@ class AppController extends Controller
 		)), 'Member') == 0);
 	}
 
+
 	public function getMembers($org_id = null, $roles = array(), $single = false, $statuses = array('Active'))
 	{
 		$this -> loadModel('Membership');

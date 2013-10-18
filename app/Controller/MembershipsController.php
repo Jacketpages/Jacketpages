@@ -141,21 +141,29 @@ class MembershipsController extends AppController
 		if (!empty($this -> data))
 		{
 			$orgId = $this -> data['Membership']['org_id'];
-			$this -> Membership -> create();
-			$this -> Membership -> set('status','Active');
-			if ($this -> Membership -> save($this -> data))
+			$userId = $this -> data['Membership']['user_id'];
+			if ($this -> isMember($orgId, $userId) || $this -> isPendingMember($orgId, $userId))
 			{
-				$this -> Session -> setFlash(__('The membership has been saved.', true));
-				$this -> redirect(array(
-					'controller' => 'memberships',
-					'action' => 'index',
-					$this -> data['Membership']['org_id']
-				));
+				$this -> Session -> setFlash(__('Membership already exists for that user.', true));				
 			}
 			else
 			{
-				$this -> Session -> setFlash(__('The membership could not be saved. Please try again.', true));
-			}
+				$this -> Membership -> create();
+				$this -> Membership -> set('status','Active');
+				if ($this -> Membership -> save($this -> data))
+				{
+					$this -> Session -> setFlash(__('The membership has been saved.', true));
+					$this -> redirect(array(
+						'controller' => 'memberships',
+						'action' => 'index',
+						$orgId
+					));			
+				}
+				else
+				{
+					$this -> Session -> setFlash(__('The membership could not be saved. Please try again.', true));
+				}	
+			}		
 		}
 	}
 
