@@ -67,6 +67,60 @@ $this -> start('search');
 		</ul>
 	</div>
 </div>
+<div id="accordion">
+	<a href="#">Filters</a>
+	<div>
+		<div style="float: left; width: 45%;">
+			<ul>
+				<?php
+				echo $this -> Form -> input('from', array(
+				'label' => 'From Status',
+					'options' => array(
+						1 => 'Created',
+						2 => 'Awaiting Author',
+						3 => 'Authored',
+						4 => 'Agenda',
+						5 => 'Conference',
+						6 => 'Passed',
+						7 => 'Failed',
+						8 => 'Tabled'
+					),
+					'selected' => $this -> Session -> read('Bill.from')
+				));
+				echo $this -> Form -> input('to', array(
+				'label' => 'To Status',
+					'options' => array(
+						1 => 'Created',
+						2 => 'Awaiting Author',
+						3 => 'Authored',
+						4 => 'Agenda',
+						5 => 'Conference',
+						6 => 'Passed',
+						7 => 'Failed',
+						8 => 'Tabled'
+					),
+					'selected' => ($this -> Session -> read('Bill.to') == null ? 7 : $this -> Session -> read('Bill.to'))
+				));
+				?>
+			</ul>
+		</div>
+		<div style="float: right; width: 45%;">
+			<?php
+			echo $this -> Form -> input('category', array(
+				'options' => array(
+					'All' => 'All',
+					'Joint' => 'Joint',
+					'Undergraduate' => 'Undergraduate',
+					'Graduate' => 'Graduate',
+				),
+				'selected' => $this -> Session -> read('Category')
+			));
+			echo "<br/>";
+			echo $this -> Form -> submit();		
+			?>
+		</div>
+	</div>
+</div>
 <?php
 $this -> end();
 $this -> start('listing');
