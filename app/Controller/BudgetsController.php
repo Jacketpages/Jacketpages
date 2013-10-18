@@ -30,14 +30,22 @@ class BudgetsController extends AppController
 		'Session'
 	);
 
-	public function index($org_id = null)
+	public function index()
 	{
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+		if (!($this -> isSGAExec()))
 			$this -> redirect($this -> referer());
-		if ($org_id != null)
-		{
-			$this -> set('orgId', $org_id);
-		}
+
+		$this -> paginate = array(
+			'conditions' => array('fiscal_year' => '20' . ($this -> getFiscalYear() + 2)),
+			'fields' => array(
+				'Organization.id',
+				'Organization.name',
+				'Budget.id',
+				'Budget.state',
+				'Budget.last_mod_date'
+			),
+			'recursive' => 0
+		);
 		$this -> set('budgets', $this -> paginate('Budget'));
 	}
 
