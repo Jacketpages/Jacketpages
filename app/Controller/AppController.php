@@ -252,6 +252,23 @@ class AppController extends Controller
 			)
 		)), 'Member') == 0);
 	}
+	
+	protected function isPendingMember($org_id, $user_id = null)
+	{
+		if($user_id == null)
+			$user_id = $this -> Session -> read('User.id');
+		$this -> loadModel('Membership');
+		$db = ConnectionManager::getDataSource('default');
+		return (strcmp($this -> Membership -> field('role', array(
+			'org_id' => $org_id,
+			'user_id' => $user_id,
+			'status' => 'Pending',
+			'OR' => array(
+				$db -> expression('Membership.end_date >= NOW()'),
+				'Membership.end_date' => null
+			)
+		)), 'Member') == 0);
+	}
 
 
 	public function getMembers($org_id = null, $roles = array(), $single = false, $statuses = array('Active'))

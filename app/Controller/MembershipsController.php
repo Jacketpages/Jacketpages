@@ -56,7 +56,7 @@ class MembershipsController extends AppController
 	 */
 	public function edit($id = null)
 	{
-		$org_id = $this -> Membership -> field('org_id',array('id' => $id));
+		$org_id = $this -> Membership -> field('org_id', array('id' => $id));
 		if (!($this -> isOfficer($org_id) || $this -> isLace()))
 			$this -> redirectHome();
 		if ($id == null)
@@ -110,12 +110,15 @@ class MembershipsController extends AppController
 			$this -> redirect('/');
 		}
 		$this -> loadModel('User');
-		if($this -> request -> is('post') && !$this -> User -> exists($this -> request -> data['Membership']['user_id']))
+		if ($this -> request -> is('post') && !$this -> User -> exists($this -> request -> data['Membership']['user_id']))
 		{
 			$this -> Session -> setFlash("Please select a valid JacketPages user to add.");
-			$this -> redirect(array('action' => 'index',$id));
+			$this -> redirect(array(
+				'action' => 'index',
+				$id
+			));
 		}
-				/*if ($id) {
+		/*if ($id) {
 		 $orgId = $id;
 		 $userId = $this -> getUser();
 		 $this -> loadModel('User');
@@ -165,6 +168,7 @@ class MembershipsController extends AppController
 				}	
 			}		
 		}
+
 	}
 
 	// MRE: Who should be able to delete memberships?
@@ -285,14 +289,18 @@ class MembershipsController extends AppController
 		$this -> Membership -> set('title', 'Member');
 		$this -> Membership -> set('status', 'Pending');
 		$this -> Membership -> set('room_reserver', 'No');
+		$this -> Membership -> set('start_date', date('Y-m-d'));
 
-		if ($this -> Membership -> save())
+		if (!$this -> isPendingMember($org_id))
 		{
-			$this -> Session -> setFlash('Request sent to join organization.');
-		}
-		else
-		{
-			$this -> Session -> setFlash('Unable to join the organization.');
+			if ($this -> Membership -> save())
+			{
+				$this -> Session -> setFlash('Request sent to join organization.');
+			}
+			else
+			{
+				$this -> Session -> setFlash('Unable to join the organization.');
+			}
 		}
 		$this -> redirect($this -> referer());
 

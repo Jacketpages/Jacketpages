@@ -85,10 +85,6 @@ class BillsController extends AppController
 		{
 			$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
 		}
-		else
-		{
-			$authorId = $this -> Session -> read('Sga.id');
-		}
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.status BETWEEN ? AND ?' => array(
