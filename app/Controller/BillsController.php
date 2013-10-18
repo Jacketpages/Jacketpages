@@ -735,9 +735,10 @@ class BillsController extends AppController
 
 	public function votes($bill_id = null, $organization = null, $votes_id = null)
 	{
+		$state = $this -> Bill -> field('status', array('id' => $bill_id));
+		$this -> set('bill_id', $bill_id);
 		if ($this -> isSGAExec() && $state >= $this -> AGENDA)
 		{
-			if ($bill_id == null || $organization == null)
 			{
 				$this -> Session -> setFlash('Please select a bill to view.');
 				$this -> redirect(array(
@@ -746,8 +747,6 @@ class BillsController extends AppController
 				));
 			}
 
-			$state = $this -> Bill -> field('status', array('id' => $bill_id));
-			$this -> set('bill_id', $bill_id);
 
 			$this -> loadModel('BillVotes');
 			if ($this -> request -> is('get'))

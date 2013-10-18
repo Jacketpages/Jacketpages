@@ -31,7 +31,7 @@ class BillAuthor extends AppModel
 	public function authors($check)
 	{
 		$valid = true;
-		if (isset($this -> data['Authors']))
+		if (isset($this -> data['Authors']['category']))
 		{
 			if (key($check) == 'undr_auth_id')
 			{
