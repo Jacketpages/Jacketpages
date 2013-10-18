@@ -118,13 +118,18 @@ class BudgetsController extends AppController
 		$this -> set('tier', $this -> roman_numerals($organization['Organization']['tier']));
 
 		$db = ConnectionManager::getDataSource('default');
-		$this -> set('member_count', $this -> Membership -> find('count', array('conditions' => array(
-				'Organization.id' => $org_id,
+		$this -> set('member_count', $this -> Membership -> find('count', array(
+			'fields' => 'DISTINCT Membership.user_id',
+			'conditions' => array(
+				'org_id' => $org_id,
+				'Membership.status' => 'Active',
 				'OR' => array(
 					$db -> expression('Membership.end_date >= NOW()'),
 					'Membership.end_date' => null
 				)
-			))));
+			),
+			'recursive' => -1,
+		)));
 		$president = $this -> getMembers($org_id, array('President'), true);
 		$treasurer = $this -> getMembers($org_id, array('Treasurer'), true);
 		$advisor = $this -> getMembers($org_id, array('Advisor'), true);

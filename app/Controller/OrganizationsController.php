@@ -255,7 +255,7 @@ class OrganizationsController extends AppController
 				'action' => 'index'
 			));
 		}
-		$this -> set('organization', $this -> Organization -> read());
+		$this -> set('organization', $organization);
 		$this -> loadModel('Membership');
 		$this -> set('presidents', $this -> getMembers($id, array('President')));
 		$this -> set('treasurers', $this -> getMembers($id, array('Treasurer')));
