@@ -218,18 +218,21 @@ class AppController extends Controller
 	{
 		$this -> loadModel('Membership');
 		$db = ConnectionManager::getDataSource('default');
-		return in_array($this -> Membership -> field('role', array(
-			'org_id' => $org_id,
-			'user_id' => $this -> Session -> read('User.id'),
-			'OR' => array(
-								$db -> expression('Membership.end_date >= NOW()'),
-								'Membership.end_date' => null
-							)
-		)), array(
-			'Officer',
-			'President',
-			'Treasurer',
-			'Advisor'
+		return $this -> Membership -> find('count', array(
+			'fields' => 'DISTINCT Membership.role',
+			'conditions' => array('AND' => array(
+				'org_id' => $org_id,
+				'user_id' => $this -> Session -> read('User.id'),
+				'OR' => array(
+					$db -> expression('Membership.end_date >= NOW()'),
+					'Membership.end_date' => null
+				),
+				'OR' => array(
+					'role' => array('Officer','President','Treasurer','Advisor')
+				)
+				)
+			),
+			'recursive' => -1
 		));
 	}
 
@@ -240,10 +243,11 @@ class AppController extends Controller
 		return (strcmp($this -> Membership -> field('role', array(
 			'org_id' => $org_id,
 			'user_id' => $this -> Session -> read('User.id'),
+			'status' => 'Active',
 			'OR' => array(
-								$db -> expression('Membership.end_date >= NOW()'),
-								'Membership.end_date' => null
-							)
+				$db -> expression('Membership.end_date >= NOW()'),
+				'Membership.end_date' => null
+			)
 		)), 'Member') == 0);
 	}
 

@@ -38,17 +38,20 @@ if ($lace || $isOfficer)
 		'action' => 'submit',
 		$organization['Organization']['id']
 	));
+}
+
+if ($lace || $isOfficer || $isMember)
+{
 	$sidebar[] = $this -> Html -> link(__('Documents', true), array(
-		'controller' => 'documents',
-		'action' => 'index',
-		$organization['Organization']['id']
-	));
+			'controller' => 'documents',
+			'action' => 'index',
+			$organization['Organization']['id']
+		));
 	$sidebar[] = $this -> Html -> link(__('Roster', true), array(
 		'controller' => 'memberships',
 		'action' => 'index',
 		$organization['Organization']['id']
 	));
-
 }
 
 //MRE TODO add ledger page in budgets
