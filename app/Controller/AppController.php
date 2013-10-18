@@ -236,13 +236,15 @@ class AppController extends Controller
 		));
 	}
 
-	protected function isMember($org_id)
+	protected function isMember($org_id, $user_id = null)
 	{
+		if ($user_id == null)
+			$user_id = $this -> Session -> read('User.id');
 		$this -> loadModel('Membership');
 		$db = ConnectionManager::getDataSource('default');
 		return (strcmp($this -> Membership -> field('role', array(
 			'org_id' => $org_id,
-			'user_id' => $this -> Session -> read('User.id'),
+			'user_id' => $user_id,
 			'status' => 'Active',
 			'OR' => array(
 				$db -> expression('Membership.end_date >= NOW()'),

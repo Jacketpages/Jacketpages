@@ -278,11 +278,7 @@ class OrganizationsController extends AppController
 		 ))));
 		 $this -> set('pending_members', $pending_members);*/
 
-		$this -> set('orgJoinOrganizationPerm', $this -> Membership -> find('count', array('conditions' => array(
-				'Membership.status' => 'Active',
-				'org_id' => $id,
-				'User.id' => $this -> Session -> read('User.id')
-			))));
+		$this -> set('orgJoinOrganizationPerm', ($this -> isMember($id) || $this -> isPendingMember($id)));
 	}
 
 	public function add()
