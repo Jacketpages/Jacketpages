@@ -184,7 +184,7 @@ function updateTCAndRqstd(row)
 {
 	if ($("#LineItemAccount" + row).val() == "CO")
 	{
-		$("#LineItemAmount" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val() * .75).toFixed(2));
+		$("#LineItemAmount" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val() * 2.0/3.0).toFixed(2));
 		$("#LineItemTotalCost" + row).val(parseFloat($("#LineItemCostPerUnit" + row).val() * $("#LineItemQuantity" + row).val()).toFixed(2));
 	}
 	else
