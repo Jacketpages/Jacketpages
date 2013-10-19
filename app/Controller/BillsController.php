@@ -80,11 +80,13 @@ class BillsController extends AppController
 			$categories = array($this -> Session -> read('Bill.category'));
 		}
 		$keyword = $this -> Session -> read('Search.keyword');
-		$this -> loadModel('User');
+		
 		if ($id == null)
 		{
+			$this -> loadModel('User');
 			$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
 		}
+		
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.status BETWEEN ? AND ?' => array(
@@ -108,24 +110,17 @@ class BillsController extends AppController
 		// If given a user's id then filter to show only that user's bills
 		if ($id != null)
 		{
-			if (strlen($authorId) != 0)
-			{
-				$this -> set('bills', $this -> paginate('Bill',
-					// seperate this group of conditions from the previous
-					array('AND' => array(
-						// OR these together
-						array('OR' => array(
-							array('submitter' => $id),
-							array('Authors.grad_auth_id' => $authorId),
-							array('Authors.undr_auth_id' => $authorId)
-							)
+			$this -> set('bills', $this -> paginate('Bill',
+				// seperate this group of conditions from the previous
+				array('AND' => array(
+					// OR these together
+					array('OR' => array(
+						array('submitter' => $id),
+						array('Authors.grad_auth_id' => $id),
+						array('Authors.undr_auth_id' => $id)
 						)
-					))));
-			}
-			else
-			{
-				$this -> set('bills', $this -> paginate('Bill', array('OR' => array( array('submitter' => $id)))));
-			}
+					)
+				))));
 		}
 		else
 		{
@@ -601,7 +596,6 @@ class BillsController extends AppController
 	 */
 	public function my_bills($letter = null)
 	{
-		debug($this -> Session -> read());
 		$this -> index($letter, $this -> Session -> read('User.id'));
 	}
 
@@ -1021,7 +1015,6 @@ class BillsController extends AppController
     private function updateBillOwners($id)
     {
         $bill = $this -> Bill -> findById($id);
-        debug($bill);
         $this -> loadModel('User');
         $submitter = $this -> User -> findById($bill['Bill']['submitter']);
         $authors = array();
