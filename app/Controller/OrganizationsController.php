@@ -338,7 +338,7 @@ class OrganizationsController extends AppController
 			}
 			if ($this -> Organization -> save($this -> request -> data))
 			{
-				CakeLog::write('info', 'User[' . $this -> Session -> read('USER.name') . '] has edited Organization[' . $this -> request -> data['Organization']['name'] . ']');
+				CakeLog::write('info', 'User[' . $this -> Session -> read('User.name') . '] has edited Organization[' . $this -> request -> data['Organization']['name'] . ']');
 				$this -> Session -> setFlash('The organization has been saved.');
 				$this -> redirect(array(
 					'action' => 'view',
@@ -347,7 +347,7 @@ class OrganizationsController extends AppController
 			}
 			else
 			{
-				CakeLog::write('error', 'User[' . $this -> Session -> read('USER.name') . '] was unable to edit Organization[' . $this -> request -> data['Organization']['name'] . ']');
+				CakeLog::write('error', 'User[' . $this -> Session -> read('User.name') . '] was unable to edit Organization[' . $this -> request -> data['Organization']['name'] . ']');
 				$this -> Session -> setFlash('Unable to edit the organization.');
 			}
 		}

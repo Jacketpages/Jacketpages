@@ -110,10 +110,16 @@ class BillsController extends AppController
 		{
 			if (strlen($authorId) != 0)
 			{
-				$this -> set('bills', $this -> paginate('Bill', array('OR' => array(
-						array('submitter' => $id),
-						array('Authors.grad_auth_id' => $authorId),
-						array('Authors.undr_auth_id' => $authorId)
+				$this -> set('bills', $this -> paginate('Bill',
+					// seperate this group of conditions from the previous
+					array('AND' => array(
+						// OR these together
+						array('OR' => array(
+							array('submitter' => $id),
+							array('Authors.grad_auth_id' => $authorId),
+							array('Authors.undr_auth_id' => $authorId)
+							)
+						)
 					))));
 			}
 			else
@@ -578,6 +584,7 @@ class BillsController extends AppController
 			else
 			{
 				$this -> Bill -> saveField('status', $this -> TABLED);
+				$this -> redirect(array('action' => 'index'));
 			}
 		}
 		else
