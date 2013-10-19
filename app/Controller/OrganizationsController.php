@@ -192,6 +192,13 @@ class OrganizationsController extends AppController
 			$just_names[] = $orgname['Organization']['name'];
 		}
 		$this -> set('names_to_autocomplete', $just_names);
+		
+		// get all the category names for the select
+		$this->loadModel('Category');
+		$categories = $this->Category->find('list', array(
+			'fields' => array('name', 'name')
+		));
+		$this->set('categories', $categories);
 	}
 
 	/**
@@ -303,6 +310,11 @@ class OrganizationsController extends AppController
 				));
 			}
 		}
+		
+		// get all the category names for the select
+		$this->loadModel('Category');
+		$categories = $this->Category->find('list');
+		$this->set('categories', $categories);
 	}
 
 	/**
@@ -351,6 +363,11 @@ class OrganizationsController extends AppController
 				$this -> Session -> setFlash('Unable to edit the organization.');
 			}
 		}
+		
+		// get all the category names for the select
+		$this->loadModel('Category');
+		$categories = $this->Category->find('list');
+		$this->set('categories', $categories);
 	}
 
 	/**

@@ -30,32 +30,11 @@ if ($orgExportPerm)
 $sidebar[] = '<a>Organization&nbsp;Category<br /><br />
 <div id=\'category\'>'.
 $this -> Form -> create().
-$this -> Form -> input('category', array(
+$this -> Form -> select('Organization.category', $categories, array(
 		'label' => false,
 		'default' => $this -> Session -> read('Search.category'),
-		'options' => array(
-			'' => 'All',
-			'CPC Sorority' => 'CPC Sorority',
-			'Cultural/Diversity' => 'Cultural/Diversity',
-			'Departmental Sponsored' => 'Departmental Sponsored',
-			'Departments' => 'Departments',
-			'Governing Boards' => 'Governing Boards',
-			'Honor Society' => 'Honor Society',
-			'IFC Fraternity' => 'IFC Fraternity',
-			'Institute Recognized' => 'Institute Recognized',
-			'MGC Chapter' => 'MGC Chapter',
-			'None' => 'None',
-			'NPHC Chapter' => 'NPHC Chapter',
-			'Production/Performance/Publication' => 'Production/Performance/Publication',
-			'Professional/Departmental' => 'Professional/Departmental',
-			'Recreational/Sports/Leisure' => 'Recreational/Sports/Leisure',
-			'Religious/Spiritual' => 'Religious/Spiritual',
-			'Residence Hall Association' => 'Residence Hall Association',
-			'Service/Political/Educational' => 'Service/Political/Educational',
-			'Student Government' => 'Student Government',
-			'Umbrella' => 'Umbrella',
-			'Other' => 'Other'
-		)
+		'onchange' => 'submit()',
+		'empty' => 'All'
 	)).'</div></a>';
 echo $this -> Html -> nestedList($sidebar);
 ?>
