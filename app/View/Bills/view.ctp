@@ -53,19 +53,32 @@ echo $this -> element('bills/view/authors');
 echo $this -> element('bills/view/signatures');
 echo $this -> element('bills/view/outcomes');
 
+// select the rightmost tab with line items
+if(!empty($final)){
+	$selectedIndex = 6;
+}/* else if(!empty($all)){
+	$selectedIndex = 5;
+}*/ else if(!empty($conference)){
+	$selectedIndex = 4;
+} else if(!empty($undergraduate)){
+	$selectedIndex = 3;
+} else if(!empty($graduate)){
+	$selectedIndex = 2;
+} else if(!empty($jfc)){
+	$selectedIndex = 1;
+} else if(!empty($submitted)){
+	$selectedIndex = 0;
+} else {
+	// default, first tab
+	$selectedIndex = 0;
+}
+
 ?>
 <script>
 	$(function()
 	{
 		$("#tabs").tabs();
-		$("#tabs").tabs("option", "active", localStorage.selected);
-		$("#tabs").tabs(
-		{
-			activate : function(event, ui)
-			{
-				localStorage.selected = $("#tabs").tabs("option", "active");
-			}
-		});
+		$("#tabs").tabs("option", "active", <?php echo $selectedIndex; ?>);
 	}); 
 </script>
 <br>
