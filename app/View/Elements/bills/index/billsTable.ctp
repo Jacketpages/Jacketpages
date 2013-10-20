@@ -26,8 +26,9 @@
 <script>
 	$(function() {
 		$("#accordion").accordion({
-			collapsible : true,
-			active : false
+			collapsible : <?php echo (isset($openAccordion) && $openAccordion)?'false':'true'; // if $openAccordion is true, open it. default close ?>,
+			active : false,
+			heightStyle: "content"
 		});
 
 	}); 

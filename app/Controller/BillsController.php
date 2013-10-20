@@ -30,18 +30,22 @@ class BillsController extends AppController
 		// Set page view permissions
 		$this -> set('billExportPerm', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'billExportPerm'));
 
-		if ($this -> Session -> read('Bill.from') == null)
-		{
-			$this -> request -> data = array('Bill' => array(
-					'from' => 1,
-					'to' => 7,
-					'category' => 'All'
-				));
+		$defaultFilter = array('Bill' => array(
+			'from' => 1,
+			'to' => 7,
+			'category' => 'All'
+		));
+		
+		// if the filters have not be set, or the clear button has been pressed
+		if($this->Session->check('Bill.from') == false || $this->request->data('submit') === 'Clear'){
+			// set the data to the defaults
+			$this -> request -> data = $defaultFilter;
 		}
+		
 		// Writes the search keyword to the Session if the request is a POST
 		if ($this -> request -> is('post') && !$this -> request -> is('ajax'))
 		{
-			$this -> Session -> write('Search.keyword', $this -> request -> data['Bill']['keyword']);
+			$this -> Session -> write('Search.keyword', $this -> request -> data('Bill.keyword'));
 		}
 		// Deletes the search keyword if the letter is null and the request is not ajax
 		else if (!$this -> request -> is('ajax') && $letter == null)
@@ -125,6 +129,16 @@ class BillsController extends AppController
 		else
 		{
 			$this -> set('bills', $this -> paginate('Bill'));
+		}
+		
+		// if set and if one or more of the session filters are not the default
+		if($this->Session->check('Bill.from') && (
+		   $this->Session->read('Bill.from') != $defaultFilter['Bill']['from']
+		   || $this->Session->read('Bill.to') != $defaultFilter['Bill']['to']
+		   || $this->Session->read('Bill.category') != $defaultFilter['Bill']['category']))
+		{
+			// set the accordion to be open
+			$this->set('openAccordion', true);
 		}
 	}
 
