@@ -38,29 +38,10 @@ if ($sga_exec || $lace)
 		)
 	));
 }
-echo $this -> Form -> input('category', array('options' => array(
-		'1' => 'CPC Sorority',
-		'2' => 'Cultural/Diversity',
-		'3' => 'Departmental Sponsored',
-		'4' => 'Departments',
-		'5' => 'Governing Boards',
-		'6' => 'Honor Society',
-		'7' => 'IFC Fraternity',
-		'8' => 'Institute Recognized',
-		'9' => 'MGC Chapter',
-		'10' => 'None',
-		'11' => 'NPHC Chapter',
-		'12' => 'Production/Performance/Publication',
-		'13' => 'Professional/Departmental',
-		'14' => 'Recreational/Sports/Leisure',
-		'15' => 'Religious/Spiritual',
-		'16' => 'Residence Hall Association',
-		'17' => 'Service/Political/Educational',
-		'18' => 'Student Government',
-		'19' => 'Umbrella',
-		'20' => 'Other'
-	)));
-
+echo $this -> Form -> input('category', array(
+	'options' => $categories,
+	'label' => 'Category'
+));
 echo $this -> Form -> hidden('contact_id', array('id' => 'contact_id'));
 echo $this -> Form -> input('User.name', array(
 	'label' => 'Primary Contact Name -- You must select from suggestions when they appear',

@@ -113,10 +113,14 @@ $this -> start('search');
 					'Undergraduate' => 'Undergraduate',
 					'Graduate' => 'Graduate',
 				),
-				'selected' => $this -> Session -> read('Category')
+				'selected' => $this -> Session -> read('Bill.category')
 			));
 			echo "<br/>";
-			echo $this -> Form -> submit();		
+			echo $this -> Form -> submit('Submit', array('div' => array('style' => 'display:inline-block')));	
+			echo $this -> Form -> submit('Clear', array(
+				'div' => array('style' => 'display:inline-block'),
+				'name' => 'submit'
+			));	
 			?>
 		</div>
 	</div>

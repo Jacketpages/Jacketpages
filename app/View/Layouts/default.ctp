@@ -37,6 +37,7 @@
 		echo $this -> fetch('css');
 		
         ?>
+        <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
         <script type="text/javascript">
 			// @TODO Generate this script using the HTML and Js helpers
 			$(document).ready(function() {
