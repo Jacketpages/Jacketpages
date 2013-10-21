@@ -1,2 +1,9 @@
 User-agent: *
-Disallow: /
+Disallow: /users/
+Disallow: /budgets/
+Disallow: /budget_line_items/
+Disallow: /line_items/
+Disallow: /js/
+Disallow: /img/
+Disallow: /css/
+Disallow: /documents/
