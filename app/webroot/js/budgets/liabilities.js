@@ -128,9 +128,9 @@ function lcorrectNumbers()
 
 		cells[0].getElementsByTagName("input")[0].setAttribute("id", "LiabilityId" + i);
 		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[Budget][" + i + "][Liability][id]");
-		cells[0].getElementsByTagName("input")[1].setAttribute("id", "Item" + i);
+		cells[0].getElementsByTagName("input")[1].setAttribute("id", "LItem" + i);
 		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[Budget][" + i + "][Liability][item]");
-		cells[1].getElementsByTagName("input")[0].setAttribute("id", "Amount" + i);
+		cells[1].getElementsByTagName("input")[0].setAttribute("id", "LAmount" + i);
 		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[Budget][" + i + "][Liability][amount]");
 		cells[3].getElementsByTagName("button")[0].setAttribute("onclick", "lmoveUp(" + i + ")");
 		cells[4].getElementsByTagName("button")[0].setAttribute("onclick", "lmoveDown(" + i + ")");
