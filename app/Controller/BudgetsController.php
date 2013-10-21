@@ -57,12 +57,12 @@ class BudgetsController extends AppController
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
 					'state' => 'Submitted'
-				))) && !$this-> isSGAExec())
+				))) && !$this -> isSGAExec())
 			$this -> redirect(array(
 				'action' => 'summary',
 				$org_id
 			));
-			
+
 		if ($org_id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to create a budget.');
@@ -72,6 +72,15 @@ class BudgetsController extends AppController
 				$this -> Session -> read('User.id')
 			));
 		}
+		// This check may keep multiple budgets from being created, but it is UNTESTED.
+		// if ($this -> Budget -> find('count', array('conditions' => array(
+				// 'id' => $this -> getBudgetId($org_id),
+				// 'state' => 'Submitted'
+			// ))) && ($this -> request -> data['Budget']['id'] == null || $this -> request -> data['Budget']['id'] == ''))
+		// {
+			// $this -> Session -> setFlash('It appears that someone else may have already created a budget.');
+			// $this -> redirect($this -> referer());
+		// }
 
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
@@ -94,7 +103,7 @@ class BudgetsController extends AppController
 						'id' => $this -> getBudgetId($org_id),
 						'state_1' => 1
 					)));
-					$this -> updateLastModBy($this -> getBudgetId($org_id));
+				$this -> updateLastModBy($this -> getBudgetId($org_id));
 				if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 					$this -> redirect(array(
 						'controller' => 'budget_line_items',
@@ -108,10 +117,10 @@ class BudgetsController extends AppController
 			}
 		}
 		$this -> set('org_id', $org_id);
-		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array(
-			'conditions' => array(
+		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $this -> getBudgetId($org_id),
-				'state' => 'Submitted'))));
+				'state' => 'Submitted'
+			))));
 		$this -> loadModel('Membership');
 		$this -> loadModel('Organization');
 		$this -> Organization -> id = $org_id;
@@ -174,7 +183,7 @@ class BudgetsController extends AppController
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
 					'state' => 'Submitted'
-				))) && !$this-> isSGAExec())
+				))) && !$this -> isSGAExec())
 			$this -> redirect(array(
 				'action' => 'summary',
 				$org_id
@@ -190,10 +199,10 @@ class BudgetsController extends AppController
 		}
 
 		$this -> set('org_id', $org_id);
-		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array(
-			'conditions' => array(
+		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $this -> getBudgetId($org_id),
-				'state' => 'Submitted'))));
+				'state' => 'Submitted'
+			))));
 		$this -> loadModel('Fundraiser');
 		$this -> loadModel('Dues');
 		$budgetId = $this -> Budget -> field('id', array(
@@ -235,7 +244,7 @@ class BudgetsController extends AppController
 					'id' => $this -> getBudgetId($org_id),
 					'state_3' => 1
 				)));
-				$this -> updateLastModBy($this -> getBudgetId($org_id));
+			$this -> updateLastModBy($this -> getBudgetId($org_id));
 			if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 				$this -> redirect(array(
 					'controller' => 'budgets',
@@ -271,7 +280,7 @@ class BudgetsController extends AppController
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
 					'state' => 'Submitted'
-				))) && !$this-> isSGAExec())
+				))) && !$this -> isSGAExec())
 			$this -> redirect(array(
 				'action' => 'summary',
 				$org_id
@@ -292,10 +301,10 @@ class BudgetsController extends AppController
 		$this -> set('org_id', $org_id);
 		$this -> loadModel('Expense');
 		$budgetId = $this -> getBudgetId($org_id);
-		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array(
-			'conditions' => array(
+		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $this -> getBudgetId($org_id),
-				'state' => 'Submitted'))));
+				'state' => 'Submitted'
+			))));
 		if ($this -> request -> is('post'))
 		{
 			$expenseIds = Hash::extract($this -> Expense -> findAllByBudgetId($budgetId), '{n}.Expense.id');
@@ -322,7 +331,7 @@ class BudgetsController extends AppController
 						'id' => $this -> getBudgetId($org_id),
 						'state_4' => 1
 					)));
-					$this -> updateLastModBy($this -> getBudgetId($org_id));
+				$this -> updateLastModBy($this -> getBudgetId($org_id));
 			}
 			if ($redirect)
 				$this -> redirect(array(
@@ -343,7 +352,7 @@ class BudgetsController extends AppController
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
 					'state' => 'Submitted'
-				))) && !$this-> isSGAExec())
+				))) && !$this -> isSGAExec())
 			$this -> redirect(array(
 				'action' => 'summary',
 				$org_id
@@ -359,10 +368,10 @@ class BudgetsController extends AppController
 		}
 
 		$this -> set('org_id', $org_id);
-		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array(
-			'conditions' => array(
+		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $this -> getBudgetId($org_id),
-				'state' => 'Submitted'))));
+				'state' => 'Submitted'
+			))));
 		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 			$redirect = true;
 		else
@@ -380,7 +389,7 @@ class BudgetsController extends AppController
 					'id' => $this -> getBudgetId($org_id),
 					'state_5' => 1
 				)));
-				$this -> updateLastModBy($this -> getBudgetId($org_id));
+			$this -> updateLastModBy($this -> getBudgetId($org_id));
 			if ($redirect)
 				$this -> redirect(array(
 					'controller' => 'budgets',
@@ -450,7 +459,7 @@ class BudgetsController extends AppController
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
 					'state' => 'Submitted'
-				))) && !$this-> isSGAExec())
+				))) && !$this -> isSGAExec())
 			$this -> redirect(array(
 				'action' => 'summary',
 				$org_id
@@ -470,10 +479,10 @@ class BudgetsController extends AppController
 			));
 		}
 
-		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array(
-			'conditions' => array(
+		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $this -> getBudgetId($org_id),
-				'state' => 'Submitted'))));
+				'state' => 'Submitted'
+			))));
 		$this -> loadModel('MemberContribution');
 		$budgetId = $this -> getBudgetId($org_id);
 
@@ -503,7 +512,7 @@ class BudgetsController extends AppController
 						'id' => $this -> getBudgetId($org_id),
 						'state_6' => 1
 					)));
-					$this -> updateLastModBy($budgetId);
+				$this -> updateLastModBy($budgetId);
 				if ($redirect)
 					$this -> redirect(array(
 						'controller' => 'budgets',
@@ -514,7 +523,7 @@ class BudgetsController extends AppController
 
 		}
 		$this -> set('memberContributions', $this -> MemberContribution -> findAllByBudgetId($budgetId));
-		$this -> set('org_id', $org_id);	
+		$this -> set('org_id', $org_id);
 	}
 
 	public function summary($org_id = null)
@@ -546,12 +555,12 @@ class BudgetsController extends AppController
 		$totals[] = '$' . ($this -> Asset -> field('SUM(amount)', array('budget_id' => $budgetId)) - $this -> Liability -> field('SUM(amount)', array('budget_id' => $budgetId)));
 		$totals[] = '$' . $this -> MemberContribution -> field('SUM(amount)', array('budget_id' => $budgetId));
 		$this -> set('totals', $totals);
-		$this -> set('last_updated', $this -> Budget -> field('last_mod_date'));
+		$this -> set('last_updated', $this -> Budget -> field('last_mod_date', array('id' => $budgetId)));
 		$this -> loadModel('User');
-		$this -> set('last_updated_by', $this -> User -> field("CONCAT(first_name,' ',last_name)", array('id' => $this -> Budget -> field('last_mod_by'))));
+		$this -> set('last_updated_by', $this -> User -> field("CONCAT(first_name,' ',last_name)", array('id' => $this -> Budget -> field('last_mod_by', array('id' => $budgetId)))));
 		if ($this -> request -> is('post'))
 		{
-			$this -> Budget -> id = $budgetId;			
+			$this -> Budget -> id = $budgetId;
 			if ($this -> Budget -> saveField('state', 'Submitted'))
 			{
 				$this -> redirect(array(
@@ -570,8 +579,9 @@ class BudgetsController extends AppController
 
 	private function updateLastModBy($budget_id)
 	{
-		$this ->Budget -> id = $budget_id;
+		$this -> Budget -> id = $budget_id;
 		$this -> Budget -> saveField('last_mod_by', $this -> Session -> read('User.id'));
+		$this -> Budget -> saveField('last_mod_date', date('Y-m-d H:i:s'));
 	}
 
 }

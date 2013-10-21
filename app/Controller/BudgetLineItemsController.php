@@ -127,6 +127,7 @@ class BudgetLineItemsController extends AppController
 					)));
 				$this -> Budget -> id = $budget_id;
 				$this -> Budget -> saveField('last_mod_by', $this -> Session -> read('User.id'));
+				$this -> Budget -> saveField('last_mod_date', date('Y-m-d H:i:s'));
 
 			}
 			if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
