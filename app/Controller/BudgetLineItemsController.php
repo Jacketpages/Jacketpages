@@ -9,8 +9,12 @@ class BudgetLineItemsController extends AppController
 	public function index()
 	{
 		// no index
-		$this->Session->setFlash('Please select your organization to create a budget.');
-		$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
+		$this -> Session -> setFlash('Please select your organization to create a budget.');
+		$this -> redirect(array(
+			'controller' => 'organizations',
+			'action' => 'my_orgs',
+			$this -> Session -> read('User.id')
+		));
 	}
 
 	public function edit($org_id = null)
@@ -26,15 +30,20 @@ class BudgetLineItemsController extends AppController
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $budgetId,
 					'state' => 'Submitted'
-				))) && !$this-> isSGAExec())
+				))) && !$this -> isSGAExec())
 			$this -> redirect(array(
 				'action' => 'summary',
 				$org_id
 			));
-		if($org_id == null){
-			$this->Session->setFlash('Please select your organization to create a budget.');
-			$this->redirect(array('controller' => 'organizations', 'action' => 'my_orgs', $this -> Session -> read('User.id')));
-		}		
+		if ($org_id == null)
+		{
+			$this -> Session -> setFlash('Please select your organization to create a budget.');
+			$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'my_orgs',
+				$this -> Session -> read('User.id')
+			));
+		}
 		$this -> loadModel('LineItemCategory');
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
@@ -116,6 +125,9 @@ class BudgetLineItemsController extends AppController
 						'id' => $budget_id,
 						'state_2' => 1
 					)));
+				$this -> Budget -> id = $budget_id;
+				$this -> Budget -> saveField('last_mod_by', $this -> Session -> read('User.id'));
+
 			}
 			if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 				$this -> redirect(array(
@@ -137,10 +149,10 @@ class BudgetLineItemsController extends AppController
 			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
 		));
 		$this -> set('org_id', $org_id);
-		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array(
-			'conditions' => array(
+		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $budgetId,
-				'state' => 'Submitted'))));
+				'state' => 'Submitted'
+			))));
 		if ($oldBudgetId)
 		{
 			$oldAllocatedLineItems = $this -> BudgetLineItem -> findAllByBudgetIdAndState($oldBudgetId, 'Final', array(), array('line_number asc'));

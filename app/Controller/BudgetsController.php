@@ -94,6 +94,7 @@ class BudgetsController extends AppController
 						'id' => $this -> getBudgetId($org_id),
 						'state_1' => 1
 					)));
+					$this -> updateLastModBy($this -> getBudgetId($org_id));
 				if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 					$this -> redirect(array(
 						'controller' => 'budget_line_items',
@@ -234,6 +235,7 @@ class BudgetsController extends AppController
 					'id' => $this -> getBudgetId($org_id),
 					'state_3' => 1
 				)));
+				$this -> updateLastModBy($this -> getBudgetId($org_id));
 			if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 				$this -> redirect(array(
 					'controller' => 'budgets',
@@ -320,6 +322,7 @@ class BudgetsController extends AppController
 						'id' => $this -> getBudgetId($org_id),
 						'state_4' => 1
 					)));
+					$this -> updateLastModBy($this -> getBudgetId($org_id));
 			}
 			if ($redirect)
 				$this -> redirect(array(
@@ -377,6 +380,7 @@ class BudgetsController extends AppController
 					'id' => $this -> getBudgetId($org_id),
 					'state_5' => 1
 				)));
+				$this -> updateLastModBy($this -> getBudgetId($org_id));
 			if ($redirect)
 				$this -> redirect(array(
 					'controller' => 'budgets',
@@ -499,6 +503,7 @@ class BudgetsController extends AppController
 						'id' => $this -> getBudgetId($org_id),
 						'state_6' => 1
 					)));
+					$this -> updateLastModBy($budgetId);
 				if ($redirect)
 					$this -> redirect(array(
 						'controller' => 'budgets',
@@ -561,6 +566,12 @@ class BudgetsController extends AppController
 	public function view()
 	{
 
+	}
+
+	private function updateLastModBy($budget_id)
+	{
+		$this ->Budget -> id = $budget_id;
+		$this -> Budget -> saveField('last_mod_by', $this -> Session -> read('User.id'));
 	}
 
 }
