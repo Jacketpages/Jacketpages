@@ -121,6 +121,10 @@ class BudgetsController extends AppController
 				'id' => $this -> getBudgetId($org_id),
 				'state' => 'Submitted'
 			))));
+		$this -> set('budgetCreated', $this -> Budget -> find('count', array('conditions' => array(
+			'id' => $this -> getBudgetId($org_id),
+			'state' => 'Created'
+		))));
 		$this -> loadModel('Membership');
 		$this -> loadModel('Organization');
 		$this -> Organization -> id = $org_id;
@@ -202,6 +206,10 @@ class BudgetsController extends AppController
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $this -> getBudgetId($org_id),
 				'state' => 'Submitted'
+			))));
+		$this -> set('budgetCreated', $this -> Budget -> find('count', array('conditions' => array(
+				'id' => $this -> getBudgetId($org_id),
+				'state' => 'Created'
 			))));
 		$this -> loadModel('Fundraiser');
 		$this -> loadModel('Dues');
@@ -305,6 +313,10 @@ class BudgetsController extends AppController
 				'id' => $this -> getBudgetId($org_id),
 				'state' => 'Submitted'
 			))));
+		$this -> set('budgetCreated', $this -> Budget -> find('count', array('conditions' => array(
+				'id' => $this -> getBudgetId($org_id),
+				'state' => 'Created'
+			))));
 		if ($this -> request -> is('post'))
 		{
 			$expenseIds = Hash::extract($this -> Expense -> findAllByBudgetId($budgetId), '{n}.Expense.id');
@@ -371,6 +383,10 @@ class BudgetsController extends AppController
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $this -> getBudgetId($org_id),
 				'state' => 'Submitted'
+			))));
+		$this -> set('budgetCreated', $this -> Budget -> find('count', array('conditions' => array(
+				'id' => $this -> getBudgetId($org_id),
+				'state' => 'Created'
 			))));
 		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 			$redirect = true;
@@ -483,6 +499,10 @@ class BudgetsController extends AppController
 				'id' => $this -> getBudgetId($org_id),
 				'state' => 'Submitted'
 			))));
+		$this -> set('budgetCreated', $this -> Budget -> find('count', array('conditions' => array(
+				'id' => $this -> getBudgetId($org_id),
+				'state' => 'Created'
+			))));
 		$this -> loadModel('MemberContribution');
 		$budgetId = $this -> getBudgetId($org_id);
 
@@ -546,6 +566,10 @@ class BudgetsController extends AppController
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
 				'id' => $budgetId,
 				'state' => 'Submitted'
+			))));
+		$this -> set('budgetCreated', $this -> Budget -> find('count', array('conditions' => array(
+				'id' => $budgetId,
+				'state' => 'Created'
 			))));
 		$totals = array();
 		$totals[] = 'N/A';
