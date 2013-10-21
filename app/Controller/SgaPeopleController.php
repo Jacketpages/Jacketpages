@@ -116,14 +116,49 @@ class SgaPeopleController extends AppController
 			$this->redirect(array('controller' => 'sga_people', 'action' => 'index'));
 		}
 		
-		$this -> SgaPerson -> id = $id;
-		if ($this -> request -> is('get'))
+		// if form submited
+		if (!$this -> request -> is('get'))
 		{
-			$this -> request -> data = $this -> SgaPerson -> read();
-		}
-		else
-		{
-			if ($this -> SgaPerson -> save($this -> request -> data))
+			// use saveAll to create a transactional update for the belongsTo
+			
+			$this->loadModel('User');
+			// get the associated user id and level
+			$user = $this -> User -> find('first', array(
+				'fields' => array('User.id', 'User.level'),
+				'joins' => array(array(
+						'table' => 'sga_people',
+						'conditions' => array('sga_people.user_id = User.id')
+				)),
+				'conditions' => array('sga_people.id' => $id)
+			));
+			
+			$this -> request -> data['SgaPerson']['id'] = $id;// needed for saveAll
+			
+			// if their status will be Inactive
+			if($this->request->data['SgaPerson']['status'] === 'Inactive'){
+				// if they had sga_ level
+				if($user['User']['level'] === 'sga_exec' ||
+				   $user['User']['level'] === 'sga_user' ||
+				   $user['User']['level'] === 'sga_admin')
+				{
+					$this -> request -> data['User']['id'] = $user['User']['id'];
+					$this -> request -> data['User']['level'] = 'gt_member';
+				}
+				
+			} else if($this->request->data['SgaPerson']['status'] === 'Active'){
+				// status will be Active
+				
+				// if the user is not already an sga_ level
+				if($user['User']['level'] !== 'sga_exec' &&
+				   $user['User']['level'] !== 'sga_user' &&
+				   $user['User']['level'] !== 'sga_admin')
+				{
+					$this -> request -> data['User']['id'] = $user['User']['id'];
+					$this -> request -> data['User']['level'] = 'sga_user';
+				}
+			}
+		
+			if ($this -> SgaPerson -> saveAll($this -> request -> data))
 			{
 				$this -> Session -> setFlash(__('The user has been edited.', true));
 				$this -> redirect(array('action' => 'index'));
@@ -134,9 +169,11 @@ class SgaPeopleController extends AppController
 			}
 		}
 		
+		$this -> SgaPerson -> id = $id;
 		$sgaPerson = $this -> SgaPerson -> read();
+		
+		$this -> request -> data = $sgaPerson;
 		$this -> set('sgaPerson', $sgaPerson);
-		$this -> set('id', $sgaPerson['SgaPerson']['id']);
 	}
 
 }
