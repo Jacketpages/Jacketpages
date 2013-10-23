@@ -1,4 +1,4 @@
-<?php if(!$budgetSubmitted || $sga_exec) {?>
+<?php if((!$budgetSubmitted && $budgetCreated) || $sga_exec) {?>
 <div class="links left-nav" id="sidebar">
 		<?php echo $this -> fetch('sidebar');
 			echo $this -> Html -> nestedList(array(
@@ -15,7 +15,7 @@
 </div>
 <?php } ?>
 
-<div id="<?php echo (!$budgetSubmitted || $sga_exec)?'middle':'middle_full'; ?>">
+<div id="<?php echo ((!$budgetSubmitted && $budgetCreated) || $sga_exec)?'middle':'middle_full'; ?>">
     <div id="page_title"><?php echo $this -> fetch('title'); ?></div>
     <?php echo $this -> fetch('middle'); ?>
 </div>

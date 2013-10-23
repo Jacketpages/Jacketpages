@@ -145,7 +145,8 @@ class MembershipsController extends AppController
 		{
 			$orgId = $this -> data['Membership']['org_id'];
 			$userId = $this -> data['Membership']['user_id'];
-			if ($this -> isMember($orgId, $userId) || $this -> isPendingMember($orgId, $userId))
+			if (($this -> isMember($orgId, $userId) || $this -> isPendingMember($orgId, $userId))
+				&& $this -> data['Membership']['role'] == 'Member')
 			{
 				$this -> Session -> setFlash(__('Membership already exists for that user.', true));				
 			}

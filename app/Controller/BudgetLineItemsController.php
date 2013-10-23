@@ -154,6 +154,10 @@ class BudgetLineItemsController extends AppController
 				'id' => $budgetId,
 				'state' => 'Submitted'
 			))));
+		$this -> set('budgetCreated', $this -> Budget -> find('count', array('conditions' => array(
+				'id' => $budgetId,
+				'state' => 'Created'
+			))));
 		if ($oldBudgetId)
 		{
 			$oldAllocatedLineItems = $this -> BudgetLineItem -> findAllByBudgetIdAndState($oldBudgetId, 'Final', array(), array('line_number asc'));
