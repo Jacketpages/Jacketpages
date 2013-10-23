@@ -81,7 +81,10 @@ class BudgetsController extends AppController
 			// $this -> Session -> setFlash('It appears that someone else may have already created a budget.');
 			// $this -> redirect($this -> referer());
 		// }
-
+		$redirect = false;
+		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
+			$redirect = true;
+		
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
 			$this -> Budget -> data = $this -> request -> data;
@@ -220,6 +223,14 @@ class BudgetsController extends AppController
 		$this -> set('budget_id', $budgetId);
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
+			// MRE: check here if it's a redirect and remove from the data
+			// since leaving 'redirect' => 'Save and Continue' in post data
+			// kills cake's saveall command
+			$redirect = false;
+			if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
+				$redirect = true;
+			unset($this -> request -> data['redirect']);
+			
 			$newIds = Hash::extract($this -> request -> data, '{s}.{n}.Fundraiser.id');
 			$oldIds = Hash::extract($this -> Fundraiser -> findAllByBudgetId($budgetId), '{n}.Fundraiser.id');
 			foreach (Hash::diff($oldIds, $newIds) as $id)
@@ -253,7 +264,7 @@ class BudgetsController extends AppController
 					'state_3' => 1
 				)));
 			$this -> updateLastModBy($this -> getBudgetId($org_id));
-			if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
+			if ($redirect)
 				$this -> redirect(array(
 					'controller' => 'budgets',
 					'action' => 'expenses',
@@ -336,15 +347,14 @@ class BudgetsController extends AppController
 					unset($this -> request -> data[$i]);
 				}
 			}
-			if ($this -> Expense -> saveMany($this -> request -> data))
-			{
-				$this -> loadModel('BudgetSubmitState');
-				$this -> BudgetSubmitState -> save(array('BudgetSubmitState' => array(
-						'id' => $this -> getBudgetId($org_id),
-						'state_4' => 1
-					)));
-				$this -> updateLastModBy($this -> getBudgetId($org_id));
-			}
+			// MRE: update even if nothing was submited
+			$this -> Expense -> saveMany($this -> request -> data);
+			$this -> loadModel('BudgetSubmitState');
+			$this -> BudgetSubmitState -> save(array('BudgetSubmitState' => array(
+					'id' => $this -> getBudgetId($org_id),
+					'state_4' => 1
+				)));
+			$this -> updateLastModBy($this -> getBudgetId($org_id));
 			if ($redirect)
 				$this -> redirect(array(
 					'controller' => 'budgets',
@@ -525,21 +535,23 @@ class BudgetsController extends AppController
 					unset($this -> request -> data[$i]);
 				}
 			}
+			// MRE: allow blanks to be saved
 			if ($this -> MemberContribution -> saveMany($this -> request -> data))
 			{
-				$this -> loadModel('BudgetSubmitState');
-				$this -> BudgetSubmitState -> save(array('BudgetSubmitState' => array(
-						'id' => $this -> getBudgetId($org_id),
-						'state_6' => 1
-					)));
-				$this -> updateLastModBy($budgetId);
-				if ($redirect)
-					$this -> redirect(array(
-						'controller' => 'budgets',
-						'action' => 'summary',
-						$org_id
-					));
+								
 			}
+			$this -> loadModel('BudgetSubmitState');
+			$this -> BudgetSubmitState -> save(array('BudgetSubmitState' => array(
+					'id' => $this -> getBudgetId($org_id),
+					'state_6' => 1
+				)));
+			$this -> updateLastModBy($budgetId);
+			if ($redirect)
+				$this -> redirect(array(
+					'controller' => 'budgets',
+					'action' => 'summary',
+					$org_id
+				));
 
 		}
 		$this -> set('memberContributions', $this -> MemberContribution -> findAllByBudgetId($budgetId));

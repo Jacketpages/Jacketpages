@@ -24,5 +24,5 @@ foreach($budgets as $budget)
 		));
 }
 echo $this -> Html -> tableEnd();
-
+echo $this -> element('paging');
 $this -> end();
