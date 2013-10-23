@@ -39,6 +39,7 @@ class BudgetLineItemsController extends AppController
 		));
 		if (!$budgetId && !$this -> isSGAExec())
 			$this -> redirect(array(
+				'controller' => 'budgets',
 				'action' => 'summary',
 				$org_id
 			));
