@@ -86,7 +86,7 @@ class BudgetsController extends AppController
 		$redirect = false;
 		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 			$redirect = true;
-		
+
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{
 			$this -> Budget -> data = $this -> request -> data;
@@ -127,9 +127,9 @@ class BudgetsController extends AppController
 				'state' => 'Submitted'
 			))));
 		$this -> set('budgetCreated', $this -> Budget -> find('count', array('conditions' => array(
-			'id' => $this -> getBudgetId($org_id),
-			'state' => 'Created'
-		))));
+				'id' => $this -> getBudgetId($org_id),
+				'state' => 'Created'
+			))));
 		$this -> loadModel('Membership');
 		$this -> loadModel('Organization');
 		$this -> Organization -> id = $org_id;
@@ -232,7 +232,7 @@ class BudgetsController extends AppController
 			if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 				$redirect = true;
 			unset($this -> request -> data['redirect']);
-			
+
 			$newIds = Hash::extract($this -> request -> data, '{s}.{n}.Fundraiser.id');
 			$oldIds = Hash::extract($this -> Fundraiser -> findAllByBudgetId($budgetId), '{n}.Fundraiser.id');
 			foreach (Hash::diff($oldIds, $newIds) as $id)
@@ -341,12 +341,20 @@ class BudgetsController extends AppController
 					$this -> Expense -> delete($id);
 				}
 			}
-			for ($i = 0; $i < count($this -> request -> data); $i++)
+			$limit = count($this -> request -> data);
+			for ($i = 0; $i < $limit; $i++)
 			{
-				$this -> request -> data[$i]['Expense']['budget_id'] = $budgetId;
-				if (strcmp($this -> request -> data[$i]['Expense']['item'], '') == 0)
+				if (count($this -> request -> data[$i]) == 0)
 				{
 					unset($this -> request -> data[$i]);
+				}
+				else if (strcmp($this -> request -> data[$i]['Expense']['item'], '') == 0)
+				{
+					unset($this -> request -> data[$i]);
+				}
+				else
+				{
+					$this -> request -> data[$i]['Expense']['budget_id'] = $budgetId;
 				}
 			}
 			// MRE: update even if nothing was submited
@@ -538,18 +546,22 @@ class BudgetsController extends AppController
 					$this -> MemberContribution -> delete($id);
 				}
 			}
-			for ($i = 0; $i < count($this -> request -> data); $i++)
+			$limit = count($this -> request -> data);
+			if ($limit > 0)
 			{
-				$this -> request -> data[$i]['MemberContribution']['budget_id'] = $budgetId;
-				if (strcmp($this -> request -> data[$i]['MemberContribution']['item'], '') == 0)
+				for ($i = 0; $i < $limit; $i++)
 				{
-					unset($this -> request -> data[$i]);
+					$this -> request -> data[$i]['MemberContribution']['budget_id'] = $budgetId;
+					if (strcmp($this -> request -> data[$i]['MemberContribution']['item'], '') == 0)
+					{
+						unset($this -> request -> data[$i]);
+					}
 				}
 			}
 			// MRE: allow blanks to be saved
 			if ($this -> MemberContribution -> saveMany($this -> request -> data))
 			{
-								
+
 			}
 			$this -> loadModel('BudgetSubmitState');
 			$this -> BudgetSubmitState -> save(array('BudgetSubmitState' => array(
