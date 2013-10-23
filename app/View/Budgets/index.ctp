@@ -16,8 +16,8 @@ foreach($budgets as $budget)
 	echo $this -> Html -> tableCells(array(
 			$this -> Html -> link($budget['Organization']['name'], array(
 				'controller' => 'budgets',
-				'action' => 'summary',
-				$budget['Organization']['id']
+				'action' => 'view',
+				$budget['Budget']['id']
 			)),
 			$budget['Budget']['state'],
 			$budget['Budget']['last_mod_date']

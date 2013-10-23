@@ -376,21 +376,27 @@ class OrganizationsController extends AppController
 	 */
 	public function export()
 	{
-		$this -> Session -> setFlash('UNDER CONSTRUCTION');
-		$this -> redirect('/organizations/index');
+		// $this -> Session -> setFlash('UNDER CONSTRUCTION');
+		// $this -> redirect('/organizations/index');
 		$organizations = $this -> Organization -> find('all', array('fields' => array(
 				'Organization.id',
 				'Organization.name',
 				'Organization.status',
-				'Organization.contact_name',
-				'User.email'
-			)));
+				'Organization.contact_id',
+				'Organization.alcohol_form',
+				'Organization.advisor_date',
+				'Organization.constitution_date'
+			), 'recursive' => -1));
 		$this -> loadModel('Membership');
+			$this -> loadModel('User');
 		$build_export[] = array(
 			"Organization",
 			"Status",
-			"Organization Contact",
-			"Organization Contact's email",
+			"Alcohol Form Date",
+			"Advisor Form Date",
+			"Constitution Date",
+			"Contact Name",
+			"Contact Email",
 			"President",
 			"President's email",
 			"Treasurer",
@@ -400,43 +406,26 @@ class OrganizationsController extends AppController
 		);
 		foreach ($organizations as $organization)
 		{
-			$roles = array(
-				'President',
-				'Treasurer',
-				'Advisor'
-			);
-			// initialize variables
-			$advisor = array(
-				'Membership' => array('name' => ''),
-				'User' => array('email' => '')
-			);
-			$treasurer = array(
-				'Membership' => array('name' => ''),
-				'User' => array('email' => '')
-			);
-			$president = array(
-				'Membership' => array('name' => ''),
-				'User' => array('email' => '')
-			);
 			// get values if they exist
-			$president = $this -> Membership -> findByRoleAndOrgId('President', $organization['Organization']['id'], array(
-				'name',
-				'User.email'
-			));
-			$treasurer = $this -> Membership -> findByRoleAndOrgId('Treasurer', $organization['Organization']['id'], array(
-				'name',
-				'User.email'
-			));
-			$advisor = $this -> Membership -> findByRoleAndOrgId('Advisor', $organization['Organization']['id'], array(
-				'name',
-				'User.email'
-			));
+			 $president = $this -> getMembers($organization['Organization']['id'],array('President'), true);
 
+			 $treasurer = $this -> getMembers($organization['Organization']['id'],array('Treasurer'), true);
+			$advisor = $this -> getMembers($organization['Organization']['id'],array('Advisor'), true);
+			$contact = $this -> User -> findById($organization['Organization']['contact_id']);
+			if(count($contact) == 0)
+			{
+				$contact = array(
+						'User' => array('name' => '','email' => '')
+					);
+			}
 			$build_export[] = array(
 				$organization['Organization']['name'],
 				$organization['Organization']['status'],
-				$organization['Organization']['contact_name'],
-				$organization['User']['email'],
+				$organization['Organization']['alcohol_form'],
+				$organization['Organization']['advisor_date'],
+				$organization['Organization']['constitution_date'],
+				$contact['User']['name'],
+				$contact['User']['email'],
 				$president['Membership']['name'],
 				$president['User']['email'],
 				$treasurer['Membership']['name'],

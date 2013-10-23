@@ -74,12 +74,14 @@ class BudgetsController extends AppController
 		}
 		// This check may keep multiple budgets from being created, but it is UNTESTED.
 		// if ($this -> Budget -> find('count', array('conditions' => array(
-				// 'id' => $this -> getBudgetId($org_id),
-				// 'state' => 'Submitted'
-			// ))) && ($this -> request -> data['Budget']['id'] == null || $this -> request -> data['Budget']['id'] == ''))
+		// 'id' => $this -> getBudgetId($org_id),
+		// 'state' => 'Submitted'
+		// ))) && ($this -> request -> data['Budget']['id'] == null || $this -> request
+		// -> data['Budget']['id'] == ''))
 		// {
-			// $this -> Session -> setFlash('It appears that someone else may have already created a budget.');
-			// $this -> redirect($this -> referer());
+		// $this -> Session -> setFlash('It appears that someone else may have already
+		// created a budget.');
+		// $this -> redirect($this -> referer());
 		// }
 
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
@@ -412,7 +414,8 @@ class BudgetsController extends AppController
 				$this -> Asset -> delete($id);
 			}
 		}
-		for ($i = 0; $i < count($assets); $i++)
+		$limit = count($assets);
+		for ($i = 0; $i < $limit; $i++)
 		{
 			$assets[$i]['Asset']['budget_id'] = $budgetId;
 			if (strcmp($assets[$i]['Asset']['item'], '') == 0)
@@ -437,12 +440,20 @@ class BudgetsController extends AppController
 				$this -> Liability -> delete($id);
 			}
 		}
-		for ($i = 0; $i < count($liabilities); $i++)
+		$limit = count($liabilities);
+		for ($i = 0; $i < $limit; $i++)
 		{
-			$liabilities[$i]['Liability']['budget_id'] = $budgetId;
-			if (strcmp($liabilities[$i]['Liability']['item'], '') == 0)
+			if (count($liabilities[$i]) == 0)
 			{
 				unset($liabilities[$i]);
+			}
+			else if (strcmp($liabilities[$i]['Liability']['item'], '') == 0)
+			{
+				unset($liabilities[$i]);
+			}
+			else
+			{
+				$liabilities[$i]['Liability']['budget_id'] = $budgetId;
 			}
 		}
 		if ($this -> Liability -> saveMany($liabilities))
@@ -572,9 +583,15 @@ class BudgetsController extends AppController
 		}
 	}
 
-	public function view()
+	public function view($budget_id)
 	{
-
+		$budget = $this -> Budget -> find('first', array(
+			'conditions' => array('Budget.id' => $budget_id),
+			'recursive' => 1
+		));
+		debug($budget);
+		$this -> loadModel('Organization');
+		$this -> set('organization', $this -> Organization -> findById($budget['Budget']['org_id']));
 	}
 
 	private function updateLastModBy($budget_id)

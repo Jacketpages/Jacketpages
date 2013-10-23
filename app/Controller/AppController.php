@@ -221,17 +221,19 @@ class AppController extends Controller
 		return $this -> Membership -> find('count', array(
 			'fields' => 'DISTINCT Membership.role',
 			'conditions' => array('AND' => array(
-				'org_id' => $org_id,
-				'user_id' => $this -> Session -> read('User.id'),
-				'OR' => array(
-					$db -> expression('Membership.end_date >= NOW()'),
-					'Membership.end_date' => null
-				),
-				'OR' => array(
-					'role' => array('Officer','President','Treasurer','Advisor')
-				)
-				)
-			),
+					'org_id' => $org_id,
+					'user_id' => $this -> Session -> read('User.id'),
+					'OR' => array(
+						$db -> expression('Membership.end_date >= NOW()'),
+						'Membership.end_date' => null
+					),
+					'OR' => array('role' => array(
+							'Officer',
+							'President',
+							'Treasurer',
+							'Advisor'
+						))
+				)),
 			'recursive' => -1
 		));
 	}
@@ -252,10 +254,10 @@ class AppController extends Controller
 			)
 		)), 'Member') == 0);
 	}
-	
+
 	protected function isPendingMember($org_id, $user_id = null)
 	{
-		if($user_id == null)
+		if ($user_id == null)
 			$user_id = $this -> Session -> read('User.id');
 		$this -> loadModel('Membership');
 		$db = ConnectionManager::getDataSource('default');
@@ -269,7 +271,6 @@ class AppController extends Controller
 			)
 		)), 'Member') == 0);
 	}
-
 
 	public function getMembers($org_id = null, $roles = array(), $single = false, $statuses = array('Active'))
 	{
@@ -304,6 +305,13 @@ class AppController extends Controller
 						)),
 					'order' => 'Membership.start_date desc'
 				));
+				if (count($members) == 0)
+				{
+					$members = array(
+						'Membership' => array('name' => ''),
+						'User' => array('email' => '')
+					);
+				}
 			}
 		}
 		return $members;
@@ -344,9 +352,9 @@ class AppController extends Controller
 	protected function redirectHome()
 	{
 		$this -> redirect(array(
-				'controller' => 'pages',
-				'action' => 'home'
-			));
+			'controller' => 'pages',
+			'action' => 'home'
+		));
 	}
 
 }
