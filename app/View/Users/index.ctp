@@ -22,7 +22,7 @@ $this -> assign('title', 'Users');
 if($sga_exec){
 	$this -> start('sidebar');
 	$links = array();
-	$links[] = $this -> Html -> link('Add SGA Member', array('action' => 'add'));
+	$links[] = $this -> Html -> link('Add SGA Member', array('controller' => 'sga_people', 'action' => 'add'));
 	if($admin){
 		$links[] = $this -> Html -> link('Add User', array('action' => 'add'));
 	}
