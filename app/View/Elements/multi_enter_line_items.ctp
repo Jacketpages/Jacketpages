@@ -111,6 +111,7 @@ foreach ($lineitems as $key => $lineitem)
 					'title' => 'Reserved for Graduate SGA'
 				)
 			),
+			'value' => $lineitem['LineItem']['account'],
 			'onchange' => "updateTCAndRqstd($key)",
 			'style' => 'width: 125px'
 		)),
