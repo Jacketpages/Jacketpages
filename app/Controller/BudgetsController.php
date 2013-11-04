@@ -631,15 +631,95 @@ class BudgetsController extends AppController
 		}
 	}
 
-	public function view($budget_id)
+	public function view()
 	{
-		$budget = $this -> Budget -> find('first', array(
-			'conditions' => array('Budget.id' => $budget_id),
+		debug($this -> request -> data);
+		$time = microtime();
+		$time = explode(' ', $time);
+		$time = $time[1] + $time[0];
+		$start = $time;
+		$budgets = $this -> Budget -> find('all', array(
+			'conditions' => array('fiscal_year' => ('20' . ($this -> getFiscalYear() + 2))),
 			'recursive' => 1
 		));
-		debug($budget);
+		$this -> setRequested();
+		$this -> setAllocated();
+		$years = Hash::extract($this -> Budget -> find('all', array('fields' => array('DISTINCT fiscal_year'))), '{n}.Budget.fiscal_year');
+		$this -> set('fiscal_years', array_combine($years, $years));
+		$orgIds = $this -> Budget -> find('all', array(
+			'conditions' => array(
+				'state' => 'Submitted',
+				'fiscal_year' => ('20' . ($this -> getFiscalYear() + 2))
+			),
+			'fields' => array('DISTINCT Budget.org_id')
+		));
+		$orgIds = Hash::extract($orgIds, '{n}.Budget.org_id');
 		$this -> loadModel('Organization');
-		$this -> set('organization', $this -> Organization -> findById($budget['Budget']['org_id']));
+		$orgs = $this -> Organization -> find('list', array(
+			'conditions' => array(
+				'status' => array(
+					'Active',
+					'Under Review',
+					'Pending'
+				),
+				'Organization.id' => $orgIds
+			),
+			'recursive' => -1,
+			'fields' => array('Organization.name'),
+			'order' => 'Organization.name asc'
+		));
+		$orgs = array('All')+$orgs;
+		$this -> set('organizations',$orgs);
+		$time = microtime();
+		$time = explode(' ', $time);
+		$time = $time[1] + $time[0];
+		$finish = $time;
+		$total_time = round(($finish - $start), 4);
+		debug('Page generated in ' . $total_time . ' seconds.');
+	}
+
+	private function setRequested()
+	{
+		$total_requested = $this -> BudgetLineItem -> find('first', array(
+			'conditions' => array(
+				'BudgetLineItem.state' => 'Submitted',
+				'Budget.fiscal_year' => ('20' . ($this -> getFiscalYear() + 2)),
+				'Budget.state' => 'Submitted'
+			),
+			'fields' => array('SUM(amount) AS Total_Requested')
+		));
+		$ly_total_requested = $this -> BudgetLineItem -> find('first', array(
+			'conditions' => array(
+				'BudgetLineItem.state' => 'Submitted',
+				'Budget.fiscal_year' => ('20' . ($this -> getFiscalYear() + 1)),
+				'Budget.state' => 'Final'
+			),
+			'fields' => array('SUM(amount) AS LY_Total_Requested')
+		));
+		$this -> set('total_requested', $total_requested[0]['Total_Requested']);
+		$this -> set('ly_total_requested', $ly_total_requested[0]['LY_Total_Requested']);
+	}
+
+	private function setAllocated()
+	{
+		$total_allocated = $this -> BudgetLineItem -> find('first', array(
+			'conditions' => array(
+				'BudgetLineItem.state' => 'Final',
+				'Budget.fiscal_year' => ('20' . ($this -> getFiscalYear() + 2)),
+				'Budget.state' => 'Final'
+			),
+			'fields' => array('SUM(amount) AS Total_Allocated')
+		));
+		$ly_total_allocated = $this -> BudgetLineItem -> find('first', array(
+			'conditions' => array(
+				'BudgetLineItem.state' => 'Final',
+				'Budget.fiscal_year' => ('20' . ($this -> getFiscalYear() + 1)),
+				'Budget.state' => 'Final'
+			),
+			'fields' => array('SUM(amount) AS LY_Total_Allocated')
+		));
+		$this -> set('total_allocated', $total_allocated[0]['Total_Allocated']);
+		$this -> set('ly_total_allocated', $ly_total_allocated[0]['LY_Total_Allocated']);
 	}
 
 	private function updateLastModBy($budget_id)
