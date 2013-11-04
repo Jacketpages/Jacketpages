@@ -388,7 +388,8 @@ class OrganizationsController extends AppController
 				'Organization.constitution_date'
 			), 'recursive' => -1));
 		$this -> loadModel('Membership');
-			$this -> loadModel('User');
+		$this -> loadModel('User');
+		$this -> loadModel('Budget');
 		$build_export[] = array(
 			"Organization",
 			"Status",
@@ -403,19 +404,26 @@ class OrganizationsController extends AppController
 			"Treasurer's email",
 			"Advisor",
 			"Advisor's email",
+			"Budget state"
 		);
 		foreach ($organizations as $organization)
 		{
 			// get values if they exist
-			 $president = $this -> getMembers($organization['Organization']['id'],array('President'), true);
-
-			 $treasurer = $this -> getMembers($organization['Organization']['id'],array('Treasurer'), true);
+			$president = $this -> getMembers($organization['Organization']['id'],array('President'), true);
+			$treasurer = $this -> getMembers($organization['Organization']['id'],array('Treasurer'), true);
 			$advisor = $this -> getMembers($organization['Organization']['id'],array('Advisor'), true);
 			$contact = $this -> User -> findById($organization['Organization']['contact_id']);
+			$budget = $this -> Budget -> findByOrgIdAndFiscalYear($organization['Organization']['id'], '20' . $this -> getFiscalYear() + 2);
 			if(count($contact) == 0)
 			{
 				$contact = array(
 						'User' => array('name' => '','email' => '')
+					);
+			}
+			if(count($budget) == 0)
+			{
+				$budget = array(
+						'Budget' => array('state' => 'Not Submitted')
 					);
 			}
 			$build_export[] = array(
@@ -432,6 +440,7 @@ class OrganizationsController extends AppController
 				$treasurer['User']['email'],
 				$advisor['Membership']['name'],
 				$advisor['User']['email'],
+				$budget['Budget']['state']
 			);
 		}
 		$this -> layout = 'csv';

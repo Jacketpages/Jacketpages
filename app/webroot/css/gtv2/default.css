@@ -16,7 +16,11 @@
   box-sizing: border-box;
 }
 
-html, body { font-size: 100%; }
+html {
+  font-size: 100%;
+  overflow-y: scroll;
+}
+
 body {
   color: #454545;
   padding: 0;

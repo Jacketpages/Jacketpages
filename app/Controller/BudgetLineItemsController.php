@@ -19,22 +19,6 @@ class BudgetLineItemsController extends AppController
 
 	public function edit($org_id = null)
 	{
-		//page permissions
-		$this -> loadModel('Budget');
-		$budgetId = $this -> Budget -> field('id', array(
-			'org_id' => $org_id,
-			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
-		));
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
-			$this -> redirect($this -> referer());
-		if ($this -> Budget -> find('count', array('conditions' => array(
-					'id' => $budgetId,
-					'state' => 'Submitted'
-				))) && !$this -> isSGAExec())
-			$this -> redirect(array(
-				'action' => 'summary',
-				$org_id
-			));
 		if ($org_id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to create a budget.');
@@ -44,6 +28,21 @@ class BudgetLineItemsController extends AppController
 				$this -> Session -> read('User.id')
 			));
 		}
+		//page permissions
+		$this -> loadModel('Budget');
+		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+			$this -> redirect($this -> referer());
+		//can only get here if budget has been started
+		$budgetId = $this -> Budget -> field('id', array(
+			'org_id' => $org_id,
+			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
+		));
+		if (!$budgetId && !$this -> isSGAExec())
+			$this -> redirect(array(
+				'controller' => 'budgets',
+				'action' => 'summary',
+				$org_id
+			));
 		$this -> loadModel('LineItemCategory');
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
 		{

@@ -86,6 +86,7 @@ class SgaPeopleController extends AppController
 			{
 				$user = $this -> User -> read(null, $this -> data['SgaPerson']['user_id']);
 				$this -> User -> set('level', 'sga_user');
+				$this -> User -> set('sga_id', $this -> SgaPerson -> getInsertID());
 				$this -> User -> save();
 				$this -> Session -> setFlash(__('The user has been added to SGA.', true));
 				$this -> redirect(array('action' => 'index'));
