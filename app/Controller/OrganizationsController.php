@@ -136,7 +136,7 @@ class OrganizationsController extends AppController
 			if (isset($this -> request -> data['Organization']['keyword']))
 			{
 				$this -> Session -> write('Search.keyword', trim($this -> request -> data['Organization']['keyword']));
-				//CakeLog::info($this -> request -> data['Organization']['keyword'], 'db');	
+				CakeLog::info($this -> request -> data['Organization']['keyword'], 'db');	
 			}
 			if (isset($this -> request -> data['Organization']['category']))
 			{

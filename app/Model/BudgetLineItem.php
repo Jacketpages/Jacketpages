@@ -16,5 +16,6 @@ class BudgetLineItem extends AppModel
 			'foreignKey' => 'budget_id'
 		)
 	);
+	public $order = "line_number asc";
 }
 ?>

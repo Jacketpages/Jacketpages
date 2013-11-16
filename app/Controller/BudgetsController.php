@@ -36,7 +36,7 @@ class BudgetsController extends AppController
 			$this -> redirect($this -> referer());
 
 		$this -> paginate = array(
-			'conditions' => array('fiscal_year' => '20' . ($this -> getFiscalYear() + 2)),
+			'conditions' => array('Budget.fiscal_year' => '20' . ($this -> getFiscalYear() + 2)),
 			'fields' => array(
 				'Organization.id',
 				'Organization.name',
@@ -195,7 +195,7 @@ class BudgetsController extends AppController
 				'action' => 'summary',
 				$org_id
 			));
-			
+
 		if ($org_id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to create a budget.');
@@ -219,7 +219,7 @@ class BudgetsController extends AppController
 		$this -> loadModel('Dues');
 		$budgetId = $this -> Budget -> field('id', array(
 			'org_id' => $org_id,
-			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
+			'Budget.fiscal_year' => '20' . $this -> getFiscalYear() + 2
 		));
 		$this -> set('budget_id', $budgetId);
 		if ($this -> request -> is('post') || $this -> request -> is('put'))
@@ -288,7 +288,7 @@ class BudgetsController extends AppController
 	{
 		return $budgetId = $this -> Budget -> field('id', array(
 			'org_id' => $org_id,
-			'fiscal_year' => '20' . $this -> getFiscalYear() + 2
+			'Budget.fiscal_year' => '20' . $this -> getFiscalYear() + 2
 		));
 	}
 
@@ -315,7 +315,7 @@ class BudgetsController extends AppController
 		$redirect = false;
 		if (isset($this -> request -> data['redirect']) && strcmp($this -> request -> data['redirect'], 'Save and Continue') == 0)
 			$redirect = true;
-	
+
 		$this -> set('org_id', $org_id);
 		$this -> loadModel('Expense');
 		$budgetId = $this -> getBudgetId($org_id);
@@ -493,7 +493,7 @@ class BudgetsController extends AppController
 
 	public function member_contributions($org_id = null)
 	{
-		
+
 		if ($org_id == null)
 		{
 			$this -> Session -> setFlash('Please select your organization to create a budget.');
@@ -587,7 +587,7 @@ class BudgetsController extends AppController
 				$this -> Session -> read('User.id')
 			));
 		}
-		
+
 		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 
@@ -598,7 +598,7 @@ class BudgetsController extends AppController
 				'action' => 'submit',
 				$org_id
 			));
-		
+
 		$this -> set('state', $this -> BudgetSubmitState -> findById($this -> getBudgetId($org_id)));
 		$this -> set('org_id', $org_id);
 		$this -> set('budgetSubmitted', $this -> Budget -> find('count', array('conditions' => array(
@@ -637,22 +637,71 @@ class BudgetsController extends AppController
 	public function view()
 	{
 		debug($this -> request -> data);
-		$time = microtime();
-		$time = explode(' ', $time);
-		$time = $time[1] + $time[0];
-		$start = $time;
-		$budgets = $this -> Budget -> find('all', array(
-			'conditions' => array('fiscal_year' => ('20' . ($this -> getFiscalYear() + 2))),
-			'recursive' => 1
-		));
-		$this -> setRequested();
-		$this -> setAllocated();
+		// Start - Set default search settings
+		if (count($this -> request -> data) == 0)
+		{
+			$this -> request -> data = array('Budget' => array(
+					'fiscal_year' => '20' . ($this -> getFiscalYear() + 2),
+					'tier' => 0,
+					'org_id' => 0
+				));
+		}
+		// End - Set default search settings
+		$fiscal_year = $this -> request -> data['Budget']['fiscal_year'];
+		$org_id = $this -> request -> data['Budget']['org_id'];
+		$tier = $this -> request -> data['Budget']['tier'];
+		if ($org_id != 0)
+		{
+			$budgets = $this -> Budget -> find('all', array(
+				'conditions' => array(
+					'Budget.fiscal_year' => $fiscal_year,
+					'Budget.org_id' => $org_id
+				),
+				'recursive' => 2,
+				'limit' => 10,
+				'order' => 'Organization.name',
+			));
+		}
+		else
+		{
+			$budgets = $this -> Budget -> find('all', array(
+				'conditions' => array(
+					'Budget.fiscal_year' => $fiscal_year,
+					'tier' => ($tier) ? $tier : array(
+						1,
+						2,
+						3
+					)
+				),
+				'recursive' => 2,
+				'limit' => 10,
+				'order' => 'Organization.name'
+			));
+		}
+
+		$orgIds = $this -> setOrganizationDropDown($fiscal_year, $tier);
+		if($org_id != 0)
+		{
+					$this -> setRequested($fiscal_year, $org_id);
+		$this -> setAllocated($fiscal_year, $org_id);
+		}
+		else {
+			
+		$this -> setRequested($fiscal_year, $orgIds);
+		$this -> setAllocated($fiscal_year, $orgIds);
+		}
+		$this -> set('budgets', $budgets);
+
+	}
+
+	private function setOrganizationDropDown($fiscal_year, $tier)
+	{
 		$years = Hash::extract($this -> Budget -> find('all', array('fields' => array('DISTINCT fiscal_year'))), '{n}.Budget.fiscal_year');
 		$this -> set('fiscal_years', array_combine($years, $years));
 		$orgIds = $this -> Budget -> find('all', array(
 			'conditions' => array(
 				'state' => 'Submitted',
-				'fiscal_year' => ('20' . ($this -> getFiscalYear() + 2))
+				'Budget.fiscal_year' => $fiscal_year
 			),
 			'fields' => array('DISTINCT Budget.org_id')
 		));
@@ -665,64 +714,75 @@ class BudgetsController extends AppController
 					'Under Review',
 					'Pending'
 				),
-				'Organization.id' => $orgIds
+				'Organization.id' => $orgIds,
+				'tier' => ($tier) ? $tier : array(
+						1,
+						2,
+						3
+					)
 			),
 			'recursive' => -1,
 			'fields' => array('Organization.name'),
 			'order' => 'Organization.name asc'
 		));
-		$orgs = array('All')+$orgs;
-		$this -> set('organizations',$orgs);
-		$time = microtime();
-		$time = explode(' ', $time);
-		$time = $time[1] + $time[0];
-		$finish = $time;
-		$total_time = round(($finish - $start), 4);
-		debug('Page generated in ' . $total_time . ' seconds.');
+		$orgIds = array_keys($orgs);
+		$orgs = array('All') + $orgs;
+		$this -> set('organizations', $orgs);
+		return $orgIds;
 	}
 
-	private function setRequested()
+	private function setRequested($fiscal_year = null, $orgIds)
 	{
-		$total_requested = $this -> BudgetLineItem -> find('first', array(
-			'conditions' => array(
-				'BudgetLineItem.state' => 'Submitted',
-				'Budget.fiscal_year' => ('20' . ($this -> getFiscalYear() + 2)),
-				'Budget.state' => 'Submitted'
-			),
-			'fields' => array('SUM(amount) AS Total_Requested')
-		));
-		$ly_total_requested = $this -> BudgetLineItem -> find('first', array(
-			'conditions' => array(
-				'BudgetLineItem.state' => 'Submitted',
-				'Budget.fiscal_year' => ('20' . ($this -> getFiscalYear() + 1)),
-				'Budget.state' => 'Final'
-			),
-			'fields' => array('SUM(amount) AS LY_Total_Requested')
-		));
-		$this -> set('total_requested', $total_requested[0]['Total_Requested']);
-		$this -> set('ly_total_requested', $ly_total_requested[0]['LY_Total_Requested']);
+		if ($fiscal_year != null)
+		{
+			$total_requested = $this -> BudgetLineItem -> find('first', array(
+				'conditions' => array(
+					'BudgetLineItem.state' => 'Submitted',
+					'Budget.fiscal_year' => $fiscal_year,
+					'Budget.state' => 'Submitted',
+					'Budget.org_id' => $orgIds
+				),
+				'fields' => array('SUM(amount) AS Total_Requested')
+			));
+			$ly_total_requested = $this -> BudgetLineItem -> find('first', array(
+				'conditions' => array(
+					'BudgetLineItem.state' => 'Submitted',
+					'Budget.fiscal_year' => $fiscal_year - 1,
+					'Budget.state' => 'Final',
+					'Budget.org_id' => $orgIds
+				),
+				'fields' => array('SUM(amount) AS LY_Total_Requested')
+			));
+			$this -> set('total_requested', $total_requested[0]['Total_Requested']);
+			$this -> set('ly_total_requested', $ly_total_requested[0]['LY_Total_Requested']);
+		}
 	}
 
-	private function setAllocated()
+	private function setAllocated($fiscal_year = null, $orgIds)
 	{
-		$total_allocated = $this -> BudgetLineItem -> find('first', array(
-			'conditions' => array(
-				'BudgetLineItem.state' => 'Final',
-				'Budget.fiscal_year' => ('20' . ($this -> getFiscalYear() + 2)),
-				'Budget.state' => 'Final'
-			),
-			'fields' => array('SUM(amount) AS Total_Allocated')
-		));
-		$ly_total_allocated = $this -> BudgetLineItem -> find('first', array(
-			'conditions' => array(
-				'BudgetLineItem.state' => 'Final',
-				'Budget.fiscal_year' => ('20' . ($this -> getFiscalYear() + 1)),
-				'Budget.state' => 'Final'
-			),
-			'fields' => array('SUM(amount) AS LY_Total_Allocated')
-		));
-		$this -> set('total_allocated', $total_allocated[0]['Total_Allocated']);
-		$this -> set('ly_total_allocated', $ly_total_allocated[0]['LY_Total_Allocated']);
+		if ($fiscal_year != null)
+		{
+			$total_allocated = $this -> BudgetLineItem -> find('first', array(
+				'conditions' => array(
+					'BudgetLineItem.state' => 'Final',
+					'Budget.fiscal_year' => $fiscal_year,
+					'Budget.state' => 'Final',
+					'Budget.org_id' => $orgIds
+				),
+				'fields' => array('SUM(amount) AS Total_Allocated')
+			));
+			$ly_total_allocated = $this -> BudgetLineItem -> find('first', array(
+				'conditions' => array(
+					'BudgetLineItem.state' => 'Final',
+					'Budget.fiscal_year' => $fiscal_year - 1,
+					'Budget.state' => 'Final',
+					'Budget.org_id' => $orgIds
+				),
+				'fields' => array('SUM(amount) AS LY_Total_Allocated')
+			));
+			$this -> set('total_allocated', $total_allocated[0]['Total_Allocated']);
+			$this -> set('ly_total_allocated', $ly_total_allocated[0]['LY_Total_Allocated']);
+		}
 	}
 
 	private function updateLastModBy($budget_id)
