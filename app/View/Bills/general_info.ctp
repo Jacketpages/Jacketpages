@@ -66,9 +66,10 @@ if($sga_admin)
 				2 => 'Awaiting Author',
 				3 => 'Authored',
 				4 => 'Agenda',
-				5 => 'Passed',
-				6 => 'Failed',
-				7 => 'Conference'
+				5 => 'Conference',
+				6 => 'Passed',
+				7 => 'Failed',
+				8 => 'Tabled'
 			),
 			'default' => $bill['Bill']['status']
 		));
@@ -81,9 +82,9 @@ else if ($bill['Bill']['status'] >= $AUTHORED && $sga_exec)
 			'options' => array(
 				3 => 'Authored',
 				4 => 'Agenda',
-				5 => 'Passed',
-				6 => 'Failed',
-				7 => 'Conference'
+				5 => 'Conference',
+				6 => 'Passed',
+				7 => 'Failed'
 			),
 			'default' => $bill['Bill']['status']
 		));
