@@ -89,11 +89,7 @@
 </script>
     </head>
     <body>
-        <!--         <div id="container">  -->
-        
-        
-        
-        
+
 		<div id="masthead">
 		  
 		  <div id="identity" class="clearfix">
@@ -176,8 +172,7 @@
 		  </div><!-- /#primary-menus -->
 		    
 		</div><!-- /#masthead -->
-        
-        </div>
+
         
         <div id="content">
         <div class="clearfix">
