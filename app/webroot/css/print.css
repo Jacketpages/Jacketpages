@@ -1,0 +1,58 @@
+/**
+ * @file
+ * CSS print styles
+ *
+ * Includes styling overrides for when pages are printed
+ *
+ */
+
+@media print {
+
+#masthead {
+	min-height: 0px;
+}
+
+#identity {
+	position: relative;
+	top: 0px;
+}
+
+h1 {
+	border: none;
+}
+
+#primary-menus {
+	display: none;
+}
+
+#footer-utility-links {
+	display: none;
+}
+
+#sidebar {
+	display: none;
+}
+
+#middle {
+	width: auto;
+	float: none;
+}
+
+.paging {
+	line-height: 8px;
+	margin: 0px;
+}
+
+#footer-logo {
+	float: none;
+}
+
+#footer-logo p {
+	float: right;
+	margin-top: 40px;
+	padding-top: 0px;
+	color: black;
+}
+
+
+}

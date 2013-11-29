@@ -632,7 +632,7 @@ table.list tr:nth-child(2n) td {
 	display: inline;
 }
 
-#struck {
+.struck td {
 	text-decoration: line-through;
 }
 

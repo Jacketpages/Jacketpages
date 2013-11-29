@@ -1041,7 +1041,12 @@ class BillsController extends AppController
                 $gradAuthor = $this -> User -> findBySgaId($bill['Authors']['grad_auth_id']);
                 if(isset($gradAuthor['User']['id']))
                 {
-                        $authors[] = $gradAuthor['User']['email'];
+                        $email = $gradAuthor['User']['email'];
+                        if (Validation::email($email)){
+                        	$authors[] = $email;
+                        } else {
+                        	CakeLog::error('User has invalid email: "'.$email.'", email ignored.');
+                        }
                         $this -> set('grad_name', $gradAuthor['User']['name']);
                 }
         }
@@ -1050,25 +1055,38 @@ class BillsController extends AppController
                 $undrAuthor = $this -> User -> findBySgaId($bill['Authors']['undr_auth_id']);
                 if(isset($undrAuthor['User']['id']))
                 {
-                        $authors[] = $undrAuthor['User']['email'];
+                        $email = $undrAuthor['User']['email'];
+                        if (Validation::email($email)){
+                        	$authors[] = $email;
+                        } else {
+                        	CakeLog::error('User has invalid email: "'.$email.'", email ignored.');
+                        }
                         $this -> set('undr_name', $undrAuthor['User']['name']);
                 }
         }
-        $authors[] = $submitter['User']['email'];
-        $this -> set('bill', $bill);
-        $email = new CakeEmail();
-        $email -> config('default');
-        $email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
-        $email -> to($authors);
-        $email -> subject('New Bill');
-        $email -> template('newbill');
-        $email -> emailFormat('html');       
-        $email -> viewVars(array(
-                'bill' => $bill,
-                'grad_name' => (isset($gradAuthor['User']['name'])) ? $gradAuthor['User']['name'] : '',
-                'undr_name' => (isset($undrAuthor['User']['name'])) ? $undrAuthor['User']['name'] : ''
-        ));
-        $email -> send();
+        $email = $submitter['User']['email'];
+        if (Validation::email($email)){
+        	$authors[] = $email;
+        } else {
+        	CakeLog::error('User has invalid email: "'.$email.'", email ignored.');
+        }
+        // at least 1 valid email is required
+        if(!empty($authors)){        
+	        $this -> set('bill', $bill);
+	        $email = new CakeEmail();
+	        $email -> config('default');
+	        $email -> from(array('gtsgacampus@gmail.com' => 'JacketPages'));
+	        $email -> to($authors);
+	        $email -> subject('New Bill');
+	        $email -> template('newbill');
+	        $email -> emailFormat('html');       
+	        $email -> viewVars(array(
+	                'bill' => $bill,
+	                'grad_name' => (isset($gradAuthor['User']['name'])) ? $gradAuthor['User']['name'] : '',
+	                'undr_name' => (isset($undrAuthor['User']['name'])) ? $undrAuthor['User']['name'] : ''
+	        ));
+	        $email -> send();
+        }
     }
 
 }

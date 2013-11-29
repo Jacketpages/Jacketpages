@@ -52,7 +52,18 @@ if ($lineitems != null)
 		if ($showAll)
 		{
 			$tableCells[] = $lineitem['LineItem']['state'];
-			echo $this -> Html -> tableCells($tableCells);
+	
+			$options = null;
+			if ($lineitem['LineItem']['struck'] && !in_array($lineitem['LineItem']['state'], array(
+					'Submitted',
+					'Final'
+				))
+			){
+				// strike through
+				$options = array('class' => 'struck');
+			}
+			
+			echo $this -> Html -> tableCells($tableCells, $options, $options);
 		}
 		else
 		{
@@ -82,12 +93,14 @@ if ($lineitems != null)
 					'Final'
 				)))
 				{
-					$tableCells[] = $this -> Html -> link("Unstrike", array(
-						'controller' => 'LineItems',
-						'action' => 'unstrikeLineItem',
-						$lineitem['LineItem']['id']
-					));
-					echo $this -> Html -> tableCells($tableCells, array('id' => 'struck'), array('id' => 'struck'));
+					$tableCells[] = array($this -> Html -> link("Unstrike", array(
+							'controller' => 'LineItems',
+							'action' => 'unstrikeLineItem',
+							$lineitem['LineItem']['id']
+						)),
+						array('style' => 'text-decoration: none')
+					);
+					echo $this -> Html -> tableCells($tableCells, array('class' => 'struck'), array('class' => 'struck'));
 				}
 				else
 				{
