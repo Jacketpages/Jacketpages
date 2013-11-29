@@ -33,7 +33,8 @@
 		
 		echo $this -> Html -> css('icing');
 		
-		//echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
+		echo $this -> Html -> css('print', 'stylesheet', array('media' => 'print'));
+		
 		echo $this -> fetch('css');
 		
         ?>
@@ -98,11 +99,15 @@
 		  <div id="identity" class="clearfix">
 		    <div id="identity-wrapper">
 		      <h1 id="gt-logo">
-		        <a href="/" rel="home" title="Georgia Tech" ><?php echo $this->Html->image('logo-gt.png', array('alt' => 'Georgia Tech')); ?></a>    
+		        <a href="/" rel="home" title="Georgia Tech" >
+		        	<?php echo $this->Html->image('logo-gt.png', array('alt' => 'Georgia Tech')); ?>
+		        </a>    
 		      </h1>
-		      <a href="/" rel="home" title="Georgia Tech" style="float: right">
-		      		<?php echo $this->Html->image('jacketpages.png', array('alt' => 'Georgia Tech')); ?>
+		      <h1 id="jp-logo">
+		      	<a href="/" rel="home" title="JacketPages">
+		      		<?php echo $this->Html->image('jacketpages.png', array('alt' => 'Jacket Pages')); ?>
 		      	</a> 
+		      </h1>
 		    </div>
 		  </div><!-- /#identity -->
 		

@@ -126,7 +126,11 @@
   float: left;
   margin: 0;
   position: relative;
-  width: 60%;
+}
+#jp-logo {
+  float: right;
+  margin: 0;
+  position: relative;
 }
 #gt-logo-mothership-link {
   background: url('../images/ie-sucks.png');
