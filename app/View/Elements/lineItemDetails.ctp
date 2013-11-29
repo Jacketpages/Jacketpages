@@ -82,12 +82,14 @@ if ($lineitems != null)
 					'Final'
 				)))
 				{
-					$tableCells[] = $this -> Html -> link("Unstrike", array(
-						'controller' => 'LineItems',
-						'action' => 'unstrikeLineItem',
-						$lineitem['LineItem']['id']
-					));
-					echo $this -> Html -> tableCells($tableCells, array('id' => 'struck'), array('id' => 'struck'));
+					$tableCells[] = array($this -> Html -> link("Unstrike", array(
+							'controller' => 'LineItems',
+							'action' => 'unstrikeLineItem',
+							$lineitem['LineItem']['id']
+						)),
+						array('style' => 'text-decoration: none')
+					);
+					echo $this -> Html -> tableCells($tableCells, array('class' => 'struck'), array('id' => 'struck'));
 				}
 				else
 				{
