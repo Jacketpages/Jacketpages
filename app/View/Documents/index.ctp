@@ -32,8 +32,13 @@ if ($isOfficer || $lace)
 	}
 	echo $this -> Html -> tableEnd();
 	echo $this -> Html -> tag('h2', 'Upload File');
+	if(!empty($errors)){
+		foreach ($errors as $field => $error){
+			echo implode('<br />', $error);
+        }
+	}
 	echo $this -> Form -> create('Document', array('type' => 'file'));
-	echo $this -> Form -> file('Document.submittedfile');
+	echo $this -> Form -> file('submittedfile');
 	echo $this -> Form -> submit();
 
 }
