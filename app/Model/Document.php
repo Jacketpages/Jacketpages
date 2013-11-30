@@ -25,7 +25,12 @@ class Document extends AppModel
 			)
 		);
 		
-		return $this->validates();
+		$validates = $this->validates();
+		
+		// reset the validation
+		$this->validate = array();
+		
+		return $validates;
 	}
 	
 	// an extended 
