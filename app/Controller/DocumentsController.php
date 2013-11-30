@@ -75,10 +75,7 @@ class DocumentsController extends AppController
 						$this -> Session -> setFlash('The document failed to upload.');
 					}
 				}
-			}else
-					{
-						$this -> Session -> setFlash('File size is larger than 2.5MB.');
-					}
+			}
 		}
 		
 		$this->set('errors', $this->Document->validationErrors);
