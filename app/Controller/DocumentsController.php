@@ -42,9 +42,13 @@ class DocumentsController extends AppController
 				'action' => 'index'
 			));
 		}
+		
 		if ($this -> request -> is('post'))
 		{
-			if ($this -> request -> data['Document']['submittedfile']['file_size'] < 2500000)
+			// set model data for validation
+			$this->Document->set($this->request->data);
+			
+			if ($this->Document->validatesDocumentUpload())
 			{
 				$dir = new Folder(APP . DS . "Documents" . DS . $id, true, 0744);
 				move_uploaded_file($this -> request -> data['Document']['submittedfile']['tmp_name'], APP . DS . "Documents" . DS . $id . DS . $this -> request -> data['Document']['submittedfile']['name']);
@@ -71,11 +75,10 @@ class DocumentsController extends AppController
 						$this -> Session -> setFlash('The document failed to upload.');
 					}
 				}
-			}else
-					{
-						$this -> Session -> setFlash('File size is larger than 2.5MB.');
-					}
+			}
 		}
+		
+		$this->set('errors', $this->Document->validationErrors);
 	}
 
 	/**
