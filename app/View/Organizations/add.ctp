@@ -47,7 +47,7 @@ echo $this -> Form -> input('User.name', array(
  ));*/
 echo $this -> Form -> input('description');
 echo $this -> Form -> input('website');
-echo $this -> Form -> input('meeting_info');
+echo $this -> Form -> input('meeting_information');
 echo $this -> Form -> input('meeting_frequency');
 echo $this -> Form -> input('annual_events');
 echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));

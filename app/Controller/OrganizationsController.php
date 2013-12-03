@@ -184,7 +184,7 @@ class OrganizationsController extends AppController
 		}
 		// Sets the users variable for the view
 		$this -> set('organizations', $this -> paginate('Organization'));
-		$orgnames = $this -> Organization -> find('all', array('fields' => 'name'));
+		$orgnames = $this -> Organization -> find('all', array('fields' => 'name', 'conditions' => array($org_status => 'Inactive')));
 		// Create the array for the javascript autocomplete
 		$just_names = array();
 		foreach ($orgnames as $orgname)
