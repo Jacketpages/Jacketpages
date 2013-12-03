@@ -385,11 +385,13 @@ class OrganizationsController extends AppController
 				'Organization.contact_id',
 				'Organization.alcohol_form',
 				'Organization.advisor_date',
-				'Organization.constitution_date'
-			), 'recursive' => -1));
+				'Organization.constitution_date',
+				'Organization.category'
+			), 'recursive' => -1));		
 		$this -> loadModel('Membership');
 		$this -> loadModel('User');
 		$this -> loadModel('Budget');
+		$this -> loadModel('Category');
 		$build_export[] = array(
 			"Organization",
 			"Status",
@@ -399,12 +401,13 @@ class OrganizationsController extends AppController
 			"Contact Name",
 			"Contact Email",
 			"President",
-			"President's email",
+			"President's Email",
 			"Treasurer",
-			"Treasurer's email",
+			"Treasurer's Email",
 			"Advisor",
-			"Advisor's email",
-			"Budget state"
+			"Advisor's Email",
+			"Budget State",
+			"Category"			
 		);
 		foreach ($organizations as $organization)
 		{
@@ -413,7 +416,14 @@ class OrganizationsController extends AppController
 			$treasurer = $this -> getMembers($organization['Organization']['id'],array('Treasurer'), true);
 			$advisor = $this -> getMembers($organization['Organization']['id'],array('Advisor'), true);
 			$contact = $this -> User -> findById($organization['Organization']['contact_id']);
-			$budget = $this -> Budget -> findByOrgIdAndFiscalYear($organization['Organization']['id'], '20' . $this -> getFiscalYear() + 2);
+			$budget = $this -> Budget -> find('first', array(
+				'fields' => array('Budget.state'),
+				'conditions' => array(
+					'org_id' => $organization['Organization']['id'],
+					'fiscal_year' => '20' . $this -> getFiscalYear() + 2),
+				'recursive' => -1
+			));
+			$category = $this -> Category -> findById($organization['Organization']['category']);
 			if(count($contact) == 0)
 			{
 				$contact = array(
@@ -440,7 +450,8 @@ class OrganizationsController extends AppController
 				$treasurer['User']['email'],
 				$advisor['Membership']['name'],
 				$advisor['User']['email'],
-				$budget['Budget']['state']
+				$budget['Budget']['state'],
+				$category['Category']['name']
 			);
 		}
 		$this -> layout = 'csv';
