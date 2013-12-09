@@ -24,7 +24,7 @@ $this -> start('middle');
 
 echo $this -> element('multi_enter_line_items');
 
-echo $this -> Form -> submit('Submit', array(
+echo $this -> Form -> submit('Save', array(
 	'formnovalidate',
 	'onclick' => 'openToolTips()'
 ));

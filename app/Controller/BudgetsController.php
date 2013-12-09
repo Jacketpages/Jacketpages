@@ -637,6 +637,12 @@ class BudgetsController extends AppController
 	public function view()
 	{
 		debug($this -> request -> data);
+		$goToNext = false;
+		if (isset($this -> request -> data['redirect']))
+		{
+			$goToNext = true;
+			unset($this -> request -> data['redirect']);
+		}
 		// Start - Set default search settings
 		if (count($this -> request -> data) == 0)
 		{
@@ -650,6 +656,39 @@ class BudgetsController extends AppController
 		$fiscal_year = $this -> request -> data['Budget']['fiscal_year'];
 		$org_id = $this -> request -> data['Budget']['org_id'];
 		$tier = $this -> request -> data['Budget']['tier'];
+		if (!isset($this -> request -> data['Budget']['state']))
+		{
+			$this -> request -> data['Budget']['state'] = 'JFC';
+		}
+		$this -> set('state', $this -> request -> data['Budget']['state']);
+		if ($this -> request -> is('post') && strcmp($this -> request -> data['Budget']['state'], '') != 0)
+		{
+			if (strcmp($this -> Session -> read('Budget.state'), $this -> request -> data['Budget']['state']) == 0)
+			{
+				$budgetId = $this -> Budget -> field('id', array(
+					'org_id' => $org_id,
+					'Budget.fiscal_year' => $fiscal_year
+				));
+				for ($i = 0; $i < count($this -> request -> data['BudgetLineItem']); $i++)
+				{
+					$this -> request -> data['BudgetLineItem'][$i]['budget_id'] = $budgetId;
+					$this -> request -> data['BudgetLineItem'][$i]['line_number'] = ($i + 1);
+					$this -> request -> data['BudgetLineItem'][$i]['state'] = $this -> request -> data['Budget']['state'];
+					//TODO Add in last mod by and date.
+				}
+				if ($this -> BudgetLineItem -> saveAll($this -> request -> data['BudgetLineItem']))
+				{
+					debug("Worked");
+				}
+			}
+			$this -> Session -> write('Budget.state', $this -> request -> data['Budget']['state']);
+			if ($goToNext)
+			{
+				$org_id = $this -> getNextOrgId($fiscal_year, $tier, $org_id);
+				debug($this -> getNextOrgId($fiscal_year, $tier, $org_id));
+			}
+		}
+		$this -> set('org_id', $org_id);
 		if ($org_id != 0)
 		{
 			$budgets = $this -> Budget -> find('all', array(
@@ -658,7 +697,7 @@ class BudgetsController extends AppController
 					'Budget.org_id' => $org_id
 				),
 				'recursive' => 2,
-				'limit' => 10,
+				//'limit' => 10,
 				'order' => 'Organization.name',
 			));
 		}
@@ -674,21 +713,22 @@ class BudgetsController extends AppController
 					)
 				),
 				'recursive' => 2,
-				'limit' => 10,
+				//'limit' => 10,
 				'order' => 'Organization.name'
 			));
 		}
 
 		$orgIds = $this -> setOrganizationDropDown($fiscal_year, $tier);
-		if($org_id != 0)
+		if ($org_id != 0)
 		{
-					$this -> setRequested($fiscal_year, $org_id);
-		$this -> setAllocated($fiscal_year, $org_id);
+			$this -> setRequested($fiscal_year, $org_id);
+			$this -> setAllocated($fiscal_year, $org_id);
 		}
-		else {
-			
-		$this -> setRequested($fiscal_year, $orgIds);
-		$this -> setAllocated($fiscal_year, $orgIds);
+		else
+		{
+
+			$this -> setRequested($fiscal_year, $orgIds);
+			$this -> setAllocated($fiscal_year, $orgIds);
 		}
 		$this -> set('budgets', $budgets);
 
@@ -716,10 +756,10 @@ class BudgetsController extends AppController
 				),
 				'Organization.id' => $orgIds,
 				'tier' => ($tier) ? $tier : array(
-						1,
-						2,
-						3
-					)
+					1,
+					2,
+					3
+				)
 			),
 			'recursive' => -1,
 			'fields' => array('Organization.name'),
@@ -790,6 +830,44 @@ class BudgetsController extends AppController
 		$this -> Budget -> id = $budget_id;
 		$this -> Budget -> saveField('last_mod_by', $this -> Session -> read('User.id'));
 		$this -> Budget -> saveField('last_mod_date', date('Y-m-d H:i:s'));
+	}
+
+	private function getNextOrgId($fiscal_year = null, $tier = null, $org_id)
+	{
+		if ($fiscal_year != null && $tier != null && $org_id != null)
+		{
+			$orgIds = $this -> Budget -> find('all', array(
+				'conditions' => array(
+					'state' => 'Submitted',
+					'Budget.fiscal_year' => $fiscal_year
+				),
+				'fields' => array('DISTINCT Budget.org_id')
+			));
+			$orgIds = Hash::extract($orgIds, '{n}.Budget.org_id');
+			$this -> loadModel('Organization');
+			$orgs = $this -> Organization -> find('list', array(
+				'conditions' => array(
+					'status' => array(
+						'Active',
+						'Under Review',
+						'Pending'
+					),
+					'Organization.id' => $orgIds,
+					'tier' => ($tier) ? $tier : array(
+						1,
+						2,
+						3
+					)
+				),
+				'recursive' => -1,
+				'fields' => array('Organization.name'),
+				'order' => 'Organization.name asc'
+			));
+			$orgIds = array_keys($orgs);
+			//debug($orgIds);
+			$index = array_search($org_id, $orgIds);
+			return $orgIds[$index + 1];
+		}
 	}
 
 }

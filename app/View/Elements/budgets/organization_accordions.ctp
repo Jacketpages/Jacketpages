@@ -17,7 +17,7 @@ else
 			echo $this -> Html -> div('', null, array('id' => "org-accordion-$i"));
 			echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 			{
-				echo $this -> Html -> div();
+				echo $this -> Html -> div('', null, array('style' => "padding 0 0 0 0;"));
 				{
 					echo $this -> element('/budgets/line_items', array(
 						'budget' => $budget,
@@ -40,13 +40,15 @@ else
 		{
 			$("#org-accordion-" + i).accordion(
 			{
-				collapsible : true
+				collapsible : true,
+				heightStyle: "content"
 			});
 			for ( j = 0; j < 5; j++)
 			{
 				$("#bli-accordion-" + i + "" + j).accordion(
 				{
-					collapsible : true
+					collapsible : true,
+					heightStyle: "content"
 				});
 			}
 		}
