@@ -184,7 +184,7 @@ class OrganizationsController extends AppController
 		}
 		// Sets the users variable for the view
 		$this -> set('organizations', $this -> paginate('Organization'));
-		$orgnames = $this -> Organization -> find('all', array('fields' => 'name'));
+		$orgnames = $this -> Organization -> find('all', array('fields' => 'name', 'conditions' => array($org_status => 'Inactive')));
 		// Create the array for the javascript autocomplete
 		$just_names = array();
 		foreach ($orgnames as $orgname)
@@ -385,11 +385,13 @@ class OrganizationsController extends AppController
 				'Organization.contact_id',
 				'Organization.alcohol_form',
 				'Organization.advisor_date',
-				'Organization.constitution_date'
-			), 'recursive' => -1));
+				'Organization.constitution_date',
+				'Organization.category'
+			), 'recursive' => -1));		
 		$this -> loadModel('Membership');
 		$this -> loadModel('User');
 		$this -> loadModel('Budget');
+		$this -> loadModel('Category');
 		$build_export[] = array(
 			"Organization",
 			"Status",
@@ -399,12 +401,13 @@ class OrganizationsController extends AppController
 			"Contact Name",
 			"Contact Email",
 			"President",
-			"President's email",
+			"President's Email",
 			"Treasurer",
-			"Treasurer's email",
+			"Treasurer's Email",
 			"Advisor",
-			"Advisor's email",
-			"Budget state"
+			"Advisor's Email",
+			"Budget State",
+			"Category"			
 		);
 		foreach ($organizations as $organization)
 		{
@@ -413,7 +416,14 @@ class OrganizationsController extends AppController
 			$treasurer = $this -> getMembers($organization['Organization']['id'],array('Treasurer'), true);
 			$advisor = $this -> getMembers($organization['Organization']['id'],array('Advisor'), true);
 			$contact = $this -> User -> findById($organization['Organization']['contact_id']);
-			$budget = $this -> Budget -> findByOrgIdAndFiscalYear($organization['Organization']['id'], '20' . $this -> getFiscalYear() + 2);
+			$budget = $this -> Budget -> find('first', array(
+				'fields' => array('Budget.state'),
+				'conditions' => array(
+					'org_id' => $organization['Organization']['id'],
+					'fiscal_year' => '20' . $this -> getFiscalYear() + 2),
+				'recursive' => -1
+			));
+			$category = $this -> Category -> findById($organization['Organization']['category']);
 			if(count($contact) == 0)
 			{
 				$contact = array(
@@ -440,7 +450,8 @@ class OrganizationsController extends AppController
 				$treasurer['User']['email'],
 				$advisor['Membership']['name'],
 				$advisor['User']['email'],
-				$budget['Budget']['state']
+				$budget['Budget']['state'],
+				$category['Category']['name']
 			);
 		}
 		$this -> layout = 'csv';
@@ -449,30 +460,47 @@ class OrganizationsController extends AppController
 
 	public function addlogo($org_id = null)
 	{
-		if(!($this -> isOfficer($org_id) || $this -> isLace()))
+		if(!($this -> isOfficer($org_id) || $this -> isLace())){
 			$this -> redirectHome();
-		if ($this -> request -> is('post') && $this -> request -> data['Logo']['image']['size'] < 200000)
-		{
-			$dir = new Folder("../webroot/img/" . $org_id, true);
-			//debug($dir -> pwd() . DS . $this -> request -> data["File"]['image']["name"]);
-			if (move_uploaded_file($this -> request -> data['Logo']['image']['tmp_name'], 'img/' . $org_id . '/' . $this -> request -> data['Logo']['image']['name']))
-			{
-				$this -> Organization -> id = $org_id;
-				$this -> Organization -> saveField('logo_path', '/img/' . $org_id . '/' . $this -> request -> data['Logo']['image']['name']);
-			}
-
-			$logo_path = $this -> Organization -> field('logo_path', array('id' => $org_id));
-			
-			 //MRE What does this do?
-			 /*if (strcmp($logo_path, '/img/default_logo.gif') && strcmp($logo_path, '/img/' . $org_id . DS . $this -> request -> data['Logo']['image']['name']))
-			{
-				$webroot = new Folder("../webroot/" . $org_id . "/");
-				$file = new File($webroot -> pwd() . $logo_path);
-				$file -> delete();
-			}*/
-			$this -> redirect('/organizations/view/' . $org_id);
 		}
-		$this -> set('organization', $this -> Organization -> read(null, $org_id));
+		
+		if ($this -> request -> is('post'))
+		{
+			// set model data for validation
+			$this->Organization->set($this->request->data);
+			
+			// check validations, for only the logo
+			if($this->Organization->validatesLogoUpload()){
+				// valid
+				$dir = new Folder("../webroot/img/" . $org_id, true);
+				
+				if (move_uploaded_file($this -> request -> data['Organization']['image']['tmp_name'], 'img/' . $org_id . '/' . $this -> request -> data['Organization']['image']['name']))
+				{
+					$this -> Organization -> id = $org_id;
+					$this -> Organization -> saveField('logo_path', '/img/' . $org_id . '/' . $this -> request -> data['Organization']['image']['name']);
+				}
+	
+				$logo_path = $this -> Organization -> field('logo_path', array('id' => $org_id));
+				
+				 //MRE What does this do?
+				 /*if (strcmp($logo_path, '/img/default_logo.gif') && strcmp($logo_path, '/img/' . $org_id . DS . $this -> request -> data['Logo']['image']['name']))
+				{
+					$webroot = new Folder("../webroot/" . $org_id . "/");
+					$file = new File($webroot -> pwd() . $logo_path);
+					$file -> delete();
+				}*/
+				
+				$this -> redirect('/organizations/view/' . $org_id);
+			}
+			
+		} else {
+			// GET
+			// display an error for image
+			$this->Organization->invalidate('image', 'Image should be less than 200 KB.');
+		}
+		
+		$this->set('errors', $this->Organization->validationErrors);
+		$this->set('organization', $this -> Organization -> read(null, $org_id));
 	}
 
 	function getlogo($id = null)

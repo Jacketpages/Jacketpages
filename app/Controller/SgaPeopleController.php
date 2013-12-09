@@ -4,6 +4,8 @@
  * @since 6/22/2012
  */
 
+App::uses('Sanitize', 'Utility');
+
 class SgaPeopleController extends AppController
 {
 	public $helpers = array(
@@ -19,6 +21,18 @@ class SgaPeopleController extends AppController
 	// TODO clean up the comments for this function. They still correspond to User
 	public function index($letter = null)
 	{
+		$defaultFilter = array('SgaPerson' => array(
+			'house' => 'all',
+			'department' => 'all',
+			'status' => 'all'
+		));
+		
+		// if the filters have not be set, or the clear button has been pressed
+		if($this->Session->check('SgaPerson.house') == false || $this->request->data('submit') === 'Clear'){
+			// set the data to the defaults
+			$this -> request -> data = $defaultFilter;
+		}
+	
 		// Set page view permissions
 		//$this -> set('sgaStatusEditDelete', $this -> Acl -> check('Role/' . $this -> Session -> read('User.level'), 'sgaStatusEditDelete'));
 
@@ -32,11 +46,20 @@ class SgaPeopleController extends AppController
 		{
 			$this -> Session -> delete('Search.keyword');
 		}
+		
+		// save filters
+		if (isset($this->request->data['SgaPerson']['house']))
+		{
+			$this->Session->write('SgaPerson.house', $this->request->data['SgaPerson']['house']);
+			$this->Session->write('SgaPerson.department', $this->request->data['SgaPerson']['department']);
+			$this->Session->write('SgaPerson.status', $this->request->data['SgaPerson']['status']);
+		}
+		
 		// Performs a search on the User table with the following conditions:
 		// WHERE (NAME LIKE '%<SEARCH>%' OR GT_USER_NAME LIKE '%<SEARCH>%') AND NAME LIKE
 		// '<LETTER>%'
 		$this -> loadModel('User');
-		$this -> paginate = array(
+		$paginate = array(
 			'conditions' => array('AND' => array(
 					'OR' => array( array($this -> User -> getVirtualField('name') . ' LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
 						//array('User.GT_USER_NAME LIKE' => '%' . $this -> Session ->
@@ -47,14 +70,52 @@ class SgaPeopleController extends AppController
 			'limit' => 20,
 			'order' => array('status' => 'ASC', 'house' => 'ASC', 'department' => 'ASC')
 		);
+		
+		// if filter is not all, then add the condition
+		if(($filterHouse = $this->Session->read('SgaPerson.house')) !== 'all'){
+			$paginate['conditions']['AND'][] = array('house' => $filterHouse);
+		}
+		if(($filterDepartment = $this->Session->read('SgaPerson.department')) !== 'all'){
+			$paginate['conditions']['AND'][] = array('department' => $filterDepartment);
+		}
+		if(($filterStatus = $this->Session->read('SgaPerson.status')) !== 'all'){
+			$paginate['conditions']['AND'][] = array('status' => $filterStatus);
+		}
+		
+		// set paginate
+		$this -> paginate = $paginate;
+		
 		// If the request is ajax then change the layout to return just the updated user
 		// list
 		if ($this -> RequestHandler -> isAjax())
 		{
 			$this -> layout = 'list';
 		}
+		
 		// Sets the users variable for the view
 		$this -> set('sgapeople', $this -> paginate('SgaPerson'));
+		
+		// get all the departments for the filter
+		$departments = Sanitize::clean($this->SgaPerson->find('list', array(
+        	'fields' => array('SgaPerson.department', 'SgaPerson.department'),
+        	'order' => array('SgaPerson.department'),
+        	'conditions' => array("NOT" => array(
+				        'department' => ''
+				    )
+				)
+        	)
+        ));
+        $departments = array('all' => 'all') + $departments;// add the all condition
+        $this->set('departments', $departments);
+		
+		// if any of the filters are not their default
+		if($filterHouse !== $defaultFilter['SgaPerson']['house'] ||
+		   $filterDepartment !== $defaultFilter['SgaPerson']['department'] ||
+		   $filterStatus !== $defaultFilter['SgaPerson']['status'])
+		{
+			// set the accordion to be open
+			$this->set('openAccordion', true);
+		}
 	}
 
 	/**

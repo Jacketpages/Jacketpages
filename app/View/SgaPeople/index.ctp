@@ -37,7 +37,6 @@ $this -> start('search');
 			'default' => $this -> Session -> read('Search.keyword'),
 			'width' => '80%'
 		));
-		echo $this -> Form -> end();
 		?>
 	</div>
 	<div id="rightHalf">
@@ -67,6 +66,52 @@ $this -> start('search');
 		</ul>
 	</div>
 </div>
+
+<div id="accordion">
+	<a href="#">Filters</a>
+	<div>
+		<div style="float: left; width: 45%;">
+			<ul>
+				<?php
+				echo $this -> Form -> input('house', array(
+				'label' => 'House',
+					'options' => array(
+						'all' => 'All',
+						'undergraduate' => 'Undergraduate',
+						'graduate' => 'Graduate'
+					),
+					'selected' => $this -> Session -> read('SgaPerson.house')
+				));
+				echo $this -> Form -> input('department', array(
+				'label' => 'Department',
+					'options' => $departments,
+					'selected' => $this -> Session -> read('SgaPerson.department')
+				));
+				?>
+			</ul>
+		</div>
+		<div style="float: right; width: 45%;">
+			<?php
+			echo $this -> Form -> input('status', array(
+				'options' => array(
+					'all' => 'All',
+					'active' => 'Active',
+					'inactive' => 'Inactive'
+				),
+				'selected' => $this -> Session -> read('SgaPerson.status')
+			));
+			echo "<br/>";
+			echo $this -> Form -> submit('Submit', array('div' => array('style' => 'display:inline-block')));	
+			echo $this -> Form -> submit('Clear', array(
+				'div' => array('style' => 'display:inline-block'),
+				'name' => 'submit'
+			));	
+			?>
+		</div>
+	</div>
+</div>
+<?php echo $this -> Form -> end(); ?>
+
 <?php
 $this -> end();
 $this -> start('listing');
@@ -124,6 +169,16 @@ $this -> start('listing');
 	echo $this -> element('paging');
 	?>
 </div>
+<script>
+	$(function() {
+		$("#accordion").accordion({
+			collapsible : <?php echo (isset($openAccordion) && $openAccordion)?'false':'true'; // if $openAccordion is true, open it. default close ?>,
+			active : false,
+			heightStyle: "content"
+		});
+
+	}); 
+</script>
 <?php
 $this -> end();
 ?>

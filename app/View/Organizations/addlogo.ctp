@@ -20,11 +20,14 @@
 		'style' => 'height:160px;'
 	));
 	echo "<br>";
-	echo "Image should be less than 200 KB.";
+	if(!empty($errors)){
+		foreach ($errors as $field => $error){
+			echo implode('<br />', $error);
+        }
+	}
 	echo "<br>";
-	echo "<br>";
-	echo $this -> Form -> create('Logo', array('type' => 'file'));
-	echo $this -> Form -> file('Logo.image');
-	echo $this -> Form -> submit('Upload', array());
+	echo $this -> Form -> create('Organization', array('type' => 'file'));
+	echo $this -> Form -> file('image');
+	echo $this -> Form -> submit('Upload');
 	$this -> end();
 ?>
