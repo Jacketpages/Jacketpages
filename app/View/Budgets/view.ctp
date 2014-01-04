@@ -73,12 +73,12 @@ echo $this -> Html -> tableBegin(array('class' => 'listing'));
 				'label' => false,
 				'options' => array(
 					'JFC' => 'JFC',
-					'UHRC'=>'UHRC',
-					'GSSC'=>'GSSC',
-					'UHR'=>'UHR',
-					'GSS'=>'GSS',
-					'CONF'=>'CONF',
-					'Final'=>'Final'
+					'UHRC' => 'UHRC',
+					'GSSC' => 'GSSC',
+					'UHR' => 'UHR',
+					'GSS' => 'GSS',
+					'CONF' => 'CONF',
+					'Final' => 'Final'
 				),
 				'value' => $state,
 				'onchange' => 'submit()'
@@ -87,9 +87,57 @@ echo $this -> Html -> tableBegin(array('class' => 'listing'));
 	}
 }
 echo $this -> Html -> tableEnd();
+if (count($budgets) > 1)
+{
+echo $this -> Form -> end();
+	echo $this -> Html -> tag('h1', 'Copy All Budget Line Items');
+	echo $this -> Form -> create('Budget', array(
+		'action' => ('copy/'),
+		'style' => 'display: inline;'
+	));
+	echo $this -> Html -> tableBegin(array('class' => 'listing'));
+	echo $this -> Html -> tableCells(array(
+		'Copy From State',
+		$this -> Form -> input('from_state', array(
+			'type' => 'select',
+			'label' => false,
+			'options' => array(
+				'Submitted' => 'Submitted',
+				'JFC' => 'JFC',
+				'UHRC' => 'UHRC',
+				'GSSC' => 'GSSC',
+				'UHR' => 'UHR',
+				'GSS' => 'GSS',
+				'CONF' => 'CONF',
+				'Final' => 'Final'
+			)
+		))
+	));
+	echo $this -> Html -> tableCells(array(
+		'Copy To State',
+		$this -> Form -> input('to_state', array(
+			'type' => 'select',
+			'label' => false,
+			'options' => array(
+				'JFC' => 'JFC',
+				'UHRC' => 'UHRC',
+				'GSSC' => 'GSSC',
+				'UHR' => 'UHR',
+				'GSS' => 'GSS',
+				'CONF' => 'CONF',
+				'Final' => 'Final'
+			)
+		))
+	));
+	echo $this -> Html -> tableEnd();
+	echo $this -> Form -> submit('Copy');
+
+}
 
 echo $this -> element('/budgets/organization_accordions');
-
-echo $this -> Form -> submit('Save');
-echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));
+if (count($budgets) == 1)
+{
+	echo $this -> Form -> submit('Save');
+	echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));
+}
 $this -> end();

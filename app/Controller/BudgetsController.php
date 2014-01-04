@@ -669,17 +669,50 @@ class BudgetsController extends AppController
 					'org_id' => $org_id,
 					'Budget.fiscal_year' => $fiscal_year
 				));
-				for ($i = 0; $i < count($this -> request -> data['BudgetLineItem']); $i++)
+				$BLIs = $this -> BudgetLineItem -> find('all', array(
+					'conditions' => array(
+						'budget_id' => $budgetId,
+						'fiscal_year' => $fiscal_year,
+						'BudgetLineItem.state' => 'Submitted'
+					),
+					'fields' => array(
+						'BudgetLineItem.id',
+						'BudgetLineItem.name'
+					)
+				));
+				$existingBLIs = Hash::extract($BLIs, '{n}.BudgetLineItem.name');
+				$newBLIs = Hash::extract($this -> request -> data, 'BudgetLineItem.{n}.name');
+				
+				//TODO Delete line item logic
+				//TODO Renumbering line items logic
+				
+				$difference = array_keys(array_diff($newBLIs, $existingBLIs));
+				for ($pos = 0; $pos < count($difference); $pos++)
 				{
-					$this -> request -> data['BudgetLineItem'][$i]['budget_id'] = $budgetId;
-					$this -> request -> data['BudgetLineItem'][$i]['line_number'] = ($i + 1);
-					$this -> request -> data['BudgetLineItem'][$i]['state'] = $this -> request -> data['Budget']['state'];
-					//TODO Add in last mod by and date.
+					debug($difference[$pos]);
+					$line = $this -> request -> data['BudgetLineItem'][$difference[$pos]];
+					$line['line_number'] = $pos;
+					$line['budget_id'] = $budgetId;
+					$line['state'] = 'Submitted';
+					$line['amount'] = 0;
+					$this -> BudgetLineItem -> save($line);
 				}
-				if ($this -> BudgetLineItem -> saveAll($this -> request -> data['BudgetLineItem']))
-				{
-					debug("Worked");
-				}
+				// Remember that the line item ids refer to that specific state. not the
+				// submitted state.
+				//debug($this -> request ->data);
+				// for ($i = 0; $i < count($this -> request -> data['BudgetLineItem']); $i++)
+				// {
+				// $this -> request -> data['BudgetLineItem'][$i]['budget_id'] = $budgetId;
+				// //$this -> request -> data['BudgetLineItem'][$i]['line_number'] = ($i + 1);
+				// $this -> request -> data['BudgetLineItem'][$i]['state'] = $this -> request ->
+				// data['Budget']['state'];
+				// //TODO Add in last mod by and date.
+				// }
+				// if ($this -> BudgetLineItem -> saveAll($this -> request ->
+				// data['BudgetLineItem']))
+				// {
+				// debug("Worked");
+				// }
 			}
 			$this -> Session -> write('Budget.state', $this -> request -> data['Budget']['state']);
 			if ($goToNext)
@@ -697,7 +730,6 @@ class BudgetsController extends AppController
 					'Budget.org_id' => $org_id
 				),
 				'recursive' => 2,
-				//'limit' => 10,
 				'order' => 'Organization.name',
 			));
 		}
@@ -713,7 +745,7 @@ class BudgetsController extends AppController
 					)
 				),
 				'recursive' => 2,
-				//'limit' => 10,
+				'limit' => 10,
 				'order' => 'Organization.name'
 			));
 		}
@@ -736,63 +768,81 @@ class BudgetsController extends AppController
 
 	private function setOrganizationDropDown($fiscal_year, $tier)
 	{
+		$result = false;
+		//Cache::read('organizations');
 		$years = Hash::extract($this -> Budget -> find('all', array('fields' => array('DISTINCT fiscal_year'))), '{n}.Budget.fiscal_year');
 		$this -> set('fiscal_years', array_combine($years, $years));
-		$orgIds = $this -> Budget -> find('all', array(
-			'conditions' => array(
-				'state' => 'Submitted',
-				'Budget.fiscal_year' => $fiscal_year
-			),
-			'fields' => array('DISTINCT Budget.org_id')
-		));
-		$orgIds = Hash::extract($orgIds, '{n}.Budget.org_id');
-		$this -> loadModel('Organization');
-		$orgs = $this -> Organization -> find('list', array(
-			'conditions' => array(
-				'status' => array(
-					'Active',
-					'Under Review',
-					'Pending'
+		if (!$result)
+		{
+			$orgIds = $this -> Budget -> find('all', array(
+				'conditions' => array(
+					'state' => 'Submitted',
+					'Budget.fiscal_year' => $fiscal_year
 				),
-				'Organization.id' => $orgIds,
-				'tier' => ($tier) ? $tier : array(
-					1,
-					2,
-					3
-				)
-			),
-			'recursive' => -1,
-			'fields' => array('Organization.name'),
-			'order' => 'Organization.name asc'
-		));
-		$orgIds = array_keys($orgs);
-		$orgs = array('All') + $orgs;
+				'fields' => array('DISTINCT Budget.org_id')
+			));
+			$orgIds = Hash::extract($orgIds, '{n}.Budget.org_id');
+			$this -> loadModel('Organization');
+			$orgs = $this -> Organization -> find('list', array(
+				'conditions' => array(
+					'status' => array(
+						'Active',
+						'Under Review',
+						'Pending'
+					),
+					'Organization.id' => $orgIds,
+					'tier' => ($tier) ? $tier : array(
+						1,
+						2,
+						3
+					)
+				),
+				'recursive' => -1,
+				'fields' => array('Organization.name'),
+				'order' => 'Organization.name asc'
+			));
+			$orgIds = array_keys($orgs);
+			Cache::write('organizations', $orgs);
+			$result = $orgs;
+		}
+		$orgs = array('All') + $result;
 		$this -> set('organizations', $orgs);
-		return $orgIds;
+		return array_keys($result);
 	}
 
 	private function setRequested($fiscal_year = null, $orgIds)
 	{
 		if ($fiscal_year != null)
 		{
-			$total_requested = $this -> BudgetLineItem -> find('first', array(
-				'conditions' => array(
-					'BudgetLineItem.state' => 'Submitted',
-					'Budget.fiscal_year' => $fiscal_year,
-					'Budget.state' => 'Submitted',
-					'Budget.org_id' => $orgIds
-				),
-				'fields' => array('SUM(amount) AS Total_Requested')
-			));
-			$ly_total_requested = $this -> BudgetLineItem -> find('first', array(
-				'conditions' => array(
-					'BudgetLineItem.state' => 'Submitted',
-					'Budget.fiscal_year' => $fiscal_year - 1,
-					'Budget.state' => 'Final',
-					'Budget.org_id' => $orgIds
-				),
-				'fields' => array('SUM(amount) AS LY_Total_Requested')
-			));
+			$total_requested = false;
+			//Cache::read("total_requested");
+			if (!$total_requested)
+			{
+				$total_requested = $this -> BudgetLineItem -> find('first', array(
+					'conditions' => array(
+						'BudgetLineItem.state' => 'Submitted',
+						'Budget.fiscal_year' => $fiscal_year,
+						'Budget.state' => 'Submitted',
+						'Budget.org_id' => $orgIds
+					),
+					'fields' => array('SUM(amount) AS Total_Requested')
+				));
+				Cache::write("total_requested", $total_requested);
+			}
+			$ly_total_requested = Cache::read("ly_total_requested");
+			if (!$ly_total_requested)
+			{
+				$ly_total_requested = $this -> BudgetLineItem -> find('first', array(
+					'conditions' => array(
+						'BudgetLineItem.state' => 'Submitted',
+						'Budget.fiscal_year' => $fiscal_year - 1,
+						'Budget.state' => 'Final',
+						'Budget.org_id' => $orgIds
+					),
+					'fields' => array('SUM(amount) AS LY_Total_Requested')
+				));
+				Cache::write("ly_total_requested", $ly_total_requested);
+			}
 			$this -> set('total_requested', $total_requested[0]['Total_Requested']);
 			$this -> set('ly_total_requested', $ly_total_requested[0]['LY_Total_Requested']);
 		}
@@ -868,6 +918,44 @@ class BudgetsController extends AppController
 			$index = array_search($org_id, $orgIds);
 			return $orgIds[$index + 1];
 		}
+	}
+
+	public function copy()
+	{
+		$from_state = $this -> request -> data['Budget']['from_state'];
+		$to_state = $this -> request -> data['Budget']['to_state'];
+		if ($from_state == null || $to_state == null || strcasecmp($from_state, $to_state) == 0)
+		{
+			$this -> redirect(array(
+				'controller' => 'budgets',
+				'action' => 'view'
+			));
+		}
+		else
+		{
+			$lineItems = $this -> BudgetLineItem -> find('all', array('conditions' => array(
+					'Budget.fiscal_year' => '20' . ($this -> getFiscalYear() + 2),
+					'BudgetLineItem.state' => $from_state
+				)));
+			$count = $this -> BudgetLineItem -> find('count', array('conditions' => array(
+					'Budget.fiscal_year' => '20' . ($this -> getFiscalYear() + 2),
+					'BudgetLineItem.state' => $to_state
+				)));
+			if ($count == 0)
+			{
+				for ($i = 0; $i < count($lineItems); $i++)
+				{
+					$lineItems[$i]['BudgetLineItem']['state'] = $to_state;
+					$lineItems[$i]['BudgetLineItem']['comments'] = '';
+					$lineItems[$i]['BudgetLineItem']['id'] = null;
+				}
+				$this -> BudgetLineItem -> saveAll($lineItems);
+			}
+		}
+		$this -> redirect(array(
+			'controller' => 'budgets',
+			'action' => 'view'
+		));
 	}
 
 }
