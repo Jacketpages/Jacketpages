@@ -1,10 +1,10 @@
 function addRow(pos, tableName)
 {
-	var tableNumber = tableName.toString().substring(tableName.toString().length - 1, tableName.toString().length);
+	var tableNumber = document.getElementById(tableName).rows[1].cells[1].getElementsByTagName("input")[0].value;
 	var textarea = "<textarea name=\"data[BudgetLineItem][1][name]\" rows=\"1\" cols=\"30\" id=\"BudgetLineItem1Name\"></textarea>";
 	var category = "<input type=\"hidden\" name=\"data[BudgetLineItem][" + tableNumber + "][category]\" value=\"" + tableNumber + "\" id=\"BudgetLineItem1Category\">";
 	var id = "<input type=\"hidden\" name=\"data[BudgetLineItem][1][id]\" id=\"BudgetLineItem1Id\">";
-	//table had a header row
+	//table has a header row
 	pos = pos + 1;
 	moveTo = pos + 1;
 	var table = document.getElementById(tableName);
@@ -67,7 +67,8 @@ function correctReferences()
 			var rows = table.rows;
 			for ( j = 1; rows[j].cells[0].innerHTML != ""; j++)
 			{
-				rows[j].cells[0].innerHTML = rowNumber;
+				rows[j].cells[0].getElementsByTagName("input")[0].value = rowNumber;
+				rows[j].cells[0].getElementsByTagName("input")[0].setAttribute("value",rowNumber);
 				rows[j].cells[1].getElementsByTagName("textarea")[0].setAttribute("id", "BudgetLineItem" + index + "Name");
 				rows[j].cells[1].getElementsByTagName("textarea")[0].setAttribute("name", "data[BudgetLineItem][" + index + "][name]");
 				rows[j].cells[1].getElementsByTagName("input")[0].setAttribute("id", "BudgetLineItem" + index + "Category");
@@ -82,6 +83,9 @@ function correctReferences()
 						rows[j].cells[k].getElementsByTagName("input")[0].setAttribute("name", "data[BudgetLineItem][" + index + "][amount]");
 					}
 				}
+				rows[j].cells[12].getElementsByTagName("button")[0].setAttribute("onclick", "addRow(" + (j - 1) + ", 'BudgetLineItem-" + i + "')");
+				if (rows[j].cells[13].getElementsByTagName("button").length > 0)
+					rows[j].cells[13].getElementsByTagName("button")[0].setAttribute("onclick", "deleteRow(" + (j - 1) + ", 'BudgetLineItem-" + i + "')");
 				rowNumber++;
 				index++;
 			}

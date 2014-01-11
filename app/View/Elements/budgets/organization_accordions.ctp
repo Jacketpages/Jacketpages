@@ -1,7 +1,7 @@
 <?php
 if (count($budgets) == 1)
 {
-	echo $this -> element('/budgets/sga_edit', array('budget' => $budgets[0]));
+	echo $this -> element('/budgets/sga_edit', array('budget' => $budgets[0], 'py_index' => 0));
 }
 else if(count($budgets) == 0)
 {

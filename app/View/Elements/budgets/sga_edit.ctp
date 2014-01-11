@@ -26,7 +26,8 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 		{
 			//debug($budgetLineItem);
 			if ($category != $budgetLineItem['category'])
-			{$rowNumber = 0;
+			{
+				$rowNumber = 0;
 				if ($category > 0)
 				{
 					echo $this -> Html -> tableCells(array(
@@ -66,7 +67,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 					'id' => $tableName
 				));
 				echo $this -> Html -> tableHeaders(array(
-					'#',
+					array('#' => array('style' => 'width:2%;')),
 					array('Name' => array('style' => 'width:350px;')),
 					'PY Req',
 					'PY Alloc',
@@ -83,8 +84,23 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 				));
 
 			}
+			$requested = 0;
+			$allocated = 0;
+			if (isset($budget['Previous_Budget']['Requested'][$py_index]) && strcmp($budget['Previous_Budget']['Requested'][$py_index]['name'], $budgetLineItem['name']) == 0)
+			{
+				$requested = $budget['Previous_Budget']['Requested'][$py_index]['amount'];
+				$allocated = $budget['Previous_Budget']['Allocated'][$py_index]['amount'];
+				$py_index++;
+			}
+
 			echo $this -> Html -> tableCells(array(
-				$budgetLineItem['line_number'],
+				$this -> Form -> input("BudgetLineItem.$k.line_number", array(
+					'label' => false,
+					'value' => $budgetLineItem['line_number'],
+					'style' => 'background-color:transparent; border:none;',
+					'readonly' => 'readonly',
+					'type' => 'text'
+				)),
 				$this -> Form -> input("BudgetLineItem.$k.name", array(
 					'label' => false,
 					'div' => false,
@@ -101,8 +117,8 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 					'type' => 'hidden',
 					'value' => isset($budget[$state][$k]) ? $budget[$state][$k]['id'] : ''
 				)),
-				$this -> Number -> currency($budget['Previous_Budget']['Requested'][$k]['amount']),
-				$this -> Number -> currency($budget['Previous_Budget']['Allocated'][$k]['amount']),
+				$this -> Number -> currency($requested),
+				$this -> Number -> currency($allocated),
 				$this -> Number -> currency($budgetLineItem['amount']),
 				strcmp($state, 'JFC') == 0 ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
 					'label' => false,
@@ -139,11 +155,15 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 					'onclick' => "addRow(" . $rowNumber . ",'" . $tableName . "')",
 					'escape' => false
 				)),
-				''
+				($budgetLineItem['original']) ? '' : $this -> Form -> button('-', array(
+					'type' => 'button',
+					'onclick' => "deleteRow(" . $rowNumber . ",'" . $tableName . "')",
+					'escape' => false
+				))
 			));
 			$rowNumber++;
-			$subtotals[0] += $budget['Previous_Budget']['Requested'][$k]['amount'];
-			$subtotals[1] += $budget['Previous_Budget']['Allocated'][$k]['amount'];
+			$subtotals[0] += $requested;
+			$subtotals[1] += $allocated;
 			$subtotals[2] += $budgetLineItem['amount'];
 			$subtotals[3] += (isset($budget['JFC'][$k]) ? $budget['JFC'][$k]['amount'] : 0);
 			$subtotals[4] += (isset($budget['UHRC'][$k]) ? $budget['UHRC'][$k]['amount'] : 0);
