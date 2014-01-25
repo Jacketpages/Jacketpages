@@ -69,6 +69,8 @@ function correctReferences()
 			{
 				rows[j].cells[0].getElementsByTagName("input")[0].value = rowNumber;
 				rows[j].cells[0].getElementsByTagName("input")[0].setAttribute("value",rowNumber);
+				rows[j].cells[0].getElementsByTagName("input")[0].setAttribute("name","data[BudgetLineItem][" + index + "][line_number]");
+				rows[j].cells[0].getElementsByTagName("input")[0].setAttribute("id","BudgetLineItem" + index + "LineNumber");
 				rows[j].cells[1].getElementsByTagName("textarea")[0].setAttribute("id", "BudgetLineItem" + index + "Name");
 				rows[j].cells[1].getElementsByTagName("textarea")[0].setAttribute("name", "data[BudgetLineItem][" + index + "][name]");
 				rows[j].cells[1].getElementsByTagName("input")[0].setAttribute("id", "BudgetLineItem" + index + "Category");

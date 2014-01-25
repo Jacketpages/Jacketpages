@@ -38,6 +38,10 @@ echo $this -> Html -> tableEnd();
 
 echo $this -> Html -> tag('h1', 'Individual');
 
+if(count($budgets) == 1)
+{
+	echo $this -> Html -> div("", "Please save any changes before navigating to another page. Save button is located at the bottom of the page.", array('id' => 'notification'));
+}
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 {
 	echo $this -> Html -> tableCells(array(
@@ -130,14 +134,15 @@ echo $this -> Form -> end();
 		))
 	));
 	echo $this -> Html -> tableEnd();
-	echo $this -> Form -> submit('Copy');
+	echo $this -> Form -> submit('Copy', array("onclick" => "return confirm('Are you sure?')"));
 
 }
 
 echo $this -> element('/budgets/organization_accordions');
 if (count($budgets) == 1)
 {
-	echo $this -> Form -> submit('Save');
+	echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
 	echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));
+	echo $this -> Form -> end();
 }
 $this -> end();

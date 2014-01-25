@@ -684,60 +684,11 @@ class BudgetsController extends AppController
 				$newBLIs = Hash::extract($this -> request -> data, 'BudgetLineItem.{n}.name');
 
 				//TODO Renumbering line items logic
-				$additions = array();
-				$deletions = array();
+
 
 				debug($existingBLIs);
 				debug($newBLIs);
-				foreach ($existingBLIs as $x => $item)
-				{
-					if (!in_array($item, $newBLIs))
-					{
-						$deletions[] = $x + 1;
-					}
-				}
-				foreach ($newBLIs as $y => $item)
-				{
-					if (!in_array($item, $existingBLIs))
-					{
-						$additions[] = $y + 1;
-					}
-				}
-
-				$x = 0;
-				$y = 0;
-				while (($x + $y) < (count($additions) + count($deletions)))
-				{
-					if (isset($deletions[$x]) && isset($additions[$y]))
-					{
-						if ($deletions[$x] >= $additions[$y])
-						{
-							$this -> incrementLineNumber($fiscal_year, $budgetId, $additions[$y]);
-							$y++;
-						}
-						if ($deletions[$x] <= $additions[$y])
-						{
-							$this -> decrementLineNumber($fiscal_year, $budgetId, $deletions[$x]);
-							$x++;
-						}
-					}
-					else
-					{
-						if (isset($additions[$y]))
-						{
-							$this -> incrementLineNumber($fiscal_year, $budgetId, $additions[$y]);
-							$y++;
-						}
-						if (isset($deletions[$x]))
-						{
-							$this -> decrementLineNumber($fiscal_year, $budgetId, $deletions[$x]);
-							$x++;
-						}
-					}
-				}
-
-				debug($additions);
-				debug($deletions);
+			
 
 				$diff = array_diff($existingBLIs, $newBLIs);
 				foreach ($diff as $missingName)
@@ -787,6 +738,11 @@ class BudgetsController extends AppController
 				if ($this -> BudgetLineItem -> saveAll($this -> request -> data['BudgetLineItem']))
 				{
 					debug("Worked");
+				}
+				foreach($this -> request -> data['BudgetLineItem'] as $line)
+				{
+					$this -> BudgetLineItem -> updateAll(array('line_number' => $line['line_number']), array('BudgetLineItem.name' => $line['name'], 'BudgetLineItem.budget_id' => $line['budget_id']));
+					//debug($line);
 				}
 			}
 			$this -> Session -> write('Budget.state', $this -> request -> data['Budget']['state']);
@@ -840,26 +796,6 @@ class BudgetsController extends AppController
 		}
 		$this -> set('budgets', $budgets);
 
-	}
-
-	private function incrementLineNumber($fiscal_year, $budgetId, $line_number)
-	{
-		//@formatter:off
-		$this -> BudgetLineItem -> query("UPDATE budget_line_items bli " . 
-		"JOIN budgets b on bli.budget_id = b.id " .
-		"SET bli.line_number = bli.line_number + 1 " . 
-		"WHERE b.fiscal_year = $fiscal_year AND bli.budget_id = $budgetId AND bli.line_number >= $line_number");
-		//@formatter:on
-	}
-
-	private function decrementLineNumber($fiscal_year, $budgetId, $line_number)
-	{
-		//@formatter:off
-		$this -> BudgetLineItem -> query("UPDATE budget_line_items bli " . 
-		"JOIN budgets b on bli.budget_id = b.id " .
-		"SET bli.line_number = bli.line_number - 1 " . 
-		"WHERE b.fiscal_year = $fiscal_year AND bli.budget_id = $budgetId AND bli.line_number > $line_number");
-		//@formatter:on
 	}
 
 	private function setOrganizationDropDown($fiscal_year, $tier)
@@ -1052,6 +988,18 @@ class BudgetsController extends AppController
 			'controller' => 'budgets',
 			'action' => 'view'
 		));
+	}
+
+	public function export()
+	{
+		$budgets = $this -> Budget -> find('all', array(
+				'conditions' => array(
+					'Budget.fiscal_year' => '20' + ($this -> getFiscalYear() + 2),
+				),
+				'recursive' => 2,
+				'order' => 'Organization.name'
+			));
+		debug($budgets);
 	}
 
 }

@@ -32,7 +32,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 				{
 					echo $this -> Html -> tableCells(array(
 						'',
-						'Subtotals',
+						'<b>Subtotals</b>',
 						$this -> Number -> currency($subtotals[0]),
 						$this -> Number -> currency($subtotals[1]),
 						$this -> Number -> currency($subtotals[2]),
@@ -67,7 +67,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 					'id' => $tableName
 				));
 				echo $this -> Html -> tableHeaders(array(
-					array('#' => array('style' => 'width:2%;')),
+					array('#' => array('style' => 'width:4%;')),
 					array('Name' => array('style' => 'width:350px;')),
 					'PY Req',
 					'PY Alloc',
@@ -179,7 +179,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 			$totals[$idx] += $subtotals[$idx];
 		echo $this -> Html -> tableCells(array(
 			'',
-			'Subtotals',
+			'<b>Subtotals</b>',
 			$this -> Number -> currency($subtotals[0]),
 			$this -> Number -> currency($subtotals[1]),
 			$this -> Number -> currency($subtotals[2]),
@@ -195,7 +195,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 		));
 		echo $this -> Html -> tableCells(array(
 			'',
-			'Totals',
+			'<b>Totals</b>',
 			$this -> Number -> currency($totals[0]),
 			$this -> Number -> currency($totals[1]),
 			$this -> Number -> currency($totals[2]),
