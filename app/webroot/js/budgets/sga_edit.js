@@ -1,3 +1,25 @@
+function assignAndRunValidationRules()
+{
+	var i = 0;
+	var locations = [];
+	var values = [];
+	while(i < 6)
+	{
+		var table = document.getElementById("BudgetLineItem-" + i);
+		if (table != undefined)
+		{
+			var rows = table.rows;
+			for ( j = 1; rows[j].cells[0].innerHTML != ""; j++)
+			{
+				values.push(rows[j].cells[1].getElementsByTagName("textarea")[0].getAttribute("name"));
+				locations.push(rows[j].cells[1].getElementsByTagName("textarea")[0].getAttribute("id"));
+			}
+		}
+		i++;
+	}
+	alreadyValidated = true;
+}
+
 function addRow(pos, tableName)
 {
 	var tableNumber = document.getElementById(tableName).rows[1].cells[1].getElementsByTagName("input")[0].value;

@@ -17,6 +17,10 @@
 <?php } ?>
 
 <?php if ($sga_exec){ ?>
+	<li class="leaf">
+		<?php echo $this->Html->link('Edit Budgets', array('controller' => 'budgets', 'action' => 'view'))
+		?>
+	</li>
 	<li class="leaf last">
 		<?php echo $this->Html->link('View Budgets', array('controller' => 'budgets', 'action' => 'index'))?>
 	</li>

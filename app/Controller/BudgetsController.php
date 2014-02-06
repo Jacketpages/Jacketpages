@@ -636,166 +636,157 @@ class BudgetsController extends AppController
 
 	public function view()
 	{
-		debug($this -> request -> data);
-		$goToNext = false;
-		if (isset($this -> request -> data['redirect']))
+		if ($this -> isSGAExec())
 		{
-			$goToNext = true;
-			unset($this -> request -> data['redirect']);
-		}
-		// Start - Set default search settings
-		if (count($this -> request -> data) == 0)
-		{
-			$this -> request -> data = array('Budget' => array(
-					'fiscal_year' => '20' . ($this -> getFiscalYear() + 2),
-					'tier' => 0,
-					'org_id' => 0
-				));
-		}
-		// End - Set default search settings
-		$fiscal_year = $this -> request -> data['Budget']['fiscal_year'];
-		$org_id = $this -> request -> data['Budget']['org_id'];
-		$tier = $this -> request -> data['Budget']['tier'];
-		if (!isset($this -> request -> data['Budget']['state']))
-		{
-			$this -> request -> data['Budget']['state'] = 'JFC';
-		}
-		$this -> set('state', $this -> request -> data['Budget']['state']);
-		if ($this -> request -> is('post') && strcmp($this -> request -> data['Budget']['state'], '') != 0)
-		{
-			if (strcmp($this -> Session -> read('Budget.state'), $this -> request -> data['Budget']['state']) == 0 && $this -> Session -> read('org_id') == $org_id)
+			$goToNext = false;
+			if (isset($this -> request -> data['redirect']))
 			{
-				$budgetId = $this -> Budget -> field('id', array(
-					'org_id' => $org_id,
-					'Budget.fiscal_year' => $fiscal_year
-				));
-				$BLIs = $this -> BudgetLineItem -> find('all', array(
-					'conditions' => array(
-						'budget_id' => $budgetId,
-						'fiscal_year' => $fiscal_year,
-						'BudgetLineItem.state' => 'Submitted'
-					),
-					'fields' => array(
-						'BudgetLineItem.id',
-						'BudgetLineItem.name'
-					)
-				));
-				$existingBLIs = Hash::extract($BLIs, '{n}.BudgetLineItem.name');
-				$newBLIs = Hash::extract($this -> request -> data, 'BudgetLineItem.{n}.name');
-
-				//TODO Renumbering line items logic
-
-
-				debug($existingBLIs);
-				debug($newBLIs);
-			
-
-				$diff = array_diff($existingBLIs, $newBLIs);
-				foreach ($diff as $missingName)
-				{
-					// TODO change to be by budget id and line item name.
-					$this -> BudgetLineItem -> deleteAll(array(
-						'BudgetLineItem.name' => $missingName,
-						'original' => 0,
-						'BudgetLineItem.budget_id' => $budgetId
+				$goToNext = true;
+				unset($this -> request -> data['redirect']);
+			}
+			// Start - Set default search settings
+			if (count($this -> request -> data) == 0)
+			{
+				$this -> request -> data = array('Budget' => array(
+						'fiscal_year' => '20' . ($this -> getFiscalYear() + 2),
+						'tier' => 0,
+						'org_id' => 0
 					));
-				}
-
-				$difference = array_keys(array_diff($newBLIs, $existingBLIs));
-				$states = array(
-					'Submitted' => 'Submitted',
-					'JFC' => 'JFC',
-					'UHRC' => 'UHRC',
-					'GSSC' => 'GSSC',
-					'UHR' => 'UHR',
-					'GSS' => 'GSS',
-					'CONF' => 'CONF',
-					'Final' => 'Final'
-				);
-				for ($pos = 0; $pos < count($difference); $pos++)
+			}
+			// End - Set default search settings
+			$fiscal_year = $this -> request -> data['Budget']['fiscal_year'];
+			$org_id = $this -> request -> data['Budget']['org_id'];
+			$tier = $this -> request -> data['Budget']['tier'];
+			if (!isset($this -> request -> data['Budget']['state']))
+			{
+				$this -> request -> data['Budget']['state'] = 'JFC';
+			}
+			$this -> set('state', $this -> request -> data['Budget']['state']);
+			if ($this -> request -> is('post') && strcmp($this -> request -> data['Budget']['state'], '') != 0)
+			{
+				if (strcmp($this -> Session -> read('Budget.state'), $this -> request -> data['Budget']['state']) == 0 && $this -> Session -> read('org_id') == $org_id)
 				{
-					debug($difference[$pos]);
-					$line = $this -> request -> data['BudgetLineItem'][$difference[$pos]];
-					$line['line_number'] = $difference[$pos] + 1;
-					$line['budget_id'] = $budgetId;
-					$line['amount'] = 0;
-					foreach ($states as $state)
+					$budgetId = $this -> Budget -> field('id', array(
+						'org_id' => $org_id,
+						'Budget.fiscal_year' => $fiscal_year
+					));
+					$BLIs = $this -> BudgetLineItem -> find('all', array(
+						'conditions' => array(
+							'budget_id' => $budgetId,
+							'fiscal_year' => $fiscal_year,
+							'BudgetLineItem.state' => 'Submitted'
+						),
+						'fields' => array(
+							'BudgetLineItem.id',
+							'BudgetLineItem.name'
+						)
+					));
+					$existingBLIs = Hash::extract($BLIs, '{n}.BudgetLineItem.name');
+					$newBLIs = Hash::extract($this -> request -> data, 'BudgetLineItem.{n}.name');
+
+					$diff = array_diff($existingBLIs, $newBLIs);
+					foreach ($diff as $missingName)
 					{
-						$line['state'] = $state;
-						$this -> BudgetLineItem -> save($line);
+						// TODO change to be by budget id and line item name.
+						$this -> BudgetLineItem -> deleteAll(array(
+							'BudgetLineItem.name' => $missingName,
+							'original' => 0,
+							'BudgetLineItem.budget_id' => $budgetId
+						));
+					}
+
+					$difference = array_keys(array_diff($newBLIs, $existingBLIs));
+					$states = array(
+						'Submitted' => 'Submitted',
+						'JFC' => 'JFC',
+						'UHRC' => 'UHRC',
+						'GSSC' => 'GSSC',
+						'UHR' => 'UHR',
+						'GSS' => 'GSS',
+						'CONF' => 'CONF',
+						'Final' => 'Final'
+					);
+					for ($pos = 0; $pos < count($difference); $pos++)
+					{
+						$line = $this -> request -> data['BudgetLineItem'][$difference[$pos]];
+						$line['line_number'] = $difference[$pos] + 1;
+						$line['budget_id'] = $budgetId;
+						$line['amount'] = 0;
+						foreach ($states as $state)
+						{
+							$line['state'] = $state;
+							$this -> BudgetLineItem -> save($line);
+						}
+					}
+					// Remember that the line item ids refer to that specific state. not the
+					// submitted state.
+					for ($i = 0; $i < count($this -> request -> data['BudgetLineItem']); $i++)
+					{
+						$this -> request -> data['BudgetLineItem'][$i]['budget_id'] = $budgetId;
+						//$this -> request -> data['BudgetLineItem'][$i]['line_number'] = ($i + 1);
+						$this -> request -> data['BudgetLineItem'][$i]['state'] = $this -> request -> data['Budget']['state'];
+						//TODO Add in last mod by and date.
+					}
+					if ($this -> BudgetLineItem -> saveAll($this -> request -> data['BudgetLineItem']))
+					{
+					}
+					foreach ($this -> request -> data['BudgetLineItem'] as $line)
+					{
+						$this -> BudgetLineItem -> updateAll(array('line_number' => $line['line_number']), array(
+							'BudgetLineItem.name' => $line['name'],
+							'BudgetLineItem.budget_id' => $line['budget_id']
+						));
 					}
 				}
-				// Remember that the line item ids refer to that specific state. not the
-				// submitted state.
-				debug($this -> request -> data);
-				for ($i = 0; $i < count($this -> request -> data['BudgetLineItem']); $i++)
+				$this -> Session -> write('Budget.state', $this -> request -> data['Budget']['state']);
+				$this -> Session -> write('org_id', $org_id);
+				if ($goToNext)
 				{
-					$this -> request -> data['BudgetLineItem'][$i]['budget_id'] = $budgetId;
-					//$this -> request -> data['BudgetLineItem'][$i]['line_number'] = ($i + 1);
-					$this -> request -> data['BudgetLineItem'][$i]['state'] = $this -> request -> data['Budget']['state'];
-					//TODO Add in last mod by and date.
-				}
-				if ($this -> BudgetLineItem -> saveAll($this -> request -> data['BudgetLineItem']))
-				{
-					debug("Worked");
-				}
-				foreach($this -> request -> data['BudgetLineItem'] as $line)
-				{
-					$this -> BudgetLineItem -> updateAll(array('line_number' => $line['line_number']), array('BudgetLineItem.name' => $line['name'], 'BudgetLineItem.budget_id' => $line['budget_id']));
-					//debug($line);
+					$org_id = $this -> getNextOrgId($fiscal_year, $tier, $org_id);
 				}
 			}
-			$this -> Session -> write('Budget.state', $this -> request -> data['Budget']['state']);
-			$this -> Session -> write('org_id', $org_id);
-			if ($goToNext)
+			$this -> set('org_id', $org_id);
+			if ($org_id != 0)
 			{
-				$org_id = $this -> getNextOrgId($fiscal_year, $tier, $org_id);
-				debug($this -> getNextOrgId($fiscal_year, $tier, $org_id));
+				$budgets = $this -> Budget -> find('all', array(
+					'conditions' => array(
+						'Budget.fiscal_year' => $fiscal_year,
+						'Budget.org_id' => $org_id
+					),
+					'recursive' => 2,
+					'order' => 'Organization.name',
+				));
 			}
-		}
-		$this -> set('org_id', $org_id);
-		if ($org_id != 0)
-		{
-			$budgets = $this -> Budget -> find('all', array(
-				'conditions' => array(
-					'Budget.fiscal_year' => $fiscal_year,
-					'Budget.org_id' => $org_id
-				),
-				'recursive' => 2,
-				'order' => 'Organization.name',
-			));
-		}
-		else
-		{
-			$budgets = $this -> Budget -> find('all', array(
-				'conditions' => array(
-					'Budget.fiscal_year' => $fiscal_year,
-					'tier' => ($tier) ? $tier : array(
-						1,
-						2,
-						3
-					)
-				),
-				'recursive' => 2,
-				'limit' => 10,
-				'order' => 'Organization.name'
-			));
-		}
+			else
+			{
+				$budgets = $this -> Budget -> find('all', array(
+					'conditions' => array(
+						'Budget.fiscal_year' => $fiscal_year,
+						'tier' => ($tier) ? $tier : array(
+							1,
+							2,
+							3
+						)
+					),
+					'recursive' => 2,
+					'limit' => 10,
+					'order' => 'Organization.name'
+				));
+			}
 
-		$orgIds = $this -> setOrganizationDropDown($fiscal_year, $tier);
-		if ($org_id != 0)
-		{
-			$this -> setRequested($fiscal_year, $org_id);
-			$this -> setAllocated($fiscal_year, $org_id);
+			$orgIds = $this -> setOrganizationDropDown($fiscal_year, $tier);
+			if ($org_id != 0)
+			{
+				$this -> setRequested($fiscal_year, $org_id);
+				$this -> setAllocated($fiscal_year, $org_id);
+			}
+			else
+			{
+				$this -> setRequested($fiscal_year, $orgIds);
+				$this -> setAllocated($fiscal_year, $orgIds);
+			}
+			$this -> set('budgets', $budgets);
 		}
-		else
-		{
-
-			$this -> setRequested($fiscal_year, $orgIds);
-			$this -> setAllocated($fiscal_year, $orgIds);
-		}
-		$this -> set('budgets', $budgets);
-
 	}
 
 	private function setOrganizationDropDown($fiscal_year, $tier)
@@ -946,7 +937,6 @@ class BudgetsController extends AppController
 				'order' => 'Organization.name asc'
 			));
 			$orgIds = array_keys($orgs);
-			//debug($orgIds);
 			$index = array_search($org_id, $orgIds);
 			return $orgIds[$index + 1];
 		}
@@ -993,12 +983,10 @@ class BudgetsController extends AppController
 	public function export()
 	{
 		$budgets = $this -> Budget -> find('all', array(
-				'conditions' => array(
-					'Budget.fiscal_year' => '20' + ($this -> getFiscalYear() + 2),
-				),
-				'recursive' => 2,
-				'order' => 'Organization.name'
-			));
+			'conditions' => array('Budget.fiscal_year' => '20' + ($this -> getFiscalYear() + 2), ),
+			'recursive' => 2,
+			'order' => 'Organization.name'
+		));
 		debug($budgets);
 	}
 

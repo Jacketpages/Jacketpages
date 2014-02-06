@@ -91,7 +91,7 @@ function openToolTips()
 
 function validateForm()
 {
-	valid = validForm
+	valid = validForm,
 	validForm = true;
 	
 	if(!alreadyValidated)

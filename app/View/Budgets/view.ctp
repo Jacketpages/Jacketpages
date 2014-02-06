@@ -4,7 +4,14 @@ $this -> extend('/Common/common');
 $this -> assign('title', "Budgets");
 
 $this -> start('middle');
-echo $this -> Form -> create();
+if (count($budgets) == 1)
+{
+echo $this -> Form -> create('Budget', array('onsubmit' => 'return validateForm()'));
+}
+else
+{
+	echo $this -> Form -> create();
+}
 echo $this -> Html -> tag('h1', 'Overall');
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 {
@@ -38,7 +45,7 @@ echo $this -> Html -> tableEnd();
 
 echo $this -> Html -> tag('h1', 'Individual');
 
-if(count($budgets) == 1)
+if (count($budgets) == 1)
 {
 	echo $this -> Html -> div("", "Please save any changes before navigating to another page. Save button is located at the bottom of the page.", array('id' => 'notification'));
 }
@@ -93,7 +100,7 @@ echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableEnd();
 if (count($budgets) > 1)
 {
-echo $this -> Form -> end();
+	echo $this -> Form -> end();
 	echo $this -> Html -> tag('h1', 'Copy All Budget Line Items');
 	echo $this -> Form -> create('Budget', array(
 		'action' => ('copy/'),
