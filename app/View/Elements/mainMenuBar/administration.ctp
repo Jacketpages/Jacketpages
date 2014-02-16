@@ -24,7 +24,7 @@ if ($admin)
 		?>
 	</li>
 	<li class="leaf">
-		<?php echo $this->Html->link('Login as Other User', array('controller' => 'users', 'action' => 'loginasotheruser'))
+		<?php echo $this->Html->link('Login as Other User', array('controller' => 'users', 'action' => 'loginAsOtherUser'))
 		?>
 	</li>
 	<li class="leaf last">
