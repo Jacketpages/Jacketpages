@@ -179,6 +179,12 @@ class BudgetLineItemsController extends AppController
 			$this -> set('budgetLineItems', $budgetLineItems);
 		}
 		$this -> set('cat_count', count($category_names));
+		
+		// get the organization, for the breadcrump
+		$this -> loadModel('Organization');
+		$this -> Organization -> id = $org_id;
+		$organization = $this -> Organization -> read();
+		$this -> set('organization', $organization);
 	}
 
 	private function oldBudgetExists($org_id)

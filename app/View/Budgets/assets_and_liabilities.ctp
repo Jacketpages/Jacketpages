@@ -6,6 +6,7 @@
 
 $this -> extend('/Common/budgets');
 $this -> assign('title', 'Current Assets and Liabilities');
+$this -> Html -> addCrumb($organization['Organization']['name'], '/organizations/view/' . $organization['Organization']['id']);
 $this -> Html -> addCrumb('Assets and Liabilities', $this->here);
 $this -> start('middle');
 echo $this -> Html -> para('', 'Any bank account balances should be included here and be specific. Please indicate if asset has been tagged by GT Inventory.');

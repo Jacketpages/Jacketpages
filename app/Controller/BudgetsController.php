@@ -282,6 +282,12 @@ class BudgetsController extends AppController
 		));
 		$dues = $this -> Dues -> findAllByBudgetId($budgetId);
 		$this -> set('dues', $dues);
+		
+		// for breadcrumb
+		$this -> loadModel('Organization');
+		$this -> Organization -> id = $org_id;
+		$organization = $this -> Organization -> read();
+		$this -> set('organization', $organization);
 	}
 
 	private function getBudgetId($org_id)
@@ -371,6 +377,12 @@ class BudgetsController extends AppController
 		}
 		$expenses = $this -> Expense -> findAllByBudgetId($budgetId);
 		$this -> set('expenses', $expenses);
+		
+		// for breadcrumb
+		$this -> loadModel('Organization');
+		$this -> Organization -> id = $org_id;
+		$organization = $this -> Organization -> read();
+		$this -> set('organization', $organization);
 	}
 
 	public function assets_and_liabilities($org_id = null)
@@ -430,6 +442,12 @@ class BudgetsController extends AppController
 		}
 		$this -> set('assets', $this -> Asset -> findAllByBudgetId($budgetId));
 		$this -> set('liabilities', $this -> Liability -> findAllByBudgetId($budgetId));
+		
+		// for breadcrumb
+		$this -> loadModel('Organization');
+		$this -> Organization -> id = $org_id;
+		$organization = $this -> Organization -> read();
+		$this -> set('organization', $organization);
 	}
 
 	private function assets($assets, $budgetId)
@@ -574,6 +592,12 @@ class BudgetsController extends AppController
 		}
 		$this -> set('memberContributions', $this -> MemberContribution -> findAllByBudgetId($budgetId));
 		$this -> set('org_id', $org_id);
+		
+		// for breadcrumb
+		$this -> loadModel('Organization');
+		$this -> Organization -> id = $org_id;
+		$organization = $this -> Organization -> read();
+		$this -> set('organization', $organization);
 	}
 
 	public function summary($org_id = null)
@@ -632,6 +656,12 @@ class BudgetsController extends AppController
 				));
 			}
 		}
+		
+		// for breadcrumb
+		$this -> loadModel('Organization');
+		$this -> Organization -> id = $org_id;
+		$organization = $this -> Organization -> read();
+		$this -> set('organization', $organization);
 	}
 
 	public function view()

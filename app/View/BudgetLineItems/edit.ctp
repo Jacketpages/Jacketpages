@@ -6,6 +6,7 @@
 
 $this -> extend('/Common/budgets');
 $this -> assign('title', "FY 20$fiscalYear Budget Line Items");
+$this -> Html -> addCrumb($organization['Organization']['name'], '/organizations/view/' . $organization['Organization']['id']);
 $this -> Html -> addCrumb('Budget Line Items', $this->here);
 $this -> start('middle');
 echo $this -> Html -> para('', 'Itemize all costs, except equipment purchases that will last 
