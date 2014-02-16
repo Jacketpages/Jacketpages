@@ -47,12 +47,12 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 	));
 	echo $this -> Form -> input('Authors.id', array('type' => 'hidden'));
 	echo $this -> Form -> input('Authors.undr_auth_id', array(
-		'div' => 'underAuthor_id',
+		'div' => 'input underAuthor_id',
 		'label' => 'Undergraduate Author',
 		'options' => $underAuthors
 	));
 	echo $this -> Form -> input('Authors.grad_auth_id', array(
-		'div' => 'gradAuthor_id',
+		'div' => 'input gradAuthor_id',
 		'label' => 'Graduate Author',
 		'options' => $gradAuthors
 	));

@@ -38,7 +38,7 @@ select {
 label {
 	display: block;
 	font-size: 13px;
-	padding: 0 5px 3px 3px;
+	padding: 0 5px 1px 3px;
 }
 /**
  * Remove the automatic margin and padding added
@@ -86,6 +86,11 @@ h3 {
 	margin: 12px 0 0 0;
 	/*margin-top: 12px;*/
 	/*margin-bottom: 0;*/
+}
+
+form > .input {
+	margin-bottom: 10px;
+	border: thin red solid;
 }
 
 #page_title {
