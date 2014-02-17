@@ -123,6 +123,7 @@ $this -> start('search');
 			));	
 			?>
 		</div>
+		<div style="clear:both"></div>
 	</div>
 </div>
 <?php
