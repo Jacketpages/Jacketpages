@@ -84,13 +84,15 @@ class BillsController extends AppController
 			$categories = array($this -> Session -> read('Bill.category'));
 		}
 		$keyword = $this -> Session -> read('Search.keyword');
-		
-		if ($id == null)
+		$this -> loadModel('User');
+        if ($id == null)
 		{
-			$this -> loadModel('User');
 			$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
 		}
-		
+		else
+		{
+			$authorId = $this -> Session -> read('Sga.id');
+		}
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.status BETWEEN ? AND ?' => array(
@@ -114,17 +116,18 @@ class BillsController extends AppController
 		// If given a user's id then filter to show only that user's bills
 		if ($id != null)
 		{
-			$this -> set('bills', $this -> paginate('Bill',
-				// seperate this group of conditions from the previous
-				array('AND' => array(
-					// OR these together
-					array('OR' => array(
+			if (strlen($authorId) != 0)
+			{
+				$this -> set('bills', $this -> paginate('Bill', array('OR' => array(
 						array('submitter' => $id),
-						array('Authors.grad_auth_id' => $id),
-						array('Authors.undr_auth_id' => $id)
-						)
-					)
-				))));
+						array('Authors.grad_auth_id' => $authorId),
+						array('Authors.undr_auth_id' => $authorId)
+					))));
+			}
+			else
+			{
+				$this -> set('bills', $this -> paginate('Bill', array('OR' => array( array('submitter' => $id)))));
+			}
 		}
 		else
 		{
