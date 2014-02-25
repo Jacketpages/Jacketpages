@@ -753,6 +753,7 @@ class BillsController extends AppController
 		$this -> set('bill_id', $bill_id);
 		if ($this -> isSGAExec() && $state >= $this -> AGENDA)
 		{
+			if ($bill_id == null || $organization == null)
 			{
 				$this -> Session -> setFlash('Please select a bill to view.');
 				$this -> redirect(array(
