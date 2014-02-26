@@ -257,7 +257,7 @@ h3 {
 	width: 100%;
 	background-color: #EEB211;
 	box-shadow: 5px 5px 5px #888888;
-	color: 454545;
+	color: #454545;
 	padding: 15px;
 	margin-top: 20px;
 	margin-bottom: 20px;
@@ -669,4 +669,9 @@ table.list tr:nth-child(2n) td {
 
 .accordion_no_padding .ui-accordion-content {
 	padding: 0px;
+}
+
+#highlight:hover
+{
+	background-color:#bbcfe4;
 }

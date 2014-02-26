@@ -612,7 +612,7 @@ class BudgetsController extends AppController
 		$totals = array();
 		$totals[] = 'N/A';
 		$totals[] = '$' . $this -> BudgetLineItem -> field('SUM(amount)', array('budget_id' => $budgetId));
-		$totals[] = '$' . $this -> Fundraiser -> field('SUM(revenue)', array('budget_id' => $budgetId));
+		$totals[] = '$' . $this -> Fundraiser -> field('SUM(revenue)', array('budget_id' => $budgetId, 'type' => 'Planned'));
 		$totals[] = '$' . $this -> Expense -> field('SUM(amount)', array('budget_id' => $budgetId));
 		$totals[] = '$' . ($this -> Asset -> field('SUM(amount)', array('budget_id' => $budgetId)) - $this -> Liability -> field('SUM(amount)', array('budget_id' => $budgetId)));
 		$totals[] = '$' . $this -> MemberContribution -> field('SUM(amount)', array('budget_id' => $budgetId));
@@ -649,7 +649,7 @@ class BudgetsController extends AppController
 			{
 				$this -> request -> data = array('Budget' => array(
 						'fiscal_year' => '20' . ($this -> getFiscalYear() + 2),
-						'tier' => 0,
+						'tier' => 1,
 						'org_id' => 0
 					));
 			}
@@ -785,6 +785,7 @@ class BudgetsController extends AppController
 				$this -> setRequested($fiscal_year, $orgIds);
 				$this -> setAllocated($fiscal_year, $orgIds);
 			}
+			$this ->log($budgets);
 			$this -> set('budgets', $budgets);
 		}
 	}
@@ -990,5 +991,22 @@ class BudgetsController extends AppController
 		debug($budgets);
 	}
 
+	public function processCommentDialog($id = null)
+	{
+		$this -> autoRender = false;
+		if($this -> request -> is('get'))
+		{
+			$this -> BudgetLineItem -> id = $id;
+			return json_encode(array('success' => true, 'data' =>$this -> BudgetLineItem -> read()));
+		}
+		$this ->log("here");
+		$this -> log($this -> request ->data);
+		if($this -> request -> is('post'))
+		{
+			$this -> BudgetLineItem -> id = $id;
+			$this ->BudgetLineItem -> saveField("comments", $this -> request ->data['Comment']['Comment']);
+		}
+		return true;
+	}
 }
 ?>

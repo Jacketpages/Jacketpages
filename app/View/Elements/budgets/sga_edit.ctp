@@ -93,14 +93,18 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 				$py_index++;
 			}
 
-			echo $this -> Html -> tableCells(array(
-				$this -> Form -> input("BudgetLineItem.$k.line_number", array(
-					'label' => false,
-					'value' => $budgetLineItem['line_number'],
-					'style' => 'background-color:transparent; border:none;',
-					'readonly' => 'readonly',
-					'type' => 'text'
-				)),
+			echo $this -> Html -> tableCells(array(array(
+				array(
+					$this -> Form -> input("BudgetLineItem.$k.line_number", array(
+						'label' => false,
+						'value' => $budgetLineItem['line_number'],
+						'style' => 'background-color:transparent; border:none;' . 
+						(strlen($budget[$state][$k]['comments']) > 0 ? "text-decoration:underline;" : ""),
+						'readonly' => 'readonly',
+						'type' => 'text'
+					)),
+					array('id' => "highlight",'onclick' => 'openCommentDialog("' . "BudgetLineItem$k" . 'Id")')
+				),
 				$this -> Form -> input("BudgetLineItem.$k.name", array(
 					'label' => false,
 					'div' => false,
@@ -108,7 +112,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 					'type' => 'textarea',
 					'style' => 'background-color:transparent; border:none;resize:none;',
 					'rows' => (int) ceil(strlen($budgetLineItem['name']) / 48),
-					'value' => $budgetLineItem['name'],
+					'value' => $budgetLineItem['name'], 
 					'title' => $budgetLineItem['name']
 				)) . $this -> Form -> input("BudgetLineItem.$k.category", array(
 					'type' => 'hidden',
@@ -159,7 +163,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 					'type' => 'button',
 					'onclick' => "deleteRow(" . $rowNumber . ",'" . $tableName . "')",
 					'escape' => false
-				))
+				)))
 			));
 			$rowNumber++;
 			$subtotals[0] += $requested;
@@ -217,3 +221,72 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 	echo $this -> Html -> useTag('tagend', 'div');
 }
 echo $this -> Html -> useTag('tagend', 'div');
+?>
+
+<script>
+	$(document).ready(function()
+	{
+		$("#dialog").dialog(
+		{
+			autoOpen : false,
+			height : 300,
+			width : 350,
+			modal : true
+		});
+	});
+
+	function openCommentDialog(id)
+	{
+		var lineItemId = $("#" + id).val();
+		if (lineItemId.length != 0)
+		{
+			$.ajax(
+			{
+				url : "processCommentDialog/" + $("#" + id).val(),
+				context : document.body,
+				type : 'GET',
+				success : function(response, status)
+				{
+					var resp = JSON.parse(response);
+					var bli = resp["data"]["BudgetLineItem"];
+					$("#DialogFormComment").val(bli["comments"]);
+					$("#DialogFormName").html("Name: " + bli["name"]);
+					$("#DialogFormState").html("State: " + bli["state"]);
+
+				}
+			});
+			$("#dialog").dialog(
+			{
+				buttons :
+				{
+					"Add Comment" : function()
+					{
+						$.ajax(
+						{
+							url : "processCommentDialog/" + $("#" + id).val(),
+							context : document.body,
+							type : 'POST',
+							data : $("#CommentDialogForm").serialize(),
+							success : function(response, status)
+							{
+								$("#dialog").dialog("close");
+								alert("Your comment has posted successfully.");
+							}
+						});
+					},
+					"Cancel" : function()
+					{
+						$(this).dialog("close");
+					}
+				}
+			});
+			$('.ui-widget-content').css('border','1px solid #bbb').css('background', 'white 50% top repeat-x');
+			$("#dialog").css("background-color", "white");
+			$("#dialog").dialog("open");
+		}
+		else
+		{
+			alert("A line item does not exist for this state yet. Please save then try again.");
+		}
+	}
+</script>

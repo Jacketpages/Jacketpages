@@ -6,7 +6,8 @@ $this -> assign('title', "Budgets");
 $this -> start('middle');
 if (count($budgets) == 1)
 {
-echo $this -> Form -> create('Budget', array('onsubmit' => 'return validateForm()'));
+	echo $this -> Html -> div("",$this -> element("budgets/comment_dialog"),array('id' => 'dialog','title' => 'Add Comment to Budget Line Item'));
+	echo $this -> Form -> create('Budget', array('onsubmit' => 'return validateForm()'));
 }
 else
 {
@@ -47,7 +48,7 @@ echo $this -> Html -> tag('h1', 'Individual');
 
 if (count($budgets) == 1)
 {
-	echo $this -> Html -> div("", "Please save any changes before navigating to another page. Save button is located at the bottom of the page.", array('id' => 'notification'));
+	echo $this -> Html -> div("", "Please save any changes before navigating to another page. Save button is located at the bottom of the page. Note that viewing all organization budget information will require several seconds of processing time before loading.", array('id' => 'notification'));
 }
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 {
@@ -144,7 +145,6 @@ if (count($budgets) > 1)
 	echo $this -> Form -> submit('Copy', array("onclick" => "return confirm('Are you sure?')"));
 
 }
-
 echo $this -> element('/budgets/organization_accordions');
 if (count($budgets) == 1)
 {
