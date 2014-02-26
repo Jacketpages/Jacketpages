@@ -6,6 +6,7 @@
 
 $this -> extend('/Common/budgets');
 $this -> assign('title', 'Member Contributions');
+$this -> Html -> addCrumb($organization['Organization']['name'], '/organizations/view/' . $organization['Organization']['id']);
 $this -> Html -> addCrumb('Member Contributions', $this->here);
 $this -> start('script');
 echo $this -> Html -> script('budgets/member_contributions');

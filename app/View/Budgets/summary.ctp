@@ -6,6 +6,7 @@
 
 $this -> extend('/Common/budgets');
 $this -> assign('title', "FY 20$fiscalYear Budget Submission Summary");
+$this -> Html -> addCrumb($organization['Organization']['name'], '/organizations/view/' . $organization['Organization']['id']);
 $this -> Html -> addCrumb('Budget Submission Summary', $this->here);
 $pageNames = array(
 	'Organization Information',

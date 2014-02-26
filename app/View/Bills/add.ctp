@@ -44,12 +44,12 @@ echo $this -> Form -> input('org_id', array(
 	'default' => 'Select Organization'
 ));
 echo $this -> Form -> input('Authors.undr_auth_id', array(
-	'div' => 'underAuthor_id',
+	'div' => 'input underAuthor_id',
 	'label' => 'Undergraduate Author',
 	'options' => $underAuthors
 ));
 echo $this -> Form -> input('Authors.grad_auth_id', array(
-	'div' => 'gradAuthor_id',
+	'div' => 'input gradAuthor_id',
 	'label' => 'Graduate Author',
 	'options' => $gradAuthors
 ));

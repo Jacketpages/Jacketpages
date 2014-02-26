@@ -105,7 +105,7 @@ class SgaPeopleController extends AppController
 				)
         	)
         ));
-        $departments = array('all' => 'all') + $departments;// add the all condition
+        $departments = array('all' => 'All') + $departments;// add the all condition
         $this->set('departments', $departments);
 		
 		// if any of the filters are not their default

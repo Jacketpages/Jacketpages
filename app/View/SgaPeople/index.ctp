@@ -108,6 +108,7 @@ $this -> start('search');
 			));	
 			?>
 		</div>
+		<div style="clear:both"></div>
 	</div>
 </div>
 <?php echo $this -> Form -> end(); ?>
@@ -172,11 +173,10 @@ $this -> start('listing');
 <script>
 	$(function() {
 		$("#accordion").accordion({
-			collapsible : <?php echo (isset($openAccordion) && $openAccordion)?'false':'true'; // if $openAccordion is true, open it. default close ?>,
-			active : false,
-			heightStyle: "content"
+			collapsible : true,
+			heightStyle: "content",
+			<?php echo (isset($openAccordion) && $openAccordion)?'':'active : false'; // if $openAccordion is true, open it. default close ?>
 		});
-
 	}); 
 </script>
 <?php
