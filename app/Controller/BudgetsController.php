@@ -679,8 +679,8 @@ class BudgetsController extends AppController
 			{
 				$this -> request -> data = array('Budget' => array(
 						'fiscal_year' => '20' . ($this -> getFiscalYear() + 2),
-						'tier' => 1,
-						'org_id' => 0
+						'tier' => 2,
+						'org_id' => 27855
 					));
 			}
 			// End - Set default search settings
@@ -799,7 +799,6 @@ class BudgetsController extends AppController
 						)
 					),
 					'recursive' => 2,
-					'limit' => 10,
 					'order' => 'Organization.name'
 				));
 			}

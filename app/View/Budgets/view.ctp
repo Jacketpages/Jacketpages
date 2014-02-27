@@ -6,7 +6,7 @@ $this -> assign('title', "Budgets");
 $this -> start('middle');
 if (count($budgets) == 1)
 {
-	echo $this -> Html -> div("",$this -> element("budgets/comment_dialog"),array('id' => 'dialog','title' => 'Add Comment to Budget Line Item'));
+	echo $this -> Html -> div("",$this -> element("budgets/comment_dialog"),array('style'=> 'visibility:hiddend;','id' => 'dialog','title' => 'Add Comment to Budget Line Item'));
 	echo $this -> Form -> create('Budget', array('onsubmit' => 'return validateForm()'));
 }
 else

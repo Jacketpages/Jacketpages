@@ -226,6 +226,7 @@ echo $this -> Html -> useTag('tagend', 'div');
 <script>
 	$(document).ready(function()
 	{
+		$("#dialog").css('visibility','visibile');
 		$("#dialog").dialog(
 		{
 			autoOpen : false,
@@ -248,11 +249,11 @@ echo $this -> Html -> useTag('tagend', 'div');
 				success : function(response, status)
 				{
 					var resp = JSON.parse(response);
+					console.log(resp);
 					var bli = resp["data"]["BudgetLineItem"];
 					$("#DialogFormComment").val(bli["comments"]);
 					$("#DialogFormName").html("Name: " + bli["name"]);
 					$("#DialogFormState").html("State: " + bli["state"]);
-
 				}
 			});
 			$("#dialog").dialog(
