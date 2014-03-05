@@ -162,4 +162,10 @@ CakeLog::config('other', array(
 ));
 
 
-
+// load the environmental config file, which will override the current setting
+try {
+	Configure::load('environment', 'default', false);
+}
+catch(Exception $e){
+	die($e->getMessage());
+}

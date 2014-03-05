@@ -80,4 +80,12 @@ class DATABASE_CONFIG {
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
+	
+	function __construct()
+	{
+		// override the default database from the environment file
+		if(($environment = Configure::read('environment.database')) !== null){
+			$this->default = $environment;
+		}
+	}
 }
