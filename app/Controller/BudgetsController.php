@@ -22,7 +22,8 @@ class BudgetsController extends AppController
 		'Html',
 		'Session',
 		'Number',
-		'Time'
+		'Time',
+		'Excel'
 	);
 
 	public $components = array(
@@ -282,7 +283,7 @@ class BudgetsController extends AppController
 		));
 		$dues = $this -> Dues -> findAllByBudgetId($budgetId);
 		$this -> set('dues', $dues);
-		
+
 		// for breadcrumb
 		$this -> loadModel('Organization');
 		$this -> Organization -> id = $org_id;
@@ -377,7 +378,7 @@ class BudgetsController extends AppController
 		}
 		$expenses = $this -> Expense -> findAllByBudgetId($budgetId);
 		$this -> set('expenses', $expenses);
-		
+
 		// for breadcrumb
 		$this -> loadModel('Organization');
 		$this -> Organization -> id = $org_id;
@@ -442,7 +443,7 @@ class BudgetsController extends AppController
 		}
 		$this -> set('assets', $this -> Asset -> findAllByBudgetId($budgetId));
 		$this -> set('liabilities', $this -> Liability -> findAllByBudgetId($budgetId));
-		
+
 		// for breadcrumb
 		$this -> loadModel('Organization');
 		$this -> Organization -> id = $org_id;
@@ -592,7 +593,7 @@ class BudgetsController extends AppController
 		}
 		$this -> set('memberContributions', $this -> MemberContribution -> findAllByBudgetId($budgetId));
 		$this -> set('org_id', $org_id);
-		
+
 		// for breadcrumb
 		$this -> loadModel('Organization');
 		$this -> Organization -> id = $org_id;
@@ -636,7 +637,10 @@ class BudgetsController extends AppController
 		$totals = array();
 		$totals[] = 'N/A';
 		$totals[] = '$' . $this -> BudgetLineItem -> field('SUM(amount)', array('budget_id' => $budgetId));
-		$totals[] = '$' . $this -> Fundraiser -> field('SUM(revenue)', array('budget_id' => $budgetId, 'type' => 'Planned'));
+		$totals[] = '$' . $this -> Fundraiser -> field('SUM(revenue)', array(
+			'budget_id' => $budgetId,
+			'type' => 'Planned'
+		));
 		$totals[] = '$' . $this -> Expense -> field('SUM(amount)', array('budget_id' => $budgetId));
 		$totals[] = '$' . ($this -> Asset -> field('SUM(amount)', array('budget_id' => $budgetId)) - $this -> Liability -> field('SUM(amount)', array('budget_id' => $budgetId)));
 		$totals[] = '$' . $this -> MemberContribution -> field('SUM(amount)', array('budget_id' => $budgetId));
@@ -656,7 +660,7 @@ class BudgetsController extends AppController
 				));
 			}
 		}
-		
+
 		// for breadcrumb
 		$this -> loadModel('Organization');
 		$this -> Organization -> id = $org_id;
@@ -814,7 +818,7 @@ class BudgetsController extends AppController
 				$this -> setRequested($fiscal_year, $orgIds);
 				$this -> setAllocated($fiscal_year, $orgIds);
 			}
-			$this ->log($budgets);
+			$this -> log($budgets);
 			$this -> set('budgets', $budgets);
 		}
 	}
@@ -1013,29 +1017,71 @@ class BudgetsController extends AppController
 	public function export()
 	{
 		$budgets = $this -> Budget -> find('all', array(
-			'conditions' => array('Budget.fiscal_year' => '20' + ($this -> getFiscalYear() + 2), ),
+			'conditions' => array('Budget.fiscal_year' => '20' . ($this -> getFiscalYear() + 2), ),
 			'recursive' => 2,
 			'order' => 'Organization.name'
 		));
-		debug($budgets);
+
+		$export = array('Organizations' => '');
+
+		$states = array(
+			'JFC' => 'JFC',
+			'UHRC' => 'UHRC',
+			'GSSC' => 'GSSC',
+			'UHR' => 'UHR',
+			'GSS' => 'GSS',
+			'CONF' => 'CONF',
+			'Final' => 'Final'
+		);
+		foreach ($budgets as $budget)
+		{
+			$category = 0;
+			$category_name = '';
+			$org_name = $budget['Organization']['name'];
+			foreach ($budget['Requested'] as $k => $budgetLineItem)
+			{
+				if ($category != $budgetLineItem['category'])
+				{
+					$category_name = $budgetLineItem['LineItemCategory']['name'];
+				}
+				$amounts = array();
+				$amounts[] = (isset($budget['Previous_Budget']['Requested'][$k])) ? $budget['Previous_Budget']['Requested'][$k]['amount'] : 0;
+				$amounts[] = (isset($budget['Previous_Budget']['Allocated'][$k])) ? $budget['Previous_Budget']['Allocated'][$k]['amount'] : 0;
+				$amounts[] = $budgetLineItem['amount'];
+				foreach ($states as $state)
+				{
+					$amounts[] = (isset($budget[$state][$k])) ? $budget[$state][$k]['amount'] : 0;
+				}
+				$export['Organizations'][$org_name]['Categories'][$category_name]['LineItems'][$budgetLineItem['name']] = $amounts;
+				$category = $budgetLineItem['category'];
+			}
+
+		}
+		$this -> layout = 'csv';
+		$this -> set('states', $states);
+		$this -> set('export', $export);
 	}
 
 	public function processCommentDialog($id = null)
 	{
 		$this -> autoRender = false;
-		if($this -> request -> is('get'))
+		if ($this -> request -> is('get'))
 		{
 			$this -> BudgetLineItem -> id = $id;
-			return json_encode(array('success' => true, 'data' =>$this -> BudgetLineItem -> read()));
+			return json_encode(array(
+				'success' => true,
+				'data' => $this -> BudgetLineItem -> read()
+			));
 		}
-		$this ->log("here");
-		$this -> log($this -> request ->data);
-		if($this -> request -> is('post'))
+		$this -> log("here");
+		$this -> log($this -> request -> data);
+		if ($this -> request -> is('post'))
 		{
 			$this -> BudgetLineItem -> id = $id;
-			$this ->BudgetLineItem -> saveField("comments", $this -> request ->data['Comment']['Comment']);
+			$this -> BudgetLineItem -> saveField("comments", $this -> request -> data['Comment']['Comment']);
 		}
 		return true;
 	}
+
 }
 ?>

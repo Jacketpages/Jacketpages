@@ -2,8 +2,8 @@
 /**
  * @author Stephen Roca
  * @since 10/01/2012
+ * @deprecated
  */
-
 class CsvHelper extends AppHelper 
 {
 	public $buffer;
