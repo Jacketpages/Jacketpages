@@ -15,7 +15,8 @@ class OrganizationsController extends AppController
 		'Form',
 		'Paginator',
 		'Js',
-		'Csv'
+		'Csv',
+		'Excel'
 	);
 	public $components = array(
 		'Acl',

@@ -1,9 +1,8 @@
 <?php
-$this -> Csv -> start();
+$this -> Excel -> create();
 foreach($export as $row)
 {
-	$this -> Csv -> append($row);
+	$this -> Excel -> addRow($row);
 }
-$this -> Csv->setFilename("Organizations.csv");
-echo $this -> Csv -> end();
+$this -> Excel->generate("Organizations");
 ?>
