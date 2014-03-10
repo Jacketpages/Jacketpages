@@ -208,9 +208,14 @@ $config['rules'] = array(
 		'gt_member' => 'Role/gt_member',
 		'student' => 'Role/student',
 		'general' => 'Role/general',
-		'controllers/users/loginasotheruser' => 'Role/general'
+		'controllers/users/loginasotheruser' => 'Role/admin'
 	),
 	'deny' => array(
 	//'controllers/bills/votes' => 'Role/gt_member'
 	),
 );
+
+// if debug is 2 then allow loginAsOtherUser
+if(Configure::read('debug') == 2){
+	$config['rules']['allow']['controllers/users/loginasotheruser'] = 'Role/general';
+}
