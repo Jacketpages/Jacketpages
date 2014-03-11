@@ -33,6 +33,7 @@ class Organization extends AppModel
 				),
 				array(
 					'rule' => 'uploadErrorWithMessage',
+					'required' => true,
 					'message' => ''
 				)
 			)

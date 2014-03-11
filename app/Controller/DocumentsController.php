@@ -31,7 +31,9 @@ class DocumentsController extends AppController
 			}
 			$this -> set('organization', $org);
 			$this -> Document -> recursive = 0;
-			$this -> set('documents', $this -> paginate(array('Document.org_id' => $id)));
+			$documents = $this -> paginate(array('Document.org_id' => $id));
+			Document::addFilesizeToDocuments($documents);
+			$this -> set('documents', $documents);
 			$this -> set('id', $id);
 		}
 		else
@@ -46,12 +48,16 @@ class DocumentsController extends AppController
 		if ($this -> request -> is('post'))
 		{
 			// set model data for validation
+			$this->request->data['id'] = array('id'=>$id);// add id to the request data so validation can use it
 			$this->Document->set($this->request->data);
 			
 			if ($this->Document->validatesDocumentUpload())
 			{
-				$dir = new Folder(APP . DS . "Documents" . DS . $id, true, 0744);
-				move_uploaded_file($this -> request -> data['Document']['submittedfile']['tmp_name'], APP . DS . "Documents" . DS . $id . DS . $this -> request -> data['Document']['submittedfile']['name']);
+				$documentsFolder = Document::getDocumentsFolderWithId($id);
+				$filepath = Document::getFilepathWithIdAndName($id, $this -> request -> data['Document']['submittedfile']['name']);
+				
+				$dir = new Folder($documentsFolder, true, 0744);
+				move_uploaded_file($this->request->data['Document']['submittedfile']['tmp_name'], $filepath);
 
 				$data = array(
 					'org_id' => $id,
@@ -94,11 +100,14 @@ class DocumentsController extends AppController
 			$this -> Session -> setFlash(__('Invalid ID for document', true));
 			$this -> redirect(array('action' => 'index'));
 		}
+		
 		// Find the document to be deleted.
 		$doc = $this -> Document -> findById($id);
 		$org_id = $doc['Document']['org_id'];
+		
 		// Create a file object and delete the actual file.
-		$file = new File(APP . "Documents" . DS . $org_id . DS . $doc['Document']['name']);
+		$filepath = Document::getFilepathWithIdAndName($org_id, $doc['Document']['name']);
+		$file = new File($filepath);
 		$file -> delete();
 
 		// Delete the record in the database for the above file
@@ -118,10 +127,13 @@ class DocumentsController extends AppController
 	function sendFile($id)
 	{
 		$file = $this -> Document -> findById($id);
-		$this -> response -> file("Documents" . DS . $file['Document']['org_id'] . DS . $file['Document']['name'], array(
+
+		$filepath = Document::getFilepathWithIdAndName($file['Document']['org_id'], $file['Document']['name']);
+		$this -> response -> file($filepath, array(
 			'download' => true,
 			'name' => $file['Document']['name']
 		));
+		
 		//Return reponse object to prevent controller from trying to render a view
 		return $this -> response;
 	}
