@@ -25,6 +25,7 @@ class Organization extends AppModel
 			'image' => array(
 				array(
 					'rule' => array('fileSize', '<=', '200KB'),
+					'required' => true,
 					'message' => 'Image should be less than 200 KB.'
 				),
 				array(

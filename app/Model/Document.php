@@ -57,6 +57,7 @@ class Document extends AppModel
 			'submittedfile' => array(
 				array(
 					'rule' => array('fileSize', '<=', '8MB'),
+					'required' => true,
 					'message' => 'Documents should be less than 8MB.'
 				),
 				array(
