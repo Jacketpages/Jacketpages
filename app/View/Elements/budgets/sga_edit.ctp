@@ -99,7 +99,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 						'label' => false,
 						'value' => $budgetLineItem['line_number'],
 						'style' => 'background-color:transparent; border:none;' . 
-						(strlen($budget[$state][$k]['comments']) > 0 ? "text-decoration:underline;" : ""),
+						(isset($budget[$state][$k]) && strlen($budget[$state][$k]['comments']) > 0 ? "text-decoration:underline;" : ""),
 						'readonly' => 'readonly',
 						'type' => 'text'
 					)),

@@ -818,7 +818,6 @@ class BudgetsController extends AppController
 				$this -> setRequested($fiscal_year, $orgIds);
 				$this -> setAllocated($fiscal_year, $orgIds);
 			}
-			$this -> log($budgets);
 			$this -> set('budgets', $budgets);
 		}
 	}

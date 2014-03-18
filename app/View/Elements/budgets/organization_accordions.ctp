@@ -33,25 +33,11 @@ else
 ?>
 
 <script>
-		$(function() {
-	for(i = 0; i < <?php echo count($budgets); ?>
-		;
-		i++)
-		{
-			$("#org-accordion-" + i).accordion(
-			{
-				collapsible : true,
-				heightStyle: "content"
-			});
-			for ( j = 0; j < 5; j++)
-			{
-				$("#bli-accordion-" + i + "" + j).accordion(
-				{
-					collapsible : true,
-					heightStyle: "content"
-				});
-			}
-		}
+	$(function() {
+		$('div[id*=-accordion-]').accordion({
+			collapsible : true,
+			heightStyle: "content"
 		});
+	});
 </script>
 

@@ -13,9 +13,8 @@
         <?php
 
 		echo $this -> fetch('meta');
-		echo $this -> Html -> script('//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js');
-		echo $this -> Html -> script('http://code.jquery.com/jquery-1.9.1.js');
-		echo $this -> Html -> script('http://code.jquery.com/ui/1.10.3/jquery-ui.js');
+		echo $this -> Html -> script('http://code.jquery.com/jquery-1.11.0.min.js');
+		echo $this -> Html -> script('http://code.jquery.com/ui/1.10.4/jquery-ui.min.js');
 		echo $this -> fetch('script');
 		
 		echo $this -> Html -> css('jquery-ui-1.10.3.custom');
