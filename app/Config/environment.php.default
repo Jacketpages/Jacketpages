@@ -1,0 +1,21 @@
+<?php
+$config = array(
+	'debug' => 2,
+	
+	'Session' => array(
+		'defaults' => 'php',
+	),
+	
+	'environment' => array(
+		'database' => array(
+			'datasource' => 'Database/Mysql',
+			'persistent' => false,
+			'host'       => 'localhost',
+			'login'      => 'root',
+			'password'   => '',
+			'database'   => 'jacketpages',
+			'prefix'     => ''
+		)
+	)
+);
+?>
