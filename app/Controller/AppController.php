@@ -317,6 +317,71 @@ class AppController extends Controller
 		return $members;
 	}
 
+	// A more efficient version of getMembers, only returning name and email
+	public function getMembersContact($org_id = null, $roles = array(), $single = false, $statuses = array('Active'))
+	{
+		$this -> loadModel('Membership');
+		$this -> Membership -> Behaviors -> load('Containable');
+		$members = null;
+		if (isset($org_id) && count($roles))
+		{
+			$db = ConnectionManager::getDataSource('default');
+			if (!$single)
+			{
+				$members = $this -> Membership -> find('all', array(
+					'conditions' => array(
+						'AND' => array(
+							'Membership.org_id' => $org_id,
+							'Membership.role' => $roles,
+							'Membership.status' => $statuses,
+							'OR' => array(
+								$db -> expression('Membership.end_date >= NOW()'),
+								'Membership.end_date' => null
+							)
+						)
+					),
+					'fields' => array(
+						'name'
+					),
+					'contain' => array(
+						'User.email'
+					)
+				));
+			}
+			else
+			{
+				$members = $this -> Membership -> find('first', array(
+					'conditions' => array(
+						'AND' => array(
+							'Membership.org_id' => $org_id,
+							'Membership.role' => $roles,
+							'Membership.status' => $statuses,
+							'OR' => array(
+								$db -> expression('Membership.end_date >= NOW()'),
+								'Membership.end_date' => null
+							)
+						)
+					),
+					'order' => 'Membership.start_date desc',
+					'fields' => array(
+						'name'
+					),
+					'contain' => array(
+						'User.email'
+					)
+				));
+				if (count($members) == 0)
+				{
+					$members = array(
+						'Membership' => array('name' => ''),
+						'User' => array('email' => '')
+					);
+				}
+			}
+		}
+		return $members;
+	}
+
 	protected function isSubmitter($bill_id)
 	{
 		$this -> loadModel('Bill');

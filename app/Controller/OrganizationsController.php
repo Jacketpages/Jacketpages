@@ -254,6 +254,7 @@ class OrganizationsController extends AppController
 		// Set which organization to retrieve from the database.
 		$this -> Organization -> id = $id;
 		$organization = $this -> Organization -> read();
+		
 		if (empty($organization))
 		{
 			// no organization with that id
@@ -379,7 +380,9 @@ class OrganizationsController extends AppController
 	{
 		// $this -> Session -> setFlash('UNDER CONSTRUCTION');
 		// $this -> redirect('/organizations/index');
-		$organizations = $this -> Organization -> find('all', array('fields' => array(
+		
+		$organizations = $this -> Organization -> find('all', array(
+			'fields' => array(
 				'Organization.id',
 				'Organization.name',
 				'Organization.status',
@@ -388,8 +391,10 @@ class OrganizationsController extends AppController
 				'Organization.advisor_date',
 				'Organization.constitution_date',
 				'Organization.category'
-			), 'recursive' => -1));		
-		$this -> loadModel('Membership');
+			),
+			'recursive' => -1
+		));		
+
 		$this -> loadModel('User');
 		$this -> loadModel('Budget');
 		$this -> loadModel('Category');
@@ -413,9 +418,9 @@ class OrganizationsController extends AppController
 		foreach ($organizations as $organization)
 		{
 			// get values if they exist
-			$president = $this -> getMembers($organization['Organization']['id'],array('President'), true);
-			$treasurer = $this -> getMembers($organization['Organization']['id'],array('Treasurer'), true);
-			$advisor = $this -> getMembers($organization['Organization']['id'],array('Advisor'), true);
+			$president = $this -> getMembersContact($organization['Organization']['id'],array('President'), true);
+			$treasurer = $this -> getMembersContact($organization['Organization']['id'],array('Treasurer'), true);
+			$advisor = $this -> getMembersContact($organization['Organization']['id'],array('Advisor'), true);
 			$contact = $this -> User -> findById($organization['Organization']['contact_id']);
 			$budget = $this -> Budget -> find('first', array(
 				'fields' => array('Budget.state'),
