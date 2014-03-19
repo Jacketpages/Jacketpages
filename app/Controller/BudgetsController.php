@@ -792,7 +792,8 @@ class BudgetsController extends AppController
 				));
 			}
 			else
-			{
+			{				
+				$this -> Budget -> Behaviors -> load('Containable');
 				$budgets = $this -> Budget -> find('all', array(
 					'conditions' => array(
 						'Budget.fiscal_year' => $fiscal_year,
@@ -802,11 +803,38 @@ class BudgetsController extends AppController
 							3
 						)
 					),
-					'recursive' => 2,
+					'contain' => array(
+						'Organization' => array(
+							'fields' => array(
+								'name'
+							)							
+						),
+						'Previous_Budget' => array(
+							'Requested',
+							'Allocated',
+							'JFC',
+							'UHRC',
+							'GSSC',
+							'CONF',
+							'Final'
+						),
+						'Requested' => array(
+							'LineItemCategory' => array(
+								'fields' => array(
+									'name'
+								)
+							)
+						),
+						'Allocated',
+						'JFC',
+						'UHRC',
+						'GSSC',
+						'CONF',
+						'Final'
+					),
 					'order' => 'Organization.name'
 				));
 			}
-
 			$orgIds = $this -> setOrganizationDropDown($fiscal_year, $tier);
 			if ($org_id != 0)
 			{
