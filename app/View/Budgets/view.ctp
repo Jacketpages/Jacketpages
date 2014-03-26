@@ -13,7 +13,7 @@ else
 {
 	echo $this -> Form -> create();
 }
-echo $this -> Html -> tag('h1', 'Overall');
+echo $this -> Html -> tag('h1', 'Budget Totals');
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
 {
 	echo $this -> Html -> tableCells(array(
@@ -44,7 +44,7 @@ echo $this -> Html -> tableBegin(array('class' => 'listing'));
 }
 echo $this -> Html -> tableEnd();
 
-echo $this -> Html -> tag('h1', 'Individual');
+echo $this -> Html -> tag('h1', 'Selected Organization(s)');
 
 if (count($budgets) == 1)
 {
