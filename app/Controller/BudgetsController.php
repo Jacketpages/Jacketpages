@@ -773,12 +773,12 @@ class BudgetsController extends AppController
 					}
 				}
 				$this -> Session -> write('Budget.state', $this -> request -> data['Budget']['state']);
-				$this -> Session -> write('org_id', $org_id);
 				if ($goToNext)
 				{
 					$org_id = $this -> getNextOrgId($fiscal_year, $tier, $org_id);
 				}
 			}
+			$this -> Session -> write('org_id', $org_id);
 			$this -> set('org_id', $org_id);
 			if ($org_id != 0)
 			{
