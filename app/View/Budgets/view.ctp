@@ -148,8 +148,11 @@ if (count($budgets) > 1 && $sga_exec)
 echo $this -> element('/budgets/organization_accordions');
 if (count($budgets) == 1)
 {
-	echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
-	echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));
+	if($sga_exec)
+	{
+		echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
+		echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));		
+	}
 	echo $this -> Form -> end();
 }
 $this -> end();

@@ -111,7 +111,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 					'readonly' => 'readonly',
 					'type' => 'textarea',
 					'style' => 'background-color:transparent; border:none;resize:none;',
-					'rows' => (int) ceil(strlen($budgetLineItem['name']) / 48),
+					'rows' => (int) ceil(strlen($budgetLineItem['name']) / 47),
 					'value' => $budgetLineItem['name'], 
 					'title' => $budgetLineItem['name']
 				)) . $this -> Form -> input("BudgetLineItem.$k.category", array(

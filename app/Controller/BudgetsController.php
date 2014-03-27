@@ -696,7 +696,7 @@ class BudgetsController extends AppController
 				$this -> request -> data['Budget']['state'] = 'JFC';
 			}
 			$this -> set('state', $this -> request -> data['Budget']['state']);
-			if ($this -> request -> is('post') && strcmp($this -> request -> data['Budget']['state'], '') != 0)
+			if ($this -> isSGAExec() && $this -> request -> is('post') && strcmp($this -> request -> data['Budget']['state'], '') != 0)
 			{
 				if (strcmp($this -> Session -> read('Budget.state'), $this -> request -> data['Budget']['state']) == 0 && $this -> Session -> read('org_id') == $org_id)
 				{
