@@ -670,7 +670,7 @@ class BudgetsController extends AppController
 
 	public function view()
 	{
-		if ($this -> isSGAExec())
+		if ($this -> isSGA())
 		{
 			$goToNext = false;
 			if (isset($this -> request -> data['redirect']))

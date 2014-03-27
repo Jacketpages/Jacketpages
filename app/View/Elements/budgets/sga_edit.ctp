@@ -124,32 +124,32 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 				$this -> Number -> currency($requested),
 				$this -> Number -> currency($allocated),
 				$this -> Number -> currency($budgetLineItem['amount']),
-				strcmp($state, 'JFC') == 0 ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
+				strcmp($state, 'JFC') == 0  && $sga_exec ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
 					'label' => false,
 					'value' => isset($budget['JFC'][$k]) ? $budget['JFC'][$k]['amount'] : 0,
 					'type' => 'text'
 				)) : (isset($budget['JFC'][$k]) ? $this -> Number -> currency($budget['JFC'][$k]['amount']) : $this -> Number -> currency(0)),
-				strcmp($state, 'UHRC') == 0 ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
+				strcmp($state, 'UHRC') == 0 && $sga_exec ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
 					'label' => false,
 					'value' => isset($budget['UHRC'][$k]) ? $budget['UHRC'][$k]['amount'] : 0
 				)) : (isset($budget['UHRC'][$k]) ? $this -> Number -> currency($budget['UHRC'][$k]['amount']) : $this -> Number -> currency(0)),
-				strcmp($state, 'GSSC') == 0 ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
+				strcmp($state, 'GSSC') == 0 && $sga_exec ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
 					'label' => false,
 					'value' => isset($budget['GSSC'][$k]) ? $budget['GSSC'][$k]['amount'] : 0
-				)) : (isset($budget['GSSC'][$k]) ? $this -> Number -> currency($budget['GSSC'][$k]['amount']) : $this -> Number -> currency(0)),
-				strcmp($state, 'UHR') == 0 ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
+				)) : (isset($budget['GSSC'][$k]) && $sga_exec ? $this -> Number -> currency($budget['GSSC'][$k]['amount']) : $this -> Number -> currency(0)),
+				strcmp($state, 'UHR') == 0 && $sga_exec ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
 					'label' => false,
 					'value' => isset($budget['UHR'][$k]) ? $budget['UHR'][$k]['amount'] : 0
 				)) : (isset($budget['UHR'][$k]) ? $this -> Number -> currency($budget['UHR'][$k]['amount']) : $this -> Number -> currency(0)),
-				strcmp($state, 'GSS') == 0 ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
+				strcmp($state, 'GSS') == 0 && $sga_exec ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
 					'label' => false,
 					'value' => isset($budget['GSS'][$k]) ? $budget['GSS'][$k]['amount'] : 0
 				)) : (isset($budget['GSS'][$k]) ? $this -> Number -> currency($budget['GSS'][$k]['amount']) : $this -> Number -> currency(0)),
-				strcmp($state, 'CONF') == 0 ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
+				strcmp($state, 'CONF') == 0 && $sga_exec ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
 					'label' => false,
 					'value' => isset($budget['CONF'][$k]) ? $budget['CONF'][$k]['amount'] : 0
 				)) : (isset($budget['CONF'][$k]) ? $this -> Number -> currency($budget['CONF'][$k]['amount']) : $this -> Number -> currency(0)),
-				strcmp($state, 'Final') == 0 ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
+				strcmp($state, 'Final') == 0 && $sga_exec ? $this -> Form -> input("BudgetLineItem.$k.amount", array(
 					'label' => false,
 					'value' => isset($budget['Final'][$k]) ? $budget['Final'][$k]['amount'] : 0,
 					'type' => 'text'

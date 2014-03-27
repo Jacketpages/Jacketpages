@@ -14,15 +14,15 @@
 	<li class="leaf">
 		<?php echo $this->Html->link('View Bills on Agenda', array('controller' => 'bills', 'action' => 'onAgenda'))?>
 	</li>
+	<li class="leaf">
+		<?php echo $this->Html->link('Administer Budgets', array('controller' => 'budgets', 'action' => 'view'))
+		?>
+	</li>
 <?php } ?>
 
 <?php if ($sga_exec){ ?>
-	<li class="leaf">
-		<?php echo $this->Html->link('Edit Budgets', array('controller' => 'budgets', 'action' => 'view'))
-		?>
-	</li>
 	<li class="leaf last">
-		<?php echo $this->Html->link('View Budgets', array('controller' => 'budgets', 'action' => 'index'))?>
+		<?php echo $this->Html->link('Budget Submissions', array('controller' => 'budgets', 'action' => 'index'))?>
 	</li>
 <?php } ?>
 

@@ -76,7 +76,7 @@ echo $this -> Html -> tableBegin(array('class' => 'listing'));
 			'value' => $org_id
 		))
 	));
-	if (count($budgets) == 1)
+	if (count($budgets) == 1 && $sga_exec)
 	{
 		echo $this -> Html -> tableCells(array(
 			'State',
@@ -99,7 +99,7 @@ echo $this -> Html -> tableBegin(array('class' => 'listing'));
 	}
 }
 echo $this -> Html -> tableEnd();
-if (count($budgets) > 1)
+if (count($budgets) > 1 && $sga_exec)
 {
 	echo $this -> Form -> end();
 	echo $this -> Html -> tag('h1', 'Copy All Budget Line Items');
