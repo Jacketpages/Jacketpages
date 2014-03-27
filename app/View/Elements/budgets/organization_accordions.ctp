@@ -30,8 +30,10 @@ else
 		}
 	}
 }
-?>
 
+if(count($budgets) == 1)
+{
+?>
 <script>
 	$(function() {
 		$('div[id*=-accordion-]').accordion({
@@ -40,4 +42,7 @@ else
 		});
 	});
 </script>
+<?php	
+}
+?>
 
