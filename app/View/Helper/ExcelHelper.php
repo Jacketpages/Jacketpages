@@ -65,12 +65,12 @@ class ExcelHelper extends AppHelper
 
 	public function generate($filename = null)
 	{
-		header("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		header("Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
 		header('Cache-Control: max-age=0');
 		$objWriter = PHPExcel_IOFactory::createWriter($this -> workbook, "Excel2007");
 		ob_end_clean();
-		$objWriter -> save("php://output");
+		$objWriter -> save("php://temp");
 		// Need to disconnect cyclic references for cells and worksheets so the objects'
 		// memory can be reclaimed.
 		$this -> worksheet -> disconnectCells();
