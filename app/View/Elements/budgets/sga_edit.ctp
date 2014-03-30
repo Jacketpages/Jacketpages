@@ -103,7 +103,7 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 						'readonly' => 'readonly',
 						'type' => 'text'
 					)),
-					array('id' => "highlight",'onclick' => 'openCommentDialog("' . "BudgetLineItem$k" . 'Id")')
+					array('id' => "highlight",'onclick' => ($sga_exec) ? 'openCommentDialog("' . "BudgetLineItem$k" . 'Id")' : '')
 				),
 				$this -> Form -> input("BudgetLineItem.$k.name", array(
 					'label' => false,
@@ -154,12 +154,12 @@ echo $this -> Html -> tag('h3', $budget['Organization']['name']);
 					'value' => isset($budget['Final'][$k]) ? $budget['Final'][$k]['amount'] : 0,
 					'type' => 'text'
 				)) : (isset($budget['Final'][$k]) ? $this -> Number -> currency($budget['Final'][$k]['amount']) : $this -> Number -> currency(0)),
-				$this -> Form -> button('+', array(
+				(!$sga_exec) ? '' : $this -> Form -> button('+', array(
 					'type' => 'button',
 					'onclick' => "addRow(" . $rowNumber . ",'" . $tableName . "')",
 					'escape' => false
 				)),
-				($budgetLineItem['original']) ? '' : $this -> Form -> button('-', array(
+				($budgetLineItem['original'] || !$sga_exec) ? '' : $this -> Form -> button('-', array(
 					'type' => 'button',
 					'onclick' => "deleteRow(" . $rowNumber . ",'" . $tableName . "')",
 					'escape' => false
