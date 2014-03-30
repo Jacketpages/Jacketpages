@@ -70,7 +70,7 @@ class ExcelHelper extends AppHelper
 		header('Cache-Control: max-age=0');
 		$objWriter = PHPExcel_IOFactory::createWriter($this -> workbook, "Excel2007");
 		ob_end_clean();
-		$objWriter -> save("php://temp");
+		$objWriter -> save("php://output");
 		// Need to disconnect cyclic references for cells and worksheets so the objects'
 		// memory can be reclaimed.
 		$this -> worksheet -> disconnectCells();
