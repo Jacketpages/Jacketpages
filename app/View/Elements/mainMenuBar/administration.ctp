@@ -27,8 +27,12 @@ if ($admin)
 		<?php echo $this->Html->link('Login as Other User', array('controller' => 'users', 'action' => 'loginAsOtherUser'))
 		?>
 	</li>
-	<li class="leaf last">
+	<li class="leaf">
 		<?php echo $this->Html->link('Submit Bill as Other User', array('controller' => 'bills', 'action' => 'add'))
+		?>
+	</li>
+	<li class="leaf last">
+		<?php echo $this->Html->link('Manage Badges', array('controller' => 'badges', 'action' => 'index'))
 		?>
 	</li>
 </ul>

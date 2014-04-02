@@ -257,7 +257,7 @@ form > .input {
 /*
  * Notification popup on homepage
  */
-#notification {
+#notification, .notification {
 	width: 100%;
 	background-color: #EEB211;
 	box-shadow: 5px 5px 5px #888888;
@@ -675,7 +675,66 @@ table.list tr:nth-child(2n) td {
 	padding: 0px;
 }
 
-#highlight:hover
-{
+#highlight:hover {
 	background-color:#bbcfe4;
+}
+
+.badgeButton {
+	background-color: white;
+	border: thin solid #DDDDDD;
+	display: inline-block;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	padding: 10px;
+}
+
+.badgeButton .badgeIcon img {
+	max-height: 40px;
+}
+
+.badgeIcon {
+	padding: 5px;
+}
+.badgeIcon img {
+	max-height: 33px;
+	vertical-align: text-top;
+}
+#page_title .badgeIcon:first-child {
+	margin-left: 5px;
+}
+
+#awardSearchBox {
+	margin-bottom: 20px;
+}
+#awardSearchBox label {
+	font-size: 16px;
+}
+
+.awardsTable td {
+	padding: 0px;
+	vertical-align: middle;
+}
+
+.awardsTable select {
+	height: 300px;
+}
+
+.awardsCenterButtons {
+	text-align: center;
+}
+.awardsCenterButtons button {
+	font-weight: normal;
+}
+
+.badgeDescription {
+	border-bottom: thin solid #DDDDDD;
+    margin-bottom: 15px;
+    padding: 5px 5px 15px;
+}
+
+#organizationBadgeTable .badgeButton {
+	margin-bottom: 2px;
+    margin-right: 4px;
+    margin-top: 2px;
+    padding: 2px;
 }

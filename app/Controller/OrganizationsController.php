@@ -263,6 +263,7 @@ class OrganizationsController extends AppController
 				'action' => 'index'
 			));
 		}
+		$this -> loadModel('Badge');
 		$this -> set('organization', $organization);
 		$this -> loadModel('Membership');
 		$this -> set('presidents', $this -> getMembers($id, array('President')));
