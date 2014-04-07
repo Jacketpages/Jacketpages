@@ -264,6 +264,17 @@ class OrganizationsController extends AppController
 				'action' => 'index'
 			));
 		}
+		
+		// redirect if org is inactive and user doesn't have lace permissions
+		if (!$this -> isLace() && $organization['Organization']['status'] == 'Inactive')
+		{
+			$this -> Session -> setFlash('You do not have permission to view that page.');
+			$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'index'
+			));
+		}
+		
 		$this -> set('organization', $organization);
 		$this -> loadModel('Membership');
 		$this -> set('presidents', $this -> getMembers($id, array('President')));
