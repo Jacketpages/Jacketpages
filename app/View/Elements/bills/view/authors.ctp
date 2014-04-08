@@ -32,9 +32,9 @@ $email = (isset($UnderAuthor['User']['email'])) ? $UnderAuthor['User']['email'] 
 $undr[] = $this -> Html -> link ($name, 'mailto:' . $email) . " - " . $signed;
 
 $rows = array();
-if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Graduate')
+if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Graduate' || $bill['Bill']['category'] == 'Conference')
 	$rows[] = $grad;
-if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Undergraduate')
+if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Undergraduate' || $bill['Bill']['category'] == 'Conference')
 	$rows[] = $undr;
 $rows[] = array(
 		'Submitter',
