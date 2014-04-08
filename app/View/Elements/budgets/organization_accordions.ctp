@@ -29,6 +29,33 @@ else
 			echo $this -> Html -> useTag('tagend', 'div');
 		}
 	}
+	
+	echo $this -> Html -> tableBegin(array('class' => 'listing'));
+	echo $this -> Html -> tableHeaders(array('Grand Totals','PY Req',
+			'PY Alloc',
+			'CY Req',
+			'JFC',
+			'UHRC',
+			'GSSC',
+			'UHR',
+			'GSS',
+			'CONF',
+			'Final'));
+	echo $this -> Html -> tableCells(
+		array('Amounts',
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.Previous_Budget.Requested.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.Previous_Budget.Allocated.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.Requested.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.JFC.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.UHRC.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.GSSC.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.UHR.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.GSS.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.CONF.{n}.amount'))),
+		$this -> Number -> currency(array_sum(Hash::extract($budgets, '{n}.Final.{n}.amount')))
+	)
+	);
+	echo $this -> Html -> tableEnd();
 }
 
 if(count($budgets) == 1)
