@@ -150,8 +150,12 @@ if (count($budgets) == 1)
 {
 	if($sga_exec)
 	{
-		echo $this -> Form -> submit('Save', array('style' => 'float:left;'));
-		echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]"));		
+		echo $this -> Form -> submit('Save', array('style' => 'float:left;','formnovalidate',
+	'onclick' => 'openToolTips()'
+));
+		echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]",'formnovalidate',
+	'onclick' => 'openToolTips()'
+));		
 	}
 	echo $this -> Form -> end();
 }

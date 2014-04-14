@@ -1,5 +1,6 @@
 <?php
 echo $this -> Html -> script('budgets/sga_edit');
+echo $this -> Html -> script('validation/validation');
 $column_names = array('');
 $subtotals = array(
 	0,

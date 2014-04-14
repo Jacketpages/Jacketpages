@@ -1,21 +1,36 @@
 function assignAndRunValidationRules()
 {
-	var i = 0;
-	var locations = [];
-	var values = [];
-	while(i < 6)
+	// var i = 0;
+	// var locations = [];
+	// var values = [];
+	// while(i < 6)
+	// {
+		// var table = document.getElementById("BudgetLineItem-" + i);
+		// if (table != undefined)
+		// {
+			// var rows = table.rows;
+			// for ( j = 1; rows[j].cells[0].innerHTML != ""; j++)
+			// {
+				// values.push(rows[j].cells[1].getElementsByTagName("textarea")[0].getAttribute("name"));
+				// locations.push(rows[j].cells[1].getElementsByTagName("textarea")[0].getAttribute("id"));
+			// }
+		// }
+		// i++;
+	// }
+	
+	for(var i = 0; i < 5; i++)
 	{
-		var table = document.getElementById("BudgetLineItem-" + i);
-		if (table != undefined)
+		var element = $("#BudgetLineItem-" + i);
+		if(element != undefined)
 		{
-			var rows = table.rows;
-			for ( j = 1; rows[j].cells[0].innerHTML != ""; j++)
+			var j = 0;
+			while(document.getElementById("BudgetLineItem" + j + "Amount") != undefined)
 			{
-				values.push(rows[j].cells[1].getElementsByTagName("textarea")[0].getAttribute("name"));
-				locations.push(rows[j].cells[1].getElementsByTagName("textarea")[0].getAttribute("id"));
+				console.log($("#BudgetLineItem" + j + "Amount"));
+				moneyRule("#BudgetLineItem" + j + "Amount");
+				j++;
 			}
 		}
-		i++;
 	}
 	alreadyValidated = true;
 }
