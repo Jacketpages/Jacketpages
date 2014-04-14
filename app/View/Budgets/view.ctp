@@ -46,7 +46,7 @@ echo $this -> Html -> tableEnd();
 
 echo $this -> Html -> tag('h1', 'Selected Organization(s)');
 
-if (count($budgets) == 1)
+if (count($budgets) == 1 && $sga_exec)
 {
 	echo $this -> Html -> div("", "Please save any changes before navigating to another page. Save button is located at the bottom of the page. Note that viewing all organization budget information will require several seconds of processing time before loading.", array('id' => 'notification'));
 }
