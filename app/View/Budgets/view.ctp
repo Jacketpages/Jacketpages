@@ -6,7 +6,11 @@ $this -> assign('title', "Budgets");
 $this -> start('middle');
 if (count($budgets) == 1)
 {
-	echo $this -> Html -> div("",$this -> element("budgets/comment_dialog"),array('style'=> 'visibility:hiddend;','id' => 'dialog','title' => 'Add Comment to Budget Line Item'));
+	echo $this -> Html -> div("", $this -> element("budgets/comment_dialog"), array(
+		'style' => 'visibility:hidden;',
+		'id' => 'dialog',
+		'title' => 'Add Comment to Budget Line Item'
+	));
 	echo $this -> Form -> create('Budget', array('onsubmit' => 'return validateForm()'));
 }
 else
@@ -148,14 +152,18 @@ if (count($budgets) > 1 && $sga_exec)
 echo $this -> element('/budgets/organization_accordions');
 if (count($budgets) == 1)
 {
-	if($sga_exec)
+	if ($sga_exec)
 	{
-		echo $this -> Form -> submit('Save', array('style' => 'float:left;','formnovalidate',
-	'onclick' => 'openToolTips()'
-));
-		echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect]",'formnovalidate',
-	'onclick' => 'openToolTips()'
-));		
+		echo $this -> Form -> submit('Save', array(
+			'style' => 'float:left;',
+			'formnovalidate',
+			'onclick' => 'openToolTips()'
+		));
+		echo $this -> Form -> submit('Save and Continue', array(
+			'name' => "data[redirect]",
+			'formnovalidate',
+			'onclick' => 'openToolTips()'
+		));
 	}
 	echo $this -> Form -> end();
 }

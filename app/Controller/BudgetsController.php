@@ -792,7 +792,7 @@ class BudgetsController extends AppController
 				));
 			}
 			else
-			{				
+			{
 				$this -> Budget -> Behaviors -> load('Containable');
 				$budgets = $this -> Budget -> find('all', array(
 					'conditions' => array(
@@ -804,11 +804,7 @@ class BudgetsController extends AppController
 						)
 					),
 					'contain' => array(
-						'Organization' => array(
-							'fields' => array(
-								'name'
-							)							
-						),
+						'Organization' => array('fields' => array('name', 'tier')),
 						'Previous_Budget' => array(
 							'Requested',
 							'Allocated',
@@ -818,13 +814,7 @@ class BudgetsController extends AppController
 							'CONF',
 							'Final'
 						),
-						'Requested' => array(
-							'LineItemCategory' => array(
-								'fields' => array(
-									'name'
-								)
-							)
-						),
+						'Requested' => array('LineItemCategory' => array('fields' => array('name'))),
 						'Allocated',
 						'JFC',
 						'UHRC',
@@ -848,6 +838,37 @@ class BudgetsController extends AppController
 			}
 			$this -> set('budgets', $budgets);
 		}
+	}
+
+	public function getOrgsForDropDown($fiscal_year, $tier)
+	{
+		$this -> autoRender = false;	
+		$orgIds = $this -> Budget -> find('all', array(
+				'conditions' => array(
+					'Budget.fiscal_year' => $fiscal_year
+				),
+				'fields' => array('DISTINCT Budget.org_id')
+			));
+			$orgIds = Hash::extract($orgIds, '{n}.Budget.org_id');
+			$this -> loadModel('Organization');
+		$orgs = $this -> Organization -> find('list', array(
+				'conditions' => array(
+					'status' => array(
+						'Active',
+						'Under Review',
+						'Pending'
+					),
+					'Organization.id' => $orgIds,
+					'tier' => ($tier) ? $tier : array(
+						1,
+						2,
+						3
+					)
+				),
+				'recursive' => -1,
+				'fields' => array('Organization.name', 'Organization.id')
+			));	
+		return json_encode(array('success' => true,'Options' => $orgs));
 	}
 
 	private function setOrganizationDropDown($fiscal_year, $tier)
@@ -1041,14 +1062,52 @@ class BudgetsController extends AppController
 		));
 	}
 
+	public function budgetExport()
+	{
+		$this -> setOrganizationDropDown('20' . ($this -> getFiscalYear() + 2), 0);
+	}
+
 	public function export()
 	{
+		$fiscal_year = $this -> request -> data['Budget']['fiscal_year'];
+		$org_id = $this -> request -> data['Budget']['org_id'];
+		$tier = $this -> request -> data['Budget']['tier'];
+		
+		$conditions = array('Budget.fiscal_year' => $fiscal_year, 
+			'tier' => ($tier) ? $tier : array(
+							1,
+							2,
+							3
+						));
+		if($org_id > 0)
+		{
+			array_combine($conditions, array('Budget.org_id' => $org_id ));
+		}
+		$this -> Budget -> Behaviors -> load('Containable');
 		$budgets = $this -> Budget -> find('all', array(
-			'conditions' => array('Budget.fiscal_year' => '20' . ($this -> getFiscalYear() + 2), ),
+			'conditions' => $conditions,
+			'contain' => array(
+						'Organization' => array('fields' => array('name', 'tier')),
+						'Previous_Budget' => array(
+							'Requested',
+							'Allocated',
+							'JFC',
+							'UHRC',
+							'GSSC',
+							'CONF',
+							'Final'
+						),
+						'Requested' => array('LineItemCategory' => array('fields' => array('name'))),
+						'Allocated',
+						'JFC',
+						'UHRC',
+						'GSSC',
+						'CONF',
+						'Final'
+					),
 			'recursive' => 2,
 			'order' => 'Organization.name'
 		));
-
 		$export = array('Organizations' => '');
 
 		$states = array(
