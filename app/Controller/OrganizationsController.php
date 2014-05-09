@@ -510,6 +510,12 @@ class OrganizationsController extends AppController
 		
 		if ($this -> request -> is('post'))
 		{
+			$organization = $this->Organization->find('first', array(
+				'fields' => array('name'),
+				'conditions' => array('Organization.id' => $org_id),
+				'recursive' => -1
+			));
+		
 			// set model data for validation
 			$this->Organization->set($this->request->data);
 			
@@ -518,12 +524,16 @@ class OrganizationsController extends AppController
 				// valid
 				$dir = new Folder("../webroot/img/" . $org_id, true);
 				
-				if (move_uploaded_file($this -> request -> data['Organization']['image']['tmp_name'], 'img/' . $org_id . '/' . $this -> request -> data['Organization']['image']['name']))
+				// rename the logo but keep the extension
+				$ext = pathinfo($this->request->data['Organization']['image']['name'], PATHINFO_EXTENSION);
+				$logofilename = 'logo.'.$ext;
+				
+				if (move_uploaded_file($this -> request -> data['Organization']['image']['tmp_name'], 'img/'.$org_id.'/'.$logofilename))
 				{
 					$this -> Organization -> id = $org_id;
-					$this -> Organization -> saveField('logo_path', '/img/' . $org_id . '/' . $this -> request -> data['Organization']['image']['name']);
+					$this -> Organization -> saveField('logo_path', '/img/'.$org_id.'/'.$logofilename);
 				}
-	
+
 				$logo_path = $this -> Organization -> field('logo_path', array('id' => $org_id));
 				
 				 //MRE What does this do?
