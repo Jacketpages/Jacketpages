@@ -27,6 +27,7 @@ if ($orgExportPerm)
 		'action' => 'export'
 	));
 }
+$sidebar[] = $this -> Html -> link('Silver Leaf Certified Organization', array('action' => 'silverleaf'));
 $sidebar[] = '<a>Organization&nbsp;Category<br /><br />
 <div id=\'category\'>'.
 $this -> Form -> create().

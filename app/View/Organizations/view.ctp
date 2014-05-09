@@ -84,8 +84,13 @@ if ($orgAdminPerm)
 echo $this -> Html -> nestedList($sidebar, array());
 $this -> end();
 
+$badgeStr = '';
+foreach($organization['Badges'] as $badge){
+	$badgeStr .= $this->element('badges/display', array('badge' => $badge));
+}
+
 // Define the main information for this view.
-$this -> assign('title', $organization['Organization']['name']);
+$this -> assign('title', $organization['Organization']['name'].$badgeStr);
 $this -> start('middle');
 ?>
 <div style="display:inline-block;position:relative;width:100%">

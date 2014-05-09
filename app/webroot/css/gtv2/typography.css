@@ -230,8 +230,7 @@ fieldset.filter-wrapper { border-top: 1px solid #C0C0C0; }
 legend { font-size: 1.286em; font-weight: 700; }
 .form-type-radio .description, .form-type-checkbox .description { margin-left: 1.5em; }
 input[type="textfield"], input[type="file"], input.form-text, input.form-file {
-  border: 1px solid #b0b0b0;
-  padding: 1px;
+  padding: 2px;
 }
 
 /**

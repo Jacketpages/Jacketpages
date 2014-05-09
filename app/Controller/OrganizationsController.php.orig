@@ -290,6 +290,7 @@ class OrganizationsController extends AppController
 				'action' => 'index'
 			));
 		}
+<<<<<<< HEAD
 		
 		// redirect if org is inactive and user doesn't have lace permissions
 		if (!$this -> isLace() && $organization['Organization']['status'] == 'Inactive')
@@ -301,7 +302,9 @@ class OrganizationsController extends AppController
 			));
 		}
 		
+=======
 		$this -> loadModel('Badge');
+>>>>>>> silver_leaf
 		$this -> set('organization', $organization);
 		$this -> loadModel('Membership');
 		$this -> set('presidents', $this -> getMembers($id, array('President')));

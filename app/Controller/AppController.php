@@ -110,6 +110,7 @@ class AppController extends Controller
 				break;
 			case 'inactive_orgs' :
 			case 'index' :
+			case 'silverleaf':
 				$this -> set('orgCreatePerm', $this -> Acl -> check('Role/' . $level, 'orgCreatePerm'));
 				$this -> set('orgExportPerm', $this -> Acl -> check('Role/' . $level, 'orgExportPerm'));
 				$this -> set('orgAdminView', $this -> Acl -> check('Role/' . $level, 'orgAdminView'));

@@ -175,3 +175,4 @@ app/webroot/files
 app/Vendor/CAS*
 app/webroot/phpCAS.log
 app/Config/environment.php
+app/webroot/img/badges/*

@@ -1,35 +1,38 @@
 <?php
-/**
- * @author Stephen Roca
- * @since 06/08/2012
- */
-class Organization extends AppModel
+
+App::uses('AppModel', 'Model');
+
+class Badge extends AppModel
 {
-	public $order = 'Organization.name';
-	public $belongsTo = array(
-		'User' => array(
-			'className' => 'User',
-			'foreignKey' => 'contact_id'
-		),
-		'Category' => array(
-			'className' => 'Category',
-			'foreignKey' => 'category'
+	// view_style enum values
+	const VIEW_STYLE_DEFAULT = 'DEFAULT';
+	const VIEW_STYLE_CUSTOM = 'CUSTOM';
+	
+	public $order = 'Badge.name';
+	
+	public $recursive = 0;
+	
+	public $hasAndBelongsToMany = array(
+		'Organizations' => array(
+			'counterCache' => true
 		)
 	);
-	public $hasAndBelongsToMany = array(
-		'Badges'
-	);	
 	
-	// custom validation for logo uploading
-	// this could be moved the inside object, but requires a lot of testing
-	public function validatesLogoUpload()
+	// validation
+	public $validate = array(
+		'name' => array(
+			'rule' => 'notEmpty'
+		)
+	);
+	
+	function validatesIconUpload()
 	{
 		$this->validate = array(
-			'image' => array(
+			'icon' => array(
 				array(
 					'rule' => array('fileSize', '<=', '200KB'),
 					'required' => true,
-					'message' => 'Image should be less than 200 KB.'
+					'message' => 'Icon should be less than 200 KB.'
 				),
 				array(
 					'rule' => array('extension', array('gif', 'jpeg', 'png', 'jpg')),
@@ -51,10 +54,9 @@ class Organization extends AppModel
 		return $validates;
 	}
 	
-	// an extended 
 	public function uploadErrorWithMessage($check)
 	{
-		$check = $check['image'];
+		$check = $check['icon'];
 
 		if (is_array($check) && isset($check['error'])) {
 			$check = $check['error'];
@@ -66,7 +68,7 @@ class Organization extends AppModel
 	
 		switch ($check) {
 	        case UPLOAD_ERR_INI_SIZE:
-	            $response = 'Image file is too large, image should be less than 200 KB.';// php ini setting
+	            $response = 'Icon file is too large, icon should be less than 200 KB.';// php ini setting
 	            break;
 	        case UPLOAD_ERR_FORM_SIZE:
 	            $response = 'Max file size exceed the form limit.';
