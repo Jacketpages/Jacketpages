@@ -203,6 +203,7 @@ $config['rules'] = array(
 		'controllers/memberships/*' => 'Role/gt_member',
 		'controllers/documents/*' => 'Role/gt_member',
 		'controllers/organizations/(index|view)' => 'Role/general',
+		'controllers/organizations/silverleaf' => 'Role/general',
 		'admin' => 'Role/admin',
 		'sga_admin' => 'Role/sga_admin',
 		'sga_exec' => 'Role/sga_exec',

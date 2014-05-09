@@ -7,7 +7,7 @@ $elementName = 'badges/custom_'.Inflector::slug($badge['name']);
 // in the controller, make sure to call: $this->loadModel('Badge');
 if($badge['view_style'] == Badge::VIEW_STYLE_CUSTOM && $this->elementExists($elementName)){
 	// custom view
-	echo $this->element($elementName, array('badge', $badge));
+	echo $this->element($elementName, array('badge' => $badge));
 	
 } else {
 	// default view

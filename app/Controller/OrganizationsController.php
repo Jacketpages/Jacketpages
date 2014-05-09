@@ -16,7 +16,8 @@ class OrganizationsController extends AppController
 		'Paginator',
 		'Js',
 		'Csv',
-		'Excel'
+		'Excel',
+		'Text'
 	);
 	public $components = array(
 		'Acl',
@@ -232,6 +233,31 @@ class OrganizationsController extends AppController
 
 		$memberships = $this -> Membership -> find('all', array('conditions' => array('user_id' => $id),'order' => 'start_date desc'));
 		$this -> set('memberships', $memberships);
+	}
+	
+	/**
+	 * Displays a all the silver leaf certified organizations
+	 */
+	public function silverleaf()
+	{
+		// The badge_id for silver leaf is hard coded as #1
+		$this->paginate = array(
+		    'joins' => array(
+		        array(
+		            'alias' => 'bo',
+		            'table' => 'badges_organizations',
+		            'type' => 'INNER',
+		            'conditions' => 'bo.organization_id = organization.id AND bo.badge_id = 1'
+		        )
+		    ),
+		    'limit' => 20
+		);
+		$this->set('organizations', $this->paginate());
+		
+		// on ajax, make sure to use the list template
+		if ($this -> request -> is('ajax')){
+			$this -> layout = 'list';
+		}
 	}
 
 	/**

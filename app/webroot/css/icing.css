@@ -503,6 +503,42 @@ search {
 	content: ' +';
 }
 
+.box_listing {
+    border: thin solid #DDDDDD;
+    float: left;
+    margin: 1%;
+    padding: 10px;
+    width: 48%;
+    height: 220px;
+}
+
+.center_helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.box_listing .box_img {
+	float: left;
+    height: 200px;
+    margin-right: 10px;
+    width: 175px;
+    text-align: center;
+}
+
+.box_listing img {
+    max-height: 200px;
+    max-width: 175px;
+    width: auto;
+    vertical-align: middle;
+}
+
+.silver_leaf_cover {
+	width: 70%;
+	margin: 20px auto;
+}
+
+
 /**
  * 	Defines the attributes for the pagination numbers
  * 	and links that appear underneath lists of searchable
