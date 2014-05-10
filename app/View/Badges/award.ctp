@@ -31,7 +31,6 @@ $this -> start('search');
 		'style' => 'width:90%'
 	));
 	?>
-	<div id="div_choices" class="autocomplete"></div>
 </div>
 <?php
 $this -> end();

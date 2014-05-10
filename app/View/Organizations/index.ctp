@@ -106,9 +106,11 @@ $this -> start('search');
 	$(function() {
 var avaliableTags = <?php echo json_encode($names_to_autocomplete); ?>
 	;
-	$("#search").autocomplete(
-	{
-		source : avaliableTags
+	$("#search").autocomplete({
+		source: avaliableTags,
+		select: function(event, ui){
+			window.location.href = '<?php echo $this->Html->url(array('controller' => 'organizations', 'action' => 'view'), true);?>/'+ui.item.id;
+		}
 	});
 	});
 </script>

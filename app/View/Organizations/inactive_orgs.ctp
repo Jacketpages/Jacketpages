@@ -63,7 +63,10 @@ echo $this -> element('search', array('action' => 'inactive_orgs', 'endForm' => 
 var avaliableTags = <?php echo json_encode($names_to_autocomplete)?>
 	;
 	$("#search").autocomplete({
-		source : avaliableTags
+		source : avaliableTags,
+		select: function(event, ui){
+			window.location.href = '<?php echo $this->Html->url(array('controller' => 'organizations', 'action' => 'view'), true);?>/'+ui.item.id;
+		}
 	});
 	});
 </script>

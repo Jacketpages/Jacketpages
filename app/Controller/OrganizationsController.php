@@ -186,14 +186,19 @@ class OrganizationsController extends AppController
 		}
 		// Sets the users variable for the view
 		$this -> set('organizations', $this -> paginate('Organization'));
-		$orgnames = $this -> Organization -> find('all', array('fields' => 'name', 'conditions' => array($org_status => 'Inactive')));
+		$orgnames = $this -> Organization -> find('list', array(
+			'conditions' => array($org_status => 'Inactive')
+		));
+		
 		// Create the array for the javascript autocomplete
-		$just_names = array();
-		foreach ($orgnames as $orgname)
-		{
-			$just_names[] = $orgname['Organization']['name'];
+		$autocompleteOrgs = array();
+		foreach ($orgnames as $id=>$name){
+			$autocompleteOrgs[] = array(
+				'label' => $name, 
+				'id' => $id
+			);
 		}
-		$this -> set('names_to_autocomplete', $just_names);
+		$this -> set('names_to_autocomplete', $autocompleteOrgs);
 		
 		// get all the category names for the select
 		$this->loadModel('Category');
