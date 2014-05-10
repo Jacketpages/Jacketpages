@@ -31,14 +31,14 @@ if($bill['Bill']['status'] >= $AGENDA)
 		$bill['Bill']['number']
 	));
 }
-echo $this -> Html -> tableCells(array(
-	'Description',
-	nl2br($bill['Bill']['description'])
-));
-echo $this -> Html -> tableCells(array(
-	'Fundraising',
-	nl2br($bill['Bill']['fundraising'])
-));
+echo $this -> Html -> tableCells(array(array(
+	array('Description', array()),
+	array(nl2br($bill['Bill']['description']), array('style' => 'text-align:justify'))
+)));
+echo $this -> Html -> tableCells(array(array(
+	array('Fundraising', array()),
+	array(nl2br($bill['Bill']['fundraising']), array('style' => 'text-align:justify'))
+)));
 echo $this -> Html -> tableCells(array(
 	'Dues',
 	$bill['Organization']['dues']
