@@ -774,3 +774,18 @@ table.list tr:nth-child(2n) td {
     margin-top: 2px;
     padding: 2px;
 }
+
+.org_logo {
+	float: left;
+    text-align: center;
+    width: 50%;
+    padding: 2px;
+    margin-top: 12px;
+    height: 200px;
+}
+
+.org_logo img {
+	max-height: 200px;
+    vertical-align: middle;
+    width: auto;
+}

@@ -80,8 +80,9 @@ if ($orgAdminPerm)
 		$organization['Organization']['id']
 	), array('style' => 'color:red'), __('Are you sure you want to delete %s?', $organization['Organization']['name']));
 }
-
-echo $this -> Html -> nestedList($sidebar, array());
+if(!empty($sidebar)){
+	echo $this -> Html -> nestedList($sidebar, array());
+}
 $this -> end();
 
 $badgeStr = '';
@@ -140,12 +141,10 @@ $this -> start('middle');
 	}
 	echo $this -> Html -> tableEnd();
 	echo "</div>";
-	echo $this -> Html -> div();
-	echo $this -> Html -> image($organization['Organization']['logo_path'], array(
-		'id' => 'logo',
-		'style' => 'float:right;height:160px;'
+	echo $this -> Html -> div('org_logo', 
+		'<span class="center_helper"></span>'.$this -> Html -> image($organization['Organization']['logo_path'],
+		array('id' => 'logo')
 	));
-	echo "</div>";
 	echo "</div>";
 	// Print out the Organization's description and other
 	// general information.

@@ -84,7 +84,7 @@ class BadgesController extends AppController
 								
 				// if an icon was uploaded
 				$invalidNewFileUpload = false;
-				if($this->request->data['Badge']['icon'] != ''){
+				if($this->request->data['Badge']['icon']['name'] != ''){
 					if($this->Badge->validatesIconUpload()){
 						// upload the new file
 						$icon_path = $this->_iconPathFromUploadedBadge($this->request->data['Badge']);
@@ -92,6 +92,8 @@ class BadgesController extends AppController
 						
 						// update the icon path
 						$this->request->data['Badge']['icon_path'] = $icon_path;
+						$this->Badge->set($this->request->data);
+				
 					} else {
 						$invalidNewFileUpload = true;
 					}

@@ -33,13 +33,20 @@ $allowCustomViewStyle = $this->elementExists('badges/custom_'.Inflector::slug($b
 // edit form
 echo $this->Form->create('Badge', array('type' => 'file'));
 echo $this->Form->input('name');
-echo $this->Form->input('new_icon', array(
+echo $this->Form->input('icon', array(
 	'type' => 'file'
 ));
-echo $this->Form->input('view_style', array(
-	'options' => array('default'=>'default', 'custom' => 'custom (contact IT to request a custom badge style)'),
-	'disabled' => ($allowCustomViewStyle?false:array('custom'))
-));
+if(!$allowCustomViewStyle){
+	echo $this->Form->input('view_style', array(
+		'options' => array('default'=>'default', 'custom' => 'custom (contact IT to request a custom badge style)'),
+		'disabled' => array('custom')
+	));
+} else {
+	// allow custom
+	echo $this->Form->input('view_style', array(
+		'options' => array('default'=>'default', 'custom' => 'custom')
+	));
+}
 echo $this->Form->input('description', array('type' => 'textarea'));
 echo $this->Form->hidden('icon_path');
 echo $this->Form->submit('Save', array(

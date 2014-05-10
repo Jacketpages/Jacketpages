@@ -15,11 +15,12 @@
 	$this -> assign('title', 'Edit Logo');
 	$this -> start('middle');
 
-	echo $this -> Html -> image($organization['Organization']['logo_path'], array(
-		'id' => 'logo',
-		'style' => 'height:160px;'
-	));
-	echo "<br>";
+	echo $this -> Html -> tag('span', 
+		'<span class="center_helper"></span>'.$this -> Html -> image($organization['Organization']['logo_path'],
+		array('id' => 'logo')
+	), array('class'=>'org_logo', 'style'=>'float: none'));
+	
+	echo "<br /><br />";
 	if(!empty($errors)){
 		foreach ($errors as $field => $error){
 			echo implode('<br />', $error);
