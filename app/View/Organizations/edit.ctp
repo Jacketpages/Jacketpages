@@ -61,8 +61,6 @@ echo $this -> Form -> input('description', array(
 ));
 echo $this -> Form -> input('website', array('label' => 'Website'));
 echo $this -> Form -> input('meeting_information', array('label' => 'Meeting Information'));
-echo $this -> Form -> input('meeting_frequency', array('label' => 'Meeting Frequency'));
-echo $this -> Form -> input('annual_events', array('label' => 'Annual Events'));
 echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));
 ?>
 <div id='date'>

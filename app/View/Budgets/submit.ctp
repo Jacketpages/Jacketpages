@@ -51,10 +51,6 @@ echo $this -> Html -> tableCells(array(
 	$yearsActive
 ));
 echo $this -> Html -> tableCells(array(
-	'Meetings Frequency',
-	$organization['Organization']['meeting_frequency']
-));
-echo $this -> Html -> tableCells(array(
 	'Average Attendance per Meeting*',
 	$this -> Form -> input('average_attendance', array('type' => 'text','label' => false))
 ));
