@@ -159,14 +159,19 @@ $this -> start('middle');
 	{
 		$site = $organization['Organization']['website'];
 	}
-	echo $this -> Html -> nestedList(array(
-		'Status: ' . $organization['Organization']['status'],
+	// info list
+	$list = array(
 		'Tier: ' . $tier,
 		'Organization Contact: ' . (($organization['User']['name'] != '') ? $this -> Html -> link($organization['User']['name'], 'mailto:' . $organization['User']['email']) : 'N/A'),
 		'External Website: ' . (($organization['Organization']['website'] != '') ? $this -> Html -> link($site) : 'N/A'),
 		'Meetings: ' . (($organization['Organization']['meeting_information'] != '') ? $organization['Organization']['meeting_information'] : 'N//A'),
 		'Dues: ' . $organization['Organization']['dues']
-	), array('id' => 'description'));
+	);
+	if($lace || $sga_user || $isOfficer){
+		// add status to the beginning of the array
+		array_unshift($list, 'Status: '.$organization['Organization']['status']);
+	}
+	echo $this -> Html -> nestedList($list, array('id' => 'description'));
 	echo "<br/><br/>";
 	$this -> end();
 ?>
