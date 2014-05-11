@@ -421,9 +421,90 @@ class OrganizationsController extends AppController
 	 */
 	public function export()
 	{
-		// $this -> Session -> setFlash('UNDER CONSTRUCTION');
-		// $this -> redirect('/organizations/index');
+		$fiscal_year = '20'.($this->getFiscalYear()+2);
+	
+		$query = "
+SELECT
+	o.name AS Organization,
+	o.status AS status,
+	o.alcohol_form AS 'Alcohol Form Date',
+	o.advisor_date AS 'Advisor Form Date',
+	o.constitution_date AS 'Constitution Date',
+	CONCAT(u_c.first_name, ' ', u_c.last_name) AS 'Contact Name',
+	u_c.email AS 'Contact Email',
+	CONCAT(u_p.first_name, ' ', u_p.last_name) AS President,
+	u_p.email AS 'President\'s Email',
+	CONCAT(u_t.first_name, ' ', u_t.last_name) AS Treasurer,
+	u_t.email AS 'Treasurer\'s Email',
+	CONCAT(u_a.first_name, ' ', u_a.last_name) AS Advisor,
+	u_a.email AS 'Advisor\'s Email',
+	IFNULL(b.state, 'Not Submitted') AS 'Budget State',
+	c.name AS Category
+FROM organizations o
+	LEFT JOIN `categories` c ON c.`id`=o.`category`
+	LEFT JOIN `budgets` b ON b.`org_id`=o.id AND b.`fiscal_year`='2015'
+	LEFT JOIN `users` u_c ON u_c.id=o.`contact_id`
+	
+	LEFT JOIN `users` u_p ON u_p.id = (
+		SELECT m_p.`user_id`
+		FROM `memberships` m_p
+		WHERE m_p.`org_id`=o.id AND
+			m_p.`role`='President' AND
+			m_p.`status`='Active' AND 
+			(m_p.`end_date` >= NOW() OR m_p.`end_date` IS NULL)
+		ORDER BY m_p.`start_date` desc
+		LIMIT 1
+		)
+	
+	LEFT JOIN `users` u_t ON u_t.id = (
+		SELECT m_t.`user_id`
+		FROM `memberships` m_t
+		WHERE m_t.`org_id`=o.id AND
+			m_t.`role`='Treasurer' AND
+			m_t.`status`='Active' AND 
+			(m_t.`end_date` >= NOW() OR m_t.`end_date` IS NULL)
+		ORDER BY m_t.`start_date` desc
+		LIMIT 1
+		)
+	
+	LEFT JOIN `users` u_a ON u_a.id = (
+		SELECT m_a.`user_id`
+		FROM `memberships` m_a
+		WHERE m_a.`org_id`=o.id AND
+			m_a.`role`='Advisor' AND
+			m_a.`status`='Active' AND 
+			(m_a.`end_date` >= NOW() OR m_a.`end_date` IS NULL)
+		ORDER BY m_a.`start_date` desc
+		LIMIT 1
+		)
+ORDER BY o.`name` ASC	
+";
+		// execute query
+		$conn = ConnectionManager::getDataSource('default');
+		$statement = $conn->execute($query);
+		$build_export = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+		// add the headers
+		$headers = array(
+			"Organization",
+			"Status",
+			"Alcohol Form Date",
+			"Advisor Form Date",
+			"Constitution Date",
+			"Contact Name",
+			"Contact Email",
+			"President",
+			"President's Email",
+			"Treasurer",
+			"Treasurer's Email",
+			"Advisor",
+			"Advisor's Email",
+			"Budget State",
+			"Category"			
+		);
+		array_unshift($build_export, $headers);
 		
+		/*
 		$organizations = $this -> Organization -> find('all', array(
 			'fields' => array(
 				'Organization.id',
@@ -503,6 +584,8 @@ class OrganizationsController extends AppController
 				$category['Category']['name']
 			);
 		}
+		*/
+		
 		$this -> layout = 'csv';
 		$this -> set('export', $build_export);
 	}
