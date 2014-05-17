@@ -705,5 +705,14 @@ ORDER BY o.`name` ASC
 		));
 	}
 
+	function delete($org_id = null)
+	{
+		if($org_id != null && $this -> isSGAExec())
+		{
+			$this -> Organization -> id = $org_id;
+			$this -> Organization -> saveField('status', 'Deleted');
+		}
+	}
+
 }
 ?>
