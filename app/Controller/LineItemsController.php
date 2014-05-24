@@ -24,7 +24,7 @@ class LineItemsController extends AppController
 	private function canEditLineItems($bill, $state)
 	{
 		$valid = false;
-		if ($this -> Session -> read('User.level') == "admin")
+		if (strcmp($this -> Session -> read('User.level'), "admin") == 0)
 		{
 			$valid = true;
 		}
