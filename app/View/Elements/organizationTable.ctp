@@ -6,8 +6,10 @@ if ($lace)
 		$this -> Paginator -> sort('NAME', 'Name'),
 		'Description',
 		'Status',
-		'Forms Date',
-		'',
+		array('Forms Date' => array('width' => '85px')),
+		array('Advisor Date' => array('width' => '85px')),
+		array('Constitution Date' => array('width' => '110px')),
+		''
 		//''
 	), array('class' => 'links'));
 	foreach ($organizations as $organization)
@@ -26,6 +28,8 @@ if ($lace)
 			$summary,
 			$organization['Organization']['status'],
 			$organization['Organization']['alcohol_form'],
+			$organization['Organization']['advisor_date'],
+			$organization['Organization']['constitution_date'],
 			$this -> Html -> link(__('Edit', true), array(
 				'action' => 'edit',
 				$organization['Organization']['id']
