@@ -25,9 +25,14 @@ echo $this -> Form -> input('first_name', array(
 echo $this -> Form -> input('last_name', array('label' => 'Last Name'));
 if($admin)
 {
-	echo $this -> Form -> input('level', array('label' => 'Level'));
+	echo $this -> Form -> input('level', array('label' => 'Level', 'options' => array(
+	'admin' => 'Administrator',
+	'lace' => 'Leadership and Civic Engagment',
+	'sga_exec' => 'SGA Executive',
+	'sga_user' => 'SGA User',
+	'gt_member' => 'General GT User'
+	)));
 }
-echo $this -> Form -> input('phone', array('label' => 'Phone Number'));
 echo $this -> Form -> input('email', array('label' => 'Email'));
 echo $this -> Form -> end('Submit');
 // End User Edit Form

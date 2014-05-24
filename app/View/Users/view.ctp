@@ -47,10 +47,6 @@ $this -> start('middle');
 		'Email',
 		$user['User']['email']
 	));
-	echo $this -> Html -> tableCells(array(
-		'Phone',
-		$user['User']['phone']
-	));
 	?>
 </table>
 <?php

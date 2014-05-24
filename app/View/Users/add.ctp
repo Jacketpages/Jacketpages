@@ -26,7 +26,6 @@ if ($admin || $lace) {
 }			
 	echo $this -> Form -> input('first_name', array('label' => 'First Name'));
 	echo $this -> Form -> input('last_name', array('label' => 'Last Name'));	
-	echo $this -> Form -> input('phone', array('label' => 'Phone Number'));
 	echo $this -> Form -> input('email', array('label' => 'Email'));
 	echo $this -> Form -> end('Save User');
 $this -> end();

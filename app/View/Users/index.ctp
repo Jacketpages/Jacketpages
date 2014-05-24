@@ -48,7 +48,7 @@ echo $this -> element('search', array('action' =>  'index', 'endForm' => 1));
       $this -> Paginator -> sort('email', 'Email'),
       $this -> Paginator -> sort('gt_user_name', 'GT Username'),
       $this -> Paginator -> sort('level', 'Level'),
-      $this -> Paginator -> sort('phone', 'Phone'), "",""
+      "",""
    ), array('class' => 'links'));
    // Loop through all of the users and display their information
    foreach ($users as $user)
@@ -62,7 +62,6 @@ echo $this -> element('search', array('action' =>  'index', 'endForm' => 1));
          $user['User']['email'],
          $user['User']['gt_user_name'],
          $user['User']['level'],
-         $user['User']['phone'],
          $this -> Html -> link('Edit', array(
             'action' => 'edit',
             $user['User']['id']
