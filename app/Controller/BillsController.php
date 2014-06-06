@@ -87,12 +87,24 @@ class BillsController extends AppController
 		$this -> loadModel('User');
         if ($id == null)
 		{
-			$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
+			//$authorId = Hash::extract($this -> User -> findByName($keyword), 'User.sga_id');
+			$authorIds = Hash::extract($this -> User -> find('all', array('conditions' => array(
+				'OR' => 
+				array( 
+					array('first_name LIKE' => "%$keyword%"),
+					array('last_name LIKE'  => "%$keyword%"),
+					array('(CONCAT(first_name, " ", last_name)) LIKE' => "%$keyword%")
+			), array('sga_id IS NOT NULL')
+			))),'{n}.User.sga_id');
+			debug($authorIds);
 		}
 		else
 		{
 			$authorId = $this -> Session -> read('Sga.id');
 		}
+		
+		$conditions = array();
+		
 		$this -> paginate = array(
 			'conditions' => array(
 				'Bill.status BETWEEN ? AND ?' => array(
@@ -105,8 +117,8 @@ class BillsController extends AppController
 					array('Bill.description LIKE' => "%$keyword%"),
 					array('Bill.number LIKE' => "%$keyword%"),
 					array('(CONCAT(first_name, " ", last_name)) LIKE' => "%$keyword%"),
-					//array('Authors.grad_auth_id' => $authorId),
-					//array('Authors.undr_auth_id' => $authorId)
+					array('Authors.grad_auth_id' => $authorIds),
+					array('Authors.undr_auth_id' => $authorIds)
 				),
 				array('Bill.title LIKE' => $letter . '%')
 			),
@@ -1089,7 +1101,7 @@ class BillsController extends AppController
 	                'grad_name' => (isset($gradAuthor['User']['name'])) ? $gradAuthor['User']['name'] : '',
 	                'undr_name' => (isset($undrAuthor['User']['name'])) ? $undrAuthor['User']['name'] : ''
 	        ));
-	        $email -> send();
+	       // $email -> send();
         }
     }
 
