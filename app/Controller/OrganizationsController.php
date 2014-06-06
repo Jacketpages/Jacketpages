@@ -27,103 +27,6 @@ class OrganizationsController extends AppController
 	);
 
 	/**
-	 * @deprecated
-	 */
-	private function getlogoFiles()
-	{
-		$orgs = $this -> Organization -> query("SELECT id, logo, logo_name, logo_type from organizations where logo is not null");
-		for ($i = 0; $i < count($orgs); $i++)
-		{
-			$dir = new Folder("../webroot/img/" . $orgs[$i]["organizations"]["id"], true, 0744);
-			$file = new File($dir -> pwd() . DS . $orgs[$i]["organizations"]["logo_name"], true, 0744);
-			$file -> write(($orgs[$i]['organizations']['logo']));
-			$file -> close();
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	private function getcharterFiles()
-	{
-		$orgs = $this -> Organization -> query("SELECT organization_id, name, file from charters where id between 900 and 1382 and size != 0");
-		for ($i = 0; $i < count($orgs); $i++)
-		{
-			$dir = new Folder();
-			if (!$dir -> cd(".." . DS . "webroot" . DS . "files" . DS . $orgs[$i]["charters"]["organization_id"]))
-			{
-				$dir = new Folder(".." . DS . "webroot" . DS . "files" . DS . $orgs[$i]["charters"]["organization_id"], true, 0744);
-			}
-			$file = new File($dir -> pwd() . DS . $orgs[$i]["charters"]["name"], true, 0744);
-			$file -> write($orgs[$i]['charters']['file']);
-			$file -> close();
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	private function getBudgetFiles()
-	{
-		$orgs = $this -> Organization -> query("SELECT organization_id, name, file from budgets where size != 0");
-		for ($i = 0; $i < count($orgs); $i++)
-		{
-			$dir = new Folder();
-			if (!$dir -> cd(".." . DS . "webroot" . DS . "files" . DS . $orgs[$i]["budgets"]["organization_id"]))
-			{
-				$dir = new Folder(".." . DS . "webroot" . DS . "files" . DS . $orgs[$i]["budgets"]["organization_id"], true, 0744);
-			}
-			$file = new File($dir -> pwd() . DS . $orgs[$i]["budgets"]["name"], true, 0744);
-			$file -> write($orgs[$i]['budgets']['file']);
-			$file -> close();
-		}
-	}
-
-	/**
-	 *	@deprecated
-	 */
-	private function updateLogoPaths()
-	{
-		$orgIds = $this -> Organization -> query("SELECT id from organizations");
-		for ($i = 0; $i < count($orgIds); $i++)
-		{
-			$dir = new Folder();
-			if ($dir -> cd($dir -> pwd() . ".." . DS . "webroot" . DS . "img" . DS . $orgIds[$i]["organizations"]["id"]))
-			{
-				$files = $dir -> read();
-				$path = "'/img/" . $orgIds[$i]["organizations"]["id"] . "/" . $files[1][0] . "'";
-				$this -> Organization -> query("UPDATE ORGANIZATIONS SET LOGO_PATH = " . $path . " WHERE ID = " . $orgIds[$i]["organizations"]["id"]);
-			}
-		}
-	}
-
-	/**
-	 *	@deprecated
-	 */
-	private function updateDocumentPaths()
-	{
-		$dir = new Folder();
-		if ($dir -> cd($dir -> pwd() . ".." . DS . "webroot" . DS . "files"))
-		{
-			$folders = $dir -> read();
-			for ($i = 0; $i < count($folders[0]); $i++)
-			{
-				if ($dir -> cd($dir -> pwd() . $folders[0][$i]))
-				{
-					$files = $dir -> read();
-					for ($j = 0; $j < count($files[1]); $j++)
-					{
-						$path = "/files/" . $folders[0][$i] . "/";
-						$this -> Organization -> query("INSERT INTO DOCUMENTS (org_id, name, path, last_updated) VALUES(" . $folders[0][$i] . ",'" . addslashes($files[1][$j]) . "','" . $path . "', NOW())");
-					}
-					$dir -> cd($dir -> pwd() . DS . "..");
-				}
-			}
-
-		}
-	}
-
-	/**
 	 * A table listing of organizations.
 	 * @param letter - the first letter of an organization's name for searching.
 	 * @param category - an organization category name to be used as a filter.
@@ -173,7 +76,7 @@ class OrganizationsController extends AppController
 						array('Organization.short_name LIKE' => '%' . $this -> Session -> read('Search.keyword') . '%')
 					),
 					array('Organization.name LIKE' => $letter . '%'),
-					array($org_status => 'Inactive'),
+					array($org_status => array('Inactive','Deleted')),
 					array('Category.name LIKE' => $this -> Session -> read('Search.category') . '%')
 				)),
 			'limit' => 20
@@ -187,7 +90,7 @@ class OrganizationsController extends AppController
 		// Sets the users variable for the view
 		$this -> set('organizations', $this -> paginate('Organization'));
 		$orgnames = $this -> Organization -> find('list', array(
-			'conditions' => array($org_status => 'Inactive')
+			'conditions' => array($org_status => array('Inactive','Deleted'))
 		));
 		
 		// Create the array for the javascript autocomplete
@@ -297,7 +200,9 @@ class OrganizationsController extends AppController
 		}
 		
 		// redirect if org is inactive and user doesn't have lace permissions
-		if (!$this -> isLace() && $organization['Organization']['status'] == 'Inactive')
+		if (!$this -> isLace() && 
+			$organization['Organization']['status'] == 'Inactive' &&
+			$organization['Organization']['status'] == 'Deleted')
 		{
 			$this -> Session -> setFlash('You do not have permission to view that page.');
 			$this -> redirect(array(
@@ -315,20 +220,6 @@ class OrganizationsController extends AppController
 		$this -> set('officers', $this -> getMembers($id, array('Officer')));
 		$this -> set('members', $this -> getMembers($id, array('Member')));
 		$this -> set('tier', $this -> roman_numerals($organization['Organization']['tier']));
-
-		//MRE moved all of this to just the roster page
-		/*$members = $this -> Membership -> find('all', array('conditions' => array('AND'
-		 * => array(
-		 'Membership.role' => 'Member',
-		 'Membership.org_id' => $id
-		 ))));
-		 $this -> set('members', $members);
-		 $pending_members = $this -> Membership -> find('all', array('conditions' =>
-		 array('AND' => array(
-		 'Membership.status' => 'Pending',
-		 'Membership.org_id' => $id
-		 ))));
-		 $this -> set('pending_members', $pending_members);*/
 
 		$this -> set('orgJoinOrganizationPerm', ($this -> isMember($id) || $this -> isPendingMember($id)));
 	}
@@ -712,6 +603,10 @@ ORDER BY o.`name` ASC
 			$this -> Organization -> id = $org_id;
 			$this -> Organization -> saveField('status', 'Deleted');
 		}
+		$this -> redirect(array(
+				'controller' => 'organizations',
+				'action' => 'index'
+			));
 	}
 
 }
