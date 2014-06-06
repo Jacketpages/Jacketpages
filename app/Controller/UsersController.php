@@ -54,8 +54,7 @@ class UsersController extends AppController
 				'User.name',
 				'User.gt_user_name',
 				'User.email',
-				'User.level',
-				'User.phone'
+				'User.level'
 			)
 		);
 
