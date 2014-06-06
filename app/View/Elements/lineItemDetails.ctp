@@ -27,7 +27,8 @@ if ($lineitems != null)
 	{
 		$tableHeaders[7] = 'State';
 	}
-	if (!$showAll && $showEditAndDeleteButtons && !isset($first) && $form_state != 'Final' && $bill['Bill']['status'] < 6)
+	if (!$showAll && $showEditAndDeleteButtons && !isset($first) && 
+	(($form_state != 'Final' && $bill['Bill']['status'] < 6) || $form_state == 'Final' && $bill['Bill']['status'] < 5))
 	{
 		$tableHeaders[] = '';
 	}
@@ -68,7 +69,8 @@ if ($lineitems != null)
 		else
 		{
 			// MRE hack fix to permissions
-			if ($sga_exec && $lineitem['LineItem']['state'] != 'Final' && $bill['Bill']['status'] < 6)
+			if ($sga_exec && (($lineitem['LineItem']['state'] != 'Final' && $bill['Bill']['status'] < 6) ||
+				$lineitem['LineItem']['state'] == 'Final' && $bill['Bill']['status'] < 5))
 			{
 					$tableCells[] = $this -> Html -> link("Edit/Delete", array(
 						'controller' => 'LineItems',
@@ -104,14 +106,35 @@ if ($lineitems != null)
 				}
 				else
 				{
-					echo $this -> Html -> tableCells($tableCells);
+					$options = null;
+					if ($lineitem['LineItem']['struck'] && !in_array($lineitem['LineItem']['state'], array(
+							'Submitted',
+							'Final'
+						))
+					){
+						// strike through
+						$options = array('class' => 'struck');
+					}
+					
+					echo $this -> Html -> tableCells($tableCells, $options, $options);
 				}
 			}
 			else
 			{
-				echo $this -> Html -> tableCells($tableCells);
+				$options = null;
+				if ($lineitem['LineItem']['struck'] && !in_array($lineitem['LineItem']['state'], array(
+						'Submitted',
+						'Final'
+					))
+				){
+					// strike through
+					$options = array('class' => 'struck');
+				}
+				
+				echo $this -> Html -> tableCells($tableCells, $options, $options);
 			}
 		}
+debug($tableCells);
 	}
 	echo $this -> Html -> tableEnd();
 	echo $this -> Html -> tag('h1', 'Amounts');
