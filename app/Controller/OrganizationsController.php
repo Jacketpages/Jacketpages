@@ -174,6 +174,16 @@ class OrganizationsController extends AppController
 	 */
 	public function view($id = null)
 	{
+		$this -> loadModel('TimeboundResource');
+		$db = ConnectionManager::getDataSource('default');
+		$conditions = array(
+			'name' => 'Budget',
+			'alias' => '20' . ($this -> getFiscalYear() + 1),
+			$db -> expression('TimeboundResource.start_time <= NOW()'),
+			$db -> expression('TimeboundResource.end_time >= NOW()')
+		);
+		$this -> set('budgetIsOpen', $this -> TimeboundResource -> hasAny($conditions));
+		
 		$this -> set('isOfficer',$this -> isOfficer($id));
 		$this -> set('isMember',$this -> isMember($id));
 		if ($id == null)
@@ -394,88 +404,6 @@ ORDER BY o.`name` ASC
 			"Category"			
 		);
 		array_unshift($build_export, $headers);
-		
-		/*
-		$organizations = $this -> Organization -> find('all', array(
-			'fields' => array(
-				'Organization.id',
-				'Organization.name',
-				'Organization.status',
-				'Organization.contact_id',
-				'Organization.alcohol_form',
-				'Organization.advisor_date',
-				'Organization.constitution_date',
-				'Organization.category'
-			),
-			'recursive' => -1
-		));		
-
-		$this -> loadModel('User');
-		$this -> loadModel('Budget');
-		$this -> loadModel('Category');
-		$build_export[] = array(
-			"Organization",
-			"Status",
-			"Alcohol Form Date",
-			"Advisor Form Date",
-			"Constitution Date",
-			"Contact Name",
-			"Contact Email",
-			"President",
-			"President's Email",
-			"Treasurer",
-			"Treasurer's Email",
-			"Advisor",
-			"Advisor's Email",
-			"Budget State",
-			"Category"			
-		);
-		foreach ($organizations as $organization)
-		{
-			// get values if they exist
-			$president = $this -> getMembersContact($organization['Organization']['id'],array('President'), true);
-			$treasurer = $this -> getMembersContact($organization['Organization']['id'],array('Treasurer'), true);
-			$advisor = $this -> getMembersContact($organization['Organization']['id'],array('Advisor'), true);
-			$contact = $this -> User -> findById($organization['Organization']['contact_id']);
-			$budget = $this -> Budget -> find('first', array(
-				'fields' => array('Budget.state'),
-				'conditions' => array(
-					'org_id' => $organization['Organization']['id'],
-					'fiscal_year' => '20' . $this -> getFiscalYear() + 2),
-				'recursive' => -1
-			));
-			$category = $this -> Category -> findById($organization['Organization']['category']);
-			if(count($contact) == 0)
-			{
-				$contact = array(
-						'User' => array('name' => '','email' => '')
-					);
-			}
-			if(count($budget) == 0)
-			{
-				$budget = array(
-						'Budget' => array('state' => 'Not Submitted')
-					);
-			}
-			$build_export[] = array(
-				$organization['Organization']['name'],
-				$organization['Organization']['status'],
-				$organization['Organization']['alcohol_form'],
-				$organization['Organization']['advisor_date'],
-				$organization['Organization']['constitution_date'],
-				$contact['User']['name'],
-				$contact['User']['email'],
-				$president['Membership']['name'],
-				$president['User']['email'],
-				$treasurer['Membership']['name'],
-				$treasurer['User']['email'],
-				$advisor['Membership']['name'],
-				$advisor['User']['email'],
-				$budget['Budget']['state'],
-				$category['Category']['name']
-			);
-		}
-		*/
 		
 		$this -> layout = 'csv';
 		$this -> set('export', $build_export);

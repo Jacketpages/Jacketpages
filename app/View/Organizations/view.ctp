@@ -33,11 +33,14 @@ if ($lace || $isOfficer)
 		'action' => 'addlogo',
 		$organization['Organization']['id']
 	));
-	$sidebar[] = $this -> Html -> link(__('Submit Budget', true), array(
-		'controller' => 'budgets',
-		'action' => 'submit',
-		$organization['Organization']['id']
-	));
+	if ($budgetIsOpen)
+	{
+		$sidebar[] = $this -> Html -> link(__('Submit Budget', true), array(
+			'controller' => 'budgets',
+			'action' => 'submit',
+			$organization['Organization']['id']
+		));
+	}
 }
 
 if ($lace || $isOfficer || $isMember)

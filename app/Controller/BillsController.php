@@ -96,7 +96,6 @@ class BillsController extends AppController
 					array('(CONCAT(first_name, " ", last_name)) LIKE' => "%$keyword%")
 			), array('sga_id IS NOT NULL')
 			))),'{n}.User.sga_id');
-			debug($authorIds);
 		}
 		else
 		{
