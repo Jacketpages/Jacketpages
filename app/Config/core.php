@@ -328,7 +328,18 @@ if (Configure::read('debug') > 0) {
 }
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'myapp_';
+// funtion to restrict the scope of the include
+function getPrefix(){
+	include 'environment.php';
+	if(isset($prefix)){
+		return $prefix;
+	} else {
+		return false;
+	}
+}
+if(!($prefix = getPrefix())){
+	$prefix = 'myapp_';	
+}
 
 /**
  * Configure the cache used for general framework caching. Path information,
