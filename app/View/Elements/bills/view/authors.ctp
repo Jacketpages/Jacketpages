@@ -31,6 +31,56 @@ $name = (isset($UnderAuthor['User']['name'])) ? $UnderAuthor['User']['name'] : '
 $email = (isset($UnderAuthor['User']['email'])) ? $UnderAuthor['User']['email'] : '';
 $undr[] = $this -> Html -> link ($name, 'mailto:' . $email) . " - " . $signed;
 
+if ($bill['Bill']['status'] < $AGENDA)
+{
+	if ($this -> Session -> read('Sga.id') == $bill['Authors']['grad_auth_id']  && ($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Graduate'))
+	{
+		if (!$bill['Authors']['grad_auth_appr'])
+		{
+			$grad[1] = $grad[1] . " - " . $this -> Html -> link("Sign", array(
+				'controller' => 'bills',
+				'action' => 'authorSign',
+				$bill['Bill']['id'],
+				'grad_auth_appr',
+				1
+			));
+		}
+		else
+		{
+			$grad[1] = $grad[1] . " - " . $this -> Html -> link("Remove Signature", array(
+				'controller' => 'bills',
+				'action' => 'authorSign',
+				$bill['Bill']['id'],
+				'grad_auth_appr',
+				0
+			));
+		}
+	}
+	if ($this -> Session -> read('Sga.id') == $bill['Authors']['undr_auth_id'] && ($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Undergraduate'))
+	{
+		if (!$bill['Authors']['undr_auth_appr'])
+		{
+			$undr[1] = $undr[1] . " - " . $this -> Html -> link("Sign", array(
+				'controller' => 'bills',
+				'action' => 'authorSign',
+				$bill['Bill']['id'],
+				'undr_auth_appr',
+				1
+			));
+		}
+		else
+		{
+			$undr[1] = $undr[1] . " - " . $this -> Html -> link("Remove Signature", array(
+				'controller' => 'bills',
+				'action' => 'authorSign',
+				$bill['Bill']['id'],
+				'undr_auth_appr',
+				0
+			));
+		}
+	}
+}
+
 $rows = array();
 if($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Graduate' || $bill['Bill']['category'] == 'Conference')
 	$rows[] = $grad;
@@ -51,55 +101,6 @@ $rows[] = array(
 		""
 );
 
-if ($bill['Bill']['status'] < $AGENDA)
-{
-	if ($this -> Session -> read('Sga.id') == $bill['Authors']['grad_auth_id']  && ($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Graduate'))
-	{
-		if (!$bill['Authors']['grad_auth_appr'])
-		{
-			$rows[0][1] = $rows[0][1] . " - " . $this -> Html -> link("Sign", array(
-				'controller' => 'bills',
-				'action' => 'authorSign',
-				$bill['Bill']['id'],
-				'grad_auth_appr',
-				1
-			));
-		}
-		else
-		{
-			$rows[0][1] = $rows[0][1] . " - " . $this -> Html -> link("Remove Signature", array(
-				'controller' => 'bills',
-				'action' => 'authorSign',
-				$bill['Bill']['id'],
-				'grad_auth_appr',
-				0
-			));
-		}
-	}
-	if ($this -> Session -> read('Sga.id') == $bill['Authors']['undr_auth_id'] && ($bill['Bill']['category'] == 'Joint' || $bill['Bill']['category'] == 'Undergraduate'))
-	{
-		if (!$bill['Authors']['undr_auth_appr'])
-		{
-			$rows[1][1] = $rows[1][1] . " - " . $this -> Html -> link("Sign", array(
-				'controller' => 'bills',
-				'action' => 'authorSign',
-				$bill['Bill']['id'],
-				'undr_auth_appr',
-				1
-			));
-		}
-		else
-		{
-			$rows[1][1] = $rows[1][1] . " - " . $this -> Html -> link("Remove Signature", array(
-				'controller' => 'bills',
-				'action' => 'authorSign',
-				$bill['Bill']['id'],
-				'undr_auth_appr',
-				0
-			));
-		}
-	}
-}
 echo $this -> Html -> tag('h1', 'Authors');
 echo $this -> Html -> tableBegin(array('class' => 'list'));
 foreach ($rows as $row)
