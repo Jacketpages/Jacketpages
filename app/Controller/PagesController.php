@@ -82,5 +82,7 @@ class PagesController extends AppController {
 		Cache::clear(false, '_cake_core_'); // need myapp_?
 		Cache::clear(false, '_cake_model_'); // need myapp_?
 		clearCache();
+		
+		$this->redirect('/');
 	}
 }

@@ -30,6 +30,7 @@
 /**
  * ...and connect the rest of 'Pages' controller's urls.
  */
+	Router::connect('/pages/clearcache', array('controller' => 'pages', 'action' => 'clearcache'));
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
 /**
