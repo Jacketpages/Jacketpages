@@ -39,7 +39,7 @@ echo $this->Form->input('icon', array(
 if(!$allowCustomViewStyle){
 	echo $this->Form->input('view_style', array(
 		'options' => array('DEFAULT'=>'default', 'CUSTOM' => 'custom (contact IT to request a custom badge style)'),
-		'disabled' => array('custom')
+		'disabled' => array('CUSTOM')
 	));
 } else {
 	// allow custom
