@@ -155,7 +155,7 @@ class OrganizationsController extends AppController
 		            'alias' => 'bo',
 		            'table' => 'badges_organizations',
 		            'type' => 'INNER',
-		            'conditions' => 'bo.organization_id = organization.id AND bo.badge_id = 1'
+		            'conditions' => 'bo.Organization_id = Organization.id AND bo.badge_id = 1'
 		        )
 		    ),
 		    'limit' => 20
