@@ -72,4 +72,15 @@ class PagesController extends AppController {
 		$this->set(compact('page', 'subpage', 'title_for_layout'));
 		$this->render(implode('/', $path));
 	}
+
+/**
+ * Clear out cache...
+ * Useful when updating DB
+ */	
+	public function clearcache()
+	{
+		Cache::clear(false, '_cake_core_'); // need myapp_?
+		Cache::clear(false, '_cake_model_'); // need myapp_?
+		clearCache();
+	}
 }

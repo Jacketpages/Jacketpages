@@ -189,6 +189,7 @@ $config['rules'] = array(
 		'controllers/users/edit' => 'Role/gt_member',
 		'controllers/users/delete' => 'Role/admin',
 		'controllers/pages/*' => 'Role/general',
+		'controllers/pages/clearcache' => 'Role/admin',
 		'controllers/budgets/*' => 'Role/gt_member',
 		'controllers/budgetlineitems/*' => 'Role/gt_member',
 		'controllers/CakeError/*' => 'Role/general',
