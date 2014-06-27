@@ -38,13 +38,13 @@ echo $this->Form->input('icon', array(
 ));
 if(!$allowCustomViewStyle){
 	echo $this->Form->input('view_style', array(
-		'options' => array('default'=>'default', 'custom' => 'custom (contact IT to request a custom badge style)'),
+		'options' => array('DEFAULT'=>'default', 'CUSTOM' => 'custom (contact IT to request a custom badge style)'),
 		'disabled' => array('custom')
 	));
 } else {
 	// allow custom
 	echo $this->Form->input('view_style', array(
-		'options' => array('default'=>'default', 'custom' => 'custom')
+		'options' => array('DEFAULT'=>'default', 'CUSTOM' => 'custom')
 	));
 }
 echo $this->Form->input('description', array('type' => 'textarea'));
