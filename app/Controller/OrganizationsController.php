@@ -155,7 +155,7 @@ class OrganizationsController extends AppController
 		            'alias' => 'bo',
 		            'table' => 'badges_organizations',
 		            'type' => 'INNER',
-		            'conditions' => 'bo.Organization_id = Organization.id AND bo.badge_id = 1'
+		            'conditions' => 'bo.Organization_id = Organization.id AND bo.badge_id = 1' // <== Hard Coded id for Silver Leaf
 		        )
 		    ),
 		    'limit' => 20
