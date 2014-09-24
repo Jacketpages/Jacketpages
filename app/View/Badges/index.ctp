@@ -35,7 +35,7 @@ if(count($badges) > 0){
 	$badgeButtons = '';
 	foreach($badges as $badge){
 		// check permission
-		if($admin){
+		if($sga_exec){
 			// has edit permission
 			$badgeButtons .= $this->Html->link(
 				$this->element('badges/display', array('badge' => $badge['Badge'])),
@@ -92,7 +92,7 @@ foreach($organizations as $organization){
 	$badgeStr = '';
 	foreach($organization['Badges'] as $badge){
 		// check permission
-		if($admin){
+		if($sga_exec){
 			// has edit permissions
 			$badgeStr .= $this->Html->link(
 				$this->element('badges/display', array('badge' => $badge)),
