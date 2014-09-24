@@ -9,7 +9,7 @@ $this -> Html -> addCrumb('Badges', '/badges');
 $this -> start('sidebar');
 $sidebar = array();
 $sidebar[] = $this -> Html -> link('View All Badges', array('action' => '/'));
-if($admin){
+if($sga_exec){
 	$sidebar[] = $this -> Html -> link('Award A Badge', array('action' => 'award'));
 	$sidebar[] = $this -> Html -> link('Edit A Badge', array('action' => 'edit'));
 	$sidebar[] = $this -> Html -> link('Add New Badge', array('action' => 'add'));
