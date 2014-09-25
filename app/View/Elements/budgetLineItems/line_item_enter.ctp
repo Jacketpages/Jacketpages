@@ -18,10 +18,10 @@ echo $this -> Html -> tableHeaders(array(
 	'FY ' . ($fiscalYear - 1) . ' Allocated',
 	"FY $fiscalYear Requested",
 	'Difference',
-	array('' => array('width' => '37px')),
-	array('' => array('width' => '37px')),
-	array('' => array('width' => '37px')),
-	array('' => array('width' => '37px'))
+	array('' => array('width' => '42px')),
+	array('' => array('width' => '42px')),
+	array('' => array('width' => '42px')),
+	array('' => array('width' => '42px'))
 ));
 if (!isset($budgetLineItems) || count($budgetLineItems) == 0)
 {
@@ -29,17 +29,9 @@ if (!isset($budgetLineItems) || count($budgetLineItems) == 0)
 		'BudgetLineItem' => array(
 			'id' => null,
 			'name' => null,
-			'amount' => ''
-		),
-		'OldRequested' => array(
-			'id' => null,
-			'name' => null,
-			'amount' => ''
-		),
-		'OldAllocation' => array(
-			'id' => null,
-			'name' => null,
-			'amount' => ''
+			'amount' => '',
+			'py_req' => 0,
+			'py_alloc' => 0
 		)
 	);
 }
@@ -54,24 +46,12 @@ foreach ($budgetLineItems as $key => $budgetLineItem)
 			'value' => $budgetLineItems[$key]['BudgetLineItem']['name'],
 			'id' => $num . 'BudgetLineItemName' . $key
 		)),
-		$this -> Form -> hidden($category . '.' . $key . '.OldRequested.id', array(
-			'value' => $budgetLineItems[$key]['OldRequested']['id'],
-			'id' => $num . 'OldRequestedId' . $key
-		)) . $this -> Form -> text($category . '.' . $key . '.OldRequested.amount', array(
-			'label' => false,
-			'value' => $budgetLineItems[$key]['OldRequested']['amount'],
-			'id' => $num . 'OldRequestedAmount' . $key,
-			'onchange' => "updateTotal('OldRequestedAmount', 'old_requested')"
-		)),
-		$this -> Form -> hidden($category . '.' . $key . '.OldAllocation.id', array(
-			'value' => $budgetLineItems[$key]['OldAllocation']['id'],
-			'id' => $num . 'OldAllocationId' . $key
-		)) . $this -> Form -> text($category . '.' . $key . '.OldAllocation.amount', array(
-			'label' => false,
-			'value' => $budgetLineItems[$key]['OldAllocation']['amount'],
-			'id' => $num . 'OldAllocationAmount' . $key,
-			'onchange' => "updateTotal('OldAllocationAmount', 'allocated'); updateDiff();"
-		)),
+		array($budgetLineItems[$key]['BudgetLineItem']['py_req'],
+			array('id' => $num . '_py_req_' . $key)
+		),
+		array($budgetLineItems[$key]['BudgetLineItem']['py_alloc'],
+			array('id' => $num . '_py_alloc_' . $key)
+		),
 		$this -> Form -> text($category . '.' . $key . '.BudgetLineItem.amount', array(
 			'label' => false,
 			'value' => $budgetLineItems[$key]['BudgetLineItem']['amount'],

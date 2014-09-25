@@ -24,15 +24,24 @@ echo $this -> Form -> create();
 echo $this -> element('budgetLineItems/multi_enter');
 echo "</br>";
 echo $this -> Html -> tableBegin(array('class' => 'listing'));
+$py_requested = 0;
+$py_allocated = 0;
+for ($i = 0; $i < count($category_names); $i++)
+{
+	$py_requested += array_sum(Hash::extract($budgetLineItems, $category_names[$i] . ".{n}.BudgetLineItem.py_req"));
+	$py_allocated += array_sum(Hash::extract($budgetLineItems, $category_names[$i] . ".{n}.BudgetLineItem.py_alloc"));
+}
 echo $this -> Html -> tableCells(array(
 	'FY ' . ($fiscalYear - 1) . ' Requested:',
 	array(
-		'$0.00',
+		//$budgetLineItems[$key]['OldRequested']['amount']
+		//array_sum(Hash::extract($data, $path))
+		$this -> Number -> currency($py_requested),
 		array('id' => 'old_requested')
 	),
 	'FY ' . ($fiscalYear - 1) . ' Allocated:',
 	array(
-		'$0.00',
+		$this -> Number -> currency($py_allocated),
 		array('id' => 'allocated')
 	),
 	"FY $fiscalYear Requested:",
@@ -55,7 +64,7 @@ echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect
 			for (var j = 0; j < table.rows.length - 1; j++)
 			{
 				var requested = document.getElementById(i + 'BudgetLineItemAmount' + j).value;
-				var allocated = document.getElementById(i + 'OldAllocationAmount' + j).value;
+				var allocated = document.getElementById(i + '_py_alloc_' + j).innerHTML;
 				document.getElementById(i + 'difference' + j).innerHTML = '$' + parseFloat(requested - allocated).toFixed(2);
 			}
 		}
@@ -78,8 +87,8 @@ echo $this -> Form -> submit('Save and Continue', array('name' => "data[redirect
 		document.getElementById(total_id).innerHTML = '$' + stuff;
 		}
 		updateDiff();
-		updateTotal('OldRequestedAmount','old_requested');
-		updateTotal('OldAllocationAmount','allocated');
+		//updateTotal('OldRequestedAmount','old_requested');
+		//updateTotal('OldAllocationAmount','allocated');
 		updateTotal('BudgetLineItemAmount','requested');
 		// @formatter:on
 </script>

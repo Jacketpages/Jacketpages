@@ -1038,7 +1038,7 @@ class BudgetsController extends AppController
 		else
 		{
 			$lineItems = $this -> BudgetLineItem -> find('all', array('conditions' => array(
-					'Budget.fiscal_year' => '20' . ($this -> getFiscalYear() + 2),
+					'Budget.fiscal_year' => '20' . ($this -> getFiscalYear() + 1),
 					'BudgetLineItem.state' => $from_state
 				)));
 			$count = $this -> BudgetLineItem -> find('count', array('conditions' => array(
