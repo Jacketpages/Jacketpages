@@ -48,31 +48,26 @@ function move(tableId, pos, moveTo)
 		var id = get(unique + "BudgetLineItemId" + pos).value;
 		var name = get(unique + "BudgetLineItemName" + pos).value;
 		var amt = get(unique + "BudgetLineItemAmount" + pos).value;
-		var oldAllocationId = get(unique + "OldAllocationId" + pos).value;
-		var oldAllocationAmount = get(unique + "OldAllocationAmount" + pos).value;
-		var oldRequestedId = get(unique + "OldRequestedId" + pos).value;
-		var oldRequestedAmount = get(unique + "OldRequestedAmount" + pos).value;
+		var req = get(unique + "_py_req_" + pos).innerHTML;
+		var alloc = get(unique + "_py_alloc_" + pos).innerHTML;
 		var diff = get(unique + 'difference' + pos).innerHTML;
 
 		// Set the values of the current row to the row that of the row being moved to
 		get(unique + "BudgetLineItemId" + pos).value = get(unique + "BudgetLineItemId" + moveTo).value;
 		get(unique + "BudgetLineItemName" + pos).value = get(unique + "BudgetLineItemName" + moveTo).value;
 		get(unique + "BudgetLineItemAmount" + pos).value = get(unique + "BudgetLineItemAmount" + moveTo).value;
-		get(unique + "OldRequestedId" + pos).value = get(unique + "OldRequestedId" + moveTo).value;
-		get(unique + "OldRequestedAmount" + pos).value = get(unique + "OldRequestedAmount" + moveTo).value;
-		get(unique + "OldAllocationId" + pos).value = get(unique + "OldAllocationId" + moveTo).value;
-		get(unique + "OldAllocationAmount" + pos).value = get(unique + "OldRequestedAmount" + moveTo).value;
+		get(unique + "_py_req_" + pos).innerHTML = get(unique + "_py_req_" + moveTo).innerHTML;
+		get(unique + "_py_alloc_" + pos).innerHTML = get(unique + "_py_alloc_" + moveTo).innerHTML;
 		get(unique + "difference" + pos).innerHTML = get(unique + "difference" + moveTo).innerHTML;
 
 		// Set the row being moved to, to the values of the current row
 		get(unique + "BudgetLineItemId" + moveTo).value = id;
 		get(unique + "BudgetLineItemName" + moveTo).value = name;
 		get(unique + "BudgetLineItemAmount" + moveTo).value = amt;
-		get(unique + "OldAllocationId" + moveTo).value = oldAllocationId;
-		get(unique + "OldAllocationAmount" + moveTo).value = oldAllocationAmount;
-		get(unique + "OldRequestedId" + moveTo).value = oldRequestedId;
-		get(unique + "OldRequestedAmount" + moveTo).value = oldRequestedAmount;
+		get(unique + "_py_req_" + moveTo).innerHTML = req;
+		get(unique + "_py_alloc_" + moveTo).innerHTML = alloc;
 		get(unique + "difference" + moveTo).value = diff;
+		updateDiff();
 	}
 }
 
@@ -153,14 +148,6 @@ function correctNumbers(tableId, num)
 		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][id]");
 		cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "BudgetLineItemName" + i);
 		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][name]");
-		cells[1].getElementsByTagName("input")[0].setAttribute("id", num + "OldRequestedId" + i);
-		cells[1].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][OldRequested][id]");
-		cells[1].getElementsByTagName("input")[1].setAttribute("id", num + "OldRequestedAmount" + i);
-		cells[1].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][OldRequested][amount]");
-		cells[2].getElementsByTagName("input")[0].setAttribute("id", num + "OldAllocationId" + i);
-		cells[2].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][OldAllocation][id]");
-		cells[2].getElementsByTagName("input")[1].setAttribute("id", num + "OldAllocationAmount" + i);
-		cells[2].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][OldAllocation][amount]");
 		cells[3].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
 		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][amount]");
 		cells[3].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);

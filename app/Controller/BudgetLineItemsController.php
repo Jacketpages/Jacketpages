@@ -69,50 +69,22 @@ class BudgetLineItemsController extends AppController
 			{
 				$deletion_cat_id = $this -> LineItemCategory -> field('id', array('name' => $category_name));
 				$newBliIds = Hash::extract($data, "$category_name.{n}.BudgetLineItem.id");
-				$newOldrIds = Hash::extract($data, "$category_name.{n}.OldRequested.id");
-				$newOldaIds = Hash::extract($data, "$category_name.{n}.OldAllocation.id");
-
 				$oldBliIds = Hash::extract($this -> BudgetLineItem -> findAllByBudgetIdAndCategory($budget_id, $deletion_cat_id), '{n}.BudgetLineItem.id');
-				$oldOldrIds = Hash::extract($this -> BudgetLineItem -> findAllByBudgetIdAndCategoryAndState($old_budget_id, $deletion_cat_id, 'Submitted'), '{n}.BudgetLineItem.id');
-				$oldOldaIds = Hash::extract($this -> BudgetLineItem -> findAllByBudgetIdAndCategoryAndState($old_budget_id, $deletion_cat_id, 'Final'), '{n}.BudgetLineItem.id');
-				$deletion_ids = array_merge(array_diff($oldBliIds, $newBliIds), array_diff($oldOldrIds, $newOldrIds), array_diff($oldOldaIds, $newOldaIds));
+				$deletion_ids = array_merge(array_diff($oldBliIds, $newBliIds));
 				foreach ($deletion_ids as $id)
 					$this -> BudgetLineItem -> delete($id);
 				for ($i = 0; $i < count($data[$category_name]); $i++)
 				{
-					$data[$category_name][$i]['OldAllocation']['name'] = $data[$category_name][$i]['BudgetLineItem']['name'];
-					$data[$category_name][$i]['OldRequested']['name'] = $data[$category_name][$i]['BudgetLineItem']['name'];
-					$data[$category_name][$i]['OldRequested']['state'] = 'Submitted';
-					$data[$category_name][$i]['OldAllocation']['state'] = 'Final';
 					$data[$category_name][$i]['BudgetLineItem']['state'] = 'Submitted';
 					$data[$category_name][$i]['BudgetLineItem']['line_number'] = $j;
-					$data[$category_name][$i]['OldAllocation']['line_number'] = $j;
-					$data[$category_name][$i]['OldRequested']['line_number'] = $j;
 					$data[$category_name][$i]['BudgetLineItem']['budget_id'] = $budget_id;
-					$data[$category_name][$i]['OldAllocation']['budget_id'] = $old_budget_id;
-					$data[$category_name][$i]['OldRequested']['budget_id'] = $old_budget_id;
 					$this -> loadModel('LineItemCategory');
 					$category_id = $this -> LineItemCategory -> field('id', array('name' => $category_name));
 					$data[$category_name][$i]['BudgetLineItem']['category'] = $category_id;
-					$data[$category_name][$i]['OldAllocation']['category'] = $category_id;
-					$data[$category_name][$i]['OldRequested']['category'] = $category_id;
-					if (strcmp($data[$category_name][$i]['OldAllocation']['name'], ''))
-					{
-						$j++;
-						$this -> BudgetLineItem -> create();
-						if ($this -> BudgetLineItem -> save($data[$category_name][$i]['OldAllocation']))
-						{
-						}
-					}
-					if (strcmp($data[$category_name][$i]['OldRequested']['name'], ''))
-					{
-						$this -> BudgetLineItem -> create();
-						if ($this -> BudgetLineItem -> save($data[$category_name][$i]['OldRequested']))
-						{
-						}
-					}
+
 					if (strcmp($data[$category_name][$i]['BudgetLineItem']['name'], ''))
 					{
+						$j++;
 						$this -> BudgetLineItem -> create();
 						if ($this -> BudgetLineItem -> save($data[$category_name][$i]['BudgetLineItem']))
 						{
@@ -159,21 +131,43 @@ class BudgetLineItemsController extends AppController
 			))));
 		if ($oldBudgetId)
 		{
-			$oldAllocatedLineItems = $this -> BudgetLineItem -> findAllByBudgetIdAndState($oldBudgetId, 'Final', array(), array('line_number asc'));
-			$oldRequestedLineItems = $this -> BudgetLineItem -> findAllByBudgetIdAndState($oldBudgetId, 'Submitted', array(), array('line_number asc'));
-			$currentLineItems = $this -> BudgetLineItem -> findAllByBudgetId($budgetId, array(), array('line_number asc'));
+			$currentLineItems = $this -> BudgetLineItem -> findAllByBudgetIdAndState($budgetId, 'Submitted', array(), array('line_number asc'));
+
+			if(count($currentLineItems) == 0)
+			{
+				$oldAllocatedLineItems = $this -> BudgetLineItem -> findAllByBudgetIdAndState($oldBudgetId, 'Final', array(), array('line_number asc'));
+				$oldRequestedLineItems = $this -> BudgetLineItem -> findAllByBudgetIdAndState($oldBudgetId, 'Submitted', array(), array('line_number asc'));
+				$currentLineItems = $oldAllocatedLineItems;
+				for($k = 0; $k < count($currentLineItems); $k++)
+				{
+					$currentLineItems[$k]['BudgetLineItem']["py_req"] = $oldRequestedLineItems[$k]['BudgetLineItem']["amount"];
+					$currentLineItems[$k]['BudgetLineItem']["py_alloc"] = $oldAllocatedLineItems[$k]['BudgetLineItem']["amount"];
+					$currentLineItems[$k]['BudgetLineItem']["amount"] = 0;
+					$currentLineItems[$k]['BudgetLineItem']["alloc_parent_id"] = $currentLineItems[$k]['BudgetLineItem']["id"];
+					$currentLineItems[$k]['BudgetLineItem']["req_parent_id"] = $oldRequestedLineItems[$k]['BudgetLineItem']["id"];
+					$currentLineItems[$k]['BudgetLineItem']["id"] = "";
+				}
+			}
+			else 
+			{
+				for($q = 0; $q < count($currentLineItems); $q++)
+				{
+					$this -> BudgetLineItem -> id = $currentLineItems[$k]['BudgetLineItem']["req_parent_id"];
+					$currentLineItems[$k]['BudgetLineItem']["py_req"] = $this -> BudgetLineItem -> field('amount');
+					$this -> BudgetLineItem -> id = $currentLineItems[$k]['BudgetLineItem']["alloc_parent_id"];
+					$currentLineItems[$k]['BudgetLineItem']["py_alloc"] = $this -> BudgetLineItem -> field('amount');
+				}
+			}
 
 			$budgetLineItems = array();
 			foreach ($category_names as $category_name)
 			{
 				$budgetLineItems[$category_name] = array();
 			}
-			for ($i = 0; $i < count($oldAllocatedLineItems); $i++)
+			for ($i = 0; $i < count($currentLineItems); $i++)
 			{
-				array_push($budgetLineItems[$oldAllocatedLineItems[$i]['LineItemCategory']['name']], array(
-					'BudgetLineItem' => $currentLineItems[$i]['BudgetLineItem'],
-					'OldAllocation' => $oldAllocatedLineItems[$i]['BudgetLineItem'],
-					'OldRequested' => $oldRequestedLineItems[$i]['BudgetLineItem']
+				array_push($budgetLineItems[$currentLineItems[$i]['LineItemCategory']['name']], array(
+					'BudgetLineItem' => $currentLineItems[$i]['BudgetLineItem']
 				));
 			}
 			$this -> set('budgetLineItems', $budgetLineItems);
