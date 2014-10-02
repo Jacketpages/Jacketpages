@@ -67,6 +67,19 @@ function move(tableId, pos, moveTo)
 		get(unique + "_py_req_" + moveTo).innerHTML = req;
 		get(unique + "_py_alloc_" + moveTo).innerHTML = alloc;
 		get(unique + "difference" + moveTo).value = diff;
+		
+		if(get(unique + "BudgetLineItemAllocParentId" + pos) != undefined)
+		{
+			var allocParentId = get(unique + "BudgetLineItemAllocParentId" + pos).value;
+			get(unique + "BudgetLineItemAllocParentId" + pos).value = get(unique + "BudgetLineItemAllocParentId" + moveTo).value;
+			get(unique + "BudgetLineItemAllocParentId" + moveTo).value = allocParentId;
+		}
+		if(get(unique + "BudgetLineItemReqParentId" + pos) != undefined)
+		{
+			var reqParentId = get(unique + "BudgetLineItemReqParentId" + pos).value;
+			get(unique + "BudgetLineItemReqParentId" + pos).value = get(unique + "BudgetLineItemReqParentId" + moveTo).value;
+			get(unique + "BudgetLineItemReqParentId" + moveTo).value = reqParentId;
+		}
 		updateDiff();
 	}
 }
@@ -94,6 +107,8 @@ function addRow(tableId, pos, num)
 				cells[i].getElementsByTagName("input")[j].setAttribute("value", "");
 			}
 	}
+	cells[1].innerHTML = "0";
+	cells[2].innerHTML = "0";
 	cells[4].innerHTML = '$0.00';
 	correctNumbers(tableId, num);
 }
@@ -144,12 +159,29 @@ function correctNumbers(tableId, num)
 		var startIndex = stuff.indexOf("[") + 1;
 		var endIndex = stuff.indexOf("]");
 		var category = stuff.substring(startIndex, endIndex);
-		cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemId" + i);
-		cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][id]");
-		cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "BudgetLineItemName" + i);
-		cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][name]");
-		cells[3].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
-		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][amount]");
+		if(cells[0].getElementsByTagName("input").length > 2)
+		{
+			cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemId" + i);
+			cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][id]");
+			cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "BudgetLineItemAllocParentId" + i);
+			cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][alloc_parent_id]");
+			cells[0].getElementsByTagName("input")[2].setAttribute("id", num + "BudgetLineItemReqParentId" + i);
+			cells[0].getElementsByTagName("input")[2].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][req_parent_id]");
+			cells[0].getElementsByTagName("input")[3].setAttribute("id", num + "BudgetLineItemName" + i);
+			cells[0].getElementsByTagName("input")[3].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][name]");
+		}
+		else
+		{
+			cells[0].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemId" + i);
+			cells[0].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][id]");
+			cells[0].getElementsByTagName("input")[1].setAttribute("id", num + "BudgetLineItemName" + i);
+			cells[0].getElementsByTagName("input")[1].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][name]");			
+		}
+		
+		
+		cells[1].setAttribute("id", num + "_py_req_" + i);
+		cells[2].setAttribute("id", num + "_py_alloc_" + i);
+		
 		cells[3].getElementsByTagName("input")[0].setAttribute("id", num + "BudgetLineItemAmount" + i);
 		cells[3].getElementsByTagName("input")[0].setAttribute("name", "data[" + category + "][" + i + "][BudgetLineItem][amount]");
 		cells[4].setAttribute("id", num + "difference" + i);

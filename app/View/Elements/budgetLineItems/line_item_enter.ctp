@@ -37,11 +37,27 @@ if (!isset($budgetLineItems) || count($budgetLineItems) == 0)
 }
 foreach ($budgetLineItems as $key => $budgetLineItem)
 {
-	echo $this -> Html -> tableCells(array(
-		$this -> Form -> hidden($category . '.' . $key . '.BudgetLineItem.id', array(
+	$hiddenFields = $this -> Form -> hidden($category . '.' . $key . '.BudgetLineItem.id', array(
 			'value' => $budgetLineItems[$key]['BudgetLineItem']['id'],
 			'id' => $num . 'BudgetLineItemId' . $key
-		)) . $this -> Form -> text($category . '.' . $key . '.BudgetLineItem.name', array(
+		));
+	if (isset($budgetLineItems[$key]['BudgetLineItem']['alloc_parent_id']))
+	{
+		$hiddenFields .= $this -> Form -> hidden($category . '.' . $key . '.BudgetLineItem.alloc_parent_id', array(
+			'value' => $budgetLineItems[$key]['BudgetLineItem']['alloc_parent_id'],
+			'id' => $num . 'BudgetLineItemAllocParentId' . $key
+		));
+		
+	}
+	if(isset($budgetLineItems[$key]['BudgetLineItem']['req_parent_id']))
+	{
+		$hiddenFields .= $this -> Form -> hidden($category . '.' . $key . '.BudgetLineItem.req_parent_id', array(
+			'value' => $budgetLineItems[$key]['BudgetLineItem']['req_parent_id'],
+			'id' => $num . 'BudgetLineItemReqParentId' . $key
+		));
+	}
+	echo $this -> Html -> tableCells(array(
+		 $hiddenFields . $this -> Form -> text($category . '.' . $key . '.BudgetLineItem.name', array(
 			'label' => false,
 			'value' => $budgetLineItems[$key]['BudgetLineItem']['name'],
 			'id' => $num . 'BudgetLineItemName' . $key

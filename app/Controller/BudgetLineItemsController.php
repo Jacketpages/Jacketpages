@@ -82,8 +82,14 @@ class BudgetLineItemsController extends AppController
 					$category_id = $this -> LineItemCategory -> field('id', array('name' => $category_name));
 					$data[$category_name][$i]['BudgetLineItem']['category'] = $category_id;
 
+					// 0 is false
+					// -1 or 1 is true
 					if (strcmp($data[$category_name][$i]['BudgetLineItem']['name'], ''))
 					{
+						if(strcmp($data[$category_name][$i]['BudgetLineItem']['amount'], '') == 0)
+						{
+							$data[$category_name][$i]['BudgetLineItem']['amount'] = 0;
+						}
 						$j++;
 						$this -> BudgetLineItem -> create();
 						if ($this -> BudgetLineItem -> save($data[$category_name][$i]['BudgetLineItem']))
@@ -142,8 +148,8 @@ class BudgetLineItemsController extends AppController
 				{
 					$currentLineItems[$k]['BudgetLineItem']["py_req"] = $oldRequestedLineItems[$k]['BudgetLineItem']["amount"];
 					$currentLineItems[$k]['BudgetLineItem']["py_alloc"] = $oldAllocatedLineItems[$k]['BudgetLineItem']["amount"];
-					$currentLineItems[$k]['BudgetLineItem']["amount"] = 0;
-					$currentLineItems[$k]['BudgetLineItem']["alloc_parent_id"] = $currentLineItems[$k]['BudgetLineItem']["id"];
+					//$currentLineItems[$k]['BudgetLineItem']["amount"] = 0;
+					$currentLineItems[$k]['BudgetLineItem']["alloc_parent_id"] = $oldAllocatedLineItems[$k]['BudgetLineItem']["id"];
 					$currentLineItems[$k]['BudgetLineItem']["req_parent_id"] = $oldRequestedLineItems[$k]['BudgetLineItem']["id"];
 					$currentLineItems[$k]['BudgetLineItem']["id"] = "";
 				}
@@ -152,10 +158,19 @@ class BudgetLineItemsController extends AppController
 			{
 				for($q = 0; $q < count($currentLineItems); $q++)
 				{
-					$this -> BudgetLineItem -> id = $currentLineItems[$k]['BudgetLineItem']["req_parent_id"];
-					$currentLineItems[$k]['BudgetLineItem']["py_req"] = $this -> BudgetLineItem -> field('amount');
-					$this -> BudgetLineItem -> id = $currentLineItems[$k]['BudgetLineItem']["alloc_parent_id"];
-					$currentLineItems[$k]['BudgetLineItem']["py_alloc"] = $this -> BudgetLineItem -> field('amount');
+					$this -> BudgetLineItem -> id = $currentLineItems[$q]['BudgetLineItem']["req_parent_id"];
+					$currentLineItems[$q]['BudgetLineItem']["py_req"] = $this -> BudgetLineItem -> field('amount');
+					if($currentLineItems[$q]['BudgetLineItem']["py_req"] == null){
+						$currentLineItems[$q]['BudgetLineItem']["py_req"] = 0;
+					}
+					unset($currentLineItems[$q]['BudgetLineItem']["req_parent_id"]);
+					
+					$this -> BudgetLineItem -> id = $currentLineItems[$q]['BudgetLineItem']["alloc_parent_id"];
+					$currentLineItems[$q]['BudgetLineItem']["py_alloc"] = $this -> BudgetLineItem -> field('amount');
+					if($currentLineItems[$q]['BudgetLineItem']["py_alloc"] == null){
+						$currentLineItems[$q]['BudgetLineItem']["py_alloc"] = 0;
+					}
+					unset($currentLineItems[$q]['BudgetLineItem']["alloc_parent_id"]);
 				}
 			}
 

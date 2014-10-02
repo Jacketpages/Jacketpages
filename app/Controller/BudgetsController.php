@@ -52,8 +52,17 @@ class BudgetsController extends AppController
 
 	public function submit($org_id = null)
 	{
+		$this -> loadModel('TimeboundResource');
+		$db = ConnectionManager::getDataSource('default');
+		$conditions = array(
+			'name' => 'Budget',
+			'alias' => '20' . ($this -> getFiscalYear() + 2),
+			$db -> expression('TimeboundResource.start_time <= NOW()'),
+			$db -> expression('TimeboundResource.end_time >= NOW()')
+		);
+		$budgetIsOpen = $this -> TimeboundResource -> hasAny($conditions);
 		//page permissions
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+		if (!(($this -> isOfficer($org_id) && $budgetIsOpen) || $this -> isSGAExec()))
 			$this -> redirect($this -> referer());
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
