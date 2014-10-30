@@ -343,7 +343,7 @@ SELECT
 	c.name AS Category
 FROM organizations o
 	LEFT JOIN `categories` c ON c.`id`=o.`category`
-	LEFT JOIN `budgets` b ON b.`org_id`=o.id AND b.`fiscal_year`='2015'
+	LEFT JOIN `budgets` b ON b.`org_id`=o.id AND b.`fiscal_year`='".$fiscal_year."'
 	LEFT JOIN `users` u_c ON u_c.id=o.`contact_id`
 	
 	LEFT JOIN `users` u_p ON u_p.id = (
