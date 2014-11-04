@@ -319,7 +319,7 @@
  *       Please check the comments in boostrap.php for more info on the cache engines available
  *       and their settings.
  */
-$engine = 'File';
+$engine = 'Memcache';
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
