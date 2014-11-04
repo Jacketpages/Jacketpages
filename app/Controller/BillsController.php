@@ -1100,7 +1100,7 @@ class BillsController extends AppController
 	                'grad_name' => (isset($gradAuthor['User']['name'])) ? $gradAuthor['User']['name'] : '',
 	                'undr_name' => (isset($undrAuthor['User']['name'])) ? $undrAuthor['User']['name'] : ''
 	        ));
-	       // $email -> send();
+	        $email -> send();
         }
     }
 
