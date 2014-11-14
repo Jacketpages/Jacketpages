@@ -18,9 +18,6 @@
       'width' => '100%',
       'height' => '350'
    ));
-   
-   <iframe ></iframe>
-   
    echo '</div>';
     ?>
     
