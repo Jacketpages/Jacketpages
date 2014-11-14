@@ -16,7 +16,7 @@
    echo $this -> Html -> tag('iframe', "", array(
       'src' => "https://www.google.com/calendar/embed?mode=WEEK&src=1qihk52drlsino2r5evgrpup00%40group.calendar.google.com&amp;ctz=America/New_York",
       'width' => '100%',
-      'height' => '350'
+      'height' => '550'
    ));
    echo '</div>';
     ?>
