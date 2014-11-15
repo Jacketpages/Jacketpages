@@ -170,8 +170,12 @@ $this -> start('middle');
 		'Dues: ' . $organization['Organization']['dues']
 	);
 	if($lace || $sga_user || $isOfficer){
-		// add status to the beginning of the array
-		array_unshift($list, 'Status: '.$organization['Organization']['status']);
+		// add officer specific info to the beginning of the array
+		$list = array(
+			'Status: '.$organization['Organization']['status'],
+			'Alcohol Form Date: '.date('M j, Y', strtotime($organization['Organization']['alcohol_form'])),
+			'Advisor Form Date: '.date('M j, Y', strtotime($organization['Organization']['advisor_date']))
+		) + $list;
 	}
 	echo $this -> Html -> nestedList($list, array('id' => 'description'));
 	echo "<br/><br/>";
