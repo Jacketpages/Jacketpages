@@ -171,11 +171,12 @@ $this -> start('middle');
 	);
 	if($lace || $sga_user || $isOfficer){
 		// add officer specific info to the beginning of the array
-		$list = array(
+		$officer_list = array(
 			'Status: '.$organization['Organization']['status'],
 			'Alcohol Form Date: '.date('M j, Y', strtotime($organization['Organization']['alcohol_form'])),
 			'Advisor Form Date: '.date('M j, Y', strtotime($organization['Organization']['advisor_date']))
-		) + $list;
+		);
+		$list = array_merge($officer_list, $list);
 	}
 	echo $this -> Html -> nestedList($list, array('id' => 'description'));
 	echo "<br/><br/>";
