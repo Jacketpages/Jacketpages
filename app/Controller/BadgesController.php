@@ -143,21 +143,27 @@ class BadgesController extends AppController
 		}
 		
 		if($this->request->is('post')){
-			// build the structure for saving HABTM
-			$saveBadge = array(
-				'Badge' => array(
-					'id' => $badgeID
-				),
-				'Organizations' => array()
-			);
 			// if there is a list of awards, use that list
-			if(!empty($this->request->data['awarded'])){
-				$saveBadge['Organizations'] = $this->request->data['awarded'];
+			if(empty($this->request->data['awarded'])){
+				// saveAll with an empty array was not doing anything, so check this and manually delete
+				// unreward all organizations for this badge
+				$this->loadModel('BadgesOrganization');
+				$this->BadgesOrganization->deleteAll(array(
+					'badge_id' => $badgeID
+				));
+				
+			} else {
+				// build the structure for saving HABTM
+				$saveBadge = array(
+					'Badge' => array(
+						'id' => $badgeID
+					),
+					'Organizations' => $this->request->data['awarded']
+				);
+				
+				// save
+				$this->Badge->saveAll($saveBadge);
 			}
-			
-			// save
-			$this->Badge->saveAll($saveBadge);
-			
 			// don't return, keep going
 		}
 		
