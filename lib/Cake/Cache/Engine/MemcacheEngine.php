@@ -65,6 +65,7 @@ class MemcacheEngine extends CacheEngine {
  */
 	public function init($settings = array()) {
 		if (!class_exists('Memcache')) {
+			error_log('CakePHP::MemcacheEngine::init: Memcache class does not exist!');
 			return false;
 		}
 		if (!isset($settings['prefix'])) {
