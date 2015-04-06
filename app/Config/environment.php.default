@@ -20,4 +20,8 @@ $config = array(
 );
 // custom cache prefix
 // $prefix = 'myapp_dev_'
+
+// custom cache engine
+// $engine = 'File'
+
 ?>

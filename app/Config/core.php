@@ -319,13 +319,6 @@
  *       Please check the comments in boostrap.php for more info on the cache engines available
  *       and their settings.
  */
-$engine = 'Memcache';
-
-// In development mode, caches should expire quickly.
-$duration = '+999 days';
-if (Configure::read('debug') > 0) {
-	$duration = '+10 seconds';
-}
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
 // funtion to restrict the scope of the include
@@ -337,8 +330,25 @@ function getPrefix(){
 		return false;
 	}
 }
+function getEngine(){
+	include 'environment.php';
+	if(isset($engine)){
+		return $engine;
+	} else {
+		return false;
+	}
+}
 if(!($prefix = getPrefix())){
 	$prefix = 'myapp_';	
+}
+if(!($engine = getEngine())){
+	$engine = 'Memcache';// default
+}
+
+// In development mode, caches should expire quickly.
+$duration = '+999 days';
+if (Configure::read('debug') > 0) {
+	$duration = '+10 seconds';
 }
 
 /**
