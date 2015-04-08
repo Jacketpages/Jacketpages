@@ -7,7 +7,14 @@ $this -> extend("/Common/common");
 $this -> start('sidebar');
 echo $this -> element('bills/sidebar_links');
 $this -> end();
-$this -> assign("title", "Bill");
+if($bill['Bill']['status'] >= $AGENDA)
+{
+	$this -> assign("title", "Bill " . $bill['Bill']['number']);
+}
+else
+{
+	$this -> assign("title", "Bill");	
+}
 $this -> Html -> addCrumb('All Bills', '/bills');
 $this -> Html -> addCrumb('View Bill ', $this->here);
 $this -> start('middle');
@@ -24,13 +31,6 @@ echo $this -> Html -> tableCells(array(
 	'Title',
 	$bill['Bill']['title']
 ));
-if($bill['Bill']['status'] >= $AGENDA)
-{
-	echo $this -> Html -> tableCells(array(
-		'Number',
-		$bill['Bill']['number']
-	));
-}
 echo $this -> Html -> tableCells(array(array(
 	array('Description', array()),
 	array(nl2br($bill['Bill']['description']), array('style' => 'text-align:justify'))
