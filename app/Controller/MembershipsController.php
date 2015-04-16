@@ -42,11 +42,13 @@ class MembershipsController extends AppController
 		));
 
 		$members = $this -> getMembers($id, array('Member'));
+		$count = find('count', $members);
 		$pending_members = $this -> getMembers($id, array('Member'), false, array('Pending'));
 		$this -> set('officers', $officers);
 		$this -> set('members', $members);
 		$this -> set('pending_members', $pending_members);
 		$this -> set('orgId', $id);
+		$this -> set('count', $count);
 
 	}
 

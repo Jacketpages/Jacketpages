@@ -44,6 +44,11 @@ echo $this -> Html -> tableCells(array(
 	$bill['Organization']['dues']
 ));
 echo $this -> Html -> tableCells(array(
+	'Number of Members',
+	$bill['Memberships']['count']
+	//TODO to show the number of people in the organization
+));
+echo $this -> Html -> tableCells(array(
 	'Submit Date',
 	$bill['Bill']['submit_date']
 ));
