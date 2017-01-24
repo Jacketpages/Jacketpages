@@ -29,10 +29,14 @@ if ($lace || $isOfficer)
 		'action' => 'edit',
 		$organization['Organization']['id']
 	));
+	/*
 	$sidebar[] = $this -> Html -> link(__('Edit Logo', true), array(
-		'action' => 'addlogo',
-		$organization['Organization']['id']
-	));
+			'action' => 'addlogo',
+			$organization['Organization']['id']
+		));*/
+}
+
+if ($gt_member) {
 	if ($budgetIsOpen)
 	{
 		$sidebar[] = $this -> Html -> link(__('Submit Budget', true), array(
@@ -43,7 +47,7 @@ if ($lace || $isOfficer)
 	}
 }
 
-if ($lace || $isOfficer || $isMember)
+/*if ($lace || $isOfficer || $isMember)
 {
 	$sidebar[] = $this -> Html -> link(__('Documents', true), array(
 			'controller' => 'documents',
@@ -56,7 +60,7 @@ if ($lace || $isOfficer || $isMember)
 		$organization['Organization']['id']
 	));
 }
-
+*/
 //MRE TODO add ledger page in budgets
 if ($gt_member)
 {
@@ -66,14 +70,14 @@ if ($gt_member)
 		$organization['Organization']['id']
 	));
 	
-	if (!$orgJoinOrganizationPerm)
+	/*if (!$orgJoinOrganizationPerm)
 	{
 		$sidebar[] = $this -> Html -> link(__('Join Organization', true), array(
 			'controller' => 'memberships',
 			'action' => 'joinOrganization',
 			$organization['Organization']['id']
 		), null, __('Are you sure you want to join ' . $organization['Organization']['name'] . '?', true));
-	}
+	}*/
 }
 
 if ($orgAdminPerm)
@@ -100,59 +104,63 @@ $this -> start('middle');
 <div style="display:inline-block;position:relative;width:100%">
 <div style="float:left;width:50%;">
 	<?php
+	/*
 	echo $this -> Html -> tag('h1', 'Officers');
-	echo $this -> Html -> tableBegin(array('class' => 'listing'));
-	foreach ($presidents as $president)
-	{
-		if (isset($president['Membership']))
+		echo $this -> Html -> tableBegin(array('class' => 'listing'));
+		foreach ($presidents as $president)
 		{
-			echo $this -> Html -> tableCells(array(
-				($gt_member) ? $this -> Html -> link($president['Membership']['name'], 'mailto:' . $president['User']['email']) : $president['Membership']['name'],
-				(!strcmp($president['Membership']['title'], $president['Membership']['role'])) ? $president['Membership']['title'] : $president['Membership']['title'] . " (" . $president['Membership']['role'] . ")"
-			));
+			if (isset($president['Membership']))
+			{
+				echo $this -> Html -> tableCells(array(
+					($gt_member) ? $this -> Html -> link($president['Membership']['name'], 'mailto:' . $president['User']['email']) : $president['Membership']['name'],
+					(!strcmp($president['Membership']['title'], $president['Membership']['role'])) ? $president['Membership']['title'] : $president['Membership']['title'] . " (" . $president['Membership']['role'] . ")"
+				));
+			}
 		}
-	}
-	foreach ($treasurers as $treasurer)
-	{
-		if (isset($treasurer['Membership']))
+		foreach ($treasurers as $treasurer)
 		{
-			echo $this -> Html -> tableCells(array(
-				($gt_member) ? $this -> Html -> link($treasurer['Membership']['name'], 'mailto:' . $treasurer['User']['email']) : $treasurer['Membership']['name'],
-				(!strcmp($treasurer['Membership']['title'], $treasurer['Membership']['role'])) ? $treasurer['Membership']['title'] : $treasurer['Membership']['title'] . " (" . $treasurer['Membership']['role'] . ")"
-			));
+			if (isset($treasurer['Membership']))
+			{
+				echo $this -> Html -> tableCells(array(
+					($gt_member) ? $this -> Html -> link($treasurer['Membership']['name'], 'mailto:' . $treasurer['User']['email']) : $treasurer['Membership']['name'],
+					(!strcmp($treasurer['Membership']['title'], $treasurer['Membership']['role'])) ? $treasurer['Membership']['title'] : $treasurer['Membership']['title'] . " (" . $treasurer['Membership']['role'] . ")"
+				));
+			}
 		}
-	}
-	foreach ($advisors as $advisor)
-	{
-		if (isset($advisor['Membership']))
+		foreach ($advisors as $advisor)
 		{
-			echo $this -> Html -> tableCells(array(
-				($gt_member) ? $this -> Html -> link($advisor['Membership']['name'], 'mailto:' . $advisor['User']['email']) : $advisor['Membership']['name'],
-				(!strcmp($advisor['Membership']['title'], $advisor['Membership']['role'])) ? $advisor['Membership']['title'] : $advisor['Membership']['title'] . " (" . $advisor['Membership']['role'] . ")"
-			));
+			if (isset($advisor['Membership']))
+			{
+				echo $this -> Html -> tableCells(array(
+					($gt_member) ? $this -> Html -> link($advisor['Membership']['name'], 'mailto:' . $advisor['User']['email']) : $advisor['Membership']['name'],
+					(!strcmp($advisor['Membership']['title'], $advisor['Membership']['role'])) ? $advisor['Membership']['title'] : $advisor['Membership']['title'] . " (" . $advisor['Membership']['role'] . ")"
+				));
+			}
 		}
-	}
-	foreach ($officers as $officer)
-	{
-		if (isset($officer['Membership']))
+		foreach ($officers as $officer)
 		{
-			echo $this -> Html -> tableCells(array(
-				($gt_member) ? $this -> Html -> link($officer['Membership']['name'], 'mailto:' . $officer['User']['email']) : $officer['Membership']['name'],
-				$officer['Membership']['title']
-			));
+			if (isset($officer['Membership']))
+			{
+				echo $this -> Html -> tableCells(array(
+					($gt_member) ? $this -> Html -> link($officer['Membership']['name'], 'mailto:' . $officer['User']['email']) : $officer['Membership']['name'],
+					$officer['Membership']['title']
+				));
+			}
 		}
-	}
-	echo $this -> Html -> tableEnd();
+		echo $this -> Html -> tableEnd();*/
+	
 	echo "</div>";
+	/*
 	echo $this -> Html -> div('org_logo', 
-		'<span class="center_helper"></span>'.$this -> Html -> image($organization['Organization']['logo_path'],
-		array('id' => 'logo')
-	));
-	echo "</div>";
+			'<span class="center_helper"></span>'.$this -> Html -> image($organization['Organization']['logo_path'],
+			array('id' => 'logo')
+		));
+		echo "</div>";*/
+	
 	// Print out the Organization's description and other
 	// general information.
 	echo $this -> Html -> tag('h1', 'Description');
-	echo $this -> Html -> para('leftalign', $organization['Organization']['description']);
+	//echo $this -> Html -> para('leftalign', $organization['Organization']['description']);
 	if (stristr($organization['Organization']['website'], "http://") ==  false)
 	{
 		$site = "http://" . $organization['Organization']['website'];
@@ -164,12 +172,16 @@ $this -> start('middle');
 	// info list
 	$list = array(
 		'Tier: ' . $tier,
+		/*
 		'Organization Contact: ' . (($organization['User']['name'] != '') ? $this -> Html -> link($organization['User']['name'], 'mailto:' . $organization['User']['email']) : 'N/A'),
-		'External Website: ' . (($organization['Organization']['website'] != '') ? $this -> Html -> link($site) : 'N/A'),
+				*/
+		'OrgSync: ' . (($organization['Organization']['website'] != '') ? $this -> Html -> link($site) : 'N/A'),
+		/*
 		'Meetings: ' . (($organization['Organization']['meeting_information'] != '') ? $organization['Organization']['meeting_information'] : 'N//A'),
-		'Dues: ' . $organization['Organization']['dues']
+				*/
+		//'Dues: ' . $organization['Organization']['dues']
 	);
-	if($lace || $sga_user || $isOfficer){
+	/*if($lace || $sga_user || $isOfficer){
 		// add officer specific info to the beginning of the array
 		$officer_list = array(
 			'Status: '.$organization['Organization']['status'],
@@ -177,8 +189,60 @@ $this -> start('middle');
 			'Advisor Form Date: '.date('M j, Y', strtotime($organization['Organization']['advisor_date']))
 		);
 		$list = array_merge($officer_list, $list);
-	}
+	}*/
 	echo $this -> Html -> nestedList($list, array('id' => 'description'));
-	echo "<br/><br/>";
-	$this -> end();
+    //$this -> assign('title', $organization['Organization']['name'].$badgeStr);
+    //$this -> start('middle');
+	//$this -> end();
+    //echo "<br/><br/>";
+    $this -> end();
+    $this -> start('middle');
+    echo $this -> Html -> tag('h1', 'Bills');
+    //$this -> end();
+
+/*$this -> Paginator -> options(array(
+    'update' => '#forupdate',
+    'indicator' => '#indicator',
+    'evalScripts' => true,
+    'before' => $this -> Js -> get('#listing') -> effect('fadeOut', array('buffer' => false)),
+    'complete' => $this -> Js -> get('#listing') -> effect('fadeIn', array('buffer' => false)),
+));*/
+//$this -> Html -> addCrumb($org_name, '/organizations/view/'.$org_id);
+//$this -> Html -> addCrumb('Finance Ledger', $this -> here);
+//$this -> extend("/Common/list");
+//$this -> start('sidebar');
+//$this -> end();
+//$this -> assign("title", "Finance Ledger");
+//$this -> start('listing');
+//echo $this -> Html -> tag('h1', 'Bills');
+?>
+    <table class="listing">
+        <?php
+        echo $this -> Html -> tableheaders(array(
+            $this -> Paginator -> sort('title', 'Title'),
+            $this -> Paginator -> sort('number', 'Number'),
+            $this -> Paginator -> sort('category', 'Category'),
+            $this -> Paginator -> sort('Status.name', 'Status'),
+            $this -> Paginator -> sort('submit_date', 'Submit Date')
+        ), array('class' => 'links'));
+        foreach ($bills as $bill)
+        {
+            echo $this -> Html -> tableCells(array(
+                $this -> Html -> link($bill['Bill']['title'], array(
+                    'controller' => 'bills',
+                    'action' => 'view',
+                    $bill['Bill']['id']
+                )),
+                $bill['Bill']['number'],
+                $bill['Bill']['category'],
+                $bill['Status']['name'],
+                $bill['Bill']['submit_date']
+            ));
+        }
+        ?>
+    </table>
+<?php
+echo $this -> element('paging');
+//echo $this -> Html -> tag('h1', 'Budgets');
+$this -> end();
 ?>

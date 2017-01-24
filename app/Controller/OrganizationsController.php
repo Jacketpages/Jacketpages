@@ -232,6 +232,19 @@ class OrganizationsController extends AppController
 		$this -> set('tier', $this -> roman_numerals($organization['Organization']['tier']));
 
 		$this -> set('orgJoinOrganizationPerm', ($this -> isMember($id) || $this -> isPendingMember($id)));
+
+
+        $this -> loadModel('Bill');
+        $this -> paginate = array(
+            'conditions' => array('Bill.org_id' => $id),
+            'limit' => 20,
+            'order' => 'submit_date desc'
+        );
+        $this -> set('bills', $this -> paginate('Bill'));
+        $this -> loadModel('Organization');
+        $org_name = $this -> Organization -> field('name', array('id' => $id));
+        $this -> set('org_id', $id);
+        $this -> set('org_name', $org_name);
 	}
 
 	public function add()

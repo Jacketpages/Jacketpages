@@ -49,6 +49,15 @@ if ($bill['Bill']['status'] == $AUTHORED && $sga_exec
 		$bill['Bill']['id']
 	));
 }
+//Mark as Passed Button
+if ($bill['Bill']['status'] == $AGENDA && $sga_exec
+    || $admin)
+{
+    $sidebar[] = $this -> Html -> link(__('Mark as Passed', true), array(
+        'action' => 'markAsPassed',
+        $bill['Bill']['id']
+    ));
+}
 if ($bill['Bill']['status'] == $AGENDA && $sga_exec
 		|| $admin)
 {

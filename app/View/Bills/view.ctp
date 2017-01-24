@@ -39,19 +39,49 @@ echo $this -> Html -> tableCells(array(array(
 	array('Fundraising', array()),
 	array(nl2br($bill['Bill']['fundraising']), array('style' => 'text-align:justify'))
 )));
-echo $this -> Html -> tableCells(array(
-	'Dues',
-	$bill['Organization']['dues']
-));
-echo $this -> Html -> tableCells(array(
-	'Number of Members',
-	$bill['Memberships']['count']
-	//TODO to show the number of people in the organization
-));
-echo $this -> Html -> tableCells(array(
-	'Submit Date',
-	$bill['Bill']['submit_date']
-));
+
+if ($bill['Bill']['dues'] != NULL) {
+    echo $this->Html->tableCells(array(
+        'Dues',
+        $bill['Bill']['dues']
+    ));
+}
+
+if ($bill['Bill']['ugMembers'] != NULL) {
+    echo $this->Html->tableCells(array(
+        'Undergraduate Members',
+        $bill['Bill']['ugMembers']
+    ));
+}
+if ($bill['Bill']['gMembers'] != NULL) {
+    echo $this->Html->tableCells(array(
+        'Graduate Members',
+        $bill['Bill']['gMembers']
+    ));
+}
+
+if($bill['Bill']['status'] == $CREATED || $admin) {
+    //old bills have a created date stored in the submit date field
+    if($bill['Bill']['create_date'] == NULL && $bill['Bill']['status'] > $CREATED) {
+        echo $this->Html->tableCells(array(
+            'Created Date',
+            $bill['Bill']['submit_date']
+        ));
+    } else {
+        echo $this->Html->tableCells(array(
+            'Created Date',
+            $bill['Bill']['create_date']
+        ));
+    }
+}
+if($bill['Bill']['status'] >= $AWAITING_AUTHOR || $admin) {
+    if($bill['Bill']['create_date'] != NULL && $bill['Bill']['status'] > $CREATED) {
+        echo $this->Html->tableCells(array(
+            'Submit Date',
+            $bill['Bill']['submit_date']
+        ));
+    }
+}
 echo $this -> Html -> tableEnd();
 echo $this -> element('bills/view/status');
 echo $this -> element('bills/view/authors');
@@ -129,9 +159,9 @@ if(!empty($final)){
 			'lineitems' => $graduate,
 			'showAll' => 0,
 			'eligibleStates' => array(
-				'Submitted' => 'Submitted',
-				'JFC' => 'JFC',
-				'Undergraduate' => 'Undergraduate'
+                'JFC' => 'JFC',
+                'Undergraduate' => 'Undergraduate',
+				'Submitted' => 'Submitted'
 			),
 			'form_state' => 'Graduate'
 		)), array('id' => 'tabs-3'));
@@ -139,9 +169,9 @@ if(!empty($final)){
 			'lineitems' => $undergraduate,
 			'showAll' => 0,
 			'eligibleStates' => array(
-				'Submitted' => 'Submitted',
-				'JFC' => 'JFC',
-				'Graduate' => 'Graduate'
+                'Graduate' => 'Graduate',
+                'JFC' => 'JFC',
+				'Submitted' => 'Submitted'
 			),
 			'form_state' => 'Undergraduate'
 		)), array('id' => 'tabs-4'));
@@ -149,10 +179,10 @@ if(!empty($final)){
 			'lineitems' => $conference,
 			'showAll' => 0,
 			'eligibleStates' => array(
-				'Submitted' => 'Submitted',
-				'JFC' => 'JFC',
-				'Graduate' => 'Graduate',
-				'Undergraduate' => 'Undergraduate'
+                'Undergraduate' => 'Undergraduate',
+                'Graduate' => 'Graduate',
+                'JFC' => 'JFC',
+				'Submitted' => 'Submitted'
 			),
 			'form_state' => 'Conference'
 		)), array('id' => 'tabs-5'));
@@ -164,12 +194,13 @@ if(!empty($final)){
 			'lineitems' => $final,
 			'showAll' => 0,
 			'eligibleStates' => array(
-				'Submitted' => 'Submitted',
-				'JFC' => 'JFC',
+                'Undergraduate' => 'Undergraduate',
+                'Conference' => 'Conference',
 				'Graduate' => 'Graduate',
-				'Undergraduate' => 'Undergraduate',
-				'Conference' => 'Conference'
+				'JFC' => 'JFC',
+				'Submitted' => 'Submitted'
 			),
+            //TODO fix eligible states to auto select as opposed to just rearranging
 			'form_state' => 'Final'
 		)), array('id' => 'tabs-7'));
 ?>

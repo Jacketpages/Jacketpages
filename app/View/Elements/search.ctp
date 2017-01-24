@@ -4,10 +4,10 @@
  * @since 06/26/2012
  */
 ?>
-<div id="alphabet">
+<<!--div id="alphabet">
 	<div id="leftHalf">
 		<?php
-		echo $this -> Form -> create();
+/*		echo $this -> Form -> create();
 		echo $this -> Form -> input('keyword', array(
 			'label' => array(
 				'text' => 'Search',
@@ -21,12 +21,12 @@
 		{
 		 echo $this -> Form -> end();			
 		}
-		?>
+		*/?>
 	</div>
 	<div id="rightHalf">
 		<ul>
 			<?php
-			// TODO Clean up this whole alphabet thing. Is there an easier way?
+/*			// TODO Clean up this whole alphabet thing. Is there an easier way?
 			// set up alphabet
 			$alpha = range('A', 'Z');
 			for ($i = 0; $i < count($alpha); $i++)
@@ -45,8 +45,8 @@
 				'controller' => strtolower($this -> params['controller']),
 				'action' => $action
 			));
-			?>
+			*/?>
 			</li>
 		</ul>
 	</div>
-</div>
+</div>-->

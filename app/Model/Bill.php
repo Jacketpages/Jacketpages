@@ -39,8 +39,7 @@ class Bill extends AppModel
 			'foreignKey' => 'org_id',
 			'fields' => array(
 				'id',
-				'name',
-				'dues'
+				'name'
 			)
 		)
 	);
@@ -88,6 +87,21 @@ class Bill extends AppModel
 					'Conference'
 				)
 			), ),
+        'dues' => array('declared' => array(
+            'rule' => 'notEmpty',
+            'required' => true,
+            'message' => 'Must be numbers and letters and cannot be blank.',
+            ), ),
+        'ugMembers' => array('declared' => array(
+            'rule' => 'notEmpty',
+            'required' => true,
+            'message' => 'Must be numbers and letters and cannot be blank.',
+            ), ),
+        'gMembers' => array('declared' => array(
+            'rule' => 'notEmpty',
+            'required' => true,
+            'message' => 'Must be numbers and letters and cannot be blank.',
+            ), ),
 	);
 }
 ?>

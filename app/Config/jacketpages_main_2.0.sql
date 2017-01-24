@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS BILLS(
     PRIMARY KEY (id),
     title varchar(60) COMMENT 'The bill\'s title.',
     description text COMMENT 'A description of the bill.',
+    create_date date DEFAULT NULL COMMENT 'The date that the bill was created.',
     submit_date date DEFAULT NULL COMMENT 'The date that the bill was submitted.',
     dues varchar(50) DEFAULT NULL COMMENT 'The dues that the organization associated with the bill collects.',
     fundraising text COMMENT 'The fundraising effort associated with the bill.',
@@ -148,8 +149,10 @@ CREATE TABLE IF NOT EXISTS BILLS(
     gss_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Graduate Student Senate\'s votes on the bill. (Foreign Key to Bill_Votes Table)',
     uhr_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Undergraduate House of Representative\'s votes on the bill. (Foreign Key to Bill_Votes Table)',
     gcc_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Graduate Conference Committee\'s votes on the bill. (Foreign Key to Bill_Votes Table)',
-    ucc_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Undergraduate Conference Committee\'s votes on the bill. (Foreign Key to Bill_Votes Table)'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of bills submitted to SGA.'; 
+    ucc_id int(11) NOT NULL DEFAULT 0 COMMENT 'The Undergraduate Conference Committee\'s votes on the bill. (Foreign Key to Bill_Votes Table)',
+    ugMembers varchar(50) DEFAULT NULL COMMENT 'The number of current undergraduate dues paying members.',
+    gMembers varchar(50) DEFAULT NULL COMMENT 'The number of current graduate dues paying members.'
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 COMMENT 'Keeps record of bills submitted to SGA.';
     
 /*CATEGORIES TABLE STRUCTURE*/
 CREATE TABLE IF NOT EXISTS CATEGORIES(

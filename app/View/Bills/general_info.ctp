@@ -45,7 +45,12 @@ if (($bill['Submitter']['id'] == $this -> Session -> read('User.id') && $bill['B
 		'options' => $organizations,
 		'default' => 'Select Organization'
 	));
-	echo $this -> Form -> input('Authors.id', array('type' => 'hidden'));
+
+    echo $this -> Form -> input('dues', array('label' => 'Dues - Please include how often dues are paid (per semester, per year, etc.)'));
+    echo $this -> Form -> input('ugMembers', array('label' => 'Number of Undergraduate Members'));
+    echo $this -> Form -> input('gMembers', array('label' => 'Number of Graduate Members'));
+
+    echo $this -> Form -> input('Authors.id', array('type' => 'hidden'));
 	echo $this -> Form -> input('Authors.undr_auth_id', array(
 		'div' => 'input underAuthor_id',
 		'label' => 'Undergraduate Author',
