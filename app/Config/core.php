@@ -195,7 +195,8 @@
  */
 	Configure::write('Session', array(
 		'defaults' => 'php',
-		'timeout' => 60
+		'timeout' => 60,
+        'cookieTimeout' => 30,
 	));
 
 /**
@@ -254,18 +255,18 @@
  * Default settings provided below
  *
  * File storage engine.
- *
- * 	 Cache::config('default', array(
- *		'engine' => 'File', //[required]
- *		'duration' => 3600, //[optional]
- *		'probability' => 100, //[optional]
- * 		'path' => CACHE, //[optional] use system tmp directory - remember to use absolute path
- * 		'prefix' => 'cake_', //[optional]  prefix every cache file with this string
- * 		'lock' => false, //[optional]  use file locking
- * 		'serialize' => true, [optional]
- *	));
- *
- * APC (http://pecl.php.net/package/APC)
+ */
+  	 Cache::config('default', array(
+ 		'engine' => 'File', //[required]
+ 		'duration' => 3600, //[optional]
+ 		'probability' => 100, //[optional]
+  		'path' => CACHE, //[optional] use system tmp directory - remember to use absolute path
+  		'prefix' => 'cake_', //[optional]  prefix every cache file with this string
+  		'lock' => false, //[optional]  use file locking
+  		'serialize' => true, [optional]
+ 	));
+ 
+ /** APC (http://pecl.php.net/package/APC)
  *
  * 	 Cache::config('default', array(
  *		'engine' => 'Apc', //[required]
@@ -287,16 +288,16 @@
  *
  * Memcache (http://www.danga.com/memcached/)
  *
- * 	 Cache::config('default', array(
+ *	Cache::config('default', array(
  *		'engine' => 'Memcache', //[required]
  *		'duration' => 3600, //[optional]
- *		'probability' => 100, //[optional]
+ * 		'probability' => 100, //[optional]
  * 		'prefix' => Inflector::slug(APP_DIR) . '_', //[optional]  prefix every cache file with this string
- * 		'servers' => array(
- * 			'127.0.0.1:11211' // localhost, default port 11211
- * 		), //[optional]
- * 		'persistent' => true, // [optional] set this to false for non-persistent connections
- * 		'compress' => false, // [optional] compress data in Memcache (slower, but uses less memory)
+ *		'servers' => array(
+ *			'127.0.0.1:11211' // localhost, default port 11211
+ *		), //[optional]
+ *		'persistent' => true, // [optional] set this to false for non-persistent connections
+ *		'compress' => false, // [optional] compress data in Memcache (slower, but uses less memory)
  *	));
  *
  *  Wincache (http://php.net/wincache)
@@ -341,10 +342,11 @@ function getEngine(){
 if(!($prefix = getPrefix())){
 	$prefix = 'myapp_';	
 }
-if(!($engine = getEngine())){
+/*if(!($engine = getEngine())){
 	$engine = 'Memcache';// default
-}
+}*/
 
+$engine = 'File';
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
 if (Configure::read('debug') > 0) {

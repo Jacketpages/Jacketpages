@@ -50,11 +50,11 @@ $this -> start('middle');
 	?>
 </table>
 <?php
-echo $this -> Html -> tag('h1', 'Executive Positions');
-?>
+/*echo $this -> Html -> tag('h1', 'Executive Positions');
+*/?><!--
 <table class='listing'>
 	<?php
-	echo $this -> Html -> tableHeaders(array(
+/*	echo $this -> Html -> tableHeaders(array(
 		'Organization',
 		'Title',
 		'Start Date',
@@ -76,14 +76,14 @@ echo $this -> Html -> tag('h1', 'Executive Positions');
 			));
 		}
 	}
-	?>
+	*/?>
 </table>
 <?php
-echo $this -> Html -> tag('h1', 'General Affiliations');
-?>
+/*echo $this -> Html -> tag('h1', 'General Affiliations');
+*/?>
 <table class='listing'>
 	<?php
-	echo $this -> Html -> tableHeaders(array(
+/*	echo $this -> Html -> tableHeaders(array(
 		'Organization',
 		'Title',
 		'Start Date',
@@ -105,8 +105,8 @@ echo $this -> Html -> tag('h1', 'General Affiliations');
 			));
 		}
 	}
-	?>
-</table>
+	*/?>
+</table>-->
 <?php
 $this -> end();
 ?>

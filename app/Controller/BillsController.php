@@ -161,9 +161,9 @@ class BillsController extends AppController
 	 */
 	public function ledger($org_id = null)
 	{
-		$this -> paginate = array(
+		/*$this -> paginate = array(
 			'conditions' => array('Bill.org_id' => $org_id),
-			'limit' => 20,
+			'limit' => 50,
 			'order' => 'submit_date desc'
 		);
 		$this -> set('bills', $this -> paginate('Bill'));
@@ -171,7 +171,204 @@ class BillsController extends AppController
 		$org_name = $this -> Organization -> field('name', array('id' => $org_id));
 		$this -> set('org_id', $org_id);
 		$this -> set('org_name', $org_name);
-	}
+
+        $this -> Organization -> id = $org_id;
+        $organization = $this -> Organization -> read();
+
+        if (empty($organization)) {
+            // no organization with that id
+            $this->Session->setFlash('Please select an organization to view.');
+            $this->redirect(array(
+                'controller' => 'organizations',
+                'action' => 'index'
+            ));
+        }
+
+        $this -> set('organization', $organization);*/
+        ///////////////
+        //pull line items from each passed bill and display them
+        ///////////////
+        $this -> loadModel('Organization');
+        $org_name = $this -> Organization -> field('name', array('id' => $org_id));
+        $this -> set('org_id', $org_id);
+        $this -> set('org_name', $org_name);
+
+        $this -> Organization -> id = $org_id;
+        $organization = $this -> Organization -> read();
+
+        if (empty($organization)) {
+            // no organization with that id
+            $this->Session->setFlash('Please select an organization to view.');
+            $this->redirect(array(
+                'controller' => 'organizations',
+                'action' => 'index'
+            ));
+        }
+
+
+        $org_bills = $this -> Bill -> find('all', array(
+            'conditions' => array(
+                'org_id' => $org_id,
+                'Bill.status' => 6),
+            'fields' => array('title', 'type', 'id', 'status')
+        ));
+        //debug($org_bills);
+        $bill_ids = Set::extract('/Bill/id', $org_bills);//array();
+        $bill_ids = array_reverse($bill_ids);
+        //debug($bill_ids);
+
+        $bills = array();
+        foreach($bill_ids as $id) {
+
+            $this->Bill->id = $id;
+            $level = $this->Session->read('User.level') != "" ? $this->Session->read('User.level') : "general";
+            $bill = $this->Bill->read();
+            $this->set('bill', $bill);
+
+            $this->loadModel('LineItem');
+            /*$this->set('submitted', $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Submitted'
+                ),
+                'order' => 'line_number asc'
+            )));
+            $this->set('jfc', $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'JFC'
+                ),
+                'order' => 'line_number asc'
+            )));
+            $this->set('graduate', $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Graduate'
+                ),
+                'order' => 'line_number asc'
+            )));
+            $this->set('undergraduate', $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Undergraduate'
+                ),
+                'order' => 'line_number asc'
+            )));
+            $this->set('conference', $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Conference'
+                ),
+                'order' => 'line_number asc'
+            )));
+            $this->set('all', $this->LineItem->find('all', array(
+                'conditions' => array('bill_id' => $id),
+                'order' => array("FIELD(STATE, 'Submitted','JFC', 'Graduate', 'Undergraduate', 'Conference', 'Final')")
+            )));
+            $this->set('final', $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Final'
+                ),
+                'order' => 'line_number asc'
+            )));*/
+            $submitted = $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Submitted'
+                ),
+                'order' => 'line_number asc'
+            ));
+            $jfc = $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'JFC'
+                ),
+                'order' => 'line_number asc'
+            ));
+            $graduate = $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Graduate'
+                ),
+                'order' => 'line_number asc'
+            ));
+            $undergraduate = $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Undergraduate'
+                ),
+                'order' => 'line_number asc'
+            ));
+            $conference = $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Conference'
+                ),
+                'order' => 'line_number asc'
+            ));
+            $all = $this->LineItem->find('all', array(
+                'conditions' => array('bill_id' => $id),
+                'order' => array("FIELD(STATE, 'Submitted','JFC', 'Graduate', 'Undergraduate', 'Conference', 'Final')")
+            ));
+            $final = $this->LineItem->find('all', array(
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'state' => 'Final'
+                ),
+                'order' => 'line_number asc'
+            ));
+            // Set the amounts for prior year, capital outlay, and total
+            $totals = $this->LineItem->find('all', array(
+                'fields' => array(
+                    "SUM(IF(account = 'PY' AND state = 'Submitted',amount, 0)) AS PY_SUBMITTED",
+                    "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Submitted',amount, 0)) AS CO_SUBMITTED",
+                    "SUM(IF(STATE = 'Submitted',amount, 0)) AS TOTAL_SUBMITTED",
+                    "SUM(IF(ACCOUNT = 'PY' AND STATE = 'JFC',amount, 0)) AS PY_JFC",
+                    "SUM(IF(ACCOUNT = 'CO' AND STATE = 'JFC',amount, 0)) AS CO_JFC",
+                    "SUM(IF(STATE = 'JFC',amount, 0)) AS TOTAL_JFC",
+                    "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Graduate',amount, 0)) AS PY_GRADUATE",
+                    "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Graduate',amount, 0)) AS CO_GRADUATE",
+                    "SUM(IF(STATE = 'Graduate',amount, 0)) AS TOTAL_GRADUATE",
+                    "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Undergraduate',amount, 0)) AS PY_UNDERGRADUATE",
+                    "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Undergraduate',amount, 0)) AS CO_UNDERGRADUATE",
+                    "SUM(IF(STATE = 'Undergraduate',amount, 0)) AS TOTAL_UNDERGRADUATE",
+                    "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final',amount, 0)) AS PY_FINAL",
+                    "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final',amount, 0)) AS CO_FINAL",
+                    "SUM(IF(STATE = 'Final',amount, 0)) AS TOTAL_FINAL",
+                    "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Conference',amount, 0)) AS PY_CONFERENCE",
+                    "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Conference',amount, 0)) AS CO_CONFERENCE",
+                    "SUM(IF(STATE = 'Conference',amount, 0)) AS TOTAL_CONFERENCE"
+                ),
+                'conditions' => array(
+                    'bill_id' => $id,
+                    'struck <>' => 1
+                )
+            ));
+            /* Create an array of states to easily loop through and display the
+             * totals for the individual accounts
+             */
+            $states = $this->LineItem->find('all', array(
+                'fields' => array('DISTINCT state'),
+                'conditions' => array('state !=' => 'Final')
+            ));
+
+            $bills[] = array(
+                "bill" => $bill,
+                "submitted" => $submitted,
+                "jfc" => $jfc,
+                "graduate" => $graduate,
+                "undergraduate" => $undergraduate,
+                "conference" => $conference,
+                "all" => $all,
+                "final" => $final,
+                "totals" => $totals[0][0],
+                "states" => $states,
+            );
+        }
+        $this->set('bills', $bills);
+
+    }
 
 	/**
 	 * View an individual bill's information
@@ -186,12 +383,20 @@ class BillsController extends AppController
 				'controller' => 'bills',
 				'action' => 'index'
 			));
-		}
+		} else if (strpos($id, 'J') !== false || strpos($id, 'U') !== false || strpos($id, 'G') !== false) {
+		    $bill = $this -> Bill -> find('first', array(/*
+                'fields' => array('name'),*/
+                'conditions' => array('Bill.number' => $id)
+            ));
+		    $id = $bill['Bill']['id'];
+        }
 
-		// Set which bill to retrieve from the database.
-		$this -> Bill -> id = $id;
-		$level = $this -> Session -> read('User.level') != "" ? $this -> Session -> read('User.level') : "general";
-		$bill = $this -> Bill -> read();
+        // Set which bill to retrieve from the database.
+        //$this -> Bill -> id = $id;
+        $this->Bill->id = $id;
+        $level = $this->Session->read('User.level') != "" ? $this->Session->read('User.level') : "general";
+        $bill = $this->Bill->read();
+
 		switch ($bill['Bill']['status'])
 		{
 			case $this -> CREATED :
@@ -290,7 +495,7 @@ class BillsController extends AppController
 			'fields' => array('DISTINCT state'),
 			'conditions' => array('state !=' => 'Final')
 		)));
-	}
+    }
 
 	function getValidNumber($category)
 	{
@@ -330,7 +535,7 @@ class BillsController extends AppController
 			$this -> request -> data['Bill']['submitter'] = $this -> Session -> read('User.id');
 			$this -> request -> data['Bill']['last_mod_by'] = $this -> Session -> read('User.id');
 			$this -> request -> data['Bill']['status'] = 1;
-			$this -> request -> data['Bill']['submit_date'] = date('Y-m-d');
+			$this -> request -> data['Bill']['create_date'] = date('Y-m-d');
 			$this -> request -> data['Bill']['last_mod_date'] = date('Y-m-d h:i:s');
 			// If Graduate author or Undergraduate author are set as Unknown
 			// then set them to a place holder author.
@@ -377,9 +582,10 @@ class BillsController extends AppController
 			),
 			'recursive' => 0
 		));
-		//$gradAuthors[''] = "Unknown";
+		$gradAuthors[''] = "Select a GSS Senator";
 		$gradAuthors['SGA'] = $sga_graduate;
 		$this -> set('gradAuthors', $gradAuthors);
+
 		$sga_undergraduate = $this -> SgaPerson -> find('list', array(
 			'fields' => array('name_department'),
 			'conditions' => array(
@@ -388,7 +594,7 @@ class BillsController extends AppController
 			),
 			'recursive' => 0
 		));
-		//$underAuthors[''] = "Unknown";
+        $underAuthors[''] = "Select a UHR Representative";
 		$underAuthors['SGA'] = $sga_undergraduate;
 		$this -> set('underAuthors', $underAuthors);
 	}
@@ -632,23 +838,23 @@ class BillsController extends AppController
 		// Set the organization drop down list for
 		// creating a new bill
 		$id = $this -> Session -> read('User.id');
-		$this -> loadModel('Membership');
+		//$this -> loadModel('Membership');
 		$orgs[''] = 'Select Organization';
-		$ids = $this -> Membership -> find('all', array(
+		/*$ids = $this -> Membership -> find('all', array(
 			'fields' => array('Membership.org_id'),
 			'conditions' => array('Membership.user_id' => $id)
-		));
+		));*/
 		$this -> loadModel('Organization');
-		$orgs['My Organizations'] = $this -> Organization -> find('list', array(
+		/*$orgs['My Organizations'] = $this -> Organization -> find('list', array(
 			'fields' => array('name'),
 			'conditions' => array('Organization.id' => Set::extract('/Membership/org_id', $ids))
 		));
 		$na_id = key($this -> Organization -> find('list', array(
 			'fields' => array('name'),
 			'conditions' => array('name' => 'N/A')
-		)));
-		$orgs['My Organizations'][$na_id] = 'N/A';
-		$orgs['All'] = $this -> Organization -> find('list', array('fields' => array('name')));
+		)));*/
+		//$orgs['My Organizations'][$na_id] = 'N/A';
+		$orgs['All Organizations'] = $this -> Organization -> find('list', array('fields' => array('name')));
 		$this -> set('organizations', $orgs);
 	}
 
@@ -697,7 +903,10 @@ class BillsController extends AppController
 		$submitter_id = $this -> Bill -> field('submitter', array('id' => $id));
 		if ($this -> Session -> read('User.id') == $submitter_id || $this -> isSGAExec())
 		{
-			$this -> Session -> setFlash('The bill has been submitted to the authors.');
+            $this -> Bill -> id = $id;
+            $this -> Bill -> saveField('submit_date', date('Y-m-d'));
+
+            $this -> Session -> setFlash('The bill has been submitted to the authors.');
 			$this -> updateBillOwners($id);
 			$this -> setBillStatus($id, 2, true);
 		}
@@ -839,6 +1048,23 @@ class BillsController extends AppController
 		if ($bill['Bill']['status'] == $this -> AUTHORED && $this -> isSGAExec())
 		{
 			$this -> setBillStatus($id, $this -> AGENDA, true, $bill['Bill']['category']);
+		}
+		else
+		{
+			$this -> redirect(array(
+				'action' => 'view',
+				$id
+			));
+		}
+
+	}
+
+	public function markAsPassed($id)
+	{
+		$bill = $this -> Bill -> findById($id);
+		if ($bill['Bill']['status'] == $this -> AGENDA && $this -> isSGAExec())
+		{
+			$this -> setBillStatus($id, $this -> PASSED, true, $bill['Bill']['category']);
 		}
 		else
 		{

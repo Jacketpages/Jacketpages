@@ -134,7 +134,7 @@ if ($lineitems != null)
 				echo $this -> Html -> tableCells($tableCells, $options, $options);
 			}
 		}
-debug($tableCells);
+//debug($tableCells);
 	}
 	echo $this -> Html -> tableEnd();
 	echo $this -> Html -> tag('h1', 'Amounts');

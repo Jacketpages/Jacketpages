@@ -157,12 +157,12 @@
 		        </div><!-- /#utility -->
 		      </div>
 		      
-		      <div id="site-search">
-				<?php echo $this -> Html -> link('Search', array(
+		      <!--<div id="site-search">
+				<?php /*echo $this -> Html -> link('Search', array(
 					'controller' => 'organizations',
 					'action' => ''),
-					array('id'=>'site-search-container-switch')); ?>
-		      </div>
+					array('id'=>'site-search-container-switch')); */?>
+		      </div>-->
 		      
 		    </div><!-- /#primary-menus-wrapper -->
 		    

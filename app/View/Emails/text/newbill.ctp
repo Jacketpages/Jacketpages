@@ -4,8 +4,8 @@ A new bill was created with you as an author. Title:
 Description:
 <?php echo $bill['Bill']['description']; ?>
 
-Dues Collected $
-<?php echo $bill['Bill']['dues']; ?>
+<!--Dues Collected $
+--><?php /*echo $bill['Bill']['dues']; */?>
 
 Fundraising:
 <?php echo $bill['Bill']['fundraising']; ?>

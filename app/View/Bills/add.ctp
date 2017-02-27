@@ -43,6 +43,12 @@ echo $this -> Form -> input('org_id', array(
 	'options' => $organizations,
 	'default' => 'Select Organization'
 ));
+
+//Number of Members
+echo $this -> Form -> input('dues', array('label' => 'Dues - Please include how often dues are paid (per semester, per year, etc.)'));
+echo $this -> Form -> input('ugMembers', array('label' => 'Number of Undergraduate Members'));
+echo $this -> Form -> input('gMembers', array('label' => 'Number of Graduate Members'));
+
 echo $this -> Form -> input('Authors.undr_auth_id', array(
 	'div' => 'input underAuthor_id',
 	'label' => 'Undergraduate Author',

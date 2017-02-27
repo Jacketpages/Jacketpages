@@ -26,8 +26,8 @@ Submitter:
 <?php if(isset($bill['Organization']['name'])):?>
 Organization:
 <?php echo $bill['Organization']['name']; ?>
-<br><br>
+<!--<br><br>
 Dues Collected: $
-<?php echo $bill['Bill']['dues']; ?>
+--><?php /*echo $bill['Bill']['dues']; */?>
 <br><br>
 <?php endif;?>
