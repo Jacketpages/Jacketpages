@@ -18,7 +18,7 @@ echo $this -> Form -> input('name');
 		'Frozen' => 'Frozen'
 	),
 	'default' => 'Active'
-));
+));*/
 echo $this -> Form -> input('tier', array(
 	'label' => 'Tier',
 	'options' => array(
@@ -28,7 +28,7 @@ echo $this -> Form -> input('tier', array(
 	),
 	'default' => '3'
 ));
-echo $this -> Form -> input('category', array(
+/*echo $this -> Form -> input('category', array(
 	'options' => $categories,
 	'label' => 'Category'
 ));
