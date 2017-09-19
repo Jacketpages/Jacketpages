@@ -16,7 +16,7 @@
 $this -> extend('/Common/common');
 
 // Define any crumbs for this view.
-echo $this -> Html -> addCrumb('All Organizations', '/organizations');
+echo $this->Html->addCrumb('Organizations', '/organizations');
 echo $this -> Html -> addCrumb($organization['Organization']['name'], '/organizations/view/' . $organization['Organization']['id']);
 
 // Define any extra sidebar links for this view
