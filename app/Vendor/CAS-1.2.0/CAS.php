@@ -333,6 +333,11 @@ class phpCAS {
 	 * and phpCAS::setDebug()).
 	 *
 	 * @param $server_version the version of the CAS server
+     * global $PHPCAS_CLIENT, $PHPCAS_INIT_CALL;
+     *
+     * phpCAS :: traceBegin();
+     * if (is_object($PHPCAS_CLIENT)) {
+     * phpCAS :: error($PHPCAS_INIT_CALL['method'] . '() has already been called (at ' . $PHPCAS_INIT_CALL['file'] . ':' . $PHPCAS_INIT_CALL['line'] . ')');
 	 * @param $server_hostname the hostname of the CAS server
 	 * @param $server_port the port the CAS server is running on
 	 * @param $server_uri the URI the CAS server is responding on
@@ -340,13 +345,14 @@ class phpCAS {
 	 *
 	 * @return a newly created CASClient object
 	 */
-	public static function client($server_version, $server_hostname, $server_port, $server_uri, $start_session = true) {
-		global $PHPCAS_CLIENT, $PHPCAS_INIT_CALL;
+	public static function client($server_version, $server_hostname, $server_port, $server_uri, $start_session = true)
+    {
+        global $PHPCAS_CLIENT, $PHPCAS_INIT_CALL;
 
-		phpCAS :: traceBegin();
-		if (is_object($PHPCAS_CLIENT)) {
-			phpCAS :: error($PHPCAS_INIT_CALL['method'] . '() has already been called (at ' . $PHPCAS_INIT_CALL['file'] . ':' . $PHPCAS_INIT_CALL['line'] . ')');
-		}
+        phpCAS:: traceBegin();
+        if (is_object($PHPCAS_CLIENT)) {
+            phpCAS:: error($PHPCAS_INIT_CALL['method'] . '() has already been called (at ' . $PHPCAS_INIT_CALL['file'] . ':' . $PHPCAS_INIT_CALL['line'] . ')');
+        }
 		if (gettype($server_version) != 'string') {
 			phpCAS :: error('type mismatched for parameter $server_version (should be `string\')');
 		}

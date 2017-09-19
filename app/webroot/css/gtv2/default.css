@@ -288,7 +288,7 @@ ul.secondary a:active {
  */
 
 /* ~496px and less */
-@media only screen and (max-width: 31em) {
+@media only screen and (max-width: 11em) {
   
   /* Form elements */
   input[type="text"],
@@ -301,7 +301,7 @@ ul.secondary a:active {
 }
 
 /* ~496px to ~816px */
-@media only screen and (min-width: 31em) and (max-width: 51em) {
+@media only screen and (min-width: 11em) and (max-width: 15em) {
   
   /* Form elements */
   input[type="text"],
@@ -324,7 +324,7 @@ ul.secondary a:active {
 }
 
 /* ~816px or more */
-@media only screen and (min-width: 51em) {
+@media only screen and (min-width: 15em) {
 
 }
 

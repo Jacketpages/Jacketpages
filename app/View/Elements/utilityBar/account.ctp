@@ -26,8 +26,8 @@ if($gt_member)
       'controller' => 'users',
       'action' => 'logout'
    ));
-	$myAccount[] = $this -> Html -> link('JacketPages Home', '/');
-	$header = $this -> Html -> link('My Account', '#');
+    /*$myAccount[] = $this -> Html -> link('JacketPages Home', '/');
+    $header = $this -> Html -> link('My Account', '#');*/
 }
 
 echo $this -> Html -> nestedList(array($header => $myAccount));

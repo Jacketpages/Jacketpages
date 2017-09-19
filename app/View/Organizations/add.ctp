@@ -11,7 +11,7 @@ $this -> start('middle');
 echo $this -> Form -> create();
 echo $this -> Form -> input('id');
 echo $this -> Form -> input('name');
-echo $this -> Form -> input('status', array(
+/*echo $this -> Form -> input('status', array(
 	'options' => array(
 		'Active' => 'Active',
 		'Inactive' => 'Inactive',
@@ -36,7 +36,7 @@ echo $this -> Form -> hidden('contact_id', array('id' => 'contact_id'));
 echo $this -> Form -> input('User.name', array(
 	'label' => 'Primary Contact Name -- You must select from suggestions when they appear',
 	'id' => 'userName'
-));
+));*/
 /*echo $this -> Form -> input('User.name', array(
  'label' => 'Primary Contact',
  'id' => 'primary_contact'
@@ -45,10 +45,10 @@ echo $this -> Form -> input('User.name', array(
  'label' => 'Primary Contact Email',
  'id' => 'primary_email'
  ));*/
-echo $this -> Form -> input('description');
+/*echo $this -> Form -> input('description');*/
 echo $this -> Form -> input('website');
-echo $this -> Form -> input('meeting_information');
-echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));
+/*echo $this -> Form -> input('meeting_information');
+echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));*/
 echo $this -> Form -> submit('Create');
 ?>
 <script>

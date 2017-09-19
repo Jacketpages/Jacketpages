@@ -77,6 +77,10 @@ class AppController extends Controller
 		$this -> set('sga_user', $this -> Acl -> check("Role/$level", 'sga_user'));
 		$this -> set('sga_exec', $this -> Acl -> check("Role/$level", 'sga_exec'));
 		$this -> set('sga_admin', $this -> Acl -> check("Role/$level", 'sga_admin'));
+        $this->set('sofo', $this->Acl->check("Role/$level", 'sofo'));
+        $this->set('president', $this->Acl->check("Role/$level", 'president'));
+        $this->set('sec', $this->Acl->check("Role/$level", 'sec'));
+        $this->set('treasurer', $this->Acl->check("Role/$level", 'treasurer'));
 		$this -> set('sofo', $this -> Acl -> check("Role/$level", 'sofo'));
 		$this -> set('lace', $this -> Acl -> check("Role/$level", 'lace'));
 		$this -> set('admin', $this -> Acl -> check("Role/$level", 'admin'));

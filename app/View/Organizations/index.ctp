@@ -26,7 +26,7 @@ if ($orgExportPerm)
 		'action' => 'export'
 	));
 }
-$sidebar[] = $this -> Html -> link('Silver Leaf Certified Organizations', array('action' => 'silverleaf'));
+/*$sidebar[] = $this -> Html -> link('Silver Leaf Certified Organizations', array('action' => 'silverleaf'));
 $sidebar[] = '<a>Organization&nbsp;Category<br /><br />
 <div id=\'category\'>'.
 $this -> Form -> create().
@@ -35,7 +35,7 @@ $this -> Form -> select('Organization.category', $categories, array(
 		'default' => $this -> Session -> read('Search.category'),
 		'onchange' => 'submit()',
 		'empty' => 'All'
-	)).'</div></a>';
+	)).'</div></a>';*/
 
 echo $this -> Html -> nestedList($sidebar);
 $this -> end();

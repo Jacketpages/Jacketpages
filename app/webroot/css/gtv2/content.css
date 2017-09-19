@@ -129,7 +129,7 @@ body.node-type-vertical-landing-page #content .column-right .block { padding: 0 
  */
 
 /* ~496px and less */
-@media only screen and (max-width: 31em) {
+@media only screen and (max-width: 11em) {
 
   .articles.block-count-2 .block,
   .articles.block-count-3 .block,
@@ -163,7 +163,7 @@ body.node-type-vertical-landing-page #content .column-right .block { padding: 0 
 }
 
 /* ~496px to ~816px */
-@media only screen and (min-width: 31em) and (max-width: 51em) {
+@media only screen and (min-width: 11em) and (max-width: 15em) {
 
   .articles.block-count-3 .block,
   .articles.block-count-4 .block,
@@ -179,7 +179,7 @@ body.node-type-vertical-landing-page #content .column-right .block { padding: 0 
 }
 
 /* ~816px or more */
-@media only screen and (min-width: 51em) {
+@media only screen and (min-width: 15em) {
 
 }
 

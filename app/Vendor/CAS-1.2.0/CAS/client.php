@@ -946,8 +946,12 @@ class CASClient
 		unset($_SESSION['phpCAS']['auth_checked']);
 		if ( $this->isAuthenticated() ) {
 			phpCAS::trace('user already authenticated; renew');
-			$this->redirectToCas(false,true);
+            #phpCAS::renewAuthentication();
+            phpCAS::trace('client.php line 950 - renew authentication without redirecting hopefully');
+            #$this->redirectToCas(false,true); #TODO - solve authentication issue
 		} else {
+            phpCAS::trace('user not authenticated; redirect');
+            #maybe add a checkAuthentication()? or forceAuthentication() - TODO solve authentication issue
 			$this->redirectToCas();
 		}
 		phpCAS::traceEnd();
@@ -984,7 +988,7 @@ class CASClient
 	 *
 	 * @hideinitializer
 	 */
-	private $_cache_times_for_auth_recheck = 0;
+    private $_cache_times_for_auth_recheck = 0; #maybe I should be caching authentication a few times? TODO - fix authentication issues
 
 	/**
 	 * Set the number of times authentication will be cached before rechecked.
@@ -1065,7 +1069,7 @@ class CASClient
 				phpCAS::trace( "Prepare redirect to remove ticket: ".$this->getURL() );
 				phpCAS::traceExit();
 				exit();
-			}else{
+            } else {
 				// the user has already (previously during the session) been
 				// authenticated, nothing to be done.
 				phpCAS::trace('user was already authenticated, no need to look for tickets');
@@ -1254,7 +1258,6 @@ class CASClient
 		phpCAS::traceExit();
 		exit();
 	}
-
 
 	/**
 	 * This method is used to logout from CAS.

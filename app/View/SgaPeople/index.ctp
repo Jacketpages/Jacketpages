@@ -94,9 +94,9 @@ $this -> start('search');
 			<?php
 			echo $this -> Form -> input('status', array(
 				'options' => array(
-					'all' => 'All',
-					'active' => 'Active',
-					'inactive' => 'Inactive'
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                    'all' => 'All'
 				),
 				'selected' => $this -> Session -> read('SgaPerson.status')
 			));
