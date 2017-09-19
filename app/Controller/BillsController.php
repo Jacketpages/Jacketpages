@@ -854,7 +854,7 @@ class BillsController extends AppController
 			'conditions' => array('name' => 'N/A')
 		)));*/
 		//$orgs['My Organizations'][$na_id] = 'N/A';
-		$orgs['All Organizations'] = $this -> Organization -> find('list', array('fields' => array('name')));
+        $orgs['All Organizations'] = $this->Organization->find('list', array('fields' => array('name'), 'conditions' => array('Organization.status !=' => array('Inactive', 'Deleted'))));
 		$this -> set('organizations', $orgs);
 	}
 
