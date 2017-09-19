@@ -38,15 +38,15 @@ if ($sga_exec || $lace)
 		)
 	));
 }
-echo $this -> Form -> input('category', array(
+/*echo $this -> Form -> input('category', array(
 	'options' => $categories,
 	'label' => 'Category'
-));
-echo $this -> Form -> hidden('contact_id', array('id' => 'contact_id'));
+));*/
+/*echo $this -> Form -> hidden('contact_id', array('id' => 'contact_id'));
 echo $this -> Form -> input('User.name', array(
 	'label' => 'Primary Contact Name -- You must select from suggestions when they appear',
 	'id' => 'userName'
-));
+));*/
 /*echo $this -> Form -> input('User.name', array(
  'label' => 'Primary Contact',
  'id' => 'primary_contact'
@@ -55,17 +55,17 @@ echo $this -> Form -> input('User.name', array(
  'label' => 'Primary Contact Email',
  'id' => 'primary_email'
  ));*/
-echo $this -> Form -> input('description', array(
+/*echo $this -> Form -> input('description', array(
 	'label' => 'Description',
 	'type' => 'textarea'
-));
+));*/
 echo $this -> Form -> input('website', array('label' => 'Website'));
-echo $this -> Form -> input('meeting_information', array('label' => 'Meeting Information'));
-echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));
+/*echo $this -> Form -> input('meeting_information', array('label' => 'Meeting Information'));
+echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));*/
 ?>
-<div id='date'>
+<!--<div id='date'>
 	<?php
-	if ($lace)
+/*	if ($lace)
 	{
 		echo $this -> Form -> input('alcohol_form', array(
 			'type' => 'text',
@@ -92,8 +92,8 @@ echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));
 			'id' => 'forms3'
 		));
 	}
-	?>
-</div>
+	*/ ?>
+</div>-->
 </fieldset>
 <?php echo $this -> Form -> end(__('Submit', true)); ?>
 <script>
