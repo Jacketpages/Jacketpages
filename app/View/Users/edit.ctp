@@ -28,6 +28,10 @@ if($admin)
 	echo $this -> Form -> input('level', array('label' => 'Level', 'options' => array(
 	'admin' => 'Administrator',
 	'lace' => 'Leadership and Civic Engagment',
+        'sofo' => 'SOFO',
+        'president' => 'SGA President',
+        'sec' => 'GSS/UHR Secretary',
+        'treasurer' => 'GSS/UHR Treasurer',
 	'sga_exec' => 'SGA Executive',
 	'sga_user' => 'SGA User',
 	'gt_member' => 'General GT User'

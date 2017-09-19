@@ -92,7 +92,7 @@ body.cke_editable { padding: 5px; }
  */
 
 /* ~496px and less */
-@media only screen and (max-width: 31em) {
+@media only screen and (max-width: 11em) {
   
   .editor-float-left,
   .editor-float-left-simple,

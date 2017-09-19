@@ -33,11 +33,10 @@ if($sga_exec){
 $this -> start('search');
 
 echo $this -> element('search', array('action' =>  'index', 'endForm' => 1));
+$this->end();
+
+$this->start('listing');
 ?>
-
-
-<?php $this -> end();
-   $this -> start('listing');?>
 <div id='forupdate'>
 <!-- Begin users table -->
 <table class='listing'>

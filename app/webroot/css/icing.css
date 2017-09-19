@@ -165,7 +165,9 @@ form > .input {
  */
 #content {
 	z-index: 80;
-	width: 1000px;
+    width: 96%;
+    max-width: 1000px;
+    /*padding: 1% 5%;*/
 	margin: 0px auto 0px auto;
 	position: relative;
 	float: none;
@@ -177,7 +179,9 @@ form > .input {
 	margin: 18px 0px 0px 0px;
 	padding: 0 0px;
 	float: left;
-	width: 170px;
+    width: 17%;
+    max-width: 170px;
+
 }
 /**
  * Removes the bullet from the top level list
@@ -217,7 +221,8 @@ form > .input {
  */
 #middle {
 	float: right;
-	width: 805px;
+    width: 80%;
+    max-width: 805px;
 	min-height: 400px;
 	margin-top: 10px;
 }
@@ -226,7 +231,6 @@ form > .input {
 */
 #middle_full {
 	min-height: 400px;
-	margin-top: 10px;
 	margin-top: 10px;
 }
 

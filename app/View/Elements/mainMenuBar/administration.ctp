@@ -4,13 +4,14 @@ if ($lace || $sga_exec)
 {
 ?>
 
-<?php echo $this->Html->link('<span>Administration</span>', '#', array('escape' => false))
+    <?php echo $this->Html->link('<span>Admin</span>', '#', array('escape' => false))
 ?>
 <ul class="menu">
-	<li class="leaf">
-		<?php echo $this->Html->link('Manage Badges', array('controller' => 'badges', 'action' => 'index'))
-		?>
-	</li>
+    <!--<li class="leaf">
+		<?php /*echo $this->Html->link('Manage Badges', array('controller' => 'badges', 'action' => 'index'))
+		*/
+    ?>
+	</li>-->
 	<?php
 	if ($sga_exec) {
 	?>

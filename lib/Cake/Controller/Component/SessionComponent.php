@@ -68,6 +68,8 @@ class SessionComponent extends Component {
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::read
  */
 	public function read($name = null) {
+        if ($this->Session != null)
+            $this->Session->renew();
 		return CakeSession::read($name);
 	}
 

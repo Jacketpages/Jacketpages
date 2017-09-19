@@ -257,7 +257,7 @@ class UsersController extends AppController
 	 * Writes often used User variables to the Session.
 	 */
 	public function login()
-	{
+    {
 		//Set debug mode
 		phpCAS::setDebug();
 		//Initialize phpCAS
@@ -284,7 +284,7 @@ class UsersController extends AppController
 			$this -> Session -> write('Auth.User', 'student');
 		}
 		$this -> Session -> renew();
-		$this -> redirect($this -> Auth -> redirect());
+        $this->redirect($this->Auth->redirectURL()); #TODO Change redirecturl to requested url so you dont lose spot on auth
 
 	}
 

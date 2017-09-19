@@ -25,7 +25,7 @@
   box-shadow: 0px 0px 10px #C4C4C4;
   left: 0;
   position: absolute;
-  top: -132px;
+    top: -134px;
   width: 100%;
   z-index: 100;
 }
@@ -103,12 +103,12 @@
 
 /* Masthead */
 #masthead {
-  min-height: 198px;
+    /*min-height: 198px;*/
   position: relative;
 }
 #identity {
-  position: absolute;
-  top: 42px;
+    position: relative;
+    margin-top: 42px;
   width: 100%;
   z-index: 100;
 }
@@ -117,6 +117,7 @@
   background: none repeat scroll 0 0 rgba(0, 0, 0, 0.85);
   height: 90px;
   margin: 0 auto;
+    /*padding: 0 5%;*/
   max-width: 1024px;
   overflow: hidden;
 }
@@ -180,8 +181,8 @@
 
 /* Primary menus */
 #primary-menus {
-  position: absolute;
-  top: 132px;
+    position: relative;
+    /*top: 132px;*/
   width: 100%;
   z-index: 100;
 }
@@ -245,10 +246,13 @@
 #main-menu-wrapper {
   float: left;
   position: relative;
-}
-#main-menu-wrapper ul, #action-items {
   background-color: #EEB211;
+    /*padding-left: 4%;*/
+}
+
+#main-menu-wrapper ul, #action-items {
   float: left;
+    background-color: #EEB211;
   font-size: .929em;
   line-height: 1.7;
   list-style: none;
@@ -524,6 +528,7 @@
   background-color: #023d7b;
   border-bottom: 1px solid #072f59;
   margin: 0 auto;
+    /*padding: 0 5%;*/
 }
 #breadcrumb ul, #breadcrumb li {
   float: left;
@@ -910,7 +915,7 @@ div:hover > .gt-tools-contextual-link.populated { visibility: visible; }
  */
 
 /* ~496px and less */
-@media only screen and (max-width: 31em) {
+@media only screen and (max-width: 11em) {
 
   /*
    * Masthead
@@ -1165,7 +1170,7 @@ div:hover > .gt-tools-contextual-link.populated { visibility: visible; }
 }
 
 /* ~496px to ~816px */
-@media only screen and (min-width: 31em) and (max-width: 51em) {
+@media only screen and (min-width: 11em) and (max-width: 15em) {
 
   /*
    * Masthead
@@ -1386,7 +1391,7 @@ div:hover > .gt-tools-contextual-link.populated { visibility: visible; }
 }
 
 /* ~816px or more */
-@media only screen and (min-width: 51em) {
+@media only screen and (min-width: 15em) {
 
   .superfooter-resource-links ul.menu { display: block !important; }
 

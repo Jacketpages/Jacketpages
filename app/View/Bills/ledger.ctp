@@ -18,6 +18,10 @@ $this -> end();
 $this -> assign("title", "Finance Ledger");
 $this -> start('listing');
 
+if (empty($bills)) {
+    echo $this->Html->tag('h1', $org_name . " has no passed bills.");
+}
+
 foreach($bills as $bill) {
 
     echo $this -> Html -> tag('h1', $bill['bill']['Bill']['number'] . " - " . $bill['bill']['Bill']['title']);

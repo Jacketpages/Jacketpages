@@ -163,7 +163,7 @@ $this -> start('middle');
 	//echo $this -> Html -> para('leftalign', $organization['Organization']['description']);
 	if (stristr($organization['Organization']['website'], "http://") ==  false)
 	{
-		$site = "http://" . $organization['Organization']['website'];
+        $site = $organization['Organization']['website'];
 	} 
 	else
 	{

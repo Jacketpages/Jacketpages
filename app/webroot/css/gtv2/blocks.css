@@ -174,7 +174,7 @@
  */
 
 /* ~496px and less */
-@media only screen and (max-width: 31em) {
+@media only screen and (max-width: 11em) {
   
   /**
    * Content Lead/Close Regions 
@@ -223,7 +223,7 @@
 }
 
 /* ~496px to ~816px */
-@media only screen and (min-width: 31em) and (max-width: 51em) {
+@media only screen and (min-width: 11em) and (max-width: 15em) {
   
   /**
    * Content Lead/Close Regions 
@@ -284,7 +284,7 @@
 }
 
 /* ~816px or more */
-@media only screen and (min-width: 51em) {
+@media only screen and (min-width: 15em) {
   
   
 }

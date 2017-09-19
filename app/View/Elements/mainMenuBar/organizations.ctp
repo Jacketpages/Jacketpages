@@ -1,5 +1,12 @@
+<?php
+if ($gt_member) {
+    ?>
+    <?php echo $this->Html->link('<span>Organizations</span>', array('controller' => 'organizations', 'action' => 'index'), array('escape' => false)) ?>
 
-<?php echo $this->Html->link('<span>Organizations</span>', array('controller' => 'organizations', 'action' => 'index'), array('escape' => false))?>
+    <?php
+}
+?>
+
 <!--<ul class="menu">
 	<li class="leaf first <?php /*echo (!$gt_member)?'last':''*/?>">
 <?php /*echo $this->Html->link('View All Organizations', array('controller' => 'organizations', 'action' => 'index'))*/?>
