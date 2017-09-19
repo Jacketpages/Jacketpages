@@ -59,7 +59,7 @@ echo $this -> Form -> input('User.name', array(
 	'label' => 'Description',
 	'type' => 'textarea'
 ));*/
-echo $this -> Form -> input('website', array('label' => 'Website'));
+echo $this->Form->input('website', array('label' => 'Orgsync Website'));
 /*echo $this -> Form -> input('meeting_information', array('label' => 'Meeting Information'));
 echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));*/
 ?>
