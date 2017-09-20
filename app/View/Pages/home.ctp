@@ -25,50 +25,56 @@
 
     echo $this->Html->tag('h1', 'JacketPages Overview');
     ?>
+    <!--TODO - Clean up this CSS-->
     <table>
         <col width="20%">
         <col width="80%">
         <tr>
-            <td><img class="home_icon" src="/img/icons_home/bill.jpg"></td>
+            <td style="vertical-align:middle"><img class="home_icon" src="/img/icons_home/bill.jpg"></td>
             <td style="vertical-align:middle">
                 <h4>Bills</h4>
                 <ul style="padding-left: 1.6em">
-                    <li>Description</li>
-                    <li>Description</li>
-                    <li>Description</li>
+                    <li>Review financial bills allocating the Student Activity Fee to student organizations that have
+                        been voted on or will be voted on soon
+                    </li>
+                    <li>Check out resolutions voted on affirming the student body opinion</li>
+                    <li>Submit a financial request bill for your organization or a resolution supporting your cause</li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td><img src="/img/icons_home/org.jpg"></td>
-            <td style="vertical-align:  middle">
+            <td style="vertical-align:middle"><img src="/img/icons_home/org.jpg"></td>
+            <td style="vertical-align:middle">
                 <h4>Organizations</h4>
                 <ul style="padding-left: 1.6em">
-                    <li>Description</li>
-                    <li>Description</li>
-                    <li>Description</li>
+                    <li>Examine what bills have been submitted by organizations on campus</li>
+                    <li>View the financial allocations received by student organizations</li>
+                    <li>Follow the links to access organizations' information on OrgSync</li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td><img src="/img/icons_home/resources.png"></td>
-            <td style="vertical-align:  middle">
+            <td style="vertical-align:middle"><img src="/img/icons_home/resources.png"></td>
+            <td style="vertical-align:middle">
                 <h4>Resources</h4>
                 <ul style="padding-left: 1.6em">
-                    <li>Description</li>
-                    <li>Description</li>
-                    <li>Description</li>
+                    <li>Learn more about the methods SGA uses to allocate funding to student organizations, bills and
+                        budgets, and learn how to submit financial requests
+                    </li>
+                    <li>Take a look at the budgets allocated for the current and prior fiscal years</li>
+                    <li>Calculate the maximum funding you can receive for travel using the Travel Calculator</li>
+                    <li>Get answers to your frequently asked questions</li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td><img src="/img/icons_home/sga.png"></td>
-            <td style="vertical-align:  middle">
+            <td style="vertical-align:middle"><img src="/img/icons_home/sga.png"></td>
+            <td style="vertical-align: middle">
                 <h4>SGA</h4>
                 <ul style="padding-left: 1.6em">
-                    <li>Description</li>
-                    <li>Description</li>
-                    <li>Description</li>
+                    <li>Get to know your Undergraduate Representatives and Graduate Student Senators</li>
+                    <li>Contact SGA members for further information or support</li>
+                    <li>Access the SGA website for more information on SGA initiatives</li>
                 </ul>
             </td>
         </tr>
