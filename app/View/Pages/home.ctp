@@ -30,7 +30,8 @@
         <col width="20%">
         <col width="80%">
         <tr>
-            <td style="vertical-align:middle"><img class="home_icon" src="/img/icons_home/bill.jpg"></td>
+            <td style="vertical-align:middle"><a href="/bills"><img class="home_icon"
+                                                                    src="/img/icons_home/bill.jpg"></a></td>
             <td style="vertical-align:middle">
                 <h4>Bills</h4>
                 <ul style="padding-left: 1.6em">
@@ -43,7 +44,7 @@
             </td>
         </tr>
         <tr>
-            <td style="vertical-align:middle"><img src="/img/icons_home/org.jpg"></td>
+            <td style="vertical-align:middle"><a href="/organizations"><img src="/img/icons_home/org.jpg"></a></td>
             <td style="vertical-align:middle">
                 <h4>Organizations</h4>
                 <ul style="padding-left: 1.6em">
@@ -54,7 +55,8 @@
             </td>
         </tr>
         <tr>
-            <td style="vertical-align:middle"><img src="/img/icons_home/resources.png"></td>
+            <td style="vertical-align:middle"><a href="/resources/view0"><img src="/img/icons_home/resources.png"></a>
+            </td>
             <td style="vertical-align:middle">
                 <h4>Resources</h4>
                 <ul style="padding-left: 1.6em">
@@ -68,7 +70,7 @@
             </td>
         </tr>
         <tr>
-            <td style="vertical-align:middle"><img src="/img/icons_home/sga.png"></td>
+            <td style="vertical-align:middle"><a href="/sga_people"><img src="/img/icons_home/sga.png"></a></td>
             <td style="vertical-align: middle">
                 <h4>SGA</h4>
                 <ul style="padding-left: 1.6em">
