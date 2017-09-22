@@ -40,9 +40,13 @@ class ResourcesController extends AppController
             $email = new CakeEmail();
             $email->config('default');
             $email->from(array('gtsgacampus@gmail.com' => 'JacketPages - Contact Us'));
-            $email->to($submitter);
-            $email->replyTo($submitter);
-            $email->cc($vpfemail);
+            if ($submitter != null) {
+                $email->to($submitter);
+                $email->replyTo($submitter);
+                $email->cc($vpfemail);
+            } else { //for anonymous feedback
+                $email->to($vpfemail);
+            }
             $email->subject('Contact Us - JacketPages');
             $email->template('contact');
             $email->emailFormat('html');
@@ -66,6 +70,5 @@ class ResourcesController extends AppController
             $this->set('email', $user['User']['email']);
         }
     }
-
 }
 ?>
