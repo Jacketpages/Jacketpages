@@ -23,10 +23,11 @@ if($gt_member)
 
     <?php echo $this->Html->link('<span>Support</span>', array('controller' => 'users', 'action' => 'view', $this->Session->read('User.id')), array('escape' => false)) ?>
 	<ul class="menu">
+        <!--<li class="leaf first">
+            <?php /*echo $this->Html->link('Help', '#', array('onclick' => 'openHelp()')); */
+        ?>
+		</li>-->
 		<li class="leaf first">
-            <?php echo $this->Html->link('Help', '#', array('onclick' => 'openHelp()')); ?>
-		</li>
-		<li class="leaf">
             <?php echo $this->Html->link('<span>Update Name/Email</span>', array('controller' => 'users', 'action' => 'view', $this->Session->read('User.id')), array('escape' => false)) ?>
 		</li>
 		<li class="leaf last">
