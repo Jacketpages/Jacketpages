@@ -45,6 +45,10 @@ if ($gt_member) {
 			$organization['Organization']['id']
 		));
 	}
+    $sidebar[] = $this->Html->link(__('Finance Stats', true), array(
+        'action' => 'stats',
+        $organization['Organization']['id']
+    ));
 }
 
 /*if ($lace || $isOfficer || $isMember)

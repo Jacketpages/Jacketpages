@@ -550,5 +550,91 @@ ORDER BY o.`name` ASC
 			));
 	}
 
+    function stats($org_id = null)
+    {
+        if ($org_id == null) {
+            $this->Session->setFlash('Organization not found.');
+            $this->redirect(array(
+                'controller' => 'organizations',
+                'action' => 'index'
+            ));
+        }
+
+        $this->Organization->id = $org_id;
+        $organization = $this->Organization->read();
+
+        $this->calculateStats($org_id);
+
+        $this->set('organization', $organization);
+
+        $this->set('budgetIsOpen', false);
+        $this->set('orgAdminPerm', false);
+    }
+
+    function calculateStats($org_id)
+    {
+        $this->loadModel('LineItem');
+        /*$this -> set('final', $this -> LineItem -> find('all', array(
+            'conditions' => array(
+                'org_id' => $org_id,
+                'state' => 'Final'
+            ),
+            'order' => 'line_number asc'
+        )));*/
+
+        $fy_totals[] = array();
+        $first_fy = 14;
+        $end_fy = 18;
+        //TODO update to go through current fiscal year
+        for ($fy = $first_fy; $fy <= $end_fy; $fy++) {
+            $fy_totals_year = $this->LineItem->find('all', array(
+                "joins" => array(
+                    array(
+                        "table" => "bills",
+                        "alias" => "Bills",
+                        "type" => "LEFT",
+                        "conditions" => array(
+                            "LineItem.bill_id = Bills.id"
+                        )
+                    )
+                ),
+                'fields' => array(
+                    "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final',amount, 0)) AS " . $fy . "PY",
+                    "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final',amount, 0)) AS " . $fy . "CO",
+                    "SUM(IF(STATE = 'Final',amount, 0)) AS " . $fy . "TOTAL",
+                ),
+                'conditions' => array(
+                    /*'bill_id' => $id,*/
+                    'Bills.org_id' => $org_id,
+                    'Bills.number LIKE' => $fy . '%',
+                    'struck <>' => 1
+                )
+            ));
+            array_push($fy_totals[0], $fy_totals_year[0][0]);
+        }
+
+
+        // Set the amounts for prior year, capital outlay, and total
+        $totals = $this->LineItem->find('all', array(
+            'fields' => array(
+                "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final',amount, 0)) AS PY_FINAL",
+                "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final',amount, 0)) AS CO_FINAL",
+                "SUM(IF(STATE = 'Final',amount, 0)) AS TOTAL_FINAL"
+            ),
+            'conditions' => array(
+                /*'bill_id' => $id,*/
+                'org_id' => $org_id,
+                'struck <>' => 1
+            )
+        ));
+
+
+        $this->set('total', $totals[0][0]);
+        $this->set('fy_totals', $fy_totals[0]);
+        $this->set('end_fy', $end_fy);
+        $this->set('first_fy', $first_fy);
+    }
+
 }
 ?>
+
