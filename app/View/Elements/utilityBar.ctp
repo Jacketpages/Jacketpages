@@ -10,7 +10,7 @@
 echo $this -> Html -> div(null, null, array('id' => 'utilityBarWrapper'));
 echo $this -> Html -> div("utilityMenu", null, array('id' => 'utilityBar'));
 
-echo $this -> element('utilityBar/account');
+echo $this->element('utilityBar/support');
 echo $this -> element('utilityBar/bills');
 echo $this -> element('utilityBar/organizations');
 echo $this -> element('utilityBar/student_government');

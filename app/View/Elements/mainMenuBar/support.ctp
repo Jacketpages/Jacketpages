@@ -21,18 +21,16 @@ if($gt_member)
 {
 ?>
 
-	<?php echo $this->Html->link('<span>My Account</span>', array('controller' => 'users', 'action' => 'view', $this -> Session -> read('User.id')), array('escape' => false))?>
+    <?php echo $this->Html->link('<span>Support</span>', array('controller' => 'users', 'action' => 'view', $this->Session->read('User.id')), array('escape' => false)) ?>
 	<ul class="menu">
 		<li class="leaf first">
             <?php echo $this->Html->link('Help', '#', array('onclick' => 'openHelp()')); ?>
 		</li>
 		<li class="leaf">
-            <?php /*echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout'))*/
-            ?>
+            <?php echo $this->Html->link('<span>Update Name/Email</span>', array('controller' => 'users', 'action' => 'view', $this->Session->read('User.id')), array('escape' => false)) ?>
 		</li>
 		<li class="leaf last">
-            <?php /*echo $this->Html->link('JacketPages Home', '/')*/
-            ?>
+            <?php echo $this->Html->link('Contact Us', array('controller' => 'resources', 'action' => 'contact')) ?>
 		</li>
 	</ul>
 	
