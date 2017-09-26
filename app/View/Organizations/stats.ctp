@@ -114,23 +114,78 @@ echo $this->Html->tableBegin(array(
     'id' => 'outcomes'
 ));
 $fy_headers[] = '';
-$py_vals[] = 'PY';
-$co_vals[] = 'CO';
-$tot_vals[] = 'Total';
+$py_vals_currency[] = 'PY';
+$co_vals_currency[] = 'CO';
+$tot_vals_currency[] = 'Total';
 for ($fy = $first_fy; $fy <= $end_fy; $fy++) {
     $i++;
     $fy_headers[] = 'FY' . $fy;
-    $py_vals[] = $this->Number->currency($fy_totals[$i][$fy . 'PY'], 'USD');
-    $co_vals[] = $this->Number->currency($fy_totals[$i][$fy . 'CO'], 'USD');
-    $tot_vals[] = $this->Number->currency($fy_totals[$i][$fy . 'TOTAL'], 'USD');
+    $py_val =/* $this->Number->currency(*/
+        (float)$fy_totals[$i][$fy . 'PY']/*, 'USD')*/
+    ;
+    $co_val = (float)$fy_totals[$i][$fy . 'CO'];
+    $tot_val = $this->Number->currency($fy_totals[$i][$fy . 'TOTAL'], 'USD');
+
+    $py_vals[] = $py_val;
+    $co_vals[] = $co_val;
+    $tot_vals[] = $tot_val;
+
+    $py_vals_currency[] = $this->Number->currency($py_val);
+    $co_vals_currency[] = $this->Number->currency($co_val);
+    $tot_vals_currency[] = $this->Number->currency($tot_val);
+
 }
 
 echo $this->Html->tableHeaders($fy_headers);
-echo $this->Html->tableCells($py_vals);
-echo $this->Html->tableCells($co_vals);
-echo $this->Html->tableCells($tot_vals);
+echo $this->Html->tableCells($py_vals_currency);
+echo $this->Html->tableCells($co_vals_currency);
+echo $this->Html->tableCells($tot_vals_currency);
 echo $this->Html->tableEnd();
+array_shift($fy_headers);
 
+
+echo $this->Html->tag('h1', 'Allocation by Fiscal Year');
+//CHART!!!!!!!!!!!!
+use Ghunti\HighchartsPHP\Highchart;
+use Ghunti\HighchartsPHP\HighchartJsExpr;
+
+$chart = new Highchart();
+
+$chart->chart->renderTo = "container";
+$chart->chart->type = "area";
+$chart->title->text = "Student Activity Fee Allocation per Fiscal Year";
+$chart->subtitle->text = "From Bills";
+$chart->xAxis->categories = $fy_headers;
+$chart->xAxis->tickmarkPlacement = "on";
+$chart->xAxis->title->enabled = false;
+$chart->yAxis->title->text = "";
+$chart->yAxis->labels->formatter = new HighchartJsExpr("function() { return this.value}");
+$chart->tooltip->formatter = new HighchartJsExpr(
+/*"function() { return '' + this.x +': '+ Highcharts.numberFormat(this.y, 0, ',') +' millions';}"*/
+    "function() { return '' + this.series.name +': $'+ Highcharts.numberFormat(this.y, 0, '.', ',');}"
+);
+$chart->plotOptions->area->stacking = "normal";
+$chart->plotOptions->area->lineColor = "#666666";
+$chart->plotOptions->area->lineWidth = 1;
+$chart->plotOptions->area->marker->lineWidth = 1;
+$chart->plotOptions->area->marker->lineColor = "#666666";
+
+$chart->series[] = array(
+    'name' => "PY",
+    'data' => $py_vals
+);
+$chart->series[] = array(
+    'name' => "CO",
+    'data' => $co_vals
+);
+
+?>
+
+    <div id="container"></div>
+    <script src="http://code.highcharts.com/highcharts.src.js"></script>
+    <script type="text/javascript"><?php echo $chart->render("chart1"); ?></script>
+
+<?php
 
 //echo $this -> Html -> tag('h1', 'Budgets');
 $this->end();

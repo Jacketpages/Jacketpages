@@ -5,6 +5,9 @@
  */
 App::uses('Folder', 'Utility');
 App::uses('File', 'Utility');
+
+App::import('Vendor', array('file' => 'autoload'));
+
 class OrganizationsController extends AppController
 {
 	/**
@@ -584,7 +587,7 @@ ORDER BY o.`name` ASC
 
         $fy_totals[] = array();
         $first_fy = 14;
-        $end_fy = 18;
+        $end_fy = 17;
         //TODO update to go through current fiscal year
         for ($fy = $first_fy; $fy <= $end_fy; $fy++) {
             $fy_totals_year = $this->LineItem->find('all', array(
@@ -633,6 +636,10 @@ ORDER BY o.`name` ASC
         $this->set('fy_totals', $fy_totals[0]);
         $this->set('end_fy', $end_fy);
         $this->set('first_fy', $first_fy);
+    }
+
+    public function chart($id = null)
+    {
     }
 
 }
