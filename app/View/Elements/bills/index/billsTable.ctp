@@ -7,8 +7,7 @@
 		$this -> Paginator -> sort('Status.name', 'Status'),
 		$this -> Paginator -> sort('submit_date', 'Submit Date')
 	), array('class' => 'links'));
-	foreach ($bills as $bill)
-	{
+	foreach ($bills as $bill) {
 		echo $this -> Html -> tableCells(array(
 			$this -> Html -> link($bill['Bill']['title'], array(
 				'controller' => 'bills',

@@ -610,6 +610,7 @@ ORDER BY o.`name` ASC
                     /*'bill_id' => $id,*/
                     'Bills.org_id' => $org_id,
                     'Bills.number LIKE' => $fy . '%',
+                    'Bills.status' => '6',
                     'struck <>' => 1
                 )
             ));
