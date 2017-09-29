@@ -12,26 +12,81 @@ class CalculationsController extends AppController
     /**
      * Overidden $components, $helpers, and $uses
      */
-    public $helpers = array(/*'Html',
-        'Form',
+    public $helpers = array(
+        'Session',
+        'Form'
+        /*'Html',
         'Paginator',
         'Js',
         'Csv',
         'Excel',
         'Text'*/
     );
-    public $components = array(/*'Acl',
+    public $components = array(
+        'Session'
+        /*'Acl',
         'RequestHandler',
         'Session',
         'Csv'*/
     );
 
+    private $initials = array(
+        '14' => array(
+            'py' => 423703,
+            'co' => 699210,
+            'ulr' => 20367,
+            'glr' => 9633
+        ),
+        '15' => array(
+            'py' => 515664,
+            'co' => 948402,
+            'ulr' => 21000,
+            'glr' => 9000
+        ),
+        '16' => array(
+            'py' => 549692,
+            'co' => 1231652,
+            'ulr' => 21000,
+            'glr' => 9000
+        ),
+        '17' => array(
+            'py' => 422940,
+            'co' => 1458110,
+            'ulr' => 21000,
+            'glr' => 9000
+        ),
+        '18' => array(
+            'py' => 999999,
+            'co' => 999999,
+            'ulr' => 21000,
+            'glr' => 9000
+        ),
+    );
+
     public function ledger()
     {
-        $fy = '17';
+        if ($this->request->is('ajax')) {
+            $this->layout = 'list';
+        }
+
+        //TODO make time scalable automatically
+        $first_fy = 14;
+        $end_fy = 18;
+        $fys = array();
+        for ($i = $first_fy; $i <= $end_fy; $i++) {
+            $fys[$i] = 'FY' . $i;
+        }
+        $this->set('fys', $fys);
+
+        if (!isset($this->request->data['Ledger']['fy']) || $this->request->data('submit') === 'Clear') {
+            $this->request->data['Ledger']['fy'] = $end_fy;
+        }
+
+        $fy = $this->request->data['Ledger']['fy'];
 
         $this->loadModel('Bills');
-        $this->paginate = array(
+        //$this->paginate = array(
+        $bills = $this->Bills->find('all', array(
             'joins' => array(
                 array(
                     "table" => "organizations",
@@ -56,15 +111,19 @@ class CalculationsController extends AppController
             ),
             'order' => 'Bills.number',
             'limit' => 300
-        );
-        $bills = $this->paginate('Bills');
-        $this->set('bills', $bills);
+        ));
+        //$bills = $this->paginate('Bills');
+        //echo Debugger::exportVar($bills);
 
         $this->loadModel('LineItem');
         $bill_totals[] = array();
-        foreach ($bills as $bill) {
-            $bill_tot = $this->LineItem->find('all', array(
-                "joins" => array(
+        $accounts[] = array();
+        $accounts['py']['allocated'] = 0;
+        $accounts['co']['allocated'] = 0;
+        //foreach ($bills as $bill) {
+        for ($i = 0; $i < sizeof($bills); $i++) {
+            $total = $this->LineItem->find('all', array(
+                'joins' => array(
                     array(
                         "table" => "bills",
                         "alias" => "Bills",
@@ -80,57 +139,27 @@ class CalculationsController extends AppController
                     "SUM(IF(STATE = 'Final', amount, 0)) AS TOTAL",
                 ),
                 'conditions' => array(
-                    'Bills.id' => $bill['Bills']['id'],
+                    'Bills.id' => $bills[$i]['Bills']['id'],
                     'struck <>' => 1
                 )
             ));
-            array_push($bill_totals, $bill_tot[0]);
+            $bills[$i]['Bills']['py'] = $total[0][0]['PY'];
+            $bills[$i]['Bills']['co'] = $total[0][0]['CO'];
+            $bills[$i]['Bills']['tot'] = $total[0][0]['TOTAL'];
+            $bills[$i]['Bills']['org_name'] = $bills[$i]['Organizations']['name'];
+            unset($bills[$i]['Organizations']);
+            $accounts['py']['allocated'] += $bills[$i]['Bills']['py'];
+            $accounts['co']['allocated'] += $bills[$i]['Bills']['co'];
         }
-        array_shift($bill_totals);
-        $this->set('bill_totals', $bill_totals);
-        //echo Debugger::exportVar($bill_totals);
+        $this->set('bills', $bills);
+        $this->set('fy', $fy);
 
-
-        //TODO make time scalable automatically
-        $first_fy = 14;
-        $end_fy = 18;
-        //for ($fy = $first_fy; $fy <= $end_fy; $fy++) {
-        /*$fy = '17';
-        $this -> paginate = array(
-            'conditions' => array(
-                'Bills.status' => '6',
-                array('Bills.number LIKE' => $fy . 'J%')
-            ),
-            'order' => 'Bills.number',
-            'limit' => 100
-        );
-        $this -> loadModel('Bill');
-        $this -> set('bills', $this -> paginate('Bills'));*/
-
-        /*$fy_totals_year = $this->LineItem->find('all', array(
-            "joins" => array(
-                "table" => "bills",
-                    "alias" => "Bills",
-                    "type" => "LEFT",
-                    "conditions" => array(
-                        "LineItem.bill_id = Bills.id"
-                    )
-            ),
-            'fields' => array(
-                "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final',amount, 0)) AS " . $fy . "PY",
-                "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final',amount, 0)) AS " . $fy . "CO",
-                "SUM(IF(STATE = 'Final',amount, 0)) AS " . $fy . "TOTAL",
-            ),
-            'conditions' => array(
-                //'bill_id' => $id,
-                'Bills.org_id' => $org_id,
-                'Bills.number LIKE' => $fy . '%',
-                'struck <>' => 1
-            )
-        ));*/
-        //array_push($fy_totals[0], $fy_totals_year[0][0]);*/
-        //}
-
+        //TODO find better way to enter initial acocutn info
+        $accounts['py']['initial'] = $this->initials[$fy]['py'];
+        $accounts['co']['initial'] = $this->initials[$fy]['co'];
+        $accounts['py']['balance'] = $accounts['py']['initial'] - $accounts['py']['allocated'];
+        $accounts['co']['balance'] = $accounts['co']['initial'] - $accounts['co']['allocated'];
+        $this->set('accounts', $accounts);
     }
 
 }

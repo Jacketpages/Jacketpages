@@ -125,7 +125,8 @@ class PaginatorComponent extends Component {
  * @throws MissingModelException
  * @throws NotFoundException
  */
-	public function paginate($object = null, $scope = array(), $whitelist = array()) {
+    public function paginate($object = null, $data = null, $scope = array(), $whitelist = array())
+    {
 		if (is_array($object)) {
 			$whitelist = $scope;
 			$scope = $object;
@@ -193,7 +194,11 @@ class PaginatorComponent extends Component {
 			if ($recursive != $object->recursive) {
 				$parameters['recursive'] = $recursive;
 			}
-			$results = $object->find($type, array_merge($parameters, $extra));
+            if ($data == null) {
+                $results = $object->find($type, array_merge($parameters, $extra));
+            } else {
+                $results = $data;
+            }
 		}
 		$defaults = $this->getDefaults($object->alias);
 		unset($defaults[0]);
@@ -394,7 +399,6 @@ class PaginatorComponent extends Component {
 			}
 			$options['order'] = $order;
 		}
-
 		return $options;
 	}
 

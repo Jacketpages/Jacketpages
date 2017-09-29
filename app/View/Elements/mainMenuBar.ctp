@@ -9,6 +9,7 @@ echo $this->Html->useTag('tagstart', 'ul', array('class'=>'menu'));
 
 echo $this->Html->tag('li', $this->element('mainMenuBar/bills'), array('class' => 'expanded first'));
 echo $this->Html->tag('li', $this->element('mainMenuBar/organizations'), array('class' => 'expanded'));
+echo $this->Html->tag('li', $this->element('mainMenuBar/calculations'), array('class' => 'expanded'));
 echo $this->Html->tag('li', $this->element('mainMenuBar/resources'), array('class' => 'expanded'));
 echo $this->Html->tag('li', $this->element('mainMenuBar/student_government'), array('class' => 'expanded'));
 echo $this->Html->tag('li', $this->element('mainMenuBar/administration'), array('class' => 'expanded'));

@@ -621,6 +621,10 @@ table.list tr td:first-child {
 	text-align: left;
 }
 
+table.even tr td:first-child {
+    width: auto;
+}
+
 table.list tr:nth-child(2n) td {
 	background: none;
 }

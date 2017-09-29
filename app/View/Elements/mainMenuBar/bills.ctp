@@ -11,10 +11,10 @@ if ($gt_member)
 		<li class="leaf">
 			<?php echo $this->Html->link('View My Bills', array('controller' => 'bills', 'action' => 'my_bills'))?>
 		</li>
-		<li class="leaf last">
+        <li class="leaf">
 			<?php echo $this->Html->link('View All Bills', array('controller' => 'bills', 'action' => 'index'))?>
 		</li>
-        <li class="leaf">
+        <li class="leaf last">
             <?php echo $this->Html->link('View Bills on Agenda', array('controller' => 'bills', 'action' => 'onAgenda')) ?>
         </li>
 	</ul>
