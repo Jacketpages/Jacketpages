@@ -42,7 +42,8 @@ function numberRule(id)
  */
 function moneyRule(id)
 {
-	if ($(id).val().match(/^\d*(?:\.\d{0,2})?$/) == null || $(id).val().match(/^\d*(?:\.\d{0,2})?$/) == "")
+    console.log(id);
+    if ($(id).val().match(/^-?\d*(?:\.\d{0,2})?$/) == null || $(id).val().match(/^-?\d*(?:\.\d{0,2})?$/) == "")
 	{
 		addErrorClassAndInvalidateForm(id, "This is not a valid monetary amount.");
 	}
