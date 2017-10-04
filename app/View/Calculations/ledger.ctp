@@ -82,25 +82,26 @@ echo $this->Html->tableCells(array('CO Balance', $this->Number->currency($accoun
 echo $this->Html->tableEnd();
 
 echo $this->Html->tableBegin($tableOptions);
-echo $this->Html->tableCells(array('ULR Initial', $this->Number->currency($accounts['co']['initial'])));
-echo $this->Html->tableCells(array('ULR Allocated', $this->Number->currency($accounts['co']['allocated'])));
-echo $this->Html->tableCells(array('ULR Balance', $this->Number->currency($accounts['co']['balance'])));
+echo $this->Html->tableCells(array('ULR Initial', $this->Number->currency($accounts['ulr']['initial'])));
+echo $this->Html->tableCells(array('ULR Allocated', $this->Number->currency($accounts['ulr']['allocated'])));
+echo $this->Html->tableCells(array('ULR Balance', $this->Number->currency($accounts['ulr']['balance'])));
 echo $this->Html->tableEnd();
 
 echo $this->Html->tableBegin($tableOptions);
-echo $this->Html->tableCells(array('GLR Initial', $this->Number->currency($accounts['co']['initial'])));
-echo $this->Html->tableCells(array('GLR Allocated', $this->Number->currency($accounts['co']['allocated'])));
-echo $this->Html->tableCells(array('GLR Balance', $this->Number->currency($accounts['co']['balance'])));
+echo $this->Html->tableCells(array('GLR Initial', $this->Number->currency($accounts['glr']['initial'])));
+echo $this->Html->tableCells(array('GLR Allocated', $this->Number->currency($accounts['glr']['allocated'])));
+echo $this->Html->tableCells(array('GLR Balance', $this->Number->currency($accounts['glr']['balance'])));
 echo $this->Html->tableEnd();
 
-
-/*$this->start('listing');
-*/
-echo $this->Html->tag('h1', 'Bills');
 ?>
 <div id='forupdate'>
     <?php
-    echo $this->element('calculations/ledger/ledgerBillTable', array('bills' => $bills));
+    echo $this->Html->tag('h1', 'Joint Bills');
+    echo $this->element('calculations/ledger/ledgerJointBillTable', array('bills' => $joint_bills));
+    echo $this->Html->tag('h1', 'Undergraduate Bills');
+    echo $this->element('calculations/ledger/ledgerUBillTable', array('bills' => $u_bills));
+    echo $this->Html->tag('h1', 'Graduate Bills');
+    echo $this->element('calculations/ledger/ledgerGBillTable', array('bills' => $g_bills));
     ?>
 </div>
 <?php

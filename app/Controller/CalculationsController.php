@@ -30,6 +30,7 @@ class CalculationsController extends AppController
         'Csv'*/
     );
 
+    //TODO find better way to enter initial account info
     private $initials = array(
         '14' => array(
             'py' => 423703,
@@ -83,10 +84,11 @@ class CalculationsController extends AppController
         }
 
         $fy = $this->request->data['Ledger']['fy'];
+        $this->set('fy', $fy);
 
+        //Pull bills
         $this->loadModel('Bills');
-        //$this->paginate = array(
-        $bills = $this->Bills->find('all', array(
+        $joint_bills = $this->Bills->find('all', array(
             'joins' => array(
                 array(
                     "table" => "organizations",
@@ -112,16 +114,71 @@ class CalculationsController extends AppController
             'order' => 'Bills.number',
             'limit' => 300
         ));
-        //$bills = $this->paginate('Bills');
-        //echo Debugger::exportVar($bills);
+        $u_bills = $this->Bills->find('all', array(
+            'joins' => array(
+                array(
+                    "table" => "organizations",
+                    "alias" => "Organizations",
+                    "type" => "LEFT",
+                    "conditions" => array(
+                        "Organizations.id = Bills.org_id"
+                    )
+                )
+            ),
+            'fields' => array(
+                "Bills.id",
+                "Bills.number",
+                "Bills.title",
+                "Bills.org_id",
+                "Organizations.name"
+            ),
+            'conditions' => array(
+                'Bills.status' => '6',
+                'Bills.type' => 'Finance Request',
+                'OR' => array(
+                    'Bills.number LIKE' => $fy . 'U%'
+                )
+            ),
+            'order' => 'Bills.number',
+            'limit' => 50
+        ));
+        $g_bills = $this->Bills->find('all', array(
+            'joins' => array(
+                array(
+                    "table" => "organizations",
+                    "alias" => "Organizations",
+                    "type" => "LEFT",
+                    "conditions" => array(
+                        "Organizations.id = Bills.org_id"
+                    )
+                )
+            ),
+            'fields' => array(
+                "Bills.id",
+                "Bills.number",
+                "Bills.title",
+                "Bills.org_id",
+                "Organizations.name"
+            ),
+            'conditions' => array(
+                'Bills.status' => '6',
+                'Bills.type' => 'Finance Request',
+                'OR' => array(
+                    'Bills.number LIKE' => $fy . 'G%'
+                )
+            ),
+            'order' => 'Bills.number',
+            'limit' => 50
+        ));
 
+        //Sum the line items of each bill
         $this->loadModel('LineItem');
-        $bill_totals[] = array();
         $accounts[] = array();
         $accounts['py']['allocated'] = 0;
         $accounts['co']['allocated'] = 0;
-        //foreach ($bills as $bill) {
-        for ($i = 0; $i < sizeof($bills); $i++) {
+        $accounts['ulr']['allocated'] = 0;
+        $accounts['glr']['allocated'] = 0;
+        for ($i = 0; $i < sizeof($joint_bills); $i++) {
             $total = $this->LineItem->find('all', array(
                 'joins' => array(
                     array(
@@ -139,26 +196,82 @@ class CalculationsController extends AppController
                     "SUM(IF(STATE = 'Final', amount, 0)) AS TOTAL",
                 ),
                 'conditions' => array(
-                    'Bills.id' => $bills[$i]['Bills']['id'],
+                    'Bills.id' => $joint_bills[$i]['Bills']['id'],
                     'struck <>' => 1
                 )
             ));
-            $bills[$i]['Bills']['py'] = $total[0][0]['PY'];
-            $bills[$i]['Bills']['co'] = $total[0][0]['CO'];
-            $bills[$i]['Bills']['tot'] = $total[0][0]['TOTAL'];
-            $bills[$i]['Bills']['org_name'] = $bills[$i]['Organizations']['name'];
-            unset($bills[$i]['Organizations']);
-            $accounts['py']['allocated'] += $bills[$i]['Bills']['py'];
-            $accounts['co']['allocated'] += $bills[$i]['Bills']['co'];
+            $joint_bills[$i]['Bills']['py'] = $total[0][0]['PY'];
+            $joint_bills[$i]['Bills']['co'] = $total[0][0]['CO'];
+            $joint_bills[$i]['Bills']['tot'] = $total[0][0]['TOTAL'];
+            $joint_bills[$i]['Bills']['org_name'] = $joint_bills[$i]['Organizations']['name'];
+            unset($joint_bills[$i]['Organizations']);
+            $accounts['py']['allocated'] += $joint_bills[$i]['Bills']['py'];
+            $accounts['co']['allocated'] += $joint_bills[$i]['Bills']['co'];
         }
-        $this->set('bills', $bills);
-        $this->set('fy', $fy);
+        $this->set('joint_bills', $joint_bills);
 
-        //TODO find better way to enter initial acocutn info
+        for ($i = 0; $i < sizeof($u_bills); $i++) {
+            $total = $this->LineItem->find('all', array(
+                'joins' => array(
+                    array(
+                        "table" => "bills",
+                        "alias" => "Bills",
+                        "type" => "LEFT",
+                        "conditions" => array(
+                            "LineItem.bill_id = Bills.id"
+                        )
+                    )
+                ),
+                'fields' => array(
+                    "SUM(IF(ACCOUNT = 'ULR' AND STATE = 'Undergraduate', amount, 0)) AS ULR",
+                ),
+                'conditions' => array(
+                    'Bills.id' => $u_bills[$i]['Bills']['id'],
+                    'struck <>' => 1
+                )
+            ));
+            $u_bills[$i]['Bills']['ulr'] = $total[0][0]['ULR'];
+            $u_bills[$i]['Bills']['org_name'] = $u_bills[$i]['Organizations']['name'];
+            unset($u_bills[$i]['Organizations']);
+            $accounts['ulr']['allocated'] += $u_bills[$i]['Bills']['ulr'];
+        }
+        $this->set('u_bills', $u_bills);
+
+        for ($i = 0; $i < sizeof($g_bills); $i++) {
+            $total = $this->LineItem->find('all', array(
+                'joins' => array(
+                    array(
+                        "table" => "bills",
+                        "alias" => "Bills",
+                        "type" => "LEFT",
+                        "conditions" => array(
+                            "LineItem.bill_id = Bills.id"
+                        )
+                    )
+                ),
+                'fields' => array(
+                    "SUM(IF(ACCOUNT = 'GLR' AND STATE = 'Graduate', amount, 0)) AS GLR",
+                ),
+                'conditions' => array(
+                    'Bills.id' => $g_bills[$i]['Bills']['id'],
+                    'struck <>' => 1
+                )
+            ));
+            $g_bills[$i]['Bills']['glr'] = $total[0][0]['GLR'];
+            $g_bills[$i]['Bills']['org_name'] = $g_bills[$i]['Organizations']['name'];
+            unset($g_bills[$i]['Organizations']);
+            $accounts['glr']['allocated'] += $g_bills[$i]['Bills']['glr'];
+        }
+        $this->set('g_bills', $g_bills);
+
         $accounts['py']['initial'] = $this->initials[$fy]['py'];
         $accounts['co']['initial'] = $this->initials[$fy]['co'];
+        $accounts['ulr']['initial'] = $this->initials[$fy]['ulr'];
+        $accounts['glr']['initial'] = $this->initials[$fy]['glr'];
         $accounts['py']['balance'] = $accounts['py']['initial'] - $accounts['py']['allocated'];
         $accounts['co']['balance'] = $accounts['co']['initial'] - $accounts['co']['allocated'];
+        $accounts['ulr']['balance'] = $accounts['ulr']['initial'] - $accounts['ulr']['allocated'];
+        $accounts['glr']['balance'] = $accounts['glr']['initial'] - $accounts['glr']['allocated'];
         $this->set('accounts', $accounts);
     }
 
