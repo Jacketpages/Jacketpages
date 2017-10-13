@@ -2,6 +2,7 @@
 
 App::uses('Controller', 'Controller');
 
+App::import('Vendor', array('file' => 'autoload'));
 /**
  * Application Controller
  *

@@ -9,25 +9,20 @@
 class CalculationsController extends AppController
 {
 
-    /**
-     * Overidden $components, $helpers, and $uses
-     */
     public $helpers = array(
-        'Session',
-        'Form'
-        /*'Html',
+        'Html',
+        'Form',
         'Paginator',
         'Js',
         'Csv',
         'Excel',
-        'Text'*/
+        'Text'
     );
     public $components = array(
-        'Session'
-        /*'Acl',
+        'Acl',
         'RequestHandler',
         'Session',
-        'Csv'*/
+        'Csv'
     );
 
     //TODO find better way to enter initial account info
@@ -57,8 +52,8 @@ class CalculationsController extends AppController
             'glr' => 9000
         ),
         '18' => array(
-            'py' => 999999,
-            'co' => 999999,
+            'py' => 400000,
+            'co' => 1000000,
             'ulr' => 21000,
             'glr' => 9000
         ),
@@ -70,9 +65,8 @@ class CalculationsController extends AppController
             $this->layout = 'list';
         }
 
-        //TODO make time scalable automatically
         $first_fy = 14;
-        $end_fy = 18;
+        $end_fy = $this->getFiscalYear() + 1;
         $fys = array();
         for ($i = $first_fy; $i <= $end_fy; $i++) {
             $fys[$i] = 'FY' . $i;
@@ -275,4 +269,42 @@ class CalculationsController extends AppController
         $this->set('accounts', $accounts);
     }
 
+    public function accounts()
+    {
+        $fy = $this->getFiscalYear() + 1;
+
+        $this->loadModel('LineItem');
+        $totals = $this->LineItem->find('all', array(
+            'joins' => array(
+                array(
+                    "table" => "bills",
+                    "alias" => "Bills",
+                    "type" => "LEFT",
+                    "conditions" => array(
+                        "LineItem.bill_id = Bills.id"
+                    )
+                )
+            ),
+            'fields' => array(
+                "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final', amount, 0)) AS py",
+                "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final', amount, 0)) AS co",
+                "SUM(IF(ACCOUNT = 'ULR' AND STATE = 'Final', amount, 0)) AS ulr",
+                "SUM(IF(ACCOUNT = 'GLR' AND STATE = 'Final', amount, 0)) AS glr",
+            ),
+            'conditions' => array(
+                'Bills.number LIKE' => $fy . '%',
+                'struck <>' => 1
+            )
+        ));
+        $totals['initial'] = $this->initials[$fy];
+        $totals['allocated'] = $totals[0][0];
+        $this->set('totals', $totals);
+        echo Debugger::exportVar($totals);
+        $this->set('fy', $fy);
+    }
+
+    public function chart()
+    {
+
+    }
 }

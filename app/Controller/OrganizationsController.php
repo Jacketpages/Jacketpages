@@ -6,8 +6,6 @@
 App::uses('Folder', 'Utility');
 App::uses('File', 'Utility');
 
-App::import('Vendor', array('file' => 'autoload'));
-
 class OrganizationsController extends AppController
 {
 	/**
@@ -637,10 +635,6 @@ ORDER BY o.`name` ASC
         $this->set('fy_totals', $fy_totals[0]);
         $this->set('end_fy', $end_fy);
         $this->set('first_fy', $first_fy);
-    }
-
-    public function chart($id = null)
-    {
     }
 
 }
