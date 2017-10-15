@@ -271,7 +271,23 @@ class CalculationsController extends AppController
 
     public function accounts()
     {
-        $fy = $this->getFiscalYear() + 1;
+        if ($this->request->is('ajax')) {
+            $this->layout = 'list';
+        }
+
+        $first_fy = 14;
+        $end_fy = $this->getFiscalYear() + 1;
+        $fys = array();
+        for ($i = $first_fy; $i <= $end_fy; $i++) {
+            $fys[$i] = 'FY' . $i;
+        }
+        $this->set('fys', $fys);
+
+        if (!isset($this->request->data['Accounts']['fy']) || $this->request->data('submit') === 'Clear') {
+            $this->request->data['Accounts']['fy'] = $this->getFiscalYear() + 1;
+        }
+
+        $fy = $this->request->data['Accounts']['fy'];
 
         //------------------Account Pie Charts------------------
         $this->loadModel('LineItem');
@@ -304,7 +320,7 @@ class CalculationsController extends AppController
 
         //------------------Allocations by Week------------------
         //TODO take this out, only for debugging
-        $fy = 17;
+        //$fy = 17;
 
         //Get first Tuesday of the year as
         $startDate = "20" . ($fy - 1) . "-07-01";
@@ -312,14 +328,16 @@ class CalculationsController extends AppController
         $endDate = strtotime($endDate);
         $tuesdays = array();
         for ($i = strtotime('Tuesday', strtotime($startDate)); $i <= $endDate; $i = strtotime('+1 week', $i)) {
-            $d = date('m-d-Y', $i);
+            $d = date('n-j-y', $i);
             //array_push($tuesdays, $i);
+            $tuesdays[$i]['sec'] = $i;
             $tuesdays[$i]['date'] = $d;
             $tuesdays[$i]['py_allocated'] = 0;
             $tuesdays[$i]['co_allocated'] = 0;
             $tuesdays[$i]['ulr_allocated'] = 0;
             $tuesdays[$i]['glr_allocated'] = 0;
             //date('m-d-Y', $i)
+            //date('n-j-y', $i)
         }
         //echo Debugger::exportVar($tuesdays);
 
@@ -410,12 +428,15 @@ class CalculationsController extends AppController
         $ulr_balance = $this->initials[$fy]['ulr'];
         $glr_balance = $this->initials[$fy]['glr'];
 
-        $last_date = $tuesdays[end(array_keys($tuesdays))]['date'];
-        $first_date = $tuesdays[reset(array_keys($tuesdays))]['date'];
+        $keys = array_keys($tuesdays);
+        $last_date = $tuesdays[end($keys)]['date'];
+        $first_date = $tuesdays[reset($keys)]['date'];
+        $today = strtotime(date('Y-m-d'));
         foreach ($tuesdays as &$val) {
+            //echo 'Val: '.Debugger::exportVar($val).'<br>';
             //echo $val['date'].'  |  '.$val['py_allocated'].'  |  '. $val['co_allocated'].'  |  '. $val['ulr_allocated'].'  |  '. $val['glr_allocated'].'<br>';
 
-            if ($val['date'] && ($val['py_allocated'] != 0 || $val['co_allocated'] != 0 || $val['ulr_allocated'] != 0 || $val['glr_allocated'] != 0)) {
+            if (($val['sec'] < $today) && $val['date'] && ($val['py_allocated'] != 0 || $val['co_allocated'] != 0 || $val['ulr_allocated'] != 0 || $val['glr_allocated'] != 0)) {
                 $py_balance = $py_balance - $val['py_allocated'];
                 $co_balance = $co_balance - $val['co_allocated'];
                 $ulr_balance = $ulr_balance - $val['ulr_allocated'];
@@ -440,13 +461,17 @@ class CalculationsController extends AppController
                 $val['co_balance'] = $co_balance;
                 $val['ulr_balance'] = $ulr_balance;
                 $val['glr_balance'] = $glr_balance;
-            } elseif ($val['date'] == $last_date) {
+            } elseif (($val['sec'] < $today) && ($val['date'] == $last_date)) {
                 $val['date_nonzero'] = $val['date'];
                 $val['py_balance'] = $py_balance;
                 $val['co_balance'] = $co_balance;
                 $val['ulr_balance'] = $ulr_balance;
                 $val['glr_balance'] = $glr_balance;
             }
+
+            /*if($val['sec'] > $today) {
+                break;
+            }*/
         }
 
         //echo Debugger::exportVar($tuesdays);
