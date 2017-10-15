@@ -2,6 +2,7 @@
     <?php
     use Ghunti\HighchartsPHP\Highchart;
     use Ghunti\HighchartsPHP\HighchartJsExpr;
+    use Ghunti\HighchartsPHP\HighchartOption;
 
     echo $this->Html->tag('h1', 'Current FY' . $fy . ' Account Summary');
 
@@ -28,7 +29,7 @@
     $chart->series[] = array(
         'name' => "PY",
         'data' => $data,
-        'size' => "100%"
+        'size' => "100%%"
     );
     //----------------------------------------------------------------------
     $coChart = new Highchart();
@@ -108,33 +109,116 @@
         'data' => $glrData,
         'size' => "100%"
     );
+    //------------------------------------------------------------------------
+    //Line Graph
+
+    $lineChart = new Highchart();
+
+    $lineChart->chart = array(
+        'renderTo' => 'lineGraph',
+        'type' => 'line',
+        'marginRight' => 175,
+        'marginBottom' => 75
+    );
+
+    $lineChart->plotOptions->series = array(
+        'connectNulls' => true
+    );
+
+    $lineChart->title = array(
+        'text' => 'Joint Account Balances during FY' . $fy,
+        'x' => -20
+    );
+
+    $lineChart->xAxis->categories = array_column($tuesdays, 'date_nonzero');
+
+    /*$lineChart->yAxis = array(
+        'title' => array(
+            'text' => 'Balance ($)'
+        ),
+        'plotLines' => array(
+            array(
+                'value' => 0,
+                'width' => 1,
+                'color' => '#808080'
+            )
+        ),
+        array(
+            'title' => array(
+                'text' => 'Balance ($)'
+            ),
+            'plotLines' => array(
+                array(
+                    'value' => 0,
+                    'width' => 1,
+                    'color' => '#808080'
+                )
+            )
+        )
+    );*/
+    $leftYaxis = new HighchartOption();
+    $rightYaxis = new HighchartOption();
+
+    $leftYaxis->labels->formatter = new HighchartJsExpr("function() {
+    return '$' + this.value.toLocaleString(); }");
+    $rightYaxis->labels->formatter = new HighchartJsExpr("function() {
+    return '$' + this.value.toLocaleString(); }");
+
+    $leftYaxis->title->text = "Prior Year ($)";
+    $leftYaxis->labels->style->color = "#EEB211";//#89A54E";
+    $leftYaxis->title->style->color = "#EEB211";//#89A54E";
+    $leftYaxis->min = 0;
+
+    $rightYaxis->title->text = "Capital Outlay ($)";
+    $rightYaxis->title->style->color = "#072f59";
+    $rightYaxis->labels->style->color = "#072f59";
+    $rightYaxis->min = 0;
+    $rightYaxis->opposite = 1;
+
+    $lineChart->yAxis = array(
+        $leftYaxis,
+        $rightYaxis
+    );
+
+    $lineChart->legend = array(
+        'layout' => 'vertical',
+        'align' => 'right',
+        'verticalAlign' => 'top',
+        'x' => -10,
+        'y' => 100,
+        'borderWidth' => 0
+    );
+
+
+    $lineChart->series[] = array(
+        'name' => 'PY',
+        'data' => array_column($tuesdays, 'py_balance'),
+        'color' => "#EEB211"
+    );
+    $lineChart->series[] = array(
+        'name' => 'CO',
+        'data' => array_column($tuesdays, 'co_balance'),
+        'color' => "#072f59",
+        'yAxis' => 1,
+    );
+
+    $lineChart->tooltip->formatter = new HighchartJsExpr(
+        "function() { return '<b>'+ this.series.name +' Balance</b><br/>'+ this.x +': $'+ this.y.toLocaleString();}");
     ?>
 
-    <table>
-        <col width="25%">
-        <col width="25%">
-        <col width="25%">
-        <col width="25%">
-        <tr>
-            <td style="vertical-align:middle">
-                <div id="pyChart"></div>
-            </td>
-            <td style="vertical-align:middle">
-                <div id="coChart"></div>
-            </td>
-            <td style="vertical-align:middle">
-                <div id="ulrChart"></div>
-            </td>
-            <td style="vertical-align:middle">
-                <div id="glrChart"></div>
-            </td>
-        </tr>
-
-    </table>
+    <div style="text-align: center; width: 100%">
+        <div id="pyChart" style="min-width: 191px; height: 225px; width:25%; display:inline-block; float: left;"></div>
+        <div id="coChart" style="min-width: 191px; height: 225px; width:25%; display:inline-block; float: left;"></div>
+        <div id="ulrChart" style="min-width: 191px; height: 225px; width:25%; display:inline-block; float: left;"></div>
+        <div id="glrChart" style="min-width: 191px; height: 225px; width:25%; display:inline-block; float: left;"></div>
+    </div>
 
     <?php
     echo $this->Html->tag('h1', 'FY' . $fy . ' Allocation over Time');
     ?>
+
+    <div id="lineGraph" <!--style="height:600px; width: 100%"-->>
+</div>
 
     <script src="http://code.highcharts.com/highcharts.src.js"></script>
     <script type="text/javascript">
@@ -142,5 +226,15 @@
         <?php echo $coChart->render("chart2"); ?>
         <?php echo $ulrChart->render("chart3"); ?>
         <?php echo $glrChart->render("chart4"); ?>
+        <?php echo $lineChart->render("lineCHart"); ?>
+
+        //Remove the Highcharts logo and link in the bottom right
+        var e = document.getElementsByClassName('highcharts-credits');
+        [...e
+        ].forEach(remove);
+
+        function remove(item) {
+            item.outerHTML = "";
+        }
     </script>
 </div>

@@ -273,6 +273,7 @@ class CalculationsController extends AppController
     {
         $fy = $this->getFiscalYear() + 1;
 
+        //------------------Account Pie Charts------------------
         $this->loadModel('LineItem');
         $totals = $this->LineItem->find('all', array(
             'joins' => array(
@@ -299,8 +300,152 @@ class CalculationsController extends AppController
         $totals['initial'] = $this->initials[$fy];
         $totals['allocated'] = $totals[0][0];
         $this->set('totals', $totals);
-        echo Debugger::exportVar($totals);
         $this->set('fy', $fy);
+
+        //------------------Allocations by Week------------------
+        //TODO take this out, only for debugging
+        $fy = 17;
+
+        //Get first Tuesday of the year as
+        $startDate = "20" . ($fy - 1) . "-07-01";
+        $endDate = "20" . $fy . "-06-31";
+        $endDate = strtotime($endDate);
+        $tuesdays = array();
+        for ($i = strtotime('Tuesday', strtotime($startDate)); $i <= $endDate; $i = strtotime('+1 week', $i)) {
+            $d = date('m-d-Y', $i);
+            //array_push($tuesdays, $i);
+            $tuesdays[$i]['date'] = $d;
+            $tuesdays[$i]['py_allocated'] = 0;
+            $tuesdays[$i]['co_allocated'] = 0;
+            $tuesdays[$i]['ulr_allocated'] = 0;
+            $tuesdays[$i]['glr_allocated'] = 0;
+            //date('m-d-Y', $i)
+        }
+        //echo Debugger::exportVar($tuesdays);
+
+        $this->loadModel('Bills');
+        $billsWithDates = $this->Bills->find('all', array(
+            'joins' => array(
+                array(
+                    "table" => "bill_votes",
+                    "alias" => "GSSVotes",
+                    "type" => "LEFT",
+                    "conditions" => array(
+                        "Bills.gss_id = GSSVotes.id"
+                    )
+                ),
+                array(
+                    "table" => "bill_votes",
+                    "alias" => "UHRVotes",
+                    "type" => "LEFT",
+                    "conditions" => array(
+                        "Bills.uhr_id = UHRVotes.id"
+                    )
+                )
+            ),
+            'fields' => array(
+                "Bills.id",
+                "Bills.number",
+                "GSSVotes.date",
+                "UHRVotes.date",
+                "IF(GSSVotes.date IS NOT NULL, IF(UHRVotes.date IS NOT NULL, IF(GSSVotes.date > UHRVotes.date, GSSVotes.date, UHRVotes.date), GSSVotes.date), UHRVotes.date) AS date"
+            ),
+            'conditions' => array(
+                'Bills.number LIKE' => $fy . '%',
+                'Bills.type' => 'Finance Request',
+                'Bills.status' => 6
+            )
+        ));
+
+        //echo Debugger::exportVar($billsWithDates);
+
+        for ($i = 0; $i < sizeof($billsWithDates); $i++) {
+            $billsWithDates[$i]['Bills']['date'] = $billsWithDates[$i][0]['date'];
+            unset($billsWithDates[$i][0]['date']);
+
+
+            $total = $this->LineItem->find('all', array(
+                'joins' => array(
+                    array(
+                        "table" => "bills",
+                        "alias" => "Bills",
+                        "type" => "LEFT",
+                        "conditions" => array(
+                            "LineItem.bill_id = Bills.id"
+                        )
+                    )
+                ),
+                'fields' => array(
+                    "SUM(IF(ACCOUNT = 'PY' AND STATE = 'Final', amount, 0)) AS PY",
+                    "SUM(IF(ACCOUNT = 'CO' AND STATE = 'Final', amount, 0)) AS CO",
+                    "SUM(IF(ACCOUNT = 'ULR' AND STATE = 'Undergraduate', amount, 0)) AS ULR",
+                    "SUM(IF(ACCOUNT = 'GLR' AND STATE = 'Graduate', amount, 0)) AS GLR",
+                ),
+                'conditions' => array(
+                    'Bills.id' => $billsWithDates[$i]['Bills']['id'],
+                    'struck <>' => 1
+                )
+            ));
+            $billsWithDates[$i]['Bills']['py'] = $total[0][0]['PY'];
+            $billsWithDates[$i]['Bills']['co'] = $total[0][0]['CO'];
+            $billsWithDates[$i]['Bills']['ulr'] = $total[0][0]['ULR'];
+            $billsWithDates[$i]['Bills']['glr'] = $total[0][0]['GLR'];
+        }
+
+        //echo '<br><br><br>'.Debugger::exportVar($tuesdays);
+
+        for ($i = 0; $i < sizeof($billsWithDates); $i++) {
+            $tues = strtotime('previous tuesday', strtotime($billsWithDates[$i]['Bills']['date']));
+            //echo $billsWithDates[$i]['Bills']['id'].'   |   '.$billsWithDates[$i]['Bills']['number'].'   |   '.$tues.'<br>';
+            if ($tues > 0) {
+                $tuesdays[$tues]['py_allocated'] = $tuesdays[$tues]['py_allocated'] + $billsWithDates[$i]['Bills']['py'];
+                $tuesdays[$tues]['co_allocated'] = $tuesdays[$tues]['co_allocated'] + $billsWithDates[$i]['Bills']['co'];
+                $tuesdays[$tues]['ulr_allocated'] = $tuesdays[$tues]['ulr_allocated'] + $billsWithDates[$i]['Bills']['ulr'];
+                $tuesdays[$tues]['glr_allocated'] = $tuesdays[$tues]['glr_allocated'] + $billsWithDates[$i]['Bills']['glr'];
+            }
+        }
+
+        $py_balance = $this->initials[$fy]['py'];
+        $co_balance = $this->initials[$fy]['co'];
+        $ulr_balance = $this->initials[$fy]['ulr'];
+        $glr_balance = $this->initials[$fy]['glr'];
+
+        $first = true;
+        foreach ($tuesdays as &$val) {
+            if ($first) {
+                $val['date_nonzero'] = $val['date'];
+                $val['py_balance'] = $py_balance;
+                $val['co_balance'] = $co_balance;
+                $val['ulr_balance'] = $ulr_balance;
+                $val['glr_balance'] = $glr_balance;
+                $first = false;
+            }
+
+            //echo $val['date'].'  |  '.$val['py_allocated'].'  |  '. $val['co_allocated'].'  |  '. $val['ulr_allocated'].'  |  '. $val['glr_allocated'].'<br>';
+
+            if ($val['date'] && ($val['py_allocated'] != 0 || $val['co_allocated'] != 0 || $val['ulr_allocated'] != 0 || $val['glr_allocated'] != 0)) {
+                $py_balance = $py_balance - $val['py_allocated'];
+                $co_balance = $co_balance - $val['co_allocated'];
+                $ulr_balance = $ulr_balance - $val['ulr_allocated'];
+                $glr_balance = $glr_balance - $val['glr_allocated'];
+
+                $val['date_nonzero'] = $val['date'];
+                $val['py_balance'] = $py_balance;
+                $val['co_balance'] = $co_balance;
+                $val['ulr_balance'] = $ulr_balance;
+                $val['glr_balance'] = $glr_balance;
+            } else {
+                $val['date_nonzero'] = $val['date'];
+                $val['py_balance'] = null;
+                $val['co_balance'] = null;
+                $val['ulr_balance'] = null;
+                $val['glr_balance'] = null;
+            }
+        }
+
+        //echo Debugger::exportVar($tuesdays);
+
+        $this->set('tuesdays', $tuesdays);
     }
 
     public function chart()
