@@ -410,17 +410,9 @@ class CalculationsController extends AppController
         $ulr_balance = $this->initials[$fy]['ulr'];
         $glr_balance = $this->initials[$fy]['glr'];
 
-        $first = true;
+        $last_date = $tuesdays[end(array_keys($tuesdays))]['date'];
+        $first_date = $tuesdays[reset(array_keys($tuesdays))]['date'];
         foreach ($tuesdays as &$val) {
-            if ($first) {
-                $val['date_nonzero'] = $val['date'];
-                $val['py_balance'] = $py_balance;
-                $val['co_balance'] = $co_balance;
-                $val['ulr_balance'] = $ulr_balance;
-                $val['glr_balance'] = $glr_balance;
-                $first = false;
-            }
-
             //echo $val['date'].'  |  '.$val['py_allocated'].'  |  '. $val['co_allocated'].'  |  '. $val['ulr_allocated'].'  |  '. $val['glr_allocated'].'<br>';
 
             if ($val['date'] && ($val['py_allocated'] != 0 || $val['co_allocated'] != 0 || $val['ulr_allocated'] != 0 || $val['glr_allocated'] != 0)) {
@@ -440,6 +432,20 @@ class CalculationsController extends AppController
                 $val['co_balance'] = null;
                 $val['ulr_balance'] = null;
                 $val['glr_balance'] = null;
+            }
+
+            if ($val['date'] == $first_date) {
+                $val['date_nonzero'] = $val['date'];
+                $val['py_balance'] = $py_balance;
+                $val['co_balance'] = $co_balance;
+                $val['ulr_balance'] = $ulr_balance;
+                $val['glr_balance'] = $glr_balance;
+            } elseif ($val['date'] == $last_date) {
+                $val['date_nonzero'] = $val['date'];
+                $val['py_balance'] = $py_balance;
+                $val['co_balance'] = $co_balance;
+                $val['ulr_balance'] = $ulr_balance;
+                $val['glr_balance'] = $glr_balance;
             }
         }
 
