@@ -17,7 +17,7 @@ echo $this -> Form -> hidden('president_id',array('value' => isset($president['U
 echo $this -> Form -> hidden('member_count',array('value' => $member_count)); 
 echo $this -> Form -> hidden('fiscal_year', array('value' => '20' . $fiscalYear));
 echo $this -> Form -> hidden('org_id', array('value' => $organization['Organization']['id']));
-echo $this -> Html -> tableBegin(array('class' => 'listing'));
+/*echo $this -> Html -> tableBegin(array('class' => 'listing'));
 echo $this -> Html -> tableCells(array(array(
 	array('President', array('width'=>'100px')),
 	(isset($president['User']['name'])) ? $president['User']['name']: 'Missing',
@@ -36,7 +36,7 @@ echo $this -> Html -> tableCells(array(
 	'Email',
 	$this->Text->autoLinkEmails((isset($advisor['User']['email'])) ? $advisor['User']['email']: 'Missing')
 ));
-echo $this -> Html -> tableEnd();
+echo $this -> Html -> tableEnd();*/
 
 echo $this -> Html -> tableBegin(array(
 	'class' => 'listing',
@@ -46,10 +46,10 @@ echo $this -> Html -> tableHeaders(array(
 	'Membership Info',
 	''
 ));
-echo $this -> Html -> tableCells(array(
+/*echo $this -> Html -> tableCells(array(
 	'Total Years of Active Membership',
 	$yearsActive
-));
+));*/
 echo $this -> Html -> tableCells(array(
 	'Average Attendance per Meeting*',
 	$this -> Form -> input('average_attendance', array('type' => 'text','label' => false))
@@ -58,10 +58,9 @@ echo $this -> Html -> tableCells(array(
 	'Are Summer Meetings Held?*',
 	$this -> Form -> input('summer_meetings', array('type' => 'text','label' => false))
 ));
-
 echo $this -> Html -> tableCells(array(
 	'# of Members',
-	$member_count
+    $this->Form->input('member_count', array('type' => 'text', 'label' => false))
 ));
 echo $this -> Html -> tableCells(array(
 	'# of Faculty Members*',

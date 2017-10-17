@@ -30,8 +30,8 @@ class BudgetLineItemsController extends AppController
 		}
 		//page permissions
 		$this -> loadModel('Budget');
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
-			$this -> redirect($this -> referer());
+        /*if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+            $this -> redirect($this -> referer());*/
 		//can only get here if budget has been started
 		$budgetId = $this -> Budget -> field('id', array(
 			'org_id' => $org_id,

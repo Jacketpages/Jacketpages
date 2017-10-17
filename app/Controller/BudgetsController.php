@@ -62,7 +62,7 @@ class BudgetsController extends AppController
 		);
 		$budgetIsOpen = $this -> TimeboundResource -> hasAny($conditions);
 		//page permissions
-		if (!(($this -> isOfficer($org_id) && $budgetIsOpen) || $this -> isSGAExec()))
+        if (!(($budgetIsOpen) || $this->isSGAExec()))
 			$this -> redirect($this -> referer());
 		if ($this -> Budget -> find('count', array('conditions' => array(
 					'id' => $this -> getBudgetId($org_id),
@@ -102,15 +102,15 @@ class BudgetsController extends AppController
 			$this -> Budget -> data = $this -> request -> data;
 			$this -> Budget -> set('state', 'Created');
 			$this -> Budget -> set('last_mod_by', $this -> Session -> read('User.id'));
-			if (strcmp($this -> Budget -> data['Budget']['treasurer_id'], '') == 0 || strcmp($this -> Budget -> data['Budget']['president_id'], '') == 0 || strcmp($this -> Budget -> data['Budget']['advisor_id'], '') == 0)
-			{
-				$this -> Session -> setFlash('You are missing officer information.');
-				$this -> redirect(array(
-					'controller' => 'budgets',
-					'action' => 'submit',
-					$org_id
-				));
-			}
+            /*if (strcmp($this -> Budget -> data['Budget']['treasurer_id'], '') == 0 || strcmp($this -> Budget -> data['Budget']['president_id'], '') == 0 || strcmp($this -> Budget -> data['Budget']['advisor_id'], '') == 0)
+            {
+                $this -> Session -> setFlash('You are missing officer information.');
+                $this -> redirect(array(
+                    'controller' => 'budgets',
+                    'action' => 'submit',
+                    $org_id
+                ));
+            }*/
 			if ($this -> Budget -> save($this -> request -> data))
 			{
 				$this -> loadModel('BudgetSubmitState');
@@ -197,8 +197,8 @@ class BudgetsController extends AppController
 	public function fundraising($org_id = null)
 	{
 		//page permissions
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
-			$this -> redirect($this -> referer());
+        /*if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+            $this -> redirect($this -> referer());*/
 		//can only get here if budget has been started
 		if (!($this -> getBudgetId($org_id)) && !$this -> isSGAExec())
 			$this -> redirect(array(
@@ -320,8 +320,8 @@ class BudgetsController extends AppController
 			));
 		}
 		//page permissions
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
-			$this -> redirect($this -> referer());
+        /*if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+            $this -> redirect($this -> referer());*/
 		//can only get here if budget has been started
 		if (!($this -> getBudgetId($org_id)) && !$this -> isSGAExec())
 			$this -> redirect(array(
@@ -407,8 +407,8 @@ class BudgetsController extends AppController
 			));
 		}
 		//page permissions
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
-			$this -> redirect($this -> referer());
+        /*if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+            $this -> redirect($this -> referer());*/
 		//can only get here if budget has been started
 		if (!($this -> getBudgetId($org_id)) && !$this -> isSGAExec())
 			$this -> redirect(array(
@@ -532,8 +532,8 @@ class BudgetsController extends AppController
 			));
 		}
 		//page permissions
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
-			$this -> redirect($this -> referer());
+        /*if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+            $this -> redirect($this -> referer());*/
 		//can only get here if budget has been started
 		if (!($this -> getBudgetId($org_id)) && !$this -> isSGAExec())
 			$this -> redirect(array(
@@ -622,8 +622,8 @@ class BudgetsController extends AppController
 			));
 		}
 
-		if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
-			$this -> redirect($this -> referer());
+        /*if (!($this -> isOfficer($org_id) || $this -> isSGAExec()))
+            $this -> redirect($this -> referer());*/
 
 		$budgetId = $this -> getBudgetId($org_id);
 		//can only get here if budget has been started
