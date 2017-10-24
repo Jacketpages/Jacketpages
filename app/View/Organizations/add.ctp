@@ -46,7 +46,7 @@ echo $this -> Form -> input('User.name', array(
  'id' => 'primary_email'
  ));*/
 /*echo $this -> Form -> input('description');*/
-echo $this->Form->input('website', array('label' => 'Orgsync Website'));
+echo $this->Form->input('website', array('label' => 'Orgsync Website (e.g. https://orgsync.com/130898/chapter)'));
 /*echo $this -> Form -> input('meeting_information');
 echo $this -> Form -> input('dues', array('label' => 'Dues', 'id' => 'dues'));*/
 echo $this -> Form -> submit('Create');
